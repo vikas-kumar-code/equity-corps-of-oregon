@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator factories {
+  provider = "prisma-factory"
+}
+
+model cities {
+  id       Int @id @default(autoincrement())
+  state_id Int
+  name     String @db.VarChar(150)
+}
+
+model countries {
+  id         Int @id @default(autoincrement())
+  name_code  String @db.VarChar(20)
+  name       String @db.VarChar(100)
+  phone_code Int
+}
+
+model states {
+  id         Int @id @default(autoincrement())
+  country_id Int
+  name       String @db.VarChar(255)
+}
+
+model users {
+  id                Int       @id @default(autoincrement())
+  name              String    @db.VarChar(150)
+  email             String    @unique @db.VarChar(150)
+  role_id           Int       @default(0)
+  password          String    @db.VarChar(255)
+  created_at        DateTime? @default(now())
+  updated_at        DateTime? @db.Timestamp(0)
+  status            Int       @default(1)
+  varified          Int       @default(0)
+  verification_code String?   @db.VarChar(20)
+  code_valid_till   DateTime?  
+  role              roles    @relation(fields: [role_id], references: [id])
+  cases             cases[]
+}
+
+model roles {
+  id                Int       @id @default(autoincrement())
+  name              String    @db.VarChar(150)
+  status            Int       @default(1)
+  users             users[]
+}
+
+model cases {
+  id                Int       @id @default(autoincrement())
+  title             String    @db.VarChar(255)
+  description       String    @db.LongText
+  added_by          Int       
+  status            Int       @default(1)
+  user              users     @relation(fields: [added_by], references: [id])
+}
