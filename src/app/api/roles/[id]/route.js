@@ -10,7 +10,10 @@ export async function GET(request, data) {
     });
     return NextResponse.json({
         success: true,
-        user: JSON.stringify(user, (key, value) => (typeof value === 'bigint' ? value.toString() : value)),
+        record: {
+            name: record.name,
+            status: record.status
+        }
     });
 }
 
@@ -30,7 +33,7 @@ export async function DELETE(request, data) {
 export async function PUT(request, data) {
     const role = await request.json();
     const fieldsSchema = Joi.object({
-        name: Joi.required(),
+        name: Joi.string().required(),
         status: Joi.number().required(),
     })
 

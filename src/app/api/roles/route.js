@@ -48,6 +48,12 @@ export async function POST(request) {
         }
     }
     catch (err) {
+        if (err.code === 'P2002') {
+            return NextResponse.json({
+                error: true,
+                message: { name: 'Name already exists.' }
+            });
+        }
         return NextResponse.json({ error: true, message: err });
     }
 }

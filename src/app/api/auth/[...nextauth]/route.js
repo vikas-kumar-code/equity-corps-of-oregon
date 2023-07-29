@@ -4,14 +4,17 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { compare } from "bcrypt";
 import prisma from "../../../../../prisma";
 
-const handler = NextAuth({
-    session: 'jwt',
+export const authOptions = {
+    session: {
+        strategy: 'jwt',
+    },
+    //session: "jwt",
     adapter: PrismaAdapter(prisma),
     providers: [
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
-                username: { label: "Username", type: "text", placeholder: "jsmith" },
+                email: { label: "Email", type: "text", placeholder: "jsmith" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
@@ -27,11 +30,11 @@ const handler = NextAuth({
                   headers: { "Content-Type": "application/json" }
                 })
                 const user = await res.json() */
-                //const user = {id: 1, name: 'vikas', email:'example@gmail.com'}
-
+                /* const user = { id: 1, name: 'vikas', email: 'example@gmail.com' }
+                return user; */
                 const user = await prisma.users.findUnique({
                     where: {
-                        email: credentials.username
+                        email: credentials.email
                     }
                 });
                 if (!user) {
@@ -56,26 +59,20 @@ const handler = NextAuth({
         error: "/error"
     },
     callbacks: {
-        session: () => {
-            return {
-                ...session,
-                user: {
-                    ...session.user,
-                    id: token.id
-                }
-            }
+        async session({ session, token, user }) {
+            session.user.id = token.id;
+            return session;
         },
-        jwt: ({ token, user }) => {
+        async jwt({ token, user }) {
             if (user) {
-                const u = user;
-                return {
-                    ...token,
-                    id: u.id,
-                }
+                token.id = user.id;
             }
+            return token;
         }
-    }
-});
+    },
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
 
