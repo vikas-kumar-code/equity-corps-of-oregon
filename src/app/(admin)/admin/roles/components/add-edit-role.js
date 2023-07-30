@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Spinner, FloatingLabel, Form, Row, Col } from "react-bootstrap";
 import LoadingOverlay from 'react-loading-overlay';
+import { toast } from 'react-toastify';
 export default function AddEditRole(props) {
     const [loader, setLoader] = useState(false);
     const [fields, setFields] = useState({ status: 1 });
@@ -44,6 +45,9 @@ export default function AddEditRole(props) {
             if (data.success) {
                 props.closeModal();
                 props.reloadeRecords();
+                toast.success(data.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
             }
             else if (data.error) {
                 setErrors(data.message)

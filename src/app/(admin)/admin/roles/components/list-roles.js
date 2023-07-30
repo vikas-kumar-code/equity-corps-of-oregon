@@ -6,6 +6,7 @@ import moment from "moment";
 import { Card, Row, Col, Button } from "react-bootstrap"
 import Pagination from "react-js-pagination";
 import AddEditRole from './add-edit-role';
+import { toast } from 'react-toastify';
 
 export default function ListRoles() {
     const [loader, setLoader] = useState(false);
@@ -37,6 +38,9 @@ export default function ListRoles() {
             });
             const data = await response.json();
             if (data.success) {
+                toast.success(data.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
                 getRecords();
             }
         }

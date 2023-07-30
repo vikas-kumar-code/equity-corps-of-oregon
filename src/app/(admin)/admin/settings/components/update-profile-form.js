@@ -1,9 +1,10 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import { Card, Spinner, FloatingLabel, Form, Button } from "react-bootstrap"
+import { toast } from 'react-toastify';
 
-export default function ChangePasswordForm() {
-    const [fields, setFields] = useState({});
+export default function UpdateProfileForm() {
+    const [fields, setFields] = useState({ status: 1 });
     const [errors, setErrors] = useState({});
     const [submitted, setSubmitted] = useState(false);
     const handleChange = (e, field) => {
@@ -12,17 +13,13 @@ export default function ChangePasswordForm() {
     const handleValidation = () => {
         let errors = {};
         let formIsValid = true;
-        if (!fields["current_password"]) {
+        if (!fields["name"]) {
             formIsValid = false;
-            errors["current_password"] = "Please enter current password.";
+            errors["name"] = "Please enter name.";
         }
-        if (!fields["new_password"]) {
+        if (!fields["email"]) {
             formIsValid = false;
-            errors["new_password"] = "Please enter new password.";
-        }
-        if (fields["new_password"] && (fields["new_password"] !== fields["confirm_password"])) {
-            formIsValid = false;
-            errors["confirm_password"] = "Your password does not match.";
+            errors["email"] = "Please enter email.";
         }
         setErrors(errors);
         return formIsValid;
@@ -31,7 +28,7 @@ export default function ChangePasswordForm() {
         e.preventDefault();
         if (handleValidation()) {
             setSubmitted(true);
-            let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/settings/change-password`;
+            let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/settings/update-profile`;
             let REQUEST_METHOD = 'PUT';
             const response = await fetch(REQUEST_URI, {
                 method: REQUEST_METHOD,
@@ -53,55 +50,63 @@ export default function ChangePasswordForm() {
             }
         }
     }
+
+    const getProfile = async () => {
+        let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/settings/update-profile`;
+        let REQUEST_METHOD = 'GET';
+        const response = await fetch(REQUEST_URI, {
+            method: REQUEST_METHOD,
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+        const data = await response.json();
+        if (data.success) {
+            setFields(data.record);
+        }
+    }
+
+    useEffect(() => {
+        getProfile();
+    }, []);
     return (
         <Card>
             <Form onSubmit={handleSubmit}>
                 <Card.Body>
-                    <Card.Title><h3>Change Password</h3></Card.Title>
+                    <Card.Title><h3>Update Profile</h3></Card.Title>
                     <FloatingLabel
                         controlId="floatingInput"
-                        label="Current Password"
+                        label="Name"
                         className="mb-3"
                     >
                         <Form.Control
-                            type="password"
-                            name="current_password"
-                            placeholder="current_password"
-                            onChange={(event) => handleChange(event, "current_password")}
-                            isInvalid={!!errors.current_password}
+                            type="text"
+                            name="name"
+                            placeholder="Name"
+                            onChange={(event) => handleChange(event, "name")}
+                            isInvalid={!!errors.name}
+                            value={fields.name ? fields.name : ''}
                         />
-                        <Form.Control.Feedback type="invalid">{errors.current_password}</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                     </FloatingLabel>
                     <FloatingLabel
                         controlId="floatingInput"
-                        label="New Password"
+                        label="Email"
                         className="mb-3"
                     >
                         <Form.Control
-                            type="password"
-                            name="new_password"
-                            placeholder="new_password"
-                            onChange={(event) => handleChange(event, "new_password")}
-                            isInvalid={!!errors.new_password}
+                            type="text"
+                            name="email"
+                            placeholder="Email"
+                            onChange={(event) => handleChange(event, "email")}
+                            isInvalid={!!errors.email}
+                            value={fields.email ? fields.email : ''}
                         />
-                        <Form.Control.Feedback type="invalid">{errors.new_password}</Form.Control.Feedback>
-                    </FloatingLabel>
-                    <FloatingLabel
-                        controlId="floatingInput"
-                        label="Confirm Password"
-                        className="mb-3"
-                    >
-                        <Form.Control
-                            type="password"
-                            name="confirm_password"
-                            placeholder="Confirm Password"
-                            onChange={(event) => handleChange(event, "confirm_password")}
-                            isInvalid={!!errors.confirm_password}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.confirm_password}</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
                     </FloatingLabel>
                 </Card.Body>
-                <Card.Footer className='text-end pe-4'>
+                <Card.Footer className='text-end  pe-4'>
+
                     <Button
                         variant="success"
                         type="submit"

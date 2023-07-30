@@ -5,6 +5,7 @@ import Image from "next/image"
 
 export default function SignOut() {
   const session = useSession();
+  console.log(session);
   return (
 
     <ul className="navbar-nav navbar-nav-right">
@@ -20,9 +21,9 @@ export default function SignOut() {
               width={35}
               height={35}
             />
-            <p className="mb-0 d-none d-sm-block navbar-profile-name">{/* {session.user.name} */}</p>
+            <p className="mb-0 d-none d-sm-block navbar-profile-name"></p>
             <i className="mdi mdi-menu-down d-none d-sm-block"></i>
-            {JSON.stringify(session)}
+            {session.status === 'authenticated' && session.data.user.name}
           </div>
         </a>
 

@@ -26,7 +26,7 @@ export async function DELETE(request, data) {
     if (deleted) {
         return NextResponse.json({
             success: true,
-            message: 'Role has been deleted successfully.'
+            message: 'Role deleted successfully.'
         });
     }
 }
@@ -51,10 +51,10 @@ export async function PUT(request, data) {
             });
 
             if (response) {
-                return NextResponse.json({ success: true });
-            }
-            else {
-                return NextResponse.json({ error: true });
+                return NextResponse.json({
+                    success: true,
+                    message: 'Role updated successfully.'
+                });
             }
         }
     }

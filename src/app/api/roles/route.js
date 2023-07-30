@@ -40,10 +40,10 @@ export async function POST(request) {
                 }
             });
             if (response) {
-                return NextResponse.json({ success: true });
-            }
-            else {
-                return NextResponse.json({ error: true });
+                return NextResponse.json({
+                    success: true,
+                    message: 'Role added successfully.'
+                });
             }
         }
     }

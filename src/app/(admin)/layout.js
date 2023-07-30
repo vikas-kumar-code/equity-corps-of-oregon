@@ -4,6 +4,7 @@ import Provider from "../components/provider"
 import Navigation from "./components/navigation"
 import SignOut from '../components/SignOut'
 import Image from 'next/image'
+import NotificationContainer from './components/NotificationContainer'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,6 +18,7 @@ export default function AdminLayout({ children }) {
         <html lang="en">
             <body>
                 <Provider>
+                    <NotificationContainer />
                     <main>
                         <div className="container-scroller">
                             <Navigation />

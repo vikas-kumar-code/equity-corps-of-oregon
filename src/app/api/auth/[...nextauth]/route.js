@@ -8,7 +8,6 @@ export const authOptions = {
     session: {
         strategy: 'jwt',
     },
-    //session: "jwt",
     adapter: PrismaAdapter(prisma),
     providers: [
         CredentialsProvider({
