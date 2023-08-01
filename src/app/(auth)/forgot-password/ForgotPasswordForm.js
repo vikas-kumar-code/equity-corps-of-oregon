@@ -1,31 +1,17 @@
 "use client"
-import { signIn } from 'next-auth/react';
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation';
-import { Spinner } from 'react-bootstrap'
 import Link from 'next/link';
+import React, { useState } from 'react'
+import { Spinner } from 'react-bootstrap'
 
-export default function LoginForm() {
+export default function ForgotPasswordForm() {
     const [fields, setFields] = useState({});
     const [error, setError] = useState(null);
     const [loader, setLoader] = useState(false);
-    const route = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoader(true);
-        const result = await signIn("credentials", {
-            email: fields.email,
-            password: fields.password,
-            redirect: false,
-            callbackUrl: '/admin/dashboard'
-        });
-        if (result.error) {
-            setError('Email or password is invalid!');
-        }
-        else if (result.ok) {
-            route.push('/admin/dashboard');
-        }
+
     }
     return (
         <form onSubmit={handleSubmit}>
@@ -34,16 +20,8 @@ export default function LoginForm() {
                 <label>Email *</label>
                 <input type="text" className="form-control p_input" onChange={(event) => setFields({ ...fields, email: event.target.value })} />
             </div>
-            <div className="form-group">
-                <label>Password *</label>
-                <input type="password" className="form-control p_input" onChange={(event) => setFields({ ...fields, password: event.target.value })} />
-            </div>
             <div className="form-group d-flex align-items-center justify-content-between">
-                <div className="form-check">
-                    <label className="form-check-label">
-                        <input type="checkbox" className="form-check-input" /> Remember me </label>
-                </div>
-                <Link href="/forgot-password" className="forgot-pass">Forgot password</Link>
+                <Link href="/login" className="forgot-pass">Login</Link>
             </div>
             <div className="text-center d-grid">
                 <button type="submit" className="btn btn-primary btn-block enter-btn" disabled={loader}>
@@ -52,7 +30,7 @@ export default function LoginForm() {
                         variant="light"
                         className="me-1"
                     />}
-                    Login
+                    Submit
                 </button>
             </div>
         </form>

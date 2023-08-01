@@ -1,6 +1,6 @@
 import '../styles/backend-theme.css'
 import { Inter } from 'next/font/google'
-import Provider from "../components/provider"
+import Provider from "../components/Provider"
 import Navigation from "./components/navigation"
 import SignOut from '../components/SignOut'
 import Image from 'next/image'
