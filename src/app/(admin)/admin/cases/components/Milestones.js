@@ -15,13 +15,13 @@ function Milestones(props) {
     }
     const deleteRecord = (index) => {
         if (window.confirm('Are you sure to delete?')) {
-            if (milestones[index].case_id === undefined) {
+            /* if (milestones[index].case_id && milestones[index].case_id === undefined) {
                 let newMilestones = milestones.filter((r, indx) => index !== indx);
                 setMilestones(newMilestones)
             }
             else {
                 let params = { id: milestones[index].id }
-                /* events.deleteProgram(params).then((response) => {
+                events.deleteProgram(params).then((response) => {
                     if (response.data.success) {
                         let records = this.state.records.filter((r) => parseInt(r.id) !== parseInt(this.state.records[index].id))
                         this.setState({ records }, () => {
@@ -39,8 +39,8 @@ function Milestones(props) {
                     toast.error('Unexpected error !', {
                         position: toast.POSITION.TOP_RIGHT,
                     })
-                }) */
-            }
+                })
+            } */
         }
     }
     return (
