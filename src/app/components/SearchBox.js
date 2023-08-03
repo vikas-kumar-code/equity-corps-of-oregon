@@ -25,7 +25,7 @@ export default function SearchBox(props) {
           <Card.Body>
             <Card.Title>{props.title}</Card.Title>
             <Row>
-              {props.searchFields.map((field, index) => <Form.Group as={Col} md={props.col} className='mb-2'>
+              {props.searchFields.map((field, index) => <Form.Group as={Col} md={props.col} className='mb-2' key={`search-element-${index}`}>
                 {field.type === 'text' && <FloatingLabel
                   controlId="floatingInput"
                   label={field.label}

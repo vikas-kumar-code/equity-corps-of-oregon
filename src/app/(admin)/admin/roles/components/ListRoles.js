@@ -5,7 +5,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import moment from "moment";
 import { Card, Row, Col, Button } from "react-bootstrap"
 import Pagination from "react-js-pagination";
-import AddEditRole from './add-edit-role';
+import AddEditRole from './AddEditRole';
 import { toast } from 'react-toastify';
 
 export default function ListRoles() {
@@ -14,7 +14,8 @@ export default function ListRoles() {
     const recordPerPage = 10;
     const [pageNumber, setPageNumber] = useState(1);
     const [totalRecords, setTotalRecords] = useState(1);
-    const [showModal, setShowModal] = useState(false);
+    const [showAddEditModal, setShowAddEditModal] = useState(false);
+    const [showPermissionModal, setShowPermissionModal] = useState(false);
     const [recordId, setRecordId] = useState(null);
 
     const getRecords = async () => {
@@ -33,7 +34,7 @@ export default function ListRoles() {
 
     const deleteRecord = async (id) => {
         if (window.confirm('Are you sure to delete this role?')) {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/roles/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/roles/delete/${id}`, {
                 method: 'DELETE'
             });
             const data = await response.json();
@@ -48,7 +49,7 @@ export default function ListRoles() {
 
     const getRecord = (recordId = null) => {
         setRecordId(recordId);
-        setShowModal(true);
+        setShowAddEditModal(true);
     }
 
     return (
@@ -76,7 +77,7 @@ export default function ListRoles() {
                                     <th>Name </th>
                                     <th>Status</th>
                                     <th>Added On</th>
-                                    <th colSpan="2">Action</th>
+                                    <th colSpan="3">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,6 +86,7 @@ export default function ListRoles() {
                                     <td>{record.name}</td>
                                     <td>{record.status ? <span className="badge badge-success rounded-pill">Active</span> : <span className="badge badge-danger rounded-pill">Inactive</span>}</td>
                                     <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
+                                    <td><button className="btn btn-warning" onClick={() => getRecord(record.id)}>Set Permission</button></td>
                                     <td><button className="btn btn-primary" onClick={() => getRecord(record.id)}>Edit</button></td>
                                     <td><button className="btn btn-danger" onClick={() => deleteRecord(record.id)}>Delete</button></td>
                                 </tr>)}
@@ -105,14 +107,22 @@ export default function ListRoles() {
                     </Card.Footer> */}
                 </Card.Body>
             </Card>
-            {showModal && <AddEditRole
-                showModal={showModal}
+            {showAddEditModal && <AddEditRole
+                showModal={showAddEditModal}
                 closeModal={() => {
-                    setShowModal(false)
+                    setShowAddEditModal(false)
                     setRecordId(null);
                 }}
                 recordId={recordId}
                 reloadeRecords={getRecords}
+            />}
+            {showPermissionModal && <AddEditRole
+                showModal={showPermissionModal}
+                closeModal={() => {
+                    setShowPermissionModal(false)
+                    setRecordId(null);
+                }}
+                recordId={recordId}
             />}
         </LoadingOverlay>
     )

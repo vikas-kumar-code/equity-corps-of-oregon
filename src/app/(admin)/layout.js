@@ -1,4 +1,7 @@
 import '../styles/backend-theme.css'
+//import 'bootstrap/dist/css/bootstrap.min.css';
+
+import '../styles/globals.css'
 import { Inter } from 'next/font/google'
 import Provider from "../components/Provider"
 import Navigation from "./components/navigation"

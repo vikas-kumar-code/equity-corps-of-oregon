@@ -1,0 +1,25 @@
+.ck-editor__editable {
+    min-height: 300px !important;
+}
+
+.rti--container {
+    border-radius: 2px !important;
+    background-color: #2A3038 !important;
+}
+
+.rti--tag {
+    color: blue !important
+}
+
+.rti--input {
+    background-color: #2A3038 !important;
+    color: #FFFFFF !important;
+}
+
+.rti--container:focus-within {
+    border: 1px solid rgba(71, 164, 71, 0.5) !important
+}
+
+.react-datepicker-wrapper {
+    width: 100% !important;
+}

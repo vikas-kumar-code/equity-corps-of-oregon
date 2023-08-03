@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import prisma from "../../../../../prisma";
 import Joi from "joi";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export async function GET(request, data) {
     const user = await prisma.users.findUnique({
@@ -19,19 +21,6 @@ export async function GET(request, data) {
     });
 }
 
-export async function DELETE(request, data) {
-    const deleted = await prisma.users.delete({
-        where: {
-            id: Number(data.params.id),
-        },
-    });
-    if (deleted) {
-        return NextResponse.json({
-            success: true,
-            message: 'User has been deleted successfully.'
-        });
-    }
-}
 export async function PUT(request, data) {
     const user = await request.json();
     const userSchema = Joi.object({

@@ -5,7 +5,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import moment from "moment";
 import { Card, Row, Col, Button } from "react-bootstrap"
 import Pagination from "react-js-pagination";
-import AddEditUser from './add-edit-user';
+import AddEditUser from './AddEditUser';
 import SearchBox from '@/app/components/SearchBox';
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 
@@ -53,7 +53,7 @@ export default function ListUsers() {
 
     const deleteUser = async (id) => {
         if (window.confirm('Are you sure to delete this use?')) {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/delete/${id}`, {
                 method: 'DELETE'
             });
             const data = await response.json();

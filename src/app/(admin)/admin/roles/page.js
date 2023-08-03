@@ -1,4 +1,4 @@
-import ListRoles from './components/list-roles'
+import ListRoles from './components/ListRoles'
 
 export default function Roles() {
     return (

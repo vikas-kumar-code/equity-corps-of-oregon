@@ -61,3 +61,19 @@ model cases {
   status            Int      @default(1)
   user              users    @relation(fields: [added_by], references: [id])
 }
+
+model routes {
+  id                Int       @id @default(autoincrement())
+  parent_id         Int       @default(0)
+  label             String    @db.VarChar(50)
+  url               String?   @db.VarChar(200)
+  icon              String?   @db.VarChar(50)
+  permissions       permissions[]
+}
+
+model permissions {
+  id                Int       @id @default(autoincrement())
+  role_id           Int       
+  route_id          Int  
+  route             routes    @relation(fields: [route_id], references: [id])           
+}

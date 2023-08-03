@@ -1,8 +1,7 @@
-import prisma from "../../../../prisma";
 import { NextResponse } from "next/server";
-import Joi from "joi";
-import { hash } from "bcrypt";
+import { PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();
 export async function GET(request) {
     const pageNumber = request.nextUrl.searchParams.get('page') ? parseInt(request.nextUrl.searchParams.get('page')) : 1;
     const recordPerPage = 10;
@@ -21,39 +20,4 @@ export async function GET(request) {
         records: JSON.stringify(records, (key, value) => (typeof value === 'bigint' ? value.toString() : value)),
         totalRecords: totalRecords
     });
-}
-
-export async function POST(request) {
-    const role = await request.json();
-    const feldsSchema = Joi.object({
-        name: Joi.required(),
-        status: Joi.number().required(),
-    })
-
-    try {
-        const record = await feldsSchema.validateAsync(role);
-        if (record) {
-            const response = await prisma.roles.create({
-                data: {
-                    name: record.name,
-                    status: record.status
-                }
-            });
-            if (response) {
-                return NextResponse.json({
-                    success: true,
-                    message: 'Role added successfully.'
-                });
-            }
-        }
-    }
-    catch (err) {
-        if (err.code === 'P2002') {
-            return NextResponse.json({
-                error: true,
-                message: { name: 'Name already exists.' }
-            });
-        }
-        return NextResponse.json({ error: true, message: err });
-    }
 }

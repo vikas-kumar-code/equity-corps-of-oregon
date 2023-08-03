@@ -22,6 +22,7 @@ export default function LoginForm() {
         });
         if (result.error) {
             setError('Email or password is invalid!');
+            setLoader(false);
         }
         else if (result.ok) {
             route.push('/admin/dashboard');
