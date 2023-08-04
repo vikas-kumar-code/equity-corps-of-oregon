@@ -48,7 +48,7 @@ model users {
 
 model roles {
   id                Int       @id @default(autoincrement())
-  name              String    @db.VarChar(150)
+  name              String    @unique @db.VarChar(150)
   status            Int       @default(1)
   users             users[]
 }
@@ -58,6 +58,39 @@ model cases {
   title             String    @db.VarChar(255)
   description       String    @db.LongText
   added_by          Int       
-  status            Int       @default(1)
-  user              users     @relation(fields: [added_by], references: [id])
+  status            Int      @default(1)
+  user              users    @relation(fields: [added_by], references: [id])
+}
+
+model routes {
+  id                Int       @id @default(autoincrement())
+  parent_id         Int       @default(0)
+  label             String    @db.VarChar(50)
+  url               String?   @db.VarChar(200)
+  icon              String?   @db.VarChar(50)
+  permissions       permissions[]
+}
+
+model permissions {
+  id                Int       @id @default(autoincrement())
+  role_id           Int       
+  route_id          Int  
+  route             routes    @relation(fields: [route_id], references: [id])           
+}
+
+model questions {
+  id                Int       @id @default(autoincrement())
+  question          String    @db.Text             
+}
+
+model options {
+  id                Int       @id @default(autoincrement())
+  question_id       Int                 
+}
+
+model answers {
+  id                Int       @id @default(autoincrement())
+  user_id           Int
+  question_id       Int 
+  option_id         Int
 }

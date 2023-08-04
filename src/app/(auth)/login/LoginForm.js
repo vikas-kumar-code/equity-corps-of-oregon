@@ -3,6 +3,7 @@ import { signIn } from 'next-auth/react';
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { Spinner } from 'react-bootstrap'
+import Link from 'next/link';
 
 export default function LoginForm() {
     const [fields, setFields] = useState({});
@@ -14,13 +15,14 @@ export default function LoginForm() {
         e.preventDefault();
         setLoader(true);
         const result = await signIn("credentials", {
-            username: fields.username,
+            email: fields.email,
             password: fields.password,
             redirect: false,
             callbackUrl: '/admin/dashboard'
         });
         if (result.error) {
-            setError('Username or password is invalid!');
+            setError('Email or password is invalid!');
+            setLoader(false);
         }
         else if (result.ok) {
             route.push('/admin/dashboard');
@@ -30,8 +32,8 @@ export default function LoginForm() {
         <form onSubmit={handleSubmit}>
             {error !== null && <p className="text-danger text-center">{error}</p>}
             <div className="form-group">
-                <label>Username or email *</label>
-                <input type="text" className="form-control p_input" onChange={(event) => setFields({ ...fields, username: event.target.value })} />
+                <label>Email *</label>
+                <input type="text" className="form-control p_input" onChange={(event) => setFields({ ...fields, email: event.target.value })} />
             </div>
             <div className="form-group">
                 <label>Password *</label>
@@ -42,7 +44,7 @@ export default function LoginForm() {
                     <label className="form-check-label">
                         <input type="checkbox" className="form-check-input" /> Remember me </label>
                 </div>
-                <a href="#" className="forgot-pass">Forgot password</a>
+                <Link href="/forgot-password" className="forgot-pass">Forgot password</Link>
             </div>
             <div className="text-center d-grid">
                 <button type="submit" className="btn btn-primary btn-block enter-btn" disabled={loader}>

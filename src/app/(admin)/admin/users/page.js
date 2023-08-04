@@ -1,5 +1,4 @@
-import Image from 'next/image'
-import ListUsers from './components/list-users'
+import ListUsers from './components/ListUsers'
 
 export default function Users() {
     return (
