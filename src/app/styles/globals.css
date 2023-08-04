@@ -23,3 +23,9 @@
 .react-datepicker-wrapper {
     width: 100% !important;
 }
+
+/* Input Focus */
+.form-control:focus{
+    color: #fff !important;
+}
+/* Input Focus */
