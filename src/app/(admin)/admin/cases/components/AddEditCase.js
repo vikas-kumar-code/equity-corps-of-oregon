@@ -227,7 +227,7 @@ export default function AddEditCase(props) {
                                     </Form.Group>
                                 </Row>
                             </Tab>
-                            <Tab eventKey="2" title="Milestones" disabled>
+                            <Tab eventKey="2" title="Milestones">
                                 <Milestones milestones={milestones} />
                             </Tab>
                             <Tab eventKey="3" title="Documents" disabled>
