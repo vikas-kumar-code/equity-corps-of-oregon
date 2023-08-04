@@ -60,6 +60,7 @@ export default function AddEditMilestone(props) {
                                 className='form-control w-100 p-4'
                                 placeholderText='Choose date'
                                 dateFormat={'MM-dd-yyyy'}
+                                minDate={new Date()}
                             />
                         </Form.Group>
                         <Form.Group as={Col} md={12} className='mb-2'>

@@ -6,18 +6,19 @@ import LoadingOverlay from 'react-loading-overlay';
 import dynamic from "next/dynamic";
 import { TagsInput } from "react-tag-input-component";
 import Milestones from './Milestones';
+import Documents from './Documents';
 
 
 export default function AddEditCase(props) {
     //const Editor = dynamic(() => import("../../../components/Editor"), { ssr: false });
     const [loader, setLoader] = useState(false);
-    const [fields, setFields] = useState({});
+    const [fields, setFields] = useState({ milestones: [] });
     const [errors, setErrors] = useState({});
     const [submitted, setSubmitted] = useState(false);
     const [belongsTo, setBelongsTo] = useState(["Vikas kumar"]);
     const [activeTab, setActiveTab] = useState("1")
     const [description, setDescription] = useState("");
-    const [milestones, setMilestones] = useState([]);
+    //const [milestones, setMilestones] = useState([]);
 
     const handleChange = (e, field) => {
         setFields({ ...fields, [field]: e.target.value });
@@ -43,16 +44,19 @@ export default function AddEditCase(props) {
                 errors["description"] = "Please enter case description.";
             }
             if (formIsValid) {
-                setErrors(errors);
                 setActiveTab('2')
             }
-            else {
-                setErrors(errors);
-            }
-
+            setErrors(errors);
         }
         else if (parseInt(activeTab) === 2) {
-            formIsValid = false;
+            formIsValid = true;
+            if (fields.milestones.length === 0) {
+                formIsValid = false;
+                errors["milestone"] = "Please add milestone.";
+            }
+            if (formIsValid) {
+                setActiveTab('3')
+            }
             setErrors(errors);
         }
         return formIsValid;
@@ -103,7 +107,8 @@ export default function AddEditCase(props) {
         if (props.userId) {
             getUser(props.userId);
         }
-    }, [])
+        console.log(fields)
+    }, [fields])
 
     const renderButtons = (step) => {
         return (
@@ -228,10 +233,10 @@ export default function AddEditCase(props) {
                                 </Row>
                             </Tab>
                             <Tab eventKey="2" title="Milestones" disabled>
-                                <Milestones milestones={milestones} />
+                                <Milestones errors={errors} milestones={fields.milestones} updateMilestones={(milestones) => setFields({ ...fields, milestones })} />
                             </Tab>
                             <Tab eventKey="3" title="Documents" disabled>
-                                Tab content for Contact
+                                <Documents />
                             </Tab>
                         </Tabs>
                     </Modal.Body>
