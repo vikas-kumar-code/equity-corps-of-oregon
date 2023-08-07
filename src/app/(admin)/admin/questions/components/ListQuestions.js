@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 export default function ListQuestions() {
   const [loader, setLoader] = useState(false);
   const [records, setRecords] = useState([]);
-  const recordPerPage = 5;
+  const recordPerPage = 10;
   const [pageNumber, setPageNumber] = useState(1);
   const [totalRecords, setTotalRecords] = useState(1);
   const [showModal, setShowModal] = useState(false);
