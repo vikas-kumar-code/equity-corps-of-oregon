@@ -1,31 +1,17 @@
 const { PrismaClient } = require("@prisma/client");
-const bcrypt = require("bcrypt");
+const roleSeeder = require("./seeder/roleSeeder");
+const userSeeder = require("./seeder/userSeeder");
 const prisma = new PrismaClient();
 
 async function main() {
-  const defaultUserRole = await prisma.roles.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      name: "Default role",
-      status: 1,
-    },
-  });
+  // Start Seeding...
+  roleSeeder();
+  userSeeder();
+  console.log("\x1b[32m",`
 
-  const defaultUser = await prisma.users.upsert({
-    where: { email: "user@gmail.com" },
-    update: {},
-    create: {
-      email: "user@gmail.com",
-      name: "Demo User",
-      password: await bcrypt.hashSync("password", 10),
-      role_id: 1,
-      status: 1,
-      verified: 1,
-    },
-  });
-
-  console.log({ defaultUserRole, defaultUser });
+    Seeding completed.
+  `);
+  console.log("\x1b[0m");
 }
 main()
   .then(async () => {
@@ -35,4 +21,4 @@ main()
     console.error(e);
     await prisma.$disconnect();
     process.exit(1);
-  });
+});
