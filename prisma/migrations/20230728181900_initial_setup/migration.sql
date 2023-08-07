@@ -36,7 +36,7 @@ CREATE TABLE `users` (
     `created_at` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` TIMESTAMP(0) NULL,
     `status` INTEGER NOT NULL DEFAULT 1,
-    `varified` INTEGER NOT NULL DEFAULT 0,
+    `verified` INTEGER NOT NULL DEFAULT 0,
     `verification_code` VARCHAR(20) NULL,
     `code_valid_till` DATETIME(3) NULL,
 
