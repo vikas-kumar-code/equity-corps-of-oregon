@@ -12,11 +12,11 @@ import Documents from './Documents';
 export default function AddEditCase(props) {
     //const Editor = dynamic(() => import("../../../components/Editor"), { ssr: false });
     const [loader, setLoader] = useState(false);
-    const [fields, setFields] = useState({ milestones: [] });
+    const [fields, setFields] = useState({ milestones: [], documents: [] });
     const [errors, setErrors] = useState({});
     const [submitted, setSubmitted] = useState(false);
     const [belongsTo, setBelongsTo] = useState(["Vikas kumar"]);
-    const [activeTab, setActiveTab] = useState("1")
+    const [activeTab, setActiveTab] = useState("3")
     const [description, setDescription] = useState("");
     //const [milestones, setMilestones] = useState([]);
 
@@ -53,6 +53,17 @@ export default function AddEditCase(props) {
             if (fields.milestones.length === 0) {
                 formIsValid = false;
                 errors["milestone"] = "Please add milestone.";
+            }
+            if (formIsValid) {
+                setActiveTab('3')
+            }
+            setErrors(errors);
+        }
+        else if (parseInt(activeTab) === 3) {
+            formIsValid = true;
+            if (fields.documents.length === 0) {
+                formIsValid = false;
+                errors["documents"] = "Please update case documents.";
             }
             if (formIsValid) {
                 setActiveTab('3')
@@ -236,7 +247,11 @@ export default function AddEditCase(props) {
                                 <Milestones errors={errors} milestones={fields.milestones} updateMilestones={(milestones) => setFields({ ...fields, milestones })} />
                             </Tab>
                             <Tab eventKey="3" title="Documents" disabled>
-                                <Documents />
+                                <Documents
+                                    updateDocuments={(documents) => setFields({ ...fields, documents })}
+                                    documents={fields.documents}
+                                    errors={errors}
+                                />
                             </Tab>
                         </Tabs>
                     </Modal.Body>

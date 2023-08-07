@@ -6,12 +6,12 @@ export async function POST(request) {
     const prisma = new PrismaClient();
     const user = await request.json();
     const userSchema = Joi.object({
-        name: Joi.required(),
-        email: Joi.string().email().required(),
-        password: Joi.required(),
-        confirm_password: Joi.ref('password'),
-        status: Joi.number().required(),
-        role_id: Joi.number(),
+        case_number: Joi.required().required(),
+        title: Joi.string().email().required(),
+        belogns_to: Joi.string().required(),
+        description: Joi.string().required(),
+        milestones: Joi.array().min(1),
+        documents: Joi.array()
     })
 
     try {
