@@ -93,85 +93,88 @@ export default function Documents(props) {
         }
     }
     return (
-        <Row>
-            <Col md={4}>
-                <Card>
-                    <Card.Body>
-                        <Card.Title>Upload Document</Card.Title>
-                        <FloatingLabel
-                            controlId="floatingInput"
-                            label="Document Name"
-                            className="mb-3"
-                        >
-                            <Form.Control type="text" name="document_name" placeholder='file_name' value={documentName} isInvalid={!!errors.document_name} onChange={(e) => setDocumentName(e.target.value)} />
-                            <Form.Control.Feedback type="invalid">{errors.document_name}</Form.Control.Feedback>
-                        </FloatingLabel>
+        <>
+            {props.errors.documents && documents.length === 0 && <h5 className='text-danger'>Please upload case document.</h5>}
+            <Row>
+                <Col md={4}>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>Upload Document</Card.Title>
+                            <FloatingLabel
+                                controlId="floatingInput"
+                                label="Document Name"
+                                className="mb-3"
+                            >
+                                <Form.Control type="text" name="document_name" placeholder='file_name' value={documentName} isInvalid={!!errors.document_name} onChange={(e) => setDocumentName(e.target.value)} />
+                                <Form.Control.Feedback type="invalid">{errors.document_name}</Form.Control.Feedback>
+                            </FloatingLabel>
 
-                        <Form.Group controlId="formFileLg" className="mb-3">
-                            <Form.Control type="file" id="document" size="lg" onChange={handleChange} name="document" isInvalid={!!errors.document} />
-                            <Form.Control.Feedback type="invalid">{errors.document}</Form.Control.Feedback>
-                            <small className='text-default'>Only docx, doc, xl, xls, jpg, jpeg, png and pdf</small>
-                        </Form.Group>
-                    </Card.Body>
-                    <Card.Footer className='text-end'>
-                        <Button
-                            variant="danger"
-                            type="button"
-                            disabled={submitted}
-                            className='me-2'
-                            onClick={() => {
-                                setDocument(null)
-                                setDocumentName('')
-                                window.document.getElementById('document').value = ''
-                            }}
-                        >
-                            Clear
-                        </Button>
-                        <Button
-                            variant="success"
-                            type="submit"
-                            disabled={submitted}
-                            onClick={handleSubmit}
-                        >
-                            {submitted && (
-                                <Spinner
-                                    size="sm"
-                                    variant="light"
-                                    className="me-1"
-                                />
-                            )}
-                            Submit
-                        </Button>
-                    </Card.Footer>
-                </Card>
-            </Col>
-            <Col md={8}>
-                <Card>
-                    <Card.Body>
-                        <Card.Title>Documents</Card.Title>
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Document Name </th>
-                                    <th>Uploaded On</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {documents.map((record, index) => <tr key={`documents-key-${index}`}>
-                                    <td>{Number(index + 1)}.</td>
-                                    <td>{record.document_name}</td>
-                                    <td>{moment(new Date(record.uploaded_on)).format('MMMM DD, YYYY')}</td>
-                                    <td>
-                                        <Button variant='danger' onClick={() => deleteRecord(index)} size='sm'>Delete</Button>
-                                    </td>
-                                </tr>)}
-                            </tbody>
-                        </table>
-                    </Card.Body>
-                </Card>
-            </Col>
-        </Row>
+                            <Form.Group controlId="formFileLg" className="mb-3">
+                                <Form.Control type="file" id="document" size="lg" onChange={handleChange} name="document" isInvalid={!!errors.document} />
+                                <Form.Control.Feedback type="invalid">{errors.document}</Form.Control.Feedback>
+                                <small className='text-default'>Only docx, doc, xl, xls, jpg, jpeg, png and pdf</small>
+                            </Form.Group>
+                        </Card.Body>
+                        <Card.Footer className='text-end'>
+                            <Button
+                                variant="danger"
+                                type="button"
+                                disabled={submitted}
+                                className='me-2'
+                                onClick={() => {
+                                    setDocument(null)
+                                    setDocumentName('')
+                                    window.document.getElementById('document').value = ''
+                                }}
+                            >
+                                Clear
+                            </Button>
+                            <Button
+                                variant="success"
+                                type="submit"
+                                disabled={submitted}
+                                onClick={handleSubmit}
+                            >
+                                {submitted && (
+                                    <Spinner
+                                        size="sm"
+                                        variant="light"
+                                        className="me-1"
+                                    />
+                                )}
+                                Submit
+                            </Button>
+                        </Card.Footer>
+                    </Card>
+                </Col>
+                <Col md={8}>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>Documents</Card.Title>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Document Name </th>
+                                        <th>Uploaded On</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {documents.map((record, index) => <tr key={`documents-key-${index}`}>
+                                        <td>{Number(index + 1)}.</td>
+                                        <td>{record.document_name}</td>
+                                        <td>{moment(new Date(record.uploaded_on)).format('MMMM DD, YYYY')}</td>
+                                        <td>
+                                            <Button variant='danger' onClick={() => deleteRecord(index)} size='sm'>Delete</Button>
+                                        </td>
+                                    </tr>)}
+                                </tbody>
+                            </table>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </>
     )
 }

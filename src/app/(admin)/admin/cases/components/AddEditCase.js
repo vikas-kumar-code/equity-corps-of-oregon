@@ -59,6 +59,17 @@ export default function AddEditCase(props) {
             }
             setErrors(errors);
         }
+        else if (parseInt(activeTab) === 3) {
+            formIsValid = true;
+            if (fields.documents.length === 0) {
+                formIsValid = false;
+                errors["documents"] = "Please update case documents.";
+            }
+            if (formIsValid) {
+                setActiveTab('3')
+            }
+            setErrors(errors);
+        }
         return formIsValid;
     };
 
@@ -239,6 +250,7 @@ export default function AddEditCase(props) {
                                 <Documents
                                     updateDocuments={(documents) => setFields({ ...fields, documents })}
                                     documents={fields.documents}
+                                    errors={errors}
                                 />
                             </Tab>
                         </Tabs>
