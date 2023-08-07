@@ -44,6 +44,14 @@ export default function Navigation() {
                         <span className="menu-title">Cases</span>
                     </Link>
                 </li>
+                <li className={pathname === "/admin/questions" ? 'nav-item menu-items active' : 'nav-item menu-items'}>
+                    <Link href="/admin/questions" className="nav-link">
+                        <span className="menu-icon">
+                            <i className="mdi mdi-laptop"></i>
+                        </span>
+                        <span className="menu-title">Questions</span>
+                    </Link>
+                </li>
                 <li className={pathname === "/admin/users" ? 'nav-item menu-items active' : 'nav-item menu-items'}>
                     <Link href="/admin/users" className="nav-link">
                         <span className="menu-icon">

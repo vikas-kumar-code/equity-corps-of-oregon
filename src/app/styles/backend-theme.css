@@ -15835,8 +15835,7 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
 .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item.disabled a,
 .jsgrid .jsgrid-pager .disabled.jsgrid-pager-page a {
   color: #6c757d;
-  pointer-events: none;
-  background-color: #fff;
+  pointer-events: none;  
   border-color: #dee2e6;
 }
 
@@ -26770,8 +26769,7 @@ div.tagsinput {
 .jsgrid .jsgrid-table td {
   vertical-align: middle;
   font-size: 0.875rem;
-  line-height: 1;
-  white-space: nowrap;
+  line-height: 1.6;  
   padding: 0.9375rem;
 }
 

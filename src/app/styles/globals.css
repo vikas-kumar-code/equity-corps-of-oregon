@@ -1,31 +1,64 @@
 .ck-editor__editable {
-    min-height: 300px !important;
+  min-height: 300px !important;
 }
 
 .rti--container {
-    border-radius: 2px !important;
-    background-color: #2A3038 !important;
+  border-radius: 2px !important;
+  background-color: #2a3038 !important;
 }
 
 .rti--tag {
-    color: blue !important
+  color: blue !important;
 }
 
 .rti--input {
-    background-color: #2A3038 !important;
-    color: #FFFFFF !important;
+  background-color: #2a3038 !important;
+  color: #ffffff !important;
 }
 
 .rti--container:focus-within {
-    border: 1px solid rgba(71, 164, 71, 0.5) !important
+  border: 1px solid rgba(71, 164, 71, 0.5) !important;
 }
 
 .react-datepicker-wrapper {
-    width: 100% !important;
+  width: 100% !important;
 }
 
 /* Input Focus */
-.form-control:focus{
-    color: #fff !important;
+.form-control:focus {
+  color: #fff !important;
 }
 /* Input Focus */
+
+.q-opt-remove {
+  border-radius: 50%;
+  position: absolute;
+  background-color: #5d5d5d !important;
+  top: 40px;
+  right: 10px;
+}
+
+.form-check {
+  margin-top: 0px;
+}
+
+.form-check .form-check-label {
+  line-height: 1.7;
+}
+
+.textdarea-height-1 {
+  min-height: 80px !important;
+}
+.textdarea-height-2 {
+  min-height: 120px !important;
+}
+
+.invalid-feedback::first-letter {
+  text-transform: uppercase;
+}
+
+.show-error .invalid-feedback {
+  display: block !important;
+}
+
+.question-td{max-width: 50%;}
