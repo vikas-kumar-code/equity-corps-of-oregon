@@ -7,30 +7,32 @@ export default async function Home() {
     <div>
       {/* {JSON.stringify(session)} */}
       <div className="bg-dark">
-          <section>
-            <div className="container">
-              <div className="row align-items-center py-lg-8 py-6">
-                <div className="col-lg-6 text-center text-lg-start">
-                  <h1 className="text-white fs-5 fs-xl-6">Save time by building fast with Boldo Template</h1>
-                  <p className="text-white py-lg-3 py-2">Funding handshake buyer business-to-business metrics iPad partnership. First mover advantage innovator success deployment non-disclosure.</p>
-                  <div className="d-sm-flex align-items-center gap-3">
-                    <button className="btn btn-success text-black mb-3 w-75">Buy Template</button>
-                    <button className="btn btn-outline-light mb-3 w-75">Explore</button>
-                  </div>
-                </div>
-                <div className="col-lg-6 text-center text-lg-end mt-3 mt-lg-0">
-                  <Image
-                    src="/images/hero/hero-graphics.png"
-                    alt="Vercel Logo"
-                    className="img-fluid"
-                    width={494}
-                    height={423}
-                    priority
-                  />
+        <section>
+          <div className="container">
+            <div className="row align-items-center py-lg-8 py-6">
+              <div className="col-lg-6 text-center text-lg-start">
+                <h1 className="text-white fs-5 fs-xl-6">ECO Panel Attorney Program</h1>
+                <p className="text-white py-lg-3 py-2">Equity Corps of Oregon’s objective is to provide universal representation, which protects our communities by making sure that no individual faces the risk of deportation or exclusion without legal consultation and representation. Equity Corps ultimately aims to end unjust and unfair deportations and civic exclusions by providing access to an attorney and support services for every eligible Oregonian at risk of removal or civic exclusion on account of immigration status.</p>
+
+                <p className="text-white py-lg-3 py-2">Equity Corps has established an Attorney Panel Program to represent persons eligible for services. Panel attorneys, as known as ECO Providers, will be engaged to provide representation to individuals enrolled with ECO on their immigration cases in order to achieve this goal.</p>
+                <div className="d-sm-flex align-items-center gap-3">
+                  <button className="btn btn-success text-black mb-3 w-75">Buy Template</button>
+                  <button className="btn btn-outline-light mb-3 w-75">Explore</button>
                 </div>
               </div>
+              <div className="col-lg-6 text-center text-lg-end mt-3 mt-lg-0">
+                <Image
+                  src="/images/hero/hero-graphics.png"
+                  alt="Vercel Logo"
+                  className="img-fluid"
+                  width={494}
+                  height={423}
+                  priority
+                />
+              </div>
             </div>
-          </section>
+          </div>
+        </section>
       </div>
       <section>
 

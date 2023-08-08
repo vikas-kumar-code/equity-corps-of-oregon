@@ -63,6 +63,20 @@ model cases {
   user        users  @relation(fields: [added_by], references: [id])
 }
 
+model case_milestones {
+  id                Int    @id @default(autoincrement())
+  case_id           Int
+  milestone_date    DateTime
+  comment           String @db.VarChar(255)
+}
+
+model case_documents {
+  id                Int    @id @default(autoincrement())
+  case_id           Int
+  document_name     String @db.VarChar(100)
+  uploaded_on       DateTime
+}
+
 model routes {
   id          Int           @id @default(autoincrement())
   parent_id   Int           @default(0)

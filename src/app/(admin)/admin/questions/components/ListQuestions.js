@@ -119,7 +119,7 @@ export default function ListQuestions() {
                     <tr>
                       <th>#</th>
                       <th>Question </th>
-                      <th className="text-end">Action</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -133,20 +133,19 @@ export default function ListQuestions() {
                         </td>
                         <td>{record.question}</td>
                         <td>
-                          <div className="d-flex">
-                            <button
-                              className="btn btn-primary me-2"
-                              onClick={() => getRecord(record.id)}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              className="btn btn-danger"
-                              onClick={() => deleteRecord(record.id)}
-                            >
-                              Delete
-                            </button>
-                          </div>
+                          <Button
+                            className="me-2"
+                            variant="primary"
+                            onClick={() => getRecord(record.id)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="danger"
+                            onClick={() => deleteRecord(record.id)}
+                          >
+                            Delete
+                          </Button>
                         </td>
                       </tr>
                     ))}
