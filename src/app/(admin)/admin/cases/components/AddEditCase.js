@@ -16,7 +16,7 @@ export default function AddEditCase(props) {
     const [errors, setErrors] = useState({});
     const [submitted, setSubmitted] = useState(false);
     const [belongsTo, setBelongsTo] = useState(["Vikas kumar"]);
-    const [activeTab, setActiveTab] = useState("3")
+    const [activeTab, setActiveTab] = useState("1")
     const [description, setDescription] = useState("");
     //const [milestones, setMilestones] = useState([]);
 

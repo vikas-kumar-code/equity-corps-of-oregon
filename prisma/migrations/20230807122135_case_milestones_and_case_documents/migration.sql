@@ -64,3 +64,62 @@ CREATE TABLE `cases` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `case_milestones` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `case_id` INTEGER NOT NULL,
+    `milestone_date` DATETIME(3) NOT NULL,
+    `comment` VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `case_documents` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `case_id` INTEGER NOT NULL,
+    `document_name` VARCHAR(100) NOT NULL,
+    `uploaded_on` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `routes` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `parent_id` INTEGER NOT NULL DEFAULT 0,
+    `label` VARCHAR(50) NOT NULL,
+    `url` VARCHAR(200) NULL,
+    `icon` VARCHAR(50) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `permissions` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `role_id` INTEGER NOT NULL,
+    `route_id` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `questions` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `question` TEXT NOT NULL,
+    `status` BOOLEAN NOT NULL DEFAULT true,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `options` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `question_id` INTEGER NOT NULL,
+    `option` TEXT NOT NULL,
+    `status` BOOLEAN NOT NULL DEFAULT false,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

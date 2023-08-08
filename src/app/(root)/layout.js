@@ -20,10 +20,10 @@ export default function RootLayout({ children }) {
                         <nav className="navbar navbar-expand-lg fixed-top navbar-dark" data-navbar-on-scroll="data-navbar-on-scroll">
                             <div className="container"><a className="navbar-brand" href="index.html">
                                 <Image
-                                    src="/images/logo.png"
+                                    src="/images/logo-front.png"
                                     alt="Vercel Logo"
-                                    width={192}
-                                    height={74}
+                                    width={301}
+                                    height={49}
                                     priority
                                 />
                             </a>
