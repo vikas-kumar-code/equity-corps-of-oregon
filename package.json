@@ -12,14 +12,14 @@
     "@auth/prisma-adapter": "^1.0.1",
     "@ckeditor/ckeditor5-build-classic": "^39.0.0",
     "@ckeditor/ckeditor5-react": "^6.1.0",
-    "@prisma/client": "^5.0.0",
+    "@prisma/client": "^5.1.1",
     "bcrypt": "^5.1.0",
     "bootstrap": "^5.3.0",
     "joi": "^17.9.2",
     "moment": "^2.29.4",
     "next": "13.4.10",
     "next-auth": "^4.22.3",
-    "prisma": "^5.0.0",
+    "prisma": "^5.1.1",
     "prisma-factory": "^0.1.13",
     "react": "18.2.0",
     "react-bootstrap": "^2.8.0",
@@ -36,5 +36,9 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
+  },
+  "prisma": {
+    "seed": "node ./prisma/seed.js",
+    "schema": "./prisma/schema.prisma"
   }
 }
