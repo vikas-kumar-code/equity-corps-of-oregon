@@ -14,15 +14,16 @@
 
   .question{
     border: 1px solid;
-    width: 50rem;
-    height: 25rem;
+    width: 60rem;
+    height: 30rem;
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: 1px 1px 24px 1px;
-    background-color: darkcyan;
+    background-color: #191c24;
     color: aliceblue;
     font-size: 22px;
+    border-radius: 8px;
     font-weight: 900;
   }
 
@@ -34,9 +35,11 @@
     width: 20rem;
     height: 2.2rem;
     margin: 0.4rem;
-    background-color: cadetblue;
+    background-color: #537576;
     color: aliceblue;
     font-size: 18px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px 0px;
   }
 
   @keyframes slide-in {
