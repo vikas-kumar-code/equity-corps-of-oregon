@@ -171,8 +171,7 @@ export default function AddEditCase(props) {
                     <Modal.Body>
                         <Tabs
                             activeKey={activeTab}
-                            id="justify-tab-example"
-                            className="mb-3"
+                            id="justify-tab-example"                            
                             justify
                             onSelect={(k) => setActiveTab(k)}
                         >

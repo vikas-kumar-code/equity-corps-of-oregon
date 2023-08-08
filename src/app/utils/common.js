@@ -1,4 +1,5 @@
 const common = {
+  
   //Return API full path
   apiPath: (path = "") => {
     if (path && path[0] !== "/") {
@@ -29,6 +30,7 @@ const common = {
     return await outputErrors;
   },
 
+  // This function returns prisma pgination properties
   paginate: (request) => {
     const pageNo = request?.nextUrl?.searchParams?.get("page") || request?.get("page") || 1;
     const recordPerPage = request?.nextUrl?.searchParams?.get("recordPerPage") || request?.get("recordPerPage") || 10;
