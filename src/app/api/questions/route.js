@@ -11,7 +11,7 @@ export async function GET(request) {
   try {
     const paginate = common.paginate(request);
     let where = {
-      status: true,
+      //status: 1,
     };
     if (request.get("question")) {
       where = {
