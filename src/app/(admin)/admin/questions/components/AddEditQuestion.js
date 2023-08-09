@@ -102,7 +102,7 @@ export default function AddEditQuestion(props) {
     >
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
-          <h3>{props.userId ? "Update" : "Add"} Question</h3>
+          <h3>{props.recordId ? "Update" : "Add New"} Question</h3>
         </Modal.Header>
         <Modal.Body>
           <LoadingOverlay active={loader} spinner text="Loading...">
