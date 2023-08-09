@@ -1,4 +1,4 @@
-import common from "@/app/utils/common";
+import common from "@/utils/common";
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 

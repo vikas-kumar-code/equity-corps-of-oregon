@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import Joi from "joi";
-import common from "@/app/utils/common";
+import common from "@/utils/common";
 
 export async function POST(request) {
   let response = {};
@@ -31,14 +31,13 @@ export async function POST(request) {
         },
       },
     });
-    console.log(addQuestion);
     if (addQuestion) {
       response.success = true;
       response.message = "New question added successfully.";
     }
   } catch (error) {
     response.error = true;
-    response.message = await common.gerErrors(error);
+    response.message = await common.getErrors(error);
   }
   return NextResponse.json(response);
 }

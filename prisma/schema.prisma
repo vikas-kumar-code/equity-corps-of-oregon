@@ -55,26 +55,40 @@ model roles {
 }
 
 model cases {
-  id          Int    @id @default(autoincrement())
-  title       String @db.VarChar(255)
-  description String @db.LongText
-  added_by    Int
-  status      Int    @default(1)
-  user        users  @relation(fields: [added_by], references: [id])
+  id                    Int                     @id @default(autoincrement())
+  case_number           String                  @db.VarChar(50)
+  title                 String                  @db.VarChar(255)
+  description           String                  @db.LongText
+  added_by              Int
+  status                Int                     @default(1)
+  user                  users                   @relation(fields: [added_by], references: [id])
+  case_associated_names case_associated_names[]
+  case_milestones       case_milestones[]
+  case_documents        case_documents[]
+  created_at            DateTime                @default(now())
+}
+
+model case_associated_names {
+  id      Int    @id @default(autoincrement())
+  case_id Int
+  name    String @db.VarChar(50)
+  case    cases  @relation(fields: [case_id], references: [id])
 }
 
 model case_milestones {
-  id                Int    @id @default(autoincrement())
-  case_id           Int
-  milestone_date    DateTime
-  comment           String @db.VarChar(255)
+  id             Int      @id @default(autoincrement())
+  case_id        Int
+  milestone_date DateTime
+  comment        String   @db.VarChar(255)
+  case           cases    @relation(fields: [case_id], references: [id])
 }
 
 model case_documents {
-  id                Int    @id @default(autoincrement())
-  case_id           Int
-  document_name     String @db.VarChar(100)
-  uploaded_on       DateTime
+  id            Int      @id @default(autoincrement())
+  case_id       Int
+  document_name String   @db.VarChar(100)
+  uploaded_on   DateTime
+  case          cases    @relation(fields: [case_id], references: [id])
 }
 
 model routes {

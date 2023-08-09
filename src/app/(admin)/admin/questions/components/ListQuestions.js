@@ -7,7 +7,7 @@ import Pagination from "react-js-pagination";
 import AddEditQuestion from "./AddEditQuestion";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
-import common from "@/app/utils/common";
+import common from "@/utils/common";
 import { toast } from "react-toastify";
 
 export default function ListQuestions() {
@@ -20,9 +20,7 @@ export default function ListQuestions() {
   const [recordId, setRecordId] = useState(null);
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [fields, setFields] = useState(null);
-  const searchFields = [
-    { label: "Question", type: "text", name: "question" },
-  ];
+  const searchFields = [{ label: "Question", type: "text", name: "question" }];
 
   const getRecords = async () => {
     setLoader(true);
@@ -79,7 +77,7 @@ export default function ListQuestions() {
 
   return (
     <div>
-      <Row className="py-2">
+      <Row className="pb-2">
         <Col md={6} sm={12}>
           <h3>Questions</h3>
         </Col>

@@ -51,10 +51,7 @@ export default function AddEditRole(props) {
             }
             else if (data.error) {
                 setErrors(data.message)
-            }
-            else {
-                console.log(data)
-            }
+            }            
             setSubmitted(false);
         }
     }

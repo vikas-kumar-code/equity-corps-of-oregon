@@ -59,7 +59,6 @@ export async function PUT(request) {
         }
     }
     catch (err) {
-        console.log(err);
         return NextResponse.json({ error: true, message: err });
     }
 }

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import Joi from "joi";
-import common from "@/app/utils/common";
+import common from "@/utils/common";
 
 export async function PUT(request, data) {
   let response = {};
@@ -53,7 +53,7 @@ export async function PUT(request, data) {
     }
   } catch (error) {
     response.error = true;
-    response.message = await common.gerErrors(error);
+    response.message = await common.getErrors(error);
   }
   return NextResponse.json(response);
 }
