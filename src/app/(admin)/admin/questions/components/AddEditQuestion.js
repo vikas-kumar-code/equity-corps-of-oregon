@@ -1,6 +1,6 @@
 "use client";
 
-import common from "@/app/utils/common";
+import common from "@/utils/common";
 import React, { useState, useEffect } from "react";
 import {
   Button,

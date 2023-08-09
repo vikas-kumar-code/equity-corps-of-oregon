@@ -7,7 +7,7 @@ import Pagination from "react-js-pagination";
 import AddEditQuestion from "./AddEditQuestion";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
-import common from "@/app/utils/common";
+import common from "@/utils/common";
 import { toast } from "react-toastify";
 
 export default function ListQuestions() {

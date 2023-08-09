@@ -1,46 +1,62 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from '@prisma/client'
-import Joi from "joi";
+import { PrismaClient } from "@prisma/client";
+import casesSchema from "@/joi/casesSchema";
+import common from "@/utils/common";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]/route";
+import fs from "fs";
 
 export async function POST(request) {
-    const prisma = new PrismaClient();
-    const user = await request.json();
-    const userSchema = Joi.object({
-        case_number: Joi.required().required(),
-        title: Joi.string().email().required(),
-        belogns_to: Joi.string().required(),
-        description: Joi.string().required(),
-        milestones: Joi.array().min(1),
-        documents: Joi.array()
-    })
+  const session = await getServerSession(authOptions);
+  const prisma = new PrismaClient();
+  let response = {};
+  try {
+    const data = await casesSchema.validateAsync(await request.json(), {
+      abortEarly: false,
+      allowUnknown: true,
+    });
+    await prisma.cases.create({
+      data: {
+        added_by: session.user.id,
+        case_number: data.case_number,
+        title: data.title,
+        case_associated_names: {
+          create: data.belongs_to.map((belongsTo) => {
+            return { name: belongsTo };
+          }),
+        },
+        description: data.description,
+        case_milestones: { create: data.milestones },
+        case_documents: {
+          create: data.documents.map((doc) => {
+            return {
+              document_name: doc?.uploaded_file
+                ? doc.document_name + "." + doc?.uploaded_file.split(".").pop()
+                : doc?.document_name,
+              uploaded_on: doc.uploaded_on,
+            };
+          }),
+        },
+      },
+    });
 
-    try {
-        const record = await userSchema.validateAsync(user);
-        if (record) {
-            const response = await prisma.users.create({
-                data: {
-                    name: record.name,
-                    email: record.email,
-                    password: await hash(record.password, 10),
-                    status: record.status,
-                    role_id: record.role_id,
-                }
-            });
-            if (response) {
-                return NextResponse.json({ success: true });
-            }
-            else {
-                return NextResponse.json({ error: true });
-            }
-        }
+    // processing uploaded documents    
+    let destinationPath = common.publicPath("uploads/case_documents")
+    if (!fs.existsSync(destinationPath)) {
+      fs.mkdirSync(destinationPath, { recursive: true });
     }
-    catch (err) {
-        if (err.code === 'P2002') {
-            return NextResponse.json({
-                error: true,
-                message: { email: 'Email already exists.' }
-            });
-        }
-        return NextResponse.json({ error: true, message: err });
-    }
+    data.documents.forEach((doc) => {
+        let sourceFilePath = common.publicPath("temp/" + doc.uploaded_file)
+        if (fs.existsSync(sourceFilePath)) {
+          let saveFileName = doc.document_name + "." + doc?.uploaded_file.split(".").pop(); 
+          fs.rename(sourceFilePath, destinationPath+'/'+saveFileName, (err) => {});
+      }
+    });
+    response.success = true;
+    response.message = "New case added successfully.";
+  } catch (error) {
+    response.error = true;
+    response.message = common.getErrors(error);
+  }
+  return NextResponse.json(response);
 }

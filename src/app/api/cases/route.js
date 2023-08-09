@@ -1,4 +1,4 @@
-import common from "@/app/utils/common";
+import common from "@/utils/common";
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -13,13 +13,13 @@ export async function GET(request) {
     const paginate = common.paginate(request);
     // Filters
     let where = {
-      status: true,
+      status: 1,
     };
-    if (request.get("title")) {
+    if (request.get("case_number")) {
       where = {
         ...where,
-        question: {
-          contains: request.get("question"),
+        case_number: {
+          contains: request.get("case_number"),
         },
       };
     }

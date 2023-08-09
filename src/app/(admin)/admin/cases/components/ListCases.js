@@ -8,6 +8,8 @@ import Pagination from "react-js-pagination";
 import AddEditCase from "./AddEditCase";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
+import common from "@/utils/common";
+import { toast } from "react-toastify";
 
 export default function ListCases() {
   const [loader, setLoader] = useState(false);
@@ -22,31 +24,36 @@ export default function ListCases() {
   const searchFields = [
     { label: "Name", type: "text", name: "name" },
     { label: "Email", type: "text", name: "email" },
-    //{ label: 'Status', type: 'text', name: "status" }
   ];
 
   const getRecords = async () => {
     setLoader(true);
-    let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/users?page=${pageNumber}`;
+    let REQUEST_URI = common.apiPath(`/api/cases?page=${pageNumber}`);
     if (fields !== null) {
       fields["page"] = pageNumber;
       const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/users?${queryString}`;
+      REQUEST_URI = common.apiPath(`/api/cases?${queryString}`);
     }
-    const response = await fetch(REQUEST_URI);
-    const data = await response.json();
-    setLoader(false);
-    setRecords(JSON.parse(data.records));
-    setTotalRecords(data.totalRecords);
+    fetch(REQUEST_URI)
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          setRecords(response.records);
+          setTotalRecords(response.totalRecords);
+        } else {
+          toast.error(response.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => setLoader(false));
   };
 
-  useEffect(() => {
-    getRecords();
-  }, [pageNumber]);
-
-  useEffect(() => {
-    getRecords();
-  }, [fields]);
+  const getRecord = (recordId = null) => {
+    setRecordId(recordId);
+    setShowModal(true);
+  };
 
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this use?")) {
@@ -63,10 +70,13 @@ export default function ListCases() {
     }
   };
 
-  const getRecord = (recordId = null) => {
-    setRecordId(recordId);
-    setShowModal(true);
-  };
+  useEffect(() => {
+    getRecords();
+  }, [pageNumber]);
+
+  useEffect(() => {
+    getRecords();
+  }, [fields]);
 
   return (
     <div>
@@ -109,12 +119,11 @@ export default function ListCases() {
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>Name </th>
-                      <th>Email</th>
-                      <th>Role</th>
+                      <th>Case Number</th>
+                      <th>Ttile</th>
                       <th>Status</th>
                       <th>Added On</th>
-                      <th colSpan="2">Action</th>
+                      <th className="text-end">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -126,9 +135,8 @@ export default function ListCases() {
                             Number(index + 1)}
                           .
                         </td>
-                        <td>{record.name}</td>
-                        <td>{record.email}</td>
-                        <td>{record.role.name}</td>
+                        <td>{record.case_number}</td>
+                        <td>{record.title}</td>
                         <td>
                           {record.status ? (
                             <span className="badge badge-success rounded-pill">
@@ -143,15 +151,13 @@ export default function ListCases() {
                         <td>
                           {moment(record.created_at).format("D MMM,  YYYY")}
                         </td>
-                        <td>
+                        <td className="text-end">
                           <button
-                            className="btn btn-primary"
+                            className="btn btn-primary me-2"
                             onClick={() => getRecord(record.id)}
                           >
                             Edit
                           </button>
-                        </td>
-                        <td>
                           <button
                             className="btn btn-danger"
                             onClick={() => deleteUser(record.id)}
@@ -164,18 +170,20 @@ export default function ListCases() {
                   </tbody>
                 </table>
               </div>
-              <Card.Footer className="text-end">
-                <Pagination
-                  activePage={pageNumber}
-                  itemsCountPerPage={recordPerPage}
-                  totalItemsCount={totalRecords}
-                  pageRangeDisplayed={recordPerPage}
-                  onChange={(page) => setPageNumber(page)}
-                  itemClass="page-item"
-                  linkClass="page-link"
-                  innerClass="pagination float-end"
-                />
-              </Card.Footer>
+              {totalRecords > recordPerPage && (
+                <Card.Footer className="text-end">
+                  <Pagination
+                    activePage={pageNumber}
+                    itemsCountPerPage={recordPerPage}
+                    totalItemsCount={totalRecords}
+                    pageRangeDisplayed={recordPerPage}
+                    onChange={(page) => setPageNumber(page)}
+                    itemClass="page-item"
+                    linkClass="page-link"
+                    innerClass="pagination float-end"
+                  />
+                </Card.Footer>
+              )}
             </Card>
           </LoadingOverlay>
         </Col>
@@ -188,7 +196,7 @@ export default function ListCases() {
             setRecordId(null);
           }}
           recordId={recordId}
-          reloadeUsers={getRecords}
+          reloadRecords={getRecords}
         />
       )}
     </div>
