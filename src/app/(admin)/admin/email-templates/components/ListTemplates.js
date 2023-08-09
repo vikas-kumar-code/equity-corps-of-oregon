@@ -4,13 +4,13 @@ import React, { useState, useEffect } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { Card, Row, Col, Button } from "react-bootstrap";
 import Pagination from "react-js-pagination";
-import AddEditQuestion from "./AddEditQuestion";
+import AddEditTemplate from "./AddEditTemplate";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/app/utils/common";
 import { toast } from "react-toastify";
 
-export default function ListQuestions() {
+export default function ListTemplates() {
   const [loader, setLoader] = useState(false);
   const [records, setRecords] = useState([]);
   const recordPerPage = 10;
@@ -21,16 +21,16 @@ export default function ListQuestions() {
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [fields, setFields] = useState(null);
   const searchFields = [
-    { label: "Question", type: "text", name: "question" },
+    { label: "Subject", type: "text", name: "subject" },
   ];
 
   const getRecords = async () => {
     setLoader(true);
-    let REQUEST_URI = common.apiPath(`/api/questions?page=${pageNumber}`);
+    let REQUEST_URI = common.apiPath(`/api/email-templates?page=${pageNumber}`);
     if (fields !== null) {
       fields["page"] = pageNumber;
       const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/api/questions?${queryString}`);
+      REQUEST_URI = common.apiPath(`/api/email-templates?${queryString}`);
     }
     fetch(REQUEST_URI)
       .then((response) => response.json())
@@ -53,9 +53,9 @@ export default function ListQuestions() {
   }, [fields]);
 
   const deleteRecord = async (id) => {
-    if (window.confirm("Are you sure to delete this question?")) {
+    if (window.confirm("Are you sure to delete?")) {
       setLoader(true);
-      fetch(common.apiPath(`/api/questions/delete/${id}`), { method: "DELETE" })
+      fetch(common.apiPath(`/api/email-templates/delete/${id}`), { method: "DELETE" })
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
@@ -81,7 +81,7 @@ export default function ListQuestions() {
     <div>
       <Row className="py-2">
         <Col md={6} sm={12}>
-          <h3>Questions</h3>
+          <h3>Email Templates</h3>
         </Col>
         <Col md={6} sm={12} className="text-end">
           <Button
@@ -92,13 +92,13 @@ export default function ListQuestions() {
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
           </Button>
           <Button variant="primary" type="button" onClick={() => getRecord()}>
-            Add New Question
+            Add New Email Template
           </Button>
         </Col>
       </Row>
       <SearchBox
         open={showSearchBox}
-        title={"Search Questions"}
+        title={"Search Template"}
         searchFields={searchFields}
         col={6}
         searchRecords={(fields) => {
@@ -119,7 +119,9 @@ export default function ListQuestions() {
                     <thead>
                       <tr>
                         <th>#</th>
-                        <th>Question </th>
+                        <th>Subject </th>
+                        <th>From Email </th>
+                        <th>From Label </th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -132,7 +134,9 @@ export default function ListQuestions() {
                               Number(index + 1)}
                             .
                           </td>
-                          <td>{record.question}</td>
+                          <td>{record.subject}</td>
+                          <td>{record.from_label}</td>
+                          <td>{record.from_email}</td>
                           <td>
                             <Button
                               className="me-2"
@@ -169,11 +173,10 @@ export default function ListQuestions() {
                 )}
               </Card.Body>
             </Card>
-
           </LoadingOverlay>
         </Col>
       </Row>
-      <AddEditQuestion
+      {showModal && <AddEditTemplate
         showModal={showModal}
         closeModal={() => {
           setShowModal(false);
@@ -181,7 +184,7 @@ export default function ListQuestions() {
         }}
         recordId={recordId}
         reloadRecords={getRecords}
-      />
+      />}
     </div>
   );
 }

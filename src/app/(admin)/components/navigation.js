@@ -60,12 +60,20 @@ export default function Navigation() {
                         <span className="menu-title">Users</span>
                     </Link>
                 </li>
-                <li className={pathname === "/admin/users" ? 'nav-item menu-items active' : 'nav-item menu-items'}>
-                    <Link href="/admin/users" className="nav-link">
+                <li className={pathname === "/admin/attorney-applications" ? 'nav-item menu-items active' : 'nav-item menu-items'}>
+                    <Link href="/admin/attorney-applications" className="nav-link">
                         <span className="menu-icon">
                             <i className="mdi mdi-laptop"></i>
                         </span>
                         <span className="menu-title">Attorney Applications</span>
+                    </Link>
+                </li>
+                <li className={pathname === "/admin/email-templates" ? 'nav-item menu-items active' : 'nav-item menu-items'}>
+                    <Link href="/admin/email-templates" className="nav-link">
+                        <span className="menu-icon">
+                            <i className="mdi mdi-laptop"></i>
+                        </span>
+                        <span className="menu-title">Email Templates</span>
                     </Link>
                 </li>
                 <li className={pathname === "/admin/roles" ? 'nav-item menu-items active' : 'nav-item menu-items'}>

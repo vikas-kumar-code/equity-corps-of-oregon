@@ -15,7 +15,7 @@ export default function AddEditCase(props) {
     const [fields, setFields] = useState({ milestones: [], documents: [] });
     const [errors, setErrors] = useState({});
     const [submitted, setSubmitted] = useState(false);
-    const [belongsTo, setBelongsTo] = useState(["Vikas kumar"]);
+    const [belongsTo, setBelongsTo] = useState([]);
     const [activeTab, setActiveTab] = useState("1")
     const [description, setDescription] = useState("");
     //const [milestones, setMilestones] = useState([]);
