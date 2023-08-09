@@ -283,7 +283,7 @@ export default function AddEditCase(props) {
                   </Form.Group>
                 </Row>
               </Tab>
-              <Tab eventKey={2} title="Milestones" disabled={activated < 2}>
+              <Tab eventKey={2} title="Milestones" disabled={activated < 2 && !props.recordId}>
                 <Milestones
                   errors={errors}
                   setErrors={setErrors}
@@ -296,7 +296,7 @@ export default function AddEditCase(props) {
                   }
                 />
               </Tab>
-              <Tab eventKey={3} title="Documents" disabled={activated < 3}>
+              <Tab eventKey={3} title="Documents" disabled={activated < 3 && !props.recordId}>
                 <Documents
                   updateDocuments={(documents) =>
                     setFields({ ...fields, documents: documents })
