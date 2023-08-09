@@ -114,76 +114,78 @@ export default function ListCases() {
             text="Loading your content..."
           >
             <Card>
-              <div className="table-responsive">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Case Number</th>
-                      <th>Ttile</th>
-                      <th>Status</th>
-                      <th>Added On</th>
-                      <th className="text-end">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {records.map((record, index) => (
-                      <tr key={`cases-key-${index}`}>
-                        <td>
-                          {pageNumber * recordPerPage -
-                            recordPerPage +
-                            Number(index + 1)}
-                          .
-                        </td>
-                        <td>{record.case_number}</td>
-                        <td>{record.title}</td>
-                        <td>
-                          {record.status ? (
-                            <span className="badge badge-success rounded-pill">
-                              Active
-                            </span>
-                          ) : (
-                            <span className="badge badge-danger rounded-pill">
-                              Inactive
-                            </span>
-                          )}
-                        </td>
-                        <td>
-                          {moment(record.created_at).format("D MMM,  YYYY")}
-                        </td>
-                        <td className="text-end">
-                          <button
-                            className="btn btn-primary me-2"
-                            onClick={() => getRecord(record.id)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="btn btn-danger"
-                            onClick={() => deleteUser(record.id)}
-                          >
-                            Delete
-                          </button>
-                        </td>
+              <Card.Body>
+                <div className="table-responsive">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Case Number</th>
+                        <th>Ttile</th>
+                        <th>Status</th>
+                        <th>Added On</th>
+                        <th className="text-end">Action</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              {totalRecords > recordPerPage && (
-                <Card.Footer className="text-end">
-                  <Pagination
-                    activePage={pageNumber}
-                    itemsCountPerPage={recordPerPage}
-                    totalItemsCount={totalRecords}
-                    pageRangeDisplayed={recordPerPage}
-                    onChange={(page) => setPageNumber(page)}
-                    itemClass="page-item"
-                    linkClass="page-link"
-                    innerClass="pagination float-end"
-                  />
-                </Card.Footer>
-              )}
+                    </thead>
+                    <tbody>
+                      {records.map((record, index) => (
+                        <tr key={`cases-key-${index}`}>
+                          <td>
+                            {pageNumber * recordPerPage -
+                              recordPerPage +
+                              Number(index + 1)}
+                            .
+                          </td>
+                          <td>{record.case_number}</td>
+                          <td>{record.title}</td>
+                          <td>
+                            {record.status ? (
+                              <span className="badge badge-success rounded-pill">
+                                Active
+                              </span>
+                            ) : (
+                              <span className="badge badge-danger rounded-pill">
+                                Inactive
+                              </span>
+                            )}
+                          </td>
+                          <td>
+                            {moment(record.created_at).format("D MMM,  YYYY")}
+                          </td>
+                          <td className="text-end">
+                            <button
+                              className="btn btn-primary me-2"
+                              onClick={() => getRecord(record.id)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => deleteUser(record.id)}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {totalRecords > recordPerPage && (
+                  <Card.Footer className="text-end">
+                    <Pagination
+                      activePage={pageNumber}
+                      itemsCountPerPage={recordPerPage}
+                      totalItemsCount={totalRecords}
+                      pageRangeDisplayed={recordPerPage}
+                      onChange={(page) => setPageNumber(page)}
+                      itemClass="page-item"
+                      linkClass="page-link"
+                      innerClass="pagination float-end"
+                    />
+                  </Card.Footer>
+                )}
+              </Card.Body>
             </Card>
           </LoadingOverlay>
         </Col>
