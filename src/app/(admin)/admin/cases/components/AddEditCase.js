@@ -206,7 +206,7 @@ export default function AddEditCase(props) {
       <Form onSubmit={handleSubmit}>
         <LoadingOverlay active={loader} spinner text="Loading...">
           <Modal.Header closeButton className="border-bottom-0">
-            <h3>{props.userId ? "Update" : "Add"} Case</h3>
+            <h3>{props.recordId ? "Update" : "Add New"} Case</h3>
           </Modal.Header>
           <Modal.Body>
             <Tabs
