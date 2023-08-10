@@ -2,14 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import LoadingOverlay from "react-loading-overlay";
-import moment from "moment";
 import { Card, Row, Col, Button } from "react-bootstrap";
 import Pagination from "react-js-pagination";
-import AddEditCase from "./AddEditCase";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
+import Case from "./Case";
+import AddEditCase from "./AddEditCase";
+
 
 export default function ListCases() {
   const [loader, setLoader] = useState(false);
@@ -17,14 +18,15 @@ export default function ListCases() {
   const recordPerPage = 10;
   const [pageNumber, setPageNumber] = useState(1);
   const [totalRecords, setTotalRecords] = useState(1);
-  const [showModal, setShowModal] = useState(false);
-  const [recordId, setRecordId] = useState(null);
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [fields, setFields] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const searchFields = [
-    { label: "Name", type: "text", name: "name" },
-    { label: "Email", type: "text", name: "email" },
+    { label: "Case Number", type: "text", name: "case_number" },
+    { label: "Case Title", type: "text", name: "case_title" },
+    { label: "Eco Provider", type: "text", name: "user_id" },
   ];
+
 
   const getRecords = async () => {
     setLoader(true);
@@ -50,15 +52,10 @@ export default function ListCases() {
       .finally(() => setLoader(false));
   };
 
-  const getRecord = (recordId = null) => {
-    setRecordId(recordId);
-    setShowModal(true);
-  };
-
   const deleteRecord = async (id) => {
-    if (window.confirm("Are you sure to delete this use?")) {
+    if (window.confirm("Are you sure to delete?")) {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users/delete/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/cases/delete/${id}`,
         {
           method: "DELETE",
         }
@@ -74,10 +71,6 @@ export default function ListCases() {
     getRecords();
   }, [pageNumber]);
 
-  useEffect(() => {
-    getRecords();
-  }, [fields]);
-
   return (
     <div>
       <Row className="pb-2">
@@ -92,16 +85,16 @@ export default function ListCases() {
           >
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
           </Button>
-          <Button variant="primary" type="button" onClick={() => getRecord()}>
+          <Button variant="primary" type="button" onClick={() => setShowModal(true)}>
             Add New Case
           </Button>
         </Col>
       </Row>
       <SearchBox
         open={showSearchBox}
-        title={"Search User"}
+        title={"Search Case"}
         searchFields={searchFields}
-        col={6}
+        col={4}
         searchRecords={(fields) => {
           setFields(fields);
         }}
@@ -122,51 +115,22 @@ export default function ListCases() {
                         <th>#</th>
                         <th>Case Number</th>
                         <th>Ttile</th>
-                        <th>Status</th>
+                        <th>Accepted By</th>
                         <th>Added On</th>
-                        <th className="text-end">Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       {records.map((record, index) => (
-                        <tr key={`cases-key-${index}`}>
-                          <td>
-                            {pageNumber * recordPerPage -
-                              recordPerPage +
-                              Number(index + 1)}
-                            .
-                          </td>
-                          <td>{record.case_number}</td>
-                          <td>{record.title}</td>
-                          <td>
-                            {record.status ? (
-                              <span className="badge badge-success rounded-pill">
-                                Active
-                              </span>
-                            ) : (
-                              <span className="badge badge-danger rounded-pill">
-                                Inactive
-                              </span>
-                            )}
-                          </td>
-                          <td>
-                            {moment(record.created_at).format("D MMM,  YYYY")}
-                          </td>
-                          <td className="text-end">
-                            <button
-                              className="btn btn-primary me-2"
-                              onClick={() => getRecord(record.id)}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              className="btn btn-danger"
-                              onClick={() => deleteUser(record.id)}
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
+                        <Case
+                          record={record}
+                          index={index}
+                          key={`cases-key-${index}`}
+                          getRecords={getRecords}
+                          deleteRecord={deleteRecord}
+                          pageNumber={pageNumber}
+                          recordPerPage={recordPerPage}
+                        />
                       ))}
                     </tbody>
                   </table>
@@ -195,9 +159,7 @@ export default function ListCases() {
           showModal={showModal}
           closeModal={() => {
             setShowModal(false);
-            setRecordId(null);
           }}
-          recordId={recordId}
           reloadRecords={getRecords}
         />
       )}
