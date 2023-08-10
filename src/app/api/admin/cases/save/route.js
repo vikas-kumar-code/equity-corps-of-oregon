@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import casesSchema from "@/joi/casesSchema";
 import common from "@/utils/common";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import fs from "fs";
 
 export async function POST(request) {
@@ -46,10 +46,10 @@ export async function POST(request) {
       fs.mkdirSync(destinationPath, { recursive: true });
     }
     data.documents.forEach((doc) => {
-        let sourceFilePath = common.publicPath("temp/" + doc.uploaded_file)
-        if (fs.existsSync(sourceFilePath)) {
-          let saveFileName = doc.document_name + "." + doc?.uploaded_file.split(".").pop(); 
-          fs.rename(sourceFilePath, destinationPath+'/'+saveFileName, (err) => {});
+      let sourceFilePath = common.publicPath("temp/" + doc.uploaded_file)
+      if (fs.existsSync(sourceFilePath)) {
+        let saveFileName = doc.document_name + "." + doc?.uploaded_file.split(".").pop();
+        fs.rename(sourceFilePath, destinationPath + '/' + saveFileName, (err) => { });
       }
     });
     response.success = true;
