@@ -190,7 +190,7 @@ export default function AddEditCase(props) {
           </Button>
         )}
 
-        <Button size="lg" type="submit" variant="success">
+        <Button size="lg" type="submit" variant="success" disabled={submitted}>
           {submitted && <Spinner className="mr-1" color="light" size="sm" />}
           {activeTab === 3 ? " Save" : " Next"}
         </Button>

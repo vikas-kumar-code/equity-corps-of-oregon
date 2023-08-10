@@ -1,19 +1,19 @@
 const common = {
-  //Return API full path
+  //return API full path
   apiPath: (path = "") => {
     if (path && path[0] !== "/") {
       path = "/" + path;
     }
     return process.env.NEXT_PUBLIC_API_URL + path;
   },
-  //Return public path
+  //return app path
   basePath: (path = "") => {
     if (path && path[0] !== "/") {
       path = "/" + path;
     }
     return process.cwd() + path;
   },
-  //Return public path
+  //return public path
   publicPath: (path = "") => {
     if (path && path[0] !== "/") {
       path = "/" + path;

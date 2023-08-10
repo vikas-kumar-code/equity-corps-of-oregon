@@ -1,3 +1,4 @@
+import common from "@/utils/common";
 import moment from "moment";
 import React, { useState } from "react";
 import {
@@ -9,6 +10,7 @@ import {
   Button,
   Spinner,
 } from "react-bootstrap";
+import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 
 export default function Documents(props) {
@@ -16,6 +18,7 @@ export default function Documents(props) {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [errors, setErrors] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [loader, setLoader] = useState(false);
   const allowedExtensions = [
     "docx",
     "doc",
@@ -49,6 +52,8 @@ export default function Documents(props) {
       setSubmitted(true);
       const data = new FormData();
       data.append("document", selectedDocument);
+      data.append("file_name", documentName);
+      data.append("file_path", '/uploads/case_documents');
       const res = await fetch("/api/upload", {
         method: "POST",
         body: data,
@@ -90,8 +95,25 @@ export default function Documents(props) {
     if (window.confirm("Are you sure to delete?")) {
       if (props?.documents[index] || false) {
         let docx = props?.documents[index];
-        console.log(docx.document_name);
-        await props?.setDeletedDocument(docx.document_name);
+        // Delete file from server, if record has uploaded_file filed
+        if (docx.uploaded_file) {
+          try {
+            setLoader(true);
+            await fetch(common.apiPath("/api/upload/delete"), {
+              method: "POST",
+              body: JSON.stringify({
+                file: props?.documents[index].uploaded_file,
+              }),
+            });
+            toast.success("File deleted successfully");
+          } catch (error) {
+            toast.error(error.message);
+          } finally {
+            setLoader(false);
+          }
+        } else {
+          await props?.setDeletedDocument(docx.document_name);
+        }
       }
       let newDocuments = props?.documents.filter((r, indx) => index !== indx);
       await props.updateDocuments(newDocuments);
@@ -171,43 +193,45 @@ export default function Documents(props) {
           </Card>
         </Col>
         <Col md={8}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Documents</Card.Title>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Document Name </th>
-                    <th>Uploaded On</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {props?.documents?.map((record, index) => (
-                    <tr key={`documents-key-${index}`}>
-                      <td>{Number(index + 1)}.</td>
-                      <td>{record.document_name}</td>
-                      <td>
-                        {moment(record?.uploaded_on || new Date()).format(
-                          "MMMM DD, YYYY"
-                        )}
-                      </td>
-                      <td>
-                        <Button
-                          variant="danger"
-                          onClick={() => deleteRecord(index)}
-                          size="sm"
-                        >
-                          Delete
-                        </Button>
-                      </td>
+          <LoadingOverlay active={loader} spinner text="Loading...">
+            <Card>
+              <Card.Body>
+                <Card.Title>Documents</Card.Title>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Document Name </th>
+                      <th>Uploaded On</th>
+                      <th>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Card.Body>
-          </Card>
+                  </thead>
+                  <tbody>
+                    {props?.documents?.map((record, index) => (
+                      <tr key={`documents-key-${index}`}>
+                        <td>{Number(index + 1)}.</td>
+                        <td>{record.document_name}</td>
+                        <td>
+                          {moment(record?.uploaded_on || new Date()).format(
+                            "MMMM DD, YYYY"
+                          )}
+                        </td>
+                        <td>
+                          <Button
+                            variant="danger"
+                            onClick={() => deleteRecord(index)}
+                            size="sm"
+                          >
+                            Delete
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </Card.Body>
+            </Card>
+          </LoadingOverlay>
         </Col>
       </Row>
     </>

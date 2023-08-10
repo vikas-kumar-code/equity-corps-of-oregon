@@ -1,12 +1,16 @@
 const Joi = require("joi");
 
+const maxMilestones = 4;
+const maxDocuments = 5;
+const maxAssociatedNames = 20;
+
 const casesSchema = Joi.object({
   case_number: Joi.string().alphanum(),
   title: Joi.string().max(255).required(),
   belongs_to: Joi.array()
     .items(Joi.string().max(50).label("Case belongs to"))
     .min(1)
-    .max(50)
+    .max(maxAssociatedNames)
     .required(),
   description: Joi.string(),
   status: Joi.number().integer().default(1),
@@ -18,26 +22,26 @@ const casesSchema = Joi.object({
       })
     )
     .min(1)
-    .max(50)
+    .max(maxMilestones)
     .required(),
   documents: Joi.array()
     .items(
       Joi.object({
         document_name: Joi.string().max(100).required(),
         uploaded_file: Joi.string().optional(),
-        uploaded_on: Joi.date().required()
+        uploaded_on: Joi.date().required(),
       })
     )
     .min(1)
-    .max(50)
-    .required(),     
+    .max(maxDocuments)
+    .required(),
 });
 
 const casesSchemaForm1 = Joi.object({
   case_number: Joi.string().alphanum(),
   title: Joi.string().max(255).required(),
   belongs_to: Joi.array()
-    .items(Joi.string().max(50).label("Case belongs to"))
+    .items(Joi.string().max(maxAssociatedNames).label("Case belongs to"))
     .min(1)
     .max(50)
     .required(),
@@ -53,7 +57,7 @@ const casesSchemaForm2 = Joi.object({
       })
     )
     .min(1)
-    .max(50)
+    .max(maxMilestones)
     .required(),
 });
 
@@ -63,11 +67,11 @@ const casesSchemaForm3 = Joi.object({
       Joi.object({
         document_name: Joi.string().max(100).required(),
         uploaded_file: Joi.string().optional(),
-        uploaded_on: Joi.date().required()
+        uploaded_on: Joi.date().required(),
       })
     )
     .min(1)
-    .max(50)
+    .max(maxDocuments)
     .required(),
 });
 

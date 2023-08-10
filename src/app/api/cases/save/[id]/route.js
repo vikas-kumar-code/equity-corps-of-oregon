@@ -22,6 +22,13 @@ export async function PUT(request, data) {
         },
       });
 
+      // delete all Milestones
+      const deleteMilestones = await tx.case_milestones.deleteMany({
+        where: {
+          case_id: caseId,
+        },
+      });
+
       // delete all docuements
       const deleteCaseDocuments = await tx.case_documents.deleteMany({
         where: {
