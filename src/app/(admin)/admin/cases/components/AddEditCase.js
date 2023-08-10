@@ -87,10 +87,10 @@ export default function AddEditCase(props) {
           allowUnknown: true,
         });
 
-        let REQUEST_URI = common.apiPath(`/api/cases/save`);
+        let REQUEST_URI = common.apiPath(`/admin/cases/save`);
         let REQUEST_METHOD = "POST";
         if (props.recordId) {
-          REQUEST_URI = common.apiPath(`/api/cases/save/${props.recordId}`);
+          REQUEST_URI = common.apiPath(`/admin/cases/save/${props.recordId}`);
           REQUEST_METHOD = "PUT";
         }
         // Set deleted docs
@@ -146,7 +146,7 @@ export default function AddEditCase(props) {
 
   const getRecord = async (id) => {
     setLoader(true);
-    fetch(common.apiPath(`/api/cases/get/${props.recordId}`))
+    fetch(common.apiPath(`/admin/cases/get/${props.recordId}`))
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {

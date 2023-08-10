@@ -24,11 +24,11 @@ export default function ListQuestions() {
 
   const getRecords = async () => {
     setLoader(true);
-    let REQUEST_URI = common.apiPath(`/api/questions?page=${pageNumber}`);
+    let REQUEST_URI = common.apiPath(`/admin/questions?page=${pageNumber}`);
     if (fields !== null) {
       fields["page"] = pageNumber;
       const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/api/questions?${queryString}`);
+      REQUEST_URI = common.apiPath(`/admin/questions?${queryString}`);
     }
     fetch(REQUEST_URI)
       .then((response) => response.json())
@@ -53,7 +53,7 @@ export default function ListQuestions() {
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this question?")) {
       setLoader(true);
-      fetch(common.apiPath(`/api/questions/delete/${id}`), { method: "DELETE" })
+      fetch(common.apiPath(`/admin/questions/delete/${id}`), { method: "DELETE" })
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {

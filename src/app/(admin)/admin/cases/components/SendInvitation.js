@@ -19,20 +19,46 @@ export default function SendInvitation(props) {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [users, setUsers] = useState([]);
+  let searchTimeOut;
 
   const handleChange = (e, field) => {
     setFields({ ...fields, [field]: e.target.value });
   };
 
-  const filterUser = async (inputValue) => {
+  const promiseUserOptions = (inputValue) => {
+    if (searchTimeOut > 0) {
+      clearTimeout(searchTimeOut);
+    }
+    return new Promise((resolve) => {
+      if (inputValue !== "") {
+        searchTimeOut = setTimeout(() => {
+          fetch(common.apiPath(`/admin/email-templates/get/${props.recordId}`))
+            .then((response) => response.json())
+            .then((response) => {
+              if (response.success) {
+                setUsers(response.data);
+                resolve(filterUser(inputValue));
+
+              } else if (response.error) {
+                toast.error(response.message);
+              }
+            })
+            .catch((error) => {
+              toast.error(error.message);
+            })
+            .finally(() => setLoader(false));
+        }, 500);
+      } else {
+        resolve(this.filterUser(inputValue));
+      }
+    });
+  };
+
+  const filterUser = (inputValue) => {
     return users.filter((i) =>
       i.label.toLowerCase().includes(inputValue.toLowerCase())
     );
   };
-
-  const promiseOptions = async (inputValue) => {
-    await filterUser(inputValue)
-  }
 
   return (
     <Modal
@@ -58,7 +84,7 @@ export default function SendInvitation(props) {
                 isMulti
                 cacheOptions
                 defaultOptions
-                loadOptions={promiseOptions}
+                loadOptions={promiseUserOptions}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.case_number}

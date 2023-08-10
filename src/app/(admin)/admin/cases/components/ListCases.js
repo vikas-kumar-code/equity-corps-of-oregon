@@ -30,11 +30,11 @@ export default function ListCases() {
 
   const getRecords = async () => {
     setLoader(true);
-    let REQUEST_URI = common.apiPath(`/api/cases?page=${pageNumber}`);
+    let REQUEST_URI = common.apiPath(`/admin/cases?page=${pageNumber}`);
     if (fields !== null) {
       fields["page"] = pageNumber;
       const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/api/cases?${queryString}`);
+      REQUEST_URI = common.apiPath(`/admin/cases?${queryString}`);
     }
     fetch(REQUEST_URI)
       .then((response) => response.json())

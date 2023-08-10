@@ -4,7 +4,7 @@ const common = {
     if (path && path[0] !== "/") {
       path = "/" + path;
     }
-    return process.env.NEXT_PUBLIC_API_URL + path;
+    return process.env.NEXT_PUBLIC_API_URL + "/api" + path;
   },
   //return app path
   basePath: (path = "") => {

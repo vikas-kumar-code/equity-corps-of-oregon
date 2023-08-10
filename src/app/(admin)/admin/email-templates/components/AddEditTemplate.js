@@ -62,7 +62,7 @@ export default function AddEditTemplate(props) {
 
   const getRecord = async (id) => {
     setLoader(true);
-    fetch(common.apiPath(`/api/email-templates/get/${props.recordId}`))
+    fetch(common.apiPath(`/admin/email-templates/get/${props.recordId}`))
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {

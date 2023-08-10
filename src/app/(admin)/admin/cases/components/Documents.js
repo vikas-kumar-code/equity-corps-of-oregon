@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
+import common from "@/utils/common";
 
 export default function Documents(props) {
   const [documentName, setDocumentName] = useState("");
@@ -54,7 +55,7 @@ export default function Documents(props) {
       data.append("document", selectedDocument);
       data.append("file_name", documentName);
       data.append("file_path", '/uploads/case_documents');
-      const res = await fetch("/api/upload", {
+      const res = await fetch(common.apiPath("/upload"), {      
         method: "POST",
         body: data,
       });
