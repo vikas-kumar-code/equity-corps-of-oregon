@@ -30,7 +30,7 @@ const casesSchema = Joi.object({
     )
     .min(1)
     .max(50)
-    .required(),
+    .required(),     
 });
 
 const casesSchemaForm1 = Joi.object({

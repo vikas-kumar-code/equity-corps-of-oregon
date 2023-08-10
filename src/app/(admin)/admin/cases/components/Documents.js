@@ -45,7 +45,7 @@ export default function Documents(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (handleValidation()) {      
+    if (handleValidation()) {
       setSubmitted(true);
       const data = new FormData();
       data.append("document", selectedDocument);
@@ -57,7 +57,11 @@ export default function Documents(props) {
       if (response.success) {
         props?.updateDocuments([
           ...props?.documents,
-          { document_name: documentName, uploaded_file: response.file, uploaded_on: new Date() },
+          {
+            document_name: documentName,
+            uploaded_file: response.file,
+            uploaded_on: new Date(),
+          },
         ]);
         setDocumentName("");
         setSelectedDocument(null);
@@ -82,10 +86,15 @@ export default function Documents(props) {
     setErrors(error);
     return formIsValid;
   };
-  const deleteRecord = (index) => {
+  const deleteRecord = async (index) => {
     if (window.confirm("Are you sure to delete?")) {
+      if (props?.documents[index] || false) {
+        let docx = props?.documents[index];
+        console.log(docx.document_name);
+        await props?.setDeletedDocument(docx.document_name);
+      }
       let newDocuments = props?.documents.filter((r, indx) => index !== indx);
-      props.updateDocuments(newDocuments);
+      await props.updateDocuments(newDocuments);
     }
   };
   return (

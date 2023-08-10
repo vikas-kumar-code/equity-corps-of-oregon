@@ -39,6 +39,7 @@ export default function AddEditCase(props) {
   const [submitted, setSubmitted] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
   const [activated, setActivated] = useState(1);
+  const [deletedDocuments, setDeletedDocuments] = useState([]);
 
   const handleChange = (e, field) => {
     setFields({ ...fields, [field]: e.target.value });
@@ -92,9 +93,11 @@ export default function AddEditCase(props) {
           REQUEST_URI = common.apiPath(`/api/cases/save/${props.recordId}`);
           REQUEST_METHOD = "PUT";
         }
+        // Set deleted docs
+        let fieldsData = deletedDocuments.length > 0 ? {...fields,deleted_documents:deletedDocuments} : fields;
         fetch(REQUEST_URI, {
           method: REQUEST_METHOD,
-          body: JSON.stringify(fields),
+          body: JSON.stringify(fieldsData),
           headers: {
             "Content-Type": "application/json",
           },
@@ -108,7 +111,7 @@ export default function AddEditCase(props) {
               props.reloadRecords();
               setFields(initialValues);
             } else if (response.error) {
-              if (typeof response.message === "object") {                
+              if (typeof response.message === "object") {
                 setErrors(response.message);
                 const eFileds = response.message;
                 if (
@@ -127,7 +130,7 @@ export default function AddEditCase(props) {
               }
             }
           });
-      } catch (error) {       
+      } catch (error) {
         let errors = common.getErrors(error);
         if (typeof errors === "object") {
           setErrors(errors);
@@ -135,7 +138,7 @@ export default function AddEditCase(props) {
           toast.error(errors);
         }
         console.log(errors);
-      } finally{
+      } finally {
         setSubmitted(false);
       }
     }
@@ -283,7 +286,11 @@ export default function AddEditCase(props) {
                   </Form.Group>
                 </Row>
               </Tab>
-              <Tab eventKey={2} title="Milestones" disabled={activated < 2 && !props.recordId}>
+              <Tab
+                eventKey={2}
+                title="Milestones"
+                disabled={activated < 2 && !props.recordId}
+              >
                 <Milestones
                   errors={errors}
                   setErrors={setErrors}
@@ -296,11 +303,18 @@ export default function AddEditCase(props) {
                   }
                 />
               </Tab>
-              <Tab eventKey={3} title="Documents" disabled={activated < 3 && !props.recordId}>
+              <Tab
+                eventKey={3}
+                title="Documents"
+                disabled={activated < 3 && !props.recordId}
+              >
                 <Documents
                   updateDocuments={(documents) =>
                     setFields({ ...fields, documents: documents })
                   }
+                  setDeletedDocument={(doc) => {
+                    setDeletedDocuments([...deletedDocuments, doc]);
+                  }}
                   documents={fields.documents}
                   errors={errors}
                   setErrors={setErrors}

@@ -1,77 +1,104 @@
 import { NextResponse } from "next/server";
-import Joi from "joi";
 import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
-
-export async function GET(request, data) {
-    const user = await prisma.users.findUnique({
-        where: {
-            id: Number(data.params.id),
-        },
-    });
-    return NextResponse.json({
-        success: true,
-        user: {
-            name: user.name,
-            email: user.email,
-            role_id: user.role_id,
-            status: user.status
-        }
-    });
-}
+import casesSchema from "@/joi/casesSchema";
+import common from "@/utils/common";
+import fs from "fs";
 
 export async function PUT(request, data) {
-    const user = await request.json();
-    const userSchema = Joi.object({
-        name: Joi.required(),
-        email: Joi.string().email().required(),
-        password: Joi.string(),
-        confirm_password: Joi.ref('password'),
-        status: Joi.number().required(),
-        role_id: Joi.number(),
-    })
+  const prisma = new PrismaClient();
+  let response = {};
+  const caseId = parseInt(data.params.id);
+  try {
+    const record = await casesSchema.validateAsync(await request.json(), {
+      abortEarly: false,
+      allowUnknown: true,
+    });    
+    // begin transaction
+    await prisma.$transaction(async (tx) => {
+      // delete all Case associated names
+      const deleteAssociatedNames = await tx.case_associated_names.deleteMany({
+        where: {
+          case_id: caseId,
+        },
+      });
 
-    try {
-        const record = await userSchema.validateAsync(user);
-        if (record) {
-            let response;
-            if (record.password) {
-                response = await prisma.users.update({
-                    data: {
-                        name: record.name,
-                        email: record.email,
-                        password: await hash(record.password, 10),
-                        status: record.status,
-                        role_id: record.role_id,
-                    },
-                    where: {
-                        id: Number(data.params.id),
-                    }
-                });
-            }
-            else {
-                response = await prisma.users.update({
-                    data: {
-                        name: record.name,
-                        email: record.email,
-                        status: record.status,
-                        role_id: record.role_id,
-                    },
-                    where: {
-                        id: Number(data.params.id),
-                    }
-                });
-            }
-            if (response) {
-                return NextResponse.json({ success: true });
-            }
-            else {
-                return NextResponse.json({ error: true });
-            }
+      // delete all docuements
+      const deleteCaseDocuments = await tx.case_documents.deleteMany({
+        where: {
+          case_id: caseId,
+        },
+      });
+
+      // Update case record
+      const updateCaseRecord = await tx.cases.update({
+        where: {
+          id: parseInt(data.params.id),
+        },
+        data: {
+          case_number: record.case_number,
+          title: record.title,
+          case_associated_names: {
+            create: record.belongs_to.map((belongsTo) => {
+              return { name: belongsTo };
+            }),
+          },
+          description: record.description,
+          case_milestones: { create: record.milestones },
+          case_documents: {
+            create: record.documents.map((doc) => {
+              return {
+                document_name: doc?.uploaded_file
+                  ? doc.document_name +
+                    "." +
+                    doc?.uploaded_file.split(".").pop()
+                  : doc?.document_name,
+                uploaded_on: doc.uploaded_on,
+              };
+            }),
+          },
+        },
+      });
+
+      // Move newly uploaded documents from temp to case_documents directory
+      let destinationPath = common.publicPath("uploads/case_documents");
+      if (!fs.existsSync(destinationPath)) {
+        fs.mkdirSync(destinationPath, { recursive: true });
+      }      
+      record.documents.forEach((doc) => {
+        if (doc?.uploaded_file) {
+          let sourceFilePath = common.publicPath("temp/" + doc.uploaded_file);
+          if (fs.existsSync(sourceFilePath)) {
+            let saveFileName =
+              doc.document_name + "." + doc?.uploaded_file.split(".").pop();
+            fs.rename(
+              sourceFilePath,
+              destinationPath + "/" + saveFileName,
+              (err) => {}
+            );
+          }
         }
-    }
-    catch (err) {
-        return NextResponse.json({ error: true, message: err });
-    }
+      });
+
+      // Check, has deleted_documents field?
+      if (
+        record?.deleted_documents &&
+        Array.isArray(record?.deleted_documents) &&
+        record?.deleted_documents.length > 0
+      ) {
+        record.deleted_documents.forEach((doc) => {
+          let docPath = common.publicPath("uploads/case_documents/" + doc);
+          if (fs.existsSync(docPath)) {
+            fs.unlinkSync(docPath);
+          }
+        });
+      }
+    });
+
+    response.success = true;
+    response.message = "Case updated successfully.";
+  } catch (error) {
+    response.error = true;
+    response.message = common.getErrors(error);
+  }
+  return NextResponse.json(response);
 }
