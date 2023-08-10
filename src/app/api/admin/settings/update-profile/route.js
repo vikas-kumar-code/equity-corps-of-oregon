@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
-import prisma from "../../../../../prisma";
 import Joi from "joi";
 import { getServerSession } from "next-auth";
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();
 export async function GET(request) {
+
     try {
         const session = await getServerSession(authOptions);
         const user = await prisma.users.findUnique({

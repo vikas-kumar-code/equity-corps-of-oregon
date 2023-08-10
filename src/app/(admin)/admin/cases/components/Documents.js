@@ -10,6 +10,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { toast } from "react-toastify";
+import common from "@/utils/common";
 
 export default function Documents(props) {
   const [documentName, setDocumentName] = useState("");
@@ -45,11 +46,11 @@ export default function Documents(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (handleValidation()) {      
+    if (handleValidation()) {
       setSubmitted(true);
       const data = new FormData();
       data.append("document", selectedDocument);
-      const res = await fetch("/api/upload", {
+      const res = await fetch(common.apiPath("/upload"), {
         method: "POST",
         body: data,
       });

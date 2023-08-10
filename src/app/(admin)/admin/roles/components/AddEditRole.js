@@ -4,6 +4,9 @@ import React, { useState, useEffect } from 'react'
 import { Button, Modal, Spinner, FloatingLabel, Form, Row, Col } from "react-bootstrap";
 import LoadingOverlay from 'react-loading-overlay';
 import { toast } from 'react-toastify';
+import common from "@/utils/common";
+
+
 export default function AddEditRole(props) {
     const [loader, setLoader] = useState(false);
     const [fields, setFields] = useState({ status: 1 });
@@ -28,10 +31,10 @@ export default function AddEditRole(props) {
         e.preventDefault();
         if (handleValidation()) {
             setSubmitted(true);
-            let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save`;
+            let REQUEST_URI = common.apiPath(`/admin/roles/save/`);
             let REQUEST_METHOD = 'POST';
             if (props.recordId) {
-                REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save/${props.recordId}`;
+                REQUEST_URI = common.apiPath(`/admin/roles/save/${props.recordId}`);
                 REQUEST_METHOD = 'PUT';
             }
             const response = await fetch(REQUEST_URI, {
@@ -51,14 +54,14 @@ export default function AddEditRole(props) {
             }
             else if (data.error) {
                 setErrors(data.message)
-            }            
+            }
             setSubmitted(false);
         }
     }
 
     const getRole = async () => {
         setLoader(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/roles/save/${props.recordId}`, {
+        const response = await fetch(common.apiPath(`/admin/roles/save/${props.recordId}`), {
             method: 'GET'
         });
         const data = await response.json();

@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import { Card, Spinner, FloatingLabel, Form, Button } from "react-bootstrap"
+import common from "@/utils/common";
 
 export default function ChangePasswordForm() {
     const [fields, setFields] = useState({});
@@ -31,7 +32,7 @@ export default function ChangePasswordForm() {
         e.preventDefault();
         if (handleValidation()) {
             setSubmitted(true);
-            let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/settings/change-password`;
+            let REQUEST_URI = common.apiPath(`/admin/settings/change-password`);
             let REQUEST_METHOD = 'PUT';
             const response = await fetch(REQUEST_URI, {
                 method: REQUEST_METHOD,

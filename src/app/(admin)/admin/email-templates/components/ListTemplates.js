@@ -26,11 +26,11 @@ export default function ListTemplates() {
 
   const getRecords = async () => {
     setLoader(true);
-    let REQUEST_URI = common.apiPath(`/api/email-templates?page=${pageNumber}`);
+    let REQUEST_URI = common.apiPath(`/admin/email-templates?page=${pageNumber}`);
     if (fields !== null) {
       fields["page"] = pageNumber;
       const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/api/email-templates?${queryString}`);
+      REQUEST_URI = common.apiPath(`/admin/email-templates?${queryString}`);
     }
     fetch(REQUEST_URI)
       .then((response) => response.json())
@@ -55,7 +55,7 @@ export default function ListTemplates() {
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete?")) {
       setLoader(true);
-      fetch(common.apiPath(`/api/email-templates/delete/${id}`), { method: "DELETE" })
+      fetch(common.apiPath(`/admin/email-templates/delete/${id}`), { method: "DELETE" })
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {

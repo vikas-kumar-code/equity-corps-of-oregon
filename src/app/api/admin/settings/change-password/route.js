@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
-import prisma from "../../../../../prisma";
 import Joi from "joi";
 import { getServerSession } from "next-auth";
-import { authOptions } from '../../../api/auth/[...nextauth]/route';
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { compare, hash } from "bcrypt";
+import { PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();
 export async function PUT(request) {
     const data = await request.json();
     const fieldsSchema = Joi.object({

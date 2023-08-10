@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Spinner, FloatingLabel, Form, Button } from "react-bootstrap"
 import { toast } from 'react-toastify';
+import common from "@/utils/common";
 
 export default function UpdateProfileForm() {
     const [fields, setFields] = useState({ status: 1 });
@@ -28,7 +29,7 @@ export default function UpdateProfileForm() {
         e.preventDefault();
         if (handleValidation()) {
             setSubmitted(true);
-            let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/settings/update-profile`;
+            let REQUEST_URI = common.apiPath(`/admin/settings/update-profile`);
             let REQUEST_METHOD = 'PUT';
             const response = await fetch(REQUEST_URI, {
                 method: REQUEST_METHOD,
@@ -52,7 +53,7 @@ export default function UpdateProfileForm() {
     }
 
     const getProfile = async () => {
-        let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/settings/update-profile`;
+        let REQUEST_URI = common.apiPath(`/admin/settings/update-profile`);;
         let REQUEST_METHOD = 'GET';
         const response = await fetch(REQUEST_URI, {
             method: REQUEST_METHOD,

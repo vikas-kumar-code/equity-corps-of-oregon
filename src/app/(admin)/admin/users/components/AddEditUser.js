@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Spinner, FloatingLabel, Form, Row, Col } from "react-bootstrap";
 import LoadingOverlay from 'react-loading-overlay';
+import common from "@/utils/common";
+
 export default function AddEditUser(props) {
     const [loader, setLoader] = useState(false);
     const [fields, setFields] = useState({ status: 1 });
@@ -52,10 +54,10 @@ export default function AddEditUser(props) {
         e.preventDefault();
         if (handleValidation()) {
             setSubmitted(true);
-            let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/users/save`;
+            let REQUEST_URI = common.apiPath(`/admin/users/save/`);
             let REQUEST_METHOD = 'POST';
             if (props.userId) {
-                REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/users/save/${props.userId}`;
+                REQUEST_URI = common.apiPath(`/admin/users/save/${props.userId}`);;
                 REQUEST_METHOD = 'PUT';
             }
             const response = await fetch(REQUEST_URI, {
@@ -79,7 +81,7 @@ export default function AddEditUser(props) {
 
     const getUser = async (userId) => {
         setLoader(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/save/${props.userId}`, {
+        const response = await fetch(common.apiPath(`/admin/users/save/${props.userId}`), {
             method: 'GET'
         });
         const data = await response.json();
@@ -89,7 +91,7 @@ export default function AddEditUser(props) {
         }
     }
     const getRoles = async () => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/roles`, {
+        const response = await fetch(common.apiPath(`/admin/roles`), {
             method: 'GET'
         });
         const data = await response.json();
