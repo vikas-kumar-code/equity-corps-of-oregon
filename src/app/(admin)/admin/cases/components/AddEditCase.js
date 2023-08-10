@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Modal,
@@ -108,8 +108,7 @@ export default function AddEditCase(props) {
               props.reloadRecords();
               setFields(initialValues);
             } else if (response.error) {
-              if (typeof response.message === "object") {
-                console.log("here");
+              if (typeof response.message === "object") {                
                 setErrors(response.message);
                 const eFileds = response.message;
                 if (
@@ -128,8 +127,7 @@ export default function AddEditCase(props) {
               }
             }
           });
-      } catch (error) {
-        setSubmitted(false);
+      } catch (error) {       
         let errors = common.getErrors(error);
         if (typeof errors === "object") {
           setErrors(errors);
@@ -137,11 +135,13 @@ export default function AddEditCase(props) {
           toast.error(errors);
         }
         console.log(errors);
+      } finally{
+        setSubmitted(false);
       }
     }
   };
 
-  const getCase = async (id) => {
+  const getRecord = async (id) => {
     setLoader(true);
     fetch(common.apiPath(`/api/cases/get/${props.recordId}`))
       .then((response) => response.json())
@@ -160,7 +160,7 @@ export default function AddEditCase(props) {
 
   useEffect(() => {
     if (props.recordId && props.showModal) {
-      getCase(props.recordId);
+      getRecord(props.recordId);
     }
   }, [props.showModal]);
 
