@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import casesSchema from "@/joi/casesSchema";
 import common from "@/utils/common";
 import fs from "fs";
+import { moveFile } from "@/utils/serverHelpers";
 
 export async function PUT(request, data) {
   const prisma = new PrismaClient();
@@ -12,7 +13,7 @@ export async function PUT(request, data) {
     const record = await casesSchema.validateAsync(await request.json(), {
       abortEarly: false,
       allowUnknown: true,
-    });    
+    });
     // begin transaction
     await prisma.$transaction(async (tx) => {
       // delete all Case associated names
@@ -39,7 +40,7 @@ export async function PUT(request, data) {
       // Update case record
       const updateCaseRecord = await tx.cases.update({
         where: {
-          id: parseInt(data.params.id),
+          id: caseId,
         },
         data: {
           case_number: record.case_number,
@@ -54,11 +55,8 @@ export async function PUT(request, data) {
           case_documents: {
             create: record.documents.map((doc) => {
               return {
-                document_name: doc?.uploaded_file
-                  ? doc.document_name +
-                    "." +
-                    doc?.uploaded_file.split(".").pop()
-                  : doc?.document_name,
+                document_name: doc.document_name,
+                file_name: doc.file_name,
                 uploaded_on: doc.uploaded_on,
               };
             }),
@@ -66,24 +64,12 @@ export async function PUT(request, data) {
         },
       });
 
-      // Move newly uploaded documents from temp to case_documents directory
-      let destinationPath = common.publicPath("uploads/case_documents");
-      if (!fs.existsSync(destinationPath)) {
-        fs.mkdirSync(destinationPath, { recursive: true });
-      }      
+      // move uploaded documents
       record.documents.forEach((doc) => {
-        if (doc?.uploaded_file) {
-          let sourceFilePath = common.publicPath("temp/" + doc.uploaded_file);
-          if (fs.existsSync(sourceFilePath)) {
-            let saveFileName =
-              doc.document_name + "." + doc?.uploaded_file.split(".").pop();
-            fs.rename(
-              sourceFilePath,
-              destinationPath + "/" + saveFileName,
-              (err) => {}
-            );
-          }
-        }
+        moveFile(
+          common.publicPath("temp/" + doc.file_name), // source path
+          common.publicPath("uploads/case_documents/" + doc.file_name) // destination path
+        );
       });
 
       // Check, has deleted_documents field?

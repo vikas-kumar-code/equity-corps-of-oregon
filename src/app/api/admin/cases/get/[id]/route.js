@@ -15,7 +15,7 @@ export async function GET(request, data) {
         case_milestones: true,
         case_documents: true,
       },
-    });    
+    });
     response.success = true;
     response.message = "Case details";
     response.data = {
@@ -25,18 +25,21 @@ export async function GET(request, data) {
         (belongsTo) => belongsTo.name
       ),
       description: record.description,
-      milestones: record.case_milestones.map((milestone) => {
-        return {
-          milestone_date: milestone.milestone_date,
-          comment: milestone.comment,
-        };
-      }) || [],
-      documents: record?.case_documents?.map((doc) => {
-        return {
-          document_name: doc.document_name,
-          uploaded_on: doc.uploaded_on,
-        };
-      }) || [],
+      milestones:
+        record.case_milestones.map((milestone) => {
+          return {
+            milestone_date: milestone.milestone_date,
+            comment: milestone.comment,
+          };
+        }) || [],
+      documents:
+        record?.case_documents?.map((doc) => {
+          return {
+            document_name: doc.document_name,
+            file_name: doc.file_name,
+            uploaded_on: doc.uploaded_on,
+          };
+        }) || [],
     };
   } catch (error) {
     response.error = true;

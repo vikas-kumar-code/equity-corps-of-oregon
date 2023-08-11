@@ -12,6 +12,7 @@ import {
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import common from "@/utils/common";
+import DownloadButton from "./DownloadButton";
 
 export default function Documents(props) {
   const [documentName, setDocumentName] = useState("");
@@ -52,9 +53,7 @@ export default function Documents(props) {
       setSubmitted(true);
       const data = new FormData();
       data.append("document", selectedDocument);
-      data.append("file_name", documentName);
-      data.append("file_path", '/uploads/case_documents');
-      const res = await fetch(common.apiPath("/upload"), {      
+      const res = await fetch(common.apiPath("/upload"), {
         method: "POST",
         body: data,
       });
@@ -64,7 +63,7 @@ export default function Documents(props) {
           ...props?.documents,
           {
             document_name: documentName,
-            uploaded_file: response.file,
+            file_name: response.file,
             uploaded_on: new Date(),
           },
         ]);
@@ -94,29 +93,29 @@ export default function Documents(props) {
   const deleteRecord = async (index) => {
     if (window.confirm("Are you sure to delete?")) {
       if (props?.documents[index] || false) {
-        let docx = props?.documents[index];
-        // Delete file from server, if record has uploaded_file filed
-        if (docx.uploaded_file) {
-          try {
-            setLoader(true);
-            await fetch(common.apiPath("/api/upload/delete"), {
-              method: "POST",
-              body: JSON.stringify({
-                file: props?.documents[index].uploaded_file,
-              }),
-            });
-            toast.success("File deleted successfully");
-          } catch (error) {
-            toast.error(error.message);
-          } finally {
-            setLoader(false);
-          }
-        } else {
-          await props?.setDeletedDocument(docx.document_name);
+        let deleteDoc = props?.documents[index];
+        try {
+          setLoader(true);
+          await fetch(common.apiPath("/upload/delete"), {
+            method: "POST",
+            body: JSON.stringify({
+              file: deleteDoc.file_name,
+            }),
+          });
+          let newDocuments = props?.documents.filter(
+            (r, indx) => index !== indx
+          );
+          await props.updateDocuments(newDocuments);
+          await props?.setDeletedDocument(deleteDoc.file_name);
+          toast.success("File deleted successfully");
+        } catch (error) {
+          toast.error(error.message);
+        } finally {
+          setLoader(false);
         }
+      } else {
+        toast.error("Document not found.");
       }
-      let newDocuments = props?.documents.filter((r, indx) => index !== indx);
-      await props.updateDocuments(newDocuments);
     }
   };
   return (
@@ -217,13 +216,22 @@ export default function Documents(props) {
                           )}
                         </td>
                         <td>
-                          <Button
-                            variant="danger"
-                            onClick={() => deleteRecord(index)}
-                            size="sm"
-                          >
-                            Delete
-                          </Button>
+                          <div className="d-flex">
+                            <Button                            
+                              variant="danger"
+                              onClick={() => deleteRecord(index)}
+                              size="sm"
+                              className="me-2"
+                            >
+                              Delete
+                            </Button>
+                            <DownloadButton
+                              fileName={record.document_name}
+                              path={common.downloadLink(
+                                "uploads/case_documents/" + record.file_name
+                              )}
+                            />
+                          </div>
                         </td>
                       </tr>
                     ))}

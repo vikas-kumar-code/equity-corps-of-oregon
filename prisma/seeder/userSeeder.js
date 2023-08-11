@@ -3,18 +3,46 @@ const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 
 const userSeeder = async () => {
+
   await prisma.users.upsert({
-    where: { email: "user@gmail.com" },
+    where: { email: "admin@gmail.com" },
     update: {},
     create: {
-      email: "user@gmail.com",
-      name: "Demo User",
+      email: "admin@gmail.com",
+      name: "Clearing House",
       password: await bcrypt.hashSync("password", 10),
       role_id: 1,
       status: 1,
       verified: 1,
     },
   });
+
+  await prisma.users.upsert({
+    where: { email: "attorney@gmail.com" },
+    update: {},
+    create: {
+      email: "attorney@gmail.com",
+      name: "Attorney",
+      password: await bcrypt.hashSync("password", 10),
+      role_id: 2,
+      status: 1,
+      verified: 1,
+    },
+  });
+
+  await prisma.users.upsert({
+    where: { email: "ecoprovider@gmail.com" },
+    update: {},
+    create: {
+      email: "ecoprovider@gmail.com",
+      name: "Eco Provider",
+      password: await bcrypt.hashSync("password", 10),
+      role_id: 3,
+      status: 1,
+      verified: 1,
+    },
+  });
+
 };
 
 module.exports = userSeeder;

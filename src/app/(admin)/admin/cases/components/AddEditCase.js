@@ -95,7 +95,7 @@ export default function AddEditCase(props) {
         }
         // Set deleted docs
         let fieldsData = deletedDocuments.length > 0 ? {...fields,deleted_documents:deletedDocuments} : fields;
-        fetch(REQUEST_URI, {
+        await fetch(REQUEST_URI, {
           method: REQUEST_METHOD,
           body: JSON.stringify(fieldsData),
           headers: {
@@ -104,7 +104,7 @@ export default function AddEditCase(props) {
         })
           .then((response) => response.json())
           .then((response) => {
-            setSubmitted(false);
+            // setSubmitted(false);
             if (response.success) {
               toast.success(response.message);
               props.closeModal();

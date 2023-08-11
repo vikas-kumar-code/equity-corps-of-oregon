@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
-import AsyncSelect from 'react-select/async';
+import AsyncSelect from "react-select/async";
 
 export default function SendInvitation(props) {
   const [fields, setFields] = useState({});
@@ -32,21 +32,27 @@ export default function SendInvitation(props) {
     return new Promise((resolve) => {
       if (inputValue !== "") {
         searchTimeOut = setTimeout(() => {
-          fetch(common.apiPath(`/admin/email-templates/get/${props.recordId}`))
+          fetch(
+            common.apiPath(
+              `/admin/users/search?search-type=asyc-select-eco-providers&name=${inputValue}`
+            )
+          )
             .then((response) => response.json())
             .then((response) => {
               if (response.success) {
-                setUsers(response.data);
+                const formattedOptions = response.data.map((item) => ({
+                  value: item.id,
+                  label: item.name,
+                }));
+                setUsers(formattedOptions);
                 resolve(filterUser(inputValue));
-
               } else if (response.error) {
                 toast.error(response.message);
               }
             })
             .catch((error) => {
               toast.error(error.message);
-            })
-            .finally(() => setLoader(false));
+            })           
         }, 500);
       } else {
         resolve(this.filterUser(inputValue));

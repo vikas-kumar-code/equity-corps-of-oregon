@@ -1,26 +1,24 @@
+const pathJoin = (...parts) => {
+  return parts.join("/").replace(/\/+/g, "/");
+};
+
 const common = {
+  pathJoin: pathJoin,
   //return API full path
   apiPath: (path = "") => {
-    if (path && path[0] !== "/") {
-      path = "/" + path;
-    }
-    return process.env.NEXT_PUBLIC_API_URL + "/api" + path;
+    return pathJoin(process.cwd(), "api", path);
   },
   //return app path
   basePath: (path = "") => {
-    if (path && path[0] !== "/") {
-      path = "/" + path;
-    }
-    return process.cwd() + path;
+    return pathJoin(process.cwd(), path);
   },
   //return public path
   publicPath: (path = "") => {
-    if (path && path[0] !== "/") {
-      path = "/" + path;
-    }
-    return process.cwd() + "/public" + path;
+    return pathJoin(process.cwd(), "public", path);
   },
-
+  downloadLink: (path) => {
+    return pathJoin(process.cwd(), "api", "admin", "download", path);
+  },
   // create JOI errors in custom format.
   getErrors: (errors, options = { arrayKey: false }) => {
     let outputErrors = {};

@@ -32,19 +32,20 @@ model states {
 }
 
 model users {
-  id                Int       @id @default(autoincrement())
-  name              String    @db.VarChar(150)
-  email             String    @unique @db.VarChar(150)
-  role_id           Int       @default(0)
-  password          String    @db.VarChar(255)
-  created_at        DateTime? @default(now())
-  updated_at        DateTime? @db.Timestamp(0)
-  status            Int       @default(1)
-  verified          Int       @default(0)
-  verification_code String?   @db.VarChar(20)
+  id                Int                @id @default(autoincrement())
+  name              String             @db.VarChar(150)
+  email             String             @unique @db.VarChar(150)
+  role_id           Int                @default(0)
+  password          String             @db.VarChar(255)
+  created_at        DateTime?          @default(now())
+  updated_at        DateTime?          @db.Timestamp(0)
+  status            Int                @default(1)
+  verified          Int                @default(0)
+  verification_code String?            @db.VarChar(20)
   code_valid_till   DateTime?
-  role              roles     @relation(fields: [role_id], references: [id])
+  role              roles              @relation(fields: [role_id], references: [id])
   cases             cases[]
+  case_invitations  case_invitations[]
 }
 
 model roles {
@@ -65,7 +66,19 @@ model cases {
   case_associated_names case_associated_names[]
   case_milestones       case_milestones[]
   case_documents        case_documents[]
+  case_invitations      case_invitations[]
   created_at            DateTime                @default(now())
+}
+
+model case_invitations {
+  id      Int      @id @default(autoincrement())
+  case_id Int
+  user_id Int
+  // [0=>sent, 1=> accepted, 2=>expired]
+  status  Int      @default(0)
+  case    cases    @relation(fields: [case_id], references: [id])
+  user    users    @relation(fields: [user_id], references: [id])
+  sent_on DateTime @default(now())
 }
 
 model case_associated_names {
@@ -87,6 +100,7 @@ model case_documents {
   id            Int      @id @default(autoincrement())
   case_id       Int
   document_name String   @db.VarChar(100)
+  file_name     String   @db.VarChar(100)
   uploaded_on   DateTime
   case          cases    @relation(fields: [case_id], references: [id])
 }
@@ -122,10 +136,10 @@ model options {
   question    questions @relation(fields: [question_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
-model email_templates{
-  id            Int     @id @default(autoincrement())
-  subject       String  @db.VarChar(255)
-  from_email    String  @db.VarChar(100)
-  from_label    String  @db.VarChar(100)
-  content       String  @db.LongText
+model email_templates {
+  id         Int    @id @default(autoincrement())
+  subject    String @db.VarChar(255)
+  from_email String @db.VarChar(100)
+  from_label String @db.VarChar(100)
+  content    String @db.LongText
 }

@@ -27,7 +27,8 @@ const casesSchema = Joi.object({
   documents: Joi.array()
     .items(
       Joi.object({
-        document_name: Joi.string().max(100).required(),
+        document_name: Joi.string().max(200).required(),
+        file_name: Joi.string().max(200).required(),
         uploaded_file: Joi.string().optional(),
         uploaded_on: Joi.date().required(),
       })
@@ -66,6 +67,7 @@ const casesSchemaForm3 = Joi.object({
     .items(
       Joi.object({
         document_name: Joi.string().max(100).required(),
+        file_name: Joi.string().max(200).required(),
         uploaded_file: Joi.string().optional(),
         uploaded_on: Joi.date().required(),
       })
