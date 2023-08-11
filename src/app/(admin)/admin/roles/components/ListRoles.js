@@ -8,6 +8,7 @@ import Pagination from "react-js-pagination";
 import AddEditRole from './AddEditRole';
 import { toast } from 'react-toastify';
 import common from "@/utils/common";
+LoadingOverlay.propTypes = undefined
 
 export default function ListRoles() {
     const [loader, setLoader] = useState(false);

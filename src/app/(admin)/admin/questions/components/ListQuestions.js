@@ -9,6 +9,7 @@ import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
+LoadingOverlay.propTypes = undefined
 
 export default function ListQuestions() {
   const [loader, setLoader] = useState(false);

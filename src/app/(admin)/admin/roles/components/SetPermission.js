@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Modal, Spinner, FloatingLabel, Form, Row, Col } from "react-bootstrap";
 import LoadingOverlay from 'react-loading-overlay';
 import { toast } from 'react-toastify';
+LoadingOverlay.propTypes = undefined
 
 export default function SetPermission(props) {
     const [loader, setLoader] = useState(false);

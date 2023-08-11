@@ -10,6 +10,7 @@ import common from "@/utils/common";
 import { toast } from "react-toastify";
 import Case from "./Case";
 import AddEditCase from "./AddEditCase";
+LoadingOverlay.propTypes = undefined
 
 
 export default function ListCases() {

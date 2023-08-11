@@ -9,6 +9,7 @@ import AddEditUser from './AddEditUser';
 import SearchBox from '@/app/components/SearchBox';
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
+LoadingOverlay.propTypes = undefined
 
 
 export default function ListUsers() {
