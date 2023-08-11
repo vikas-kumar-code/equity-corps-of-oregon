@@ -1,13 +1,7 @@
 "use client";
 
-import React, { Component } from 'react'
-import {
-  Button,
-  Modal,
-  Spinner,
-  Form,
-  Col,
-} from "react-bootstrap";
+import React, { Component } from "react";
+import { Button, Modal, Spinner, Form, Col } from "react-bootstrap";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
 import AsyncSelect from "react-select/async";
@@ -20,7 +14,7 @@ export default class SendInvitation extends Component {
       fields: {},
       errors: {},
       users: [],
-      submitted: false
+      submitted: false,
     };
   }
   promiseUserOptions = (inputValue) => {
@@ -29,18 +23,23 @@ export default class SendInvitation extends Component {
     }
     return new Promise((resolve) => {
       if (inputValue !== "") {
-        searchTimeOut = setTimeout(() => {
+        this.searchTimeOut = setTimeout(() => {
           fetch(
             common.apiPath(
-              `/admin/users/search?role_id=3&keyword=${inputValue}`
+              `/admin/users/search/?role_id=3&keyword=${inputValue}`
             )
           )
             .then((response) => response.json())
             .then((response) => {
               if (response.success) {
-                setUsers(response.data);
-                resolve(filterUser(inputValue));
-
+                let userResponse = JSON.parse(response.records);
+                let users = [];
+                userResponse.forEach((user, index) => {
+                  users[index] = { label: user.name, value: user.id };
+                });
+                this.setState({ users }, () => {
+                  resolve(this.filterUser(inputValue));
+                });
               } else if (response.error) {
                 toast.error(response.message);
               }
@@ -48,7 +47,7 @@ export default class SendInvitation extends Component {
             .catch((error) => {
               toast.error(error.message);
             })
-            .finally(() => setLoader(false));
+            .finally(() => {});
         }, 500);
       } else {
         resolve(this.filterUser(inputValue));
@@ -109,6 +108,6 @@ export default class SendInvitation extends Component {
           </Modal.Footer>
         </Form>
       </Modal>
-    )
+    );
   }
 }

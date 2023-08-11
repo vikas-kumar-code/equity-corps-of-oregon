@@ -21,6 +21,7 @@ export async function GET(request) {
     }
   }
 
+
   const records = await prisma.users.findMany({
     select: {
       id: true,
