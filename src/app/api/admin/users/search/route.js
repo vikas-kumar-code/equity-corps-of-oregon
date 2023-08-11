@@ -1,46 +1,39 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-const prisma = new PrismaClient();
+
+const prisma = new PrismaClient({
+  log: ['query'],
+});
 export async function GET(request) {
-  try {
-    const query = request.nextUrl.searchParams;
-    let searchRecords = [];
-    if (query.get("search-type")) {
-      let where = {};
-      if (query.get("name")) {
-        where = {
-          ...where,
-          name: {
-            contains: query.get("name"),
-          },
-        };
-      }
-      if (query.get("email")) {
-        where = {
-          ...where,
-          email: {
-            contains: query.get("email"),
-          },
-        };
-      }
-      if (query.get("search-type") == "asyc-select-eco-providers") {
-        console.log('asfdasdf');
-        where = { ...where, role_id: 3 };
-        searchRecords = await prisma.users.findMany({
-          take: 20, 
-          where: { ...where },
-        });
+  let where = {};
+  if (request.nextUrl.searchParams.get('keyword')) {
+    where = {
+      ...where,
+      name: {
+        contains: request.nextUrl.searchParams.get('keyword')
       }
     }
-    return NextResponse.json({
-      success: true,
-      message: "Users search list",
-      data: searchRecords,
-    });
-  } catch (error) {
-    return NextResponse.json({
-      error: true,
-      message: error.message,
-    });
   }
+  if (request.nextUrl.searchParams.get('role_id')) {
+    where = {
+      ...where,
+      role_id: Number(request.nextUrl.searchParams.get('role_id'))
+    }
+  }
+
+  const records = await prisma.users.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true
+    },
+    where: { ...where },
+    orderBy: [
+      { name: 'asc' }
+    ]
+  });
+  return NextResponse.json({
+    success: true,
+    records: JSON.stringify(records, (key, value) => (typeof value === 'bigint' ? value.toString() : value))
+  });
 }

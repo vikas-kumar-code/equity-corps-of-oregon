@@ -5,6 +5,7 @@ import { Button, Modal, Spinner, FloatingLabel, Form, Row, Col } from "react-boo
 import LoadingOverlay from 'react-loading-overlay';
 import { toast } from 'react-toastify';
 import common from "@/utils/common";
+LoadingOverlay.propTypes = undefined
 
 
 export default function AddEditRole(props) {

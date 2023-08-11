@@ -25,12 +25,12 @@ export async function POST(request) {
           password: await hash(record.password, 10),
           status: record.status,
           role_id: record.role_id,
-          role: {
+          /* role: {
             create: {
               name: "VK Role",
               status: 1,
             },
-          },
+          }, */
         },
       });
       if (response) {

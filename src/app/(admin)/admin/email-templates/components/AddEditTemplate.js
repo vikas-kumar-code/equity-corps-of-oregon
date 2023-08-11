@@ -14,6 +14,7 @@ import {
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
+LoadingOverlay.propTypes = undefined
 
 const Editor = dynamic(() => import("../../../components/Editor"), { ssr: false });
 

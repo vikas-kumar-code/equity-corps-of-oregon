@@ -13,6 +13,7 @@ import {
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
+LoadingOverlay.propTypes = undefined
 
 export default function AddEditQuestion(props) {
   const [loader, setLoader] = useState(false);

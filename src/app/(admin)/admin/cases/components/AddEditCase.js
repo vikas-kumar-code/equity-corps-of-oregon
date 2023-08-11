@@ -23,6 +23,7 @@ import {
 } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
+LoadingOverlay.propTypes = undefined
 
 export default function AddEditCase(props) {
   const [loader, setLoader] = useState(false);
