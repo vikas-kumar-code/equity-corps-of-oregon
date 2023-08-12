@@ -1,13 +1,16 @@
 import nodemailer from "nodemailer";
 import placeholders from "./placeholders";
+import { PrismaClient } from "@prisma/client";
+import common from "./common";
+import ejs from "ejs";
+
+const prisma = new PrismaClient();
 
 const sendMail = async (
   options = {
-    to: "", // ---required
-    subject: "", // ---optional  
-    templateId: "", // ---required
-    modelsData: {}, // ---required
-    withLayout: true,
+    to: "", // required
+    templateId: "", // required
+    modelsData: {} // required
   }
 ) => {
   try {
@@ -17,73 +20,55 @@ const sendMail = async (
       auth: {
         user: process.env.MAIL_USERNAME,
         pass: process.env.MAIL_PASSWORD,
-      },
-    });
+      }
+    });    
+    const mailData = await createMailData(
+      options.templateId,
+      options.modelsData
+    );
+    // console.log('xxxxxxxxxxx');
     const info = await transporter.sendMail({
-      from: `"${process.env.MAIL_FROM_NAME}" <${process.env.MAIL_FROM_ADDRESS}>`,
-      ...options,
+      to: options.to,
+      ...mailData,
     });
+    console.log(info);
     return info?.accepted && info?.accepted.length > 0 ? true : false;
   } catch (error) {
+    console.log('here : ',error.message);
     return false;
   }
 };
 
-
-const getEmailContent = async (templateId, modelsData = {}, layout = true) => {
-  try {
-    // Get placeholders
-    const placeholders = placeholders(modelsData)
-
-    if (templateId) {
-      const data = await EmailTemplate.find(templateId); // Assuming EmailTemplate provides a method for finding by ID
-      if (data) {
-        let content = data.content;
-
-        Object.entries(placeholders).forEach(([placeholder, value]) => {
-          // Check both types of placeholders
-          // Example: USER-NAME, USER_NAME
-          const placeholder1 = placeholder
-            .replace(/_/g, "+")
-            .replace(/-/g, "+");
-          const placeholder2 = placeholder
-            .replace(/_/g, "-")
-            .replace(/-/g, "+");
-
-          if (content.includes(placeholder1)) {
-            content = content.replace(new RegExp(placeholder1, "g"), value);
-          }
-          if (content.includes(placeholder2)) {
-            content = content.replace(new RegExp(placeholder2, "g"), value);
-          }
-        });
-
-        if (layout) {
-          const templatePath = common.basePath("src/ejs/email-template.ejs");
-          const emailHtml = await ejs.renderFile(templatePath, data);
-          return renderView("emails.master-email", { content });
-        } else {
-          return content;
+const createMailData = async (templateId, modelsData = {}) => {
+  const placeholdersData = placeholders(modelsData);
+  if (templateId) {
+    const mailData = await prisma.email_templates.findUnique({
+      where: {
+        id: parseInt(templateId),
+      },
+    });
+    if (mailData) {
+      let content = mailData.content;
+      // replace placeholders with their values
+      Object.entries(placeholdersData).forEach(([placeholder, value]) => {
+        if (content.includes(`[${placeholder}]`)) {
+          content = content.replace(new RegExp(`\\[${placeholder}\\]`, "g"), value);
         }
-      } else {
-        return false;
-      }
-    } else {
-      return false;
+      });
+      console.log('yyyyyyyyy');
+      const templatePath = common.basePath("src/ejs/email-template.ejs");
+      console.log(content);
+      const message = await ejs.renderFile(templatePath, {
+        content: content,
+      });
+      return {
+        subject: mailData.subject,
+        from: '"' + mailData.from_label + '" <' + mailData.from_email + ">",
+        html: message,
+      };
     }
-  } catch (error) {
-    return false;
   }
-}
-
-// Example usage
-get_email_content(templateId, modelsData, true) // Replace templateId and modelsData with actual values
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-
+  throw new Error("Failed to send mail..!");
+};
 
 export default sendMail;

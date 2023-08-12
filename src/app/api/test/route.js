@@ -1,17 +1,19 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import ejs from "ejs";
-import path from "path";
-import common from "@/utils/common";
+import sendMail from "@/utils/sendMail";
 
 export async function GET(request, data) {
   try {
-    // Render the template with data
-    const templatePath = common.basePath("src/ejs/email-template.ejs");
-    const emailHtml = await ejs.renderFile(templatePath, data);
-
+    const mail = sendMail({
+      to: "vishalkumarmx@gmail.com",
+      templateId: 1,
+      modelsData:{
+        users:{
+          name:'Vishal Kumar'
+        }
+      }
+    });
     return NextResponse.json({
-      success: emailHtml,
+      success: mail ? 'Sent' : 'Failed',
     });
   } catch (error) {
     return NextResponse.json({
