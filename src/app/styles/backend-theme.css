@@ -19074,10 +19074,10 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
   color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
 }
 
-.text-black {
+/* .text-black {
   --bs-text-opacity: 1;
   color: rgba(var(--bs-black-rgb), var(--bs-text-opacity)) !important;
-}
+} */
 
 .text-white {
   --bs-text-opacity: 1;

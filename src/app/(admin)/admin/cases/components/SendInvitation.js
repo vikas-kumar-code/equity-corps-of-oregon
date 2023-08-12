@@ -5,6 +5,7 @@ import { Button, Modal, Spinner, Form, Col } from "react-bootstrap";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
 import AsyncSelect from "react-select/async";
+import "../../../../styles/async-select.css";
 
 export default class SendInvitation extends Component {
   constructor(props) {
@@ -60,6 +61,7 @@ export default class SendInvitation extends Component {
       i.label.toLowerCase().includes(inputValue.toLowerCase())
     );
   };
+
   render() {
     return (
       <Modal
@@ -77,6 +79,7 @@ export default class SendInvitation extends Component {
           <Modal.Body>
             <Form.Group as={Col} md={12} className="mb-2">
               <AsyncSelect
+              className="multi-select-input"
                 isMulti
                 cacheOptions
                 defaultOptions
