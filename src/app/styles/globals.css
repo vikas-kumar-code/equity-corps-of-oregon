@@ -42,6 +42,10 @@
   margin-top: 0px;
 }
 
+.line-height-15 {
+  line-height: 1.5;
+}
+
 .form-check .form-check-label {
   line-height: 1.7;
 }
@@ -53,7 +57,7 @@
   min-height: 120px !important;
 }
 
-.invalid-feedback::first-letter {
+.invalid-feedback::first-letter, .uc-first::first-letter {
   text-transform: uppercase;
 }
 
@@ -61,4 +65,10 @@
   display: block !important;
 }
 
-.question-td{max-width: 50%;}
+.question-td {
+  max-width: 50%;
+}
+
+.pagination{
+  margin-bottom: 5px;
+}

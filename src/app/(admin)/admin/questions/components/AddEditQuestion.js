@@ -1,6 +1,6 @@
 "use client";
 
-import common from "@/app/utils/common";
+import common from "@/utils/common";
 import React, { useState, useEffect } from "react";
 import {
   Button,
@@ -13,6 +13,8 @@ import {
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
+LoadingOverlay.propTypes = undefined
+
 export default function AddEditQuestion(props) {
   const [loader, setLoader] = useState(false);
   const initialValues = {
@@ -29,10 +31,10 @@ export default function AddEditQuestion(props) {
     e.preventDefault();
     setSubmitted(true);
     setErrors({});
-    let REQUEST_URI = common.apiPath("api/questions/save");
+    let REQUEST_URI = common.apiPath("/admin/questions/save");
     let REQUEST_METHOD = "POST";
     if (props.recordId) {
-      REQUEST_URI = common.apiPath(`api/questions/save/${props.recordId}`);
+      REQUEST_URI = common.apiPath(`/admin/questions/save/${props.recordId}`);
       REQUEST_METHOD = "PUT";
     }
     fetch(REQUEST_URI, { method: REQUEST_METHOD, body: JSON.stringify(fields) })
@@ -70,7 +72,7 @@ export default function AddEditQuestion(props) {
 
   const getQuestion = async (id) => {
     setLoader(true);
-    fetch(common.apiPath(`/api/questions/get/${props.recordId}`))
+    fetch(common.apiPath(`/admin/questions/get/${props.recordId}`))
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
@@ -102,7 +104,7 @@ export default function AddEditQuestion(props) {
     >
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
-          <h3>{props.userId ? "Update" : "Add"} Question</h3>
+          <h3>{props.recordId ? "Update" : "Add New"} Question</h3>
         </Modal.Header>
         <Modal.Body>
           <LoadingOverlay active={loader} spinner text="Loading...">

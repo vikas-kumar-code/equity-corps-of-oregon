@@ -8,6 +8,8 @@ import Pagination from "react-js-pagination";
 import AddEditUser from './AddEditUser';
 import SearchBox from '@/app/components/SearchBox';
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
+import common from "@/utils/common";
+LoadingOverlay.propTypes = undefined
 
 
 export default function ListUsers() {
@@ -29,11 +31,11 @@ export default function ListUsers() {
 
     const getUsers = async () => {
         setLoader(true);
-        let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/users?page=${pageNumber}`;
+        let REQUEST_URI = common.apiPath(`/admin/users?page=${pageNumber}`);
         if (fields !== null) {
             fields['page'] = pageNumber;
             const queryString = new URLSearchParams(fields).toString();
-            REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/users?${queryString}`;
+            REQUEST_URI = common.apiPath(`/admin/users?${queryString}`)
         }
         const response = await fetch(REQUEST_URI);
         const data = await response.json();

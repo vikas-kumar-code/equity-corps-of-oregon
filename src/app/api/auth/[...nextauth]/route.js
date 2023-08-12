@@ -37,6 +37,7 @@ export const authOptions = {
                         email: credentials.email
                     }
                 });
+                //console.log(user)
                 if (!user) {
                     return null;
                 }
@@ -45,7 +46,6 @@ export const authOptions = {
                 if (!isPasswordValid) {
                     return null;
                 }
-
                 // If no error and we have user data, return it
                 if (user) {
                     return user

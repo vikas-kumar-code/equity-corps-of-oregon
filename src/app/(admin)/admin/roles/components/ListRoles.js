@@ -7,6 +7,8 @@ import { Card, Row, Col, Button } from "react-bootstrap"
 import Pagination from "react-js-pagination";
 import AddEditRole from './AddEditRole';
 import { toast } from 'react-toastify';
+import common from "@/utils/common";
+LoadingOverlay.propTypes = undefined
 
 export default function ListRoles() {
     const [loader, setLoader] = useState(false);
@@ -20,7 +22,7 @@ export default function ListRoles() {
 
     const getRecords = async () => {
         setLoader(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/roles?page=${pageNumber}`);
+        const response = await fetch(common.apiPath(`/admin/roles?page=${pageNumber}`));
         const data = await response.json();
         setLoader(false);
         setRecords(JSON.parse(data.records));
@@ -34,7 +36,7 @@ export default function ListRoles() {
 
     const deleteRecord = async (id) => {
         if (window.confirm('Are you sure to delete this role?')) {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/roles/delete/${id}`, {
+            const response = await fetch(common.apiPath(`/admin/roles/delete/${id}`), {
                 method: 'DELETE'
             });
             const data = await response.json();

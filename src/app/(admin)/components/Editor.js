@@ -4,14 +4,14 @@ import React, { memo } from 'react'
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 
-const Editor = ({ value, handleDescription }) => {
+const Editor = ({ value, handleContent }) => {
     return (
         <CKEditor
             editor={ClassicEditor}
             data={value}
             onChange={(event, editor) => {
                 const data = editor.getData();
-                handleDescription(data);
+                handleContent(data);
             }}
         />
     )

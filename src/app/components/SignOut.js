@@ -6,7 +6,6 @@ import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 
 export default function SignOut() {
   const session = useSession();
-  console.log(session);
   return (
 
 
