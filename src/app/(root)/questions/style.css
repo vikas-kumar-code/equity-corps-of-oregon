@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 .question-bg{
-    background: url("/images/Login_bg.jpg");
+    /* background: url("/images/Login_bg.jpg"); */
     background-size: cover;
     height: 100vh;
     display: flex;
@@ -20,7 +20,7 @@
     justify-content: center;
     align-items: center;
     box-shadow: 1px 1px 24px 1px;
-    background-color: #191c24;
+    background-color: #0A2640;
     color: aliceblue;
     font-size: 22px;
     border-radius: 8px;
@@ -31,31 +31,12 @@
     margin-bottom: 20px;
   }
 
-  button{
-    width: 20rem;
-    height: 2.2rem;
-    margin: 0.4rem;
-    background-color: #537576;
-    color: aliceblue;
-    font-size: 18px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 5px 0px;
-  }
+ .check_box{
+  height: 1rem;
+ }
+ .input{
+  height: 3.5rem;
+ }
 
-  @keyframes slide-in {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(0);
-    }
-  }
-  
-  .slide-in-element {
-    animation: 1s ease-out 0s 1 slide-in;
-  }
-  
-  .slide-in-element-active {
-    opacity: 0;;
-  }
+ 
   

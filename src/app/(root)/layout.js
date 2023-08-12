@@ -17,8 +17,8 @@ export default function RootLayout({ children }) {
 
                 <main>
                     <main className="main" id="top">
-                        <nav className="navbar navbar-expand-lg fixed-top navbar-dark" data-navbar-on-scroll="data-navbar-on-scroll">
-                            <div className="container"><a className="navbar-brand" href="index.html">
+                        <nav className="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" data-navbar-on-scroll="data-navbar-on-scroll">
+                            <div className="container"><a className="navbar-brand" href="/">
                                 <Image
                                     src="/images/logo-front.png"
                                     alt="Vercel Logo"

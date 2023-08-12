@@ -1,205 +1,38 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function About() {
   return (
     <div>
       <section className="bg-dark text-center py-9">
         <div className="container">
-          <p className="text-light fs-1">About</p>
           <div className="col-12 col-md-7 mx-auto">
-            <h1 className="text-white fs-lg-7 fs-md-4 fs-3 my-4">We love to make great things, things that matter.</h1>
+            <h2 className="text-white fs-lg-5 fs-md-4 fs-3 my-4 fw-bolder">About Equity Corps of Oregon</h2>
           </div>
-          <p className="w-md-50 text-light mx-auto">Funding handshake buyer business-to-business metrics iPad partnership. First mover advantage innovator success deployment non-disclosure.</p>
+          <p className="w-md-50 text-light mx-auto fs-lg-2">ECO provides free, high quality immigration legal services to Oregonians at risk of deportation or civic exclusion due to their immigration status.</p>
         </div>
       </section>
 
       <section className="pb-0">
         <div className="container">
-          <div className="gallery-wraper">
-            <div className="img-wraper">
-                <Image
-                  src="/images/gallery/1.png"
-                  alt="Vercel Logo"
-                  className="img-fluid"
-                  width={340}
-                  height={343}
-                  priority
-                />
-            </div>
-            <div className="img-wraper">
-                <Image
-                  src="/images/gallery/2.png"
-                  alt="Vercel Logo"
-                  className="img-fluid"
-                  width={408}
-                  height={727}
-                  priority
-                />
-            </div>
-            <div className="img-wraper">
-                <Image
-                  src="/images/gallery/3.png"
-                  alt="Vercel Logo"
-                  className="img-fluid"
-                  width={340}
-                  height={343}
-                  priority
-                />
-            </div>
-            <div className="img-wraper">
-                <Image
-                  src="/images/gallery/4.png"
-                  alt="Vercel Logo"
-                  className="img-fluid"
-                  width={340}
-                  height={343}
-                  priority
-                />
-            </div>
-            <div className="img-wraper">
-                <Image
-                  src="/images/gallery/5.png"
-                  alt="Vercel Logo"
-                  className="img-fluid"
-                  width={340}
-                  height={343}
-                  priority
-                />
-            </div>
+          <div className="px-xl-8 px-md-5 px-3 pb-8">
+            <p className="fs-5">About</p>
+            <p className="fs-1">Equity Corps of Oregon, or ECO, is a collaborative of community-based organizations, nonprofits, and attorneys working to provide universal legal representation to all eligible immigrants in Oregon so everyone can defend against a deportation or civic exclusion on account of immigration status.
+
+              ECO is part of <a href='https://workerrelief.org/' style={{textDecoration:"underline !important", color:"blue"}}>Oregon Worker Relief</a> , a statewide network of community-based organizations dedicated to providing assistance to immigrant Oregonians excluded from federal and state safety-net programs.
+
+              In addition to providing access to legal representation, ECO offers services such as navigation and social service support, and educates and empowers migrant communities.</p>
           </div>
-          <div className="px-xl-8 px-md-5 px-3 py-8">
-            <p className="fs-1">Our Story</p>
-            <h1 className="fs-lg-6 fs-md-4 fs-3 my-4">Handshake infographic mass market crowdfunding iteration.</h1>
+          <div className="px-xl-8 px-md-5 px-3 pb-8">
+            <p className="fs-5">History</p>
+            <p className="fs-1">The Equity Corps officially launched in the fall of 2018, with support from the City of Portland and Multnomah County. The program is the culmination of a years-long effort by members of the Oregon Ready coalition to create an innovative universal representation model to defend immigrant Oregonians from unjust and unlawful deportations.</p>
+            <p className="fs-1">Legal representation is often the difference between an immigrant exercising their rights and accepting an unfair outcome, between an asylum seeker finding refuge or returning to a life-threatening situation, and between a family with mixed status staying together and being split apart. Immigrants who are represented in removal proceedings are fifteen times more likely to apply for relief and five-and-a-half times more likely to win their cases and prevail against unjust deportations when compared to their non-represented counterparts.</p>
+            <p className="fs-1">Universal Representation (SB1543) successfully passed the Oregon legislature in 2022 to create a permanent statewide Universal Navigation and Representation program which embeds access to justice in community. Now part of Oregon Worker Relief, ECO is a collaborative of community-based organizations, nonprofits, and attorneys working to provide Universal Legal Representation to all immigrants in Oregon. </p>
+          </div>
+          <div className="px-xl-8 px-md-5 px-3 pb-8">
+            <p className="fs-5">Our Story</p>
+            <h1 className="fs-lg-3 fs-md-4 fs-3 my-4">Handshake infographic mass market crowdfunding iteration.</h1>
             <p className="fs-1">Conversion angel investor entrepreneur first mover advantage. Handshake infographic mass market crowdfunding iteration. Traction stock user experience deployment beta innovator incubator focus. Sales user experience branding growth hacking holy grail monetization conversion prototype stock network effects. Learning curve network effects return on investment bootstrapping business-to-consumer.</p>
-          </div>
-        </div>
-      </section>
-
-
-
-
-      <section className="bg-dark">
-        <div className="container">
-          <p className="text-center text-light">Our numbers</p>
-          <h1 className="text-center text-white w-lg-75 mx-auto fs-xl-6 fs-lg-4 fs-3">Handshake infographic mass market crowdfunding iteration.</h1>
-          <div className="row mt-5">
-            <div className="col-md-4 col-sm-6 text-center">
-              <h1 className="text-success fs-5 fs-md-6 fs-lg-7 fs-xl-9">120M</h1>
-              <p className="text-light fs-2">Cool feature title</p>
-            </div>
-            <div className="col-md-4 col-sm-6 text-center">
-              <h1 className="text-success fs-5 fs-md-6 fs-lg-7 fs-xl-9">10.000</h1>
-              <p className="text-light fs-2">Cool feature title</p>
-            </div>
-            <div className="col-md-4 col-sm-6 text-center">
-              <h1 className="text-success fs-5 fs-md-6 fs-lg-7 fs-xl-9">240</h1>
-              <p className="text-light fs-2">Cool feature title</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-
-
-      <section>
-        <div className="container">
-          <div className="px-xl-8 px-md-5 px-3">
-            <p className="text-gray fs-1">Our team</p>
-            <h1 className="text-black fs-lg-6 fs-md-4 fs-3 my-4">The leadership team</h1>
-            <p className="text-gray fs-1 w-lg-75">Conversion angel investor entrepreneur first mover advantage. Handshake infographic mass market crowdfunding iteration. Traction stock user experience deployment beta innovator incubator focus.</p>
-          </div>
-          <div className="row mt-7">
-            <div className="col-md-4 col-sm-6 mb-5 mb-lg-0 text-center text-sm-left"><a href="#">
-              <Image
-                  src="/images/team/1.png"
-                  alt="Vercel Logo"
-                  className="img-fluid"
-                  width={300}
-                  height={354}
-                  priority
-                />
-              </a>
-              <h1 className="fs-3 mt-3">Michael Scott</h1>
-              <p className="fs-1">General Manager</p>
-            </div>
-            <div className="col-md-4 col-sm-6 mb-5 mb-lg-0 text-center text-sm-left"><a href="#"><Image
-                  src="/images/team/2.png"
-                  alt="Vercel Logo"
-                  className="img-fluid"
-                  width={300}
-                  height={354}
-                  priority
-                /></a>
-              <h1 className="fs-3 mt-3">Dwight Schrute</h1>
-              <p className="fs-1">General Manager</p>
-            </div>
-            <div className="col-md-4 col-sm-6 mb-5 mb-lg-0 text-center text-sm-left"><a href="#"><Image
-                  src="/images/team/3.png"
-                  alt="Vercel Logo"
-                  className="img-fluid"
-                  width={300}
-                  height={354}
-                  priority
-                /></a>
-              <h1 className="fs-3 mt-3">Pam Beetsley</h1>
-              <p className="fs-1">General Manager</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-
-
-      <section className="bg-dark">
-        <div className="container">
-          <div className="px-xl-8 px-md-5 px-3">
-            <p className="text-light fs-1">Our values</p>
-            <h1 className="text-white fs-lg-6 fs-md-4 fs-3 my-lg-4 my-3">Things in we believe</h1>
-            <p className="text-light w-lg-75 fs-1">Conversion angel investor entrepreneur first mover advantage. Handshake infographic mass market crowdfunding iteration. Traction stock user experience deployment beta innovator incubator focus.</p>
-            <div className="row mt-5">
-              <div className="col-md-3"><Image
-                  src="/images/values/1.png"
-                  alt="Vercel Logo"
-                  className="img-fluid"
-                  width={150}
-                  height={151}
-                  priority
-                /></div>
-              <div className="col-md-9 mt-2 mb-md-0">
-                <h1 className="text-white fs-2 fs-lg-3 my-2">We are commited.</h1>
-                <p className="text-light fs-1">Conversion angel investor entrepreneur first mover advantage. Handshake infographic mass market crowdfunding iteration.</p>
-              </div>
-            </div>
-            <div className="row mt-5">
-              <div className="col-md-3"><Image
-                  src="/images/values/2.png"
-                  alt="Vercel Logo"
-                  className="img-fluid"
-                  width={150}
-                  height={151}
-                  priority
-                /></div>
-              <div className="col-md-9 mt-2 mb-md-0">
-                <h1 className="text-white fs-2 fs-lg-3 my-2">We are responsible.</h1>
-                <p className="text-light fs-1">Conversion angel investor entrepreneur first mover advantage. Handshake infographic mass market crowdfunding iteration.</p>
-              </div>
-            </div>
-            <div className="row mt-5">
-              <div className="col-md-3"><Image
-                  src="/images/values/3.png"
-                  alt="Vercel Logo"
-                  className="img-fluid"
-                  width={150}
-                  height={151}
-                  priority
-                /></div>
-              <div className="col-md-9 mt-2 mb-md-0">
-                <h1 className="text-white fs-2 fs-lg-3 my-2">We aim for progress.</h1>
-                <p className="text-light fs-1">Conversion angel investor entrepreneur first mover advantage. Handshake infographic mass market crowdfunding iteration.</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
