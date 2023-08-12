@@ -34,10 +34,10 @@ export default function AddEditTemplate(props) {
     setSubmitted(true);
     setErrors({});
     fields.content = content;
-    let REQUEST_URI = common.apiPath("api/email-templates/save");
+    let REQUEST_URI = common.apiPath("admin/email-templates/save");
     let REQUEST_METHOD = "POST";
     if (props.recordId) {
-      REQUEST_URI = common.apiPath(`api/email-templates/save/${props.recordId}`);
+      REQUEST_URI = common.apiPath(`admin/email-templates/save/${props.recordId}`);
       REQUEST_METHOD = "PUT";
     }
     fetch(REQUEST_URI, { method: REQUEST_METHOD, body: JSON.stringify(fields) })
