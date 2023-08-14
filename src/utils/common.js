@@ -2,6 +2,13 @@ const pathJoin = (...parts) => {
   return parts.join("/").replace(/\/+/g, "/");
 };
 
+const params = {
+  templateId: {
+    sendCaseInvitation: 1,
+    forgetPassword: 2,
+  },
+};
+
 const common = {
   params: params,
   pathJoin: pathJoin,
@@ -61,11 +68,5 @@ const common = {
   },
 };
 
-const params = {
-  templateId: {
-    sendCaseInvitation: 1,
-    forgetPassword: 2,
-  },
-};
 
 export default common;

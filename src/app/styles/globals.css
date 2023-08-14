@@ -1,4 +1,9 @@
-.ck-content{
+.table-padding-1 th,
+.table-padding-1 td {
+  padding: 0.4375rem;
+}
+
+.ck-content {
   color: initial;
 }
 .ck-editor__editable {
@@ -60,7 +65,8 @@
   min-height: 120px !important;
 }
 
-.invalid-feedback::first-letter, .uc-first::first-letter {
+.invalid-feedback::first-letter,
+.uc-first::first-letter {
   text-transform: uppercase;
 }
 
@@ -72,6 +78,6 @@
   max-width: 50%;
 }
 
-.pagination{
+.pagination {
   margin-bottom: 5px;
 }
