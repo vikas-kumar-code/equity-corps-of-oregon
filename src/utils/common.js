@@ -3,6 +3,7 @@ const pathJoin = (...parts) => {
 };
 
 const common = {
+  params: params,
   pathJoin: pathJoin,
   //return API full path
   apiPath: (path = "") => {
@@ -57,6 +58,13 @@ const common = {
       skip: skip,
       take: recordPerPage,
     };
+  },
+};
+
+const params = {
+  templateId: {
+    sendCaseInvitation: 1,
+    forgetPassword: 2,
   },
 };
 

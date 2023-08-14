@@ -2,8 +2,8 @@
 <html lang="en-US">
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-    <title>EQUITY CORPS</title>
-    <meta name="description" content="EQUITY CORPS" />
+    <title><%= process.env.APP_NAME %></title>
+    <meta name="description" content="<%= process.env.APP_NAME %>" />
     <style type="text/css">
       a:hover {
         text-decoration: underline !important;
@@ -72,7 +72,7 @@
                   "
                 >
                   <tr>
-                    <td style="height: 40px">&nbsp;</td>
+                    <td style="height: 20px">&nbsp;</td>
                   </tr>
                   <tr>
                     <td style="padding: 0 30px">
@@ -99,7 +99,7 @@
                     margin: 0 0 0;
                   "
                 >
-                  &copy; <strong>EQUITY CORPS</strong>
+                  &copy; <strong><%= process.env.APP_NAME %></strong>
                 </p>
               </td>
             </tr>

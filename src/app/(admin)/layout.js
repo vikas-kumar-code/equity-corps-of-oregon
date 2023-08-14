@@ -3,7 +3,7 @@ import '../styles/backend-theme.css'
 
 import '../styles/globals.css'
 import { Inter } from 'next/font/google'
-import Provider from "../components/Provider"
+import Provider from '../components/provider'
 import Navigation from "./components/navigation"
 import SignOut from '../components/SignOut'
 import Image from 'next/image'
@@ -12,8 +12,8 @@ import NotificationContainer from './components/NotificationContainer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-    title: 'Equity Corps of Oregon - Admin Panel',
-    description: 'Equity Corps of Oregon - Admin Panel',
+    title: `${process.env.APP_NAME} - Admin Panel`,
+    description: `${process.env.APP_NAME} - Admin Panel`,
 }
 
 export default function AdminLayout({ children }) {
@@ -52,7 +52,7 @@ export default function AdminLayout({ children }) {
                                     {children}
                                     <footer className="footer">
                                         <div className="d-sm-flex justify-content-center justify-content-sm-between">
-                                            <span className="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © Equity Corps of Oregon {new Date().getFullYear()}</span>
+                                            <span className="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © `${process.env.APP_NAME}` of Oregon {new Date().getFullYear()}</span>
                                             <span className="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Powered By <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Mitiz Technologies</a></span>
                                         </div>
                                     </footer>

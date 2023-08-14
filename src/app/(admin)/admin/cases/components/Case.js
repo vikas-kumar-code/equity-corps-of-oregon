@@ -6,7 +6,6 @@ import { Button } from "react-bootstrap";
 import SendInvitation from "./SendInvitation";
 import AddEditCase from "./AddEditCase";
 
-
 export default function Case({ record, getRecords, deleteRecord, index, pageNumber, recordPerPage }) {
   const [showModal, setShowModal] = useState(false);
   const [showSendInvitationModal, setShowSendInvitationModal] = useState(false);
