@@ -76,6 +76,7 @@ export default function Case({ record, getRecords, deleteRecord, index, pageNumb
           }}
           recordId={record.id}
           reloadRecords={getRecords}
+          invitedUsers={record?.case_invitations || []}
         />
       )}
     </>
