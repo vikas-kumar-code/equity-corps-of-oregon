@@ -2,7 +2,15 @@ const pathJoin = (...parts) => {
   return parts.join("/").replace(/\/+/g, "/");
 };
 
+const params = {
+  templateId: {
+    sendCaseInvitation: 1,
+    forgetPassword: 2,
+  },
+};
+
 const common = {
+  params: params,
   pathJoin: pathJoin,
   //return API full path
   apiPath: (path = "") => {
@@ -59,5 +67,6 @@ const common = {
     };
   },
 };
+
 
 export default common;

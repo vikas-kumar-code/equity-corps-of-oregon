@@ -77,6 +77,19 @@ const casesSchemaForm3 = Joi.object({
     .required(),
 });
 
+const sendInvitationSchema = Joi.object({
+  case_id: Joi.number().integer().required(),
+  users: Joi.array()
+    .items(Joi.number().integer().label("Send Invitaion"))
+    .min(1)
+    .required(),
+});
+
 export default casesSchema;
 
-export { casesSchemaForm1, casesSchemaForm2, casesSchemaForm3 };
+export {
+  casesSchemaForm1,
+  casesSchemaForm2,
+  casesSchemaForm3,
+  sendInvitationSchema,
+};

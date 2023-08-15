@@ -10,7 +10,7 @@ const sendMail = async (
   options = {
     to: "", // required
     templateId: "", // required
-    modelsData: {} // required
+    modelsData: {}, // required
   }
 ) => {
   try {
@@ -20,22 +20,19 @@ const sendMail = async (
       auth: {
         user: process.env.MAIL_USERNAME,
         pass: process.env.MAIL_PASSWORD,
-      }
-    });    
+      },
+    });
     const mailData = await createMailData(
       options.templateId,
       options.modelsData
     );
-    // console.log('xxxxxxxxxxx');
     const info = await transporter.sendMail({
       to: options.to,
       ...mailData,
     });
-    console.log(info);
     return info?.accepted && info?.accepted.length > 0 ? true : false;
   } catch (error) {
-    console.log('here : ',error.message);
-    return false;
+    return error.message;
   }
 };
 
@@ -52,12 +49,13 @@ const createMailData = async (templateId, modelsData = {}) => {
       // replace placeholders with their values
       Object.entries(placeholdersData).forEach(([placeholder, value]) => {
         if (content.includes(`[${placeholder}]`)) {
-          content = content.replace(new RegExp(`\\[${placeholder}\\]`, "g"), value);
+          content = content.replace(
+            new RegExp(`\\[${placeholder}\\]`, "g"),
+            value
+          );
         }
       });
-      console.log('yyyyyyyyy');
       const templatePath = common.basePath("src/ejs/email-template.ejs");
-      console.log(content);
       const message = await ejs.renderFile(templatePath, {
         content: content,
       });
