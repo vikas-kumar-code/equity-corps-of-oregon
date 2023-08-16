@@ -1,7 +1,9 @@
 import React from "react";
+import { useState } from "react";
 import { Form } from "react-bootstrap";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import Select from 'react-select';
 
 const FormGroup = ({
   label,
@@ -18,8 +20,32 @@ const FormGroup = ({
   handleKeyDown,
   select,
   check,
-  errors
+  errors,
+  handleDropdownChange,
+  selectedOptions
 }) => {
+
+  const options = [
+    { value: 'option1', label: 'English' },
+    { value: 'option2', label: 'Spanish' },
+    { value: 'option3', label: 'Vietnamese' },
+    { value: 'option4', label: 'Filipino' },
+    { value: 'option1', label: 'Pashto' },
+    { value: 'option2', label: 'Dari / Persian' },
+    { value: 'option3', label: 'Arabic' },
+    { value: 'option4', label: 'Bengali' },
+    { value: 'option1', label: 'Chinese' },
+    { value: 'option2', label: 'Haitian Creole' },
+    { value: 'option3', label: 'French' },
+    { value: 'option4', label: 'Punjabi' },
+    { value: 'option1', label: 'Hindi' },
+    { value: 'option2', label: 'Portuguese' },
+    { value: 'option3', label: 'Tigrinya' },
+    { value: 'option4', label: 'Russian' },
+    { value: 'option3', label: 'Turkish' },
+    { value: 'option4', label: 'Other' },
+  ];
+
   return (
     <div>
       {steps === id && (
@@ -42,38 +68,20 @@ const FormGroup = ({
               className="phone-input"
             />
           ) : select ? (
-            <Form.Select
-              type="select"
+            <Select
+              isMulti
               placeholder="Type your answer here"
               ref={steps === id ? firstOptionRef : null}
-              value={fields[`${keyName}`] || ""}
-              onChange={(e) => handleChange(e, `${keyName}`)}
+              options={options}
+              value={selectedOptions}
+              onChange={handleDropdownChange}
               onKeyDown={handleKeyDown}
-            >
-              <option>English</option>
-              <option>Spanish</option>
-              <option>Vietnamese</option>
-              <option>Filipino</option>
-              <option>Pashto</option>
-              <option>Dari / Persian</option>
-              <option>Arabic</option>
-              <option>Bengali</option>
-              <option>Chinese</option>
-              <option>Haitian Creole</option>
-              <option>French</option>
-              <option>Punjabi</option>
-              <option>Hindi</option>
-              <option>Portuguese</option>
-              <option>Tigrinya</option>
-              <option>Russian</option>
-              <option>Turkish</option>
-              <option>Other</option>
-            </Form.Select>
+            />
           ) : check ? (
             <div className="d-flex ">
-              <Form.Check
+              <Form.Check className="mx-3 mt-1">
+              <Form.Check.Input
                 type="checkbox"
-                className="mx-3 mt-1"
                 checked={fields.eco_panel_attorney}
                 placeholder="Type your answer here"
                 ref={steps === id ? firstOptionRef : null}
@@ -81,10 +89,11 @@ const FormGroup = ({
                 onChange={(e) => handleChange(e, `${keyName}`)}
                 onKeyDown={handleKeyDown}
               />
-              <Form.Label className="form_label">
+              <Form.Label className="form_label"  htmlFor="eco-panel-attorney">
                 I have read and accept the terms of the ECO Panel Attorney
                 Program.<span className="text-danger">*</span>
               </Form.Label>
+              </Form.Check>
             </div>
           ) : (
             <Form.Control
