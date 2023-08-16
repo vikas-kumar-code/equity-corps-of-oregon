@@ -17,7 +17,7 @@ const AttorneysInfo = () => {
       <div className="mt-5 text-center">
         <Link
           href="https://universalrep.org/"
-          className="fs-3  bg-dark text-light p-3 rounded-4 text_link"
+          className="fs-3  bg-dark text-warning p-3 rounded-4 text_link"
           target="_blank"
         >
           Become an ECO Attorney

@@ -46,7 +46,7 @@ const EcoClinic = () => {
                   </li>
                 </ul>
               </li>
-              <li>An overview of asylum eligibility and proceedings</li>
+              <li className="mt-4">An overview of asylum eligibility and proceedings</li>
               <li>
                 <p>How to prepare for removal proceedings, including</p>
                 <ul>
@@ -63,7 +63,7 @@ const EcoClinic = () => {
                   </li>
                 </ul>
               </li>
-              <li>
+              <li className="mt-4">
                 How to enroll and access services in Equity Corps of Oregon
               </li>
               <li>Working with an accredited representative or lawyer</li>
@@ -102,7 +102,7 @@ const EcoClinic = () => {
                   </li>
                 </ul>
               </li>
-              <li>
+              <li className="mt-4">
                 <p>Community navigation</p>
                 <ul>
                   <li>
@@ -110,7 +110,7 @@ const EcoClinic = () => {
                   </li>
                 </ul>
               </li>
-              <li>
+              <li className="mt-4">
                 <p>Mutual Aid & Support Groups</p>
                 <ul>
                   <li>

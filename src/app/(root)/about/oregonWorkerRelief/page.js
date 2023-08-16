@@ -68,7 +68,7 @@ const OregonWorkerRelief = () => {
           <div className="text-center">
             <Link
               href="https://workerrelief.org/"
-              className="fs-3 bg-dark text-light p-3 rounded-4 text_link"
+              className="fs-3 bg-dark text-warning p-3 rounded-4 text_link"
               target="_blank"
             >
               Oregon Worker Relief Website

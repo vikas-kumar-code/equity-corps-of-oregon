@@ -35,7 +35,7 @@ const AttorneyProgram = () => {
               individuals enrolled with ECO on their immigration cases in order
               to achieve this goal.
             </p>
-            <p className="fs-3 text-dark">
+            <p className="fs-3 text-dark mt-5">
               ECO Panel Attorney Program Application & Registration
             </p>
             <p className="fs-1">
@@ -53,7 +53,7 @@ const AttorneyProgram = () => {
             <div className="mt-5 me-4 text-center">
               <Link
                 href="https://equitycorps.org/impact/"
-                className="fs-2  bg-dark text-light p-3 rounded-4 text_link"
+                className="fs-2  bg-dark text-warning p-3 rounded-4 text_link"
                 target="_blank"
               >
                 ECO Panel Attorney Program Application & Registration Form
@@ -112,7 +112,7 @@ const AttorneyProgram = () => {
               </Link>
               <Link 
                 href="https://equitycorps.org/wp-content/uploads/2023/01/ECO-Panel-Attorney-Program-vJan2023.pdf"
-                className="fs-1 bg-dark text-light p-2 mx-2 rounded-3 text_link"
+                className="fs-1 bg-dark text-warning p-2 mx-2 rounded-3 text_link"
                 target="_blank"
               >
                 Download

@@ -53,7 +53,7 @@ const GetInvolved = () => {
             <div className="mt-5 me-4 text-center">
           <Link
             href="https://equitycorps.org/impact/"
-            className="fs-2  bg-dark text-light p-3 rounded-4 text_link"
+            className="fs-2  bg-dark text-warning p-3 rounded-4 text_link"
           >
            Learn more about ECO’s Impact
           </Link>

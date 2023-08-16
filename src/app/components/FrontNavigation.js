@@ -133,7 +133,7 @@ export default function FrontNavigation() {
                 <Link
                   href="/getInvolved/ecoClinic"
                   className={
-                    pathname === "/getInvolved/ecoClinics"
+                    pathname === "/getInvolved/ecoClinic"
                       ? "nav-link active"
                       : "nav-link"
                   }

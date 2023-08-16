@@ -35,7 +35,7 @@ const FAQ = () => {
           <div className="mt-4 me-4">
             <Link
               href="https://equitycorps.org/impact/"
-              className="fs-2  bg-dark text-light p-3 rounded-4 text_link"
+              className="fs-2  bg-dark text-warning p-3 rounded-4 text_link"
               target="_blank"
             >
               Learn more about ECO’s Impact
@@ -67,7 +67,7 @@ const FAQ = () => {
               to providing assistance to immigrant Oregonians excluded from
               federal and state safety net programs.
             </p>
-            <p className="fs-3 text-dark">
+            <p className="fs-3 text-dark mt-5">
               How and why did Equity Corps of Oregon start?
             </p>
             <p className="fs-1">
@@ -119,7 +119,7 @@ const FAQ = () => {
               </Link>{" "}
               to all immigrants in Oregon.
             </p>
-            <p className="fs-3 text-dark">
+            <p className="fs-3 text-dark mt-5">
               How does Universal Representation through Equity Corps of Oregon
               work?
             </p>
@@ -175,7 +175,7 @@ const FAQ = () => {
               Funding allocated through SB 1543 in 2022 has been critical in
               building an effective statewide Universal Representation system
             </p>
-            <p className="fs-3 text-dark">
+            <p className="fs-3 text-dark mt-5">
               Is this legal aid or part of the public criminal defense system?
               Why is a universal representation fund needed?
             </p>
@@ -201,7 +201,7 @@ const FAQ = () => {
               have a lawful right to remain in the United States are routinely
               deported.
             </p>
-            <p className="fs-3 text-dark">
+            <p className="fs-3 text-dark mt-5">
               What are the eligibility requirements for someone to receive ECO
               services?
             </p>
@@ -219,7 +219,7 @@ const FAQ = () => {
               </Link>
               .
             </p>
-            <p className="fs-3 text-dark">
+            <p className="fs-3 text-dark mt-5">
               How does Universal Representation benefit Oregon?
             </p>
             <p className="fs-1">

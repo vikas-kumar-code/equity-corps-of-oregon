@@ -4,27 +4,10 @@
     box-sizing: border-box;
 }
 .question-bg{
-    /* background: url("/images/Login_bg.jpg"); */
-    background-size: cover;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .question{
-    border: 1px solid;
-    width: 60rem;
-    height: 30rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 1px 1px 24px 1px;
-    background-color: #0A2640;
-    color: aliceblue;
-    font-size: 22px;
-    border-radius: 8px;
-    font-weight: 900;
   }
 
   .ques{
@@ -36,6 +19,7 @@
  }
  .input{
   height: 3.5rem;
+  cursor: pointer;
  }
 
  

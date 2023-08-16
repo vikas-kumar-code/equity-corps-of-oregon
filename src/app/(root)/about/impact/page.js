@@ -72,10 +72,10 @@ const Impact = () => {
           </div>
         </div>
       </section>
-      <div className="my-5 text-center">
+      <div className="my-5 text-center pb-5">
         <Link
           href="https://universalrep.org/"
-          className="fs-3  bg-dark text-light p-3 rounded-4 text_link"
+          className="fs-3  bg-dark text-warning p-3 rounded-4 text_link"
           target="_blank"
         >
           Learn more about the importance of Universal Representation in Oregon
@@ -118,7 +118,7 @@ const Impact = () => {
             </li>
             <li>350+ Oregonians have applied for work authorization</li>
           </ul>
-          <h2>Passing Universal Representation in Oregon</h2>
+          <h2 className="mt-5">Passing Universal Representation in Oregon</h2>
           <p className="fs-1">
             In 2022, after years of grassroots advocacy by the immigrant
             community and immigrant justice organizations, the Oregon
@@ -157,7 +157,7 @@ const Impact = () => {
           </ul>
         </div>
       </div>
-      <div className="px-xl-8 px-md-5 px-3 pb-5 text-center">
+      <div className="px-xl-8 px-md-5 px-3 pb-5 mt-5 text-center">
         <Image
           src="/images/hero/help-line.png"
           alt="Vercel Logo"
