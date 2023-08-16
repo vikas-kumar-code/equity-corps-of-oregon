@@ -133,7 +133,7 @@ const page = () => {
               <h2 className="mb-5">
                 You Have Successfully completed your test
               </h2>
-              <Button className="btn btn-sm text-dark btn-success" onClick={handleSubmit}>
+              <Button className="btn btn-sm text-dark btn-success" href="/registration" onClick={handleSubmit}>
                 Submit
               </Button>
             </div>

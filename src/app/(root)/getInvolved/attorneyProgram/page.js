@@ -43,8 +43,7 @@ const AttorneyProgram = () => {
               filling out the{" "}
               <Link
                 className="text-warning text_link"
-                href="https://innovation-law-lab.typeform.com/to/YqwCJqDL?typeform-source=equitycorps.org"
-                target="_blank"
+                href="/questions"
               >
                 ECO Panel Attorney Program Application & Registration Form
               </Link>
@@ -52,9 +51,8 @@ const AttorneyProgram = () => {
             </p>
             <div className="mt-5 me-4 text-center">
               <Link
-                href="https://equitycorps.org/impact/"
+                href="/questions"
                 className="fs-2  bg-dark text-warning p-3 rounded-4 text_link"
-                target="_blank"
               >
                 ECO Panel Attorney Program Application & Registration Form
               </Link>
