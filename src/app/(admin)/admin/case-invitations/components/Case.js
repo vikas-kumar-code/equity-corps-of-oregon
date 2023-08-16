@@ -75,14 +75,19 @@ export default function Case({
         </td>
         <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
         <td>
-          <Button
-            className="me-2"
-            variant="success"
-            onClick={() => handleAccept(record.id)}
-          >
-            {submitted && <Spinner className="me-1" color="light" size="sm" />}
-            Accept
-          </Button>
+          {(!record?.case_invitations[0]?.status ||
+            record?.case_invitations[0]?.status !== 1) && (
+            <Button
+              className="me-2"
+              variant="success"
+              onClick={() => handleAccept(record.id)}
+            >
+              {submitted && (
+                <Spinner className="me-1" color="light" size="sm" />
+              )}
+              Accept
+            </Button>
+          )}
           <Button
             className="me-2"
             variant="primary"
@@ -99,9 +104,7 @@ export default function Case({
           closeModal={() => {
             setShowModal(false);
           }}
-          recordId={record.id}
-          reloadRecords={getRecords}
-          invitedUsers={record?.case_invitations || []}
+          record={record}
         />
       )}
     </>
