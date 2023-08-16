@@ -1,0 +1,97 @@
+.whitetheme .navbar, .whitetheme .sidebar .sidebar-brand-wrapper, .whitetheme .sidebar{
+  background-color: #fff;
+}
+.whitetheme .sidebar .nav{
+border-right: #cbd0dd solid 1px;
+padding-top: 100px;
+height: 100%;
+}
+.whitetheme .sidebar .nav:not(.sub-menu)>.nav-item:hover:not(.nav-category):not(.account-dropdown)>.nav-link, .whitetheme .sidebar .nav .nav-item.active>.nav-link {
+background: #e8e8e8;
+}
+.whitetheme .sidebar .nav:not(.sub-menu)>.nav-item:hover:not(.nav-category):not(.account-dropdown)>.nav-link span, .whitetheme .sidebar .nav .nav-item.active>.nav-link span {
+color: #0f1015;
+}
+.whitetheme .sidebar .sidebar-brand-wrapper{
+border-bottom: #cbd0dd solid 1px;
+}
+.whitetheme .navbar .navbar-menu-wrapper{
+box-shadow: none;
+border-bottom: #cbd0dd solid 1px;
+}
+.whitetheme .content-wrapper {
+background: #f5f7fa;
+color: #0f1015;
+}
+.whitetheme .dropdown-menu {
+background-color: #fff;
+border: #cbd0dd solid 1px;
+color: #0f1015;
+}
+.whitetheme .dropdown-menu .dropdown-item{
+color: #0f1015;
+}
+.whitetheme .dropdown-item:hover, .whitetheme .dropdown-item:focus {
+background-color: #e8e8e8;
+}
+
+/* Card */
+.whitetheme .card {
+background: #fff;
+}
+.whitetheme .card .card-title {
+color: #0f1015;
+}
+.whitetheme .border-bottom {
+border-bottom: 1px solid rgba(0, 0, 0, 0.125) !important;
+}
+.whitetheme .list-wrapper ul li {
+border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+/* Card */
+
+/* Table */
+.whitetheme .table> :not(:last-child)> :last-child>*, .jsgrid .jsgrid-table> :not(:last-child)> :last-child>*, .jsgrid .jsgrid-table> :not(:last-child)> :last-child>* {
+border-bottom: 1px solid rgba(0, 0, 0, 0.125) !important;
+}
+.whitetheme .table-responsive .table thead tr th:last-child {
+text-align: center;
+}
+.whitetheme .table-responsive .table tbody tr td {
+border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+.whitetheme .table-responsive .table tbody tr:last-child td {
+border-bottom: none;
+}
+.whitetheme .table-responsive .table tbody tr td:last-child {
+text-align: center;
+}
+/* Table */
+
+/* Pagination */
+.whitetheme .pagination {
+margin-bottom: 0;
+margin-top: 25px;
+}
+.whitetheme .page-item .page-link {
+background-color: #e8e8e8;
+color: #0f1015;
+}
+/* Pagination */
+
+/* Input */
+.whitetheme .form-control {
+border: 1px solid rgba(0, 0, 0, 0.125);
+background-color: #f9f9f9;
+color: #0f1015;
+}
+.whitetheme .form-control:focus {
+color: #0f1015 !important;
+}
+/* Input */
+
+/* Footer */
+.whitetheme .footer {
+background: #fff;
+border-top: #cbd0dd solid 1px;
+}
