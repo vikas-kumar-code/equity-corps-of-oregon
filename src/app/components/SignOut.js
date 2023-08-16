@@ -12,7 +12,7 @@ export default function SignOut() {
     <Nav className="ms-auto mt-3">
       <NavDropdown title={session.status === 'authenticated' ? session.data.user.name : 'Loading..'} id="nav-dropdown">
         <NavDropdown.Item eventKey="4.1">Settings</NavDropdown.Item>
-        <NavDropdown.Item eventKey="4.2" onClick={() => signOut({ callbackUrl: '/login' })}>Sing Out</NavDropdown.Item>
+        <NavDropdown.Item eventKey="4.2" onClick={() => signOut({ callbackUrl: '/login' })}>SignOut</NavDropdown.Item>
       </NavDropdown>
     </Nav>
   )
