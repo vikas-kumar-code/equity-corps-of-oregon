@@ -2,6 +2,7 @@ import '../styles/backend-theme.css'
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
 import '../styles/globals.css'
+import '../styles/whitetheme.css'
 import { Inter } from 'next/font/google'
 import Provider from '../components/provider'
 import Navigation from "./components/navigation"
@@ -22,7 +23,7 @@ export default function AdminLayout({ children }) {
             <body>
                 <Provider>
                     <NotificationContainer />
-                    <main>
+                    <main className='whitetheme'>
                         <div className="container-scroller">
                             <Navigation />
                             <div className="container-fluid page-body-wrapper">
