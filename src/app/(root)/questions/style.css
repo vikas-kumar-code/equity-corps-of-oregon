@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 .question-bg{
-    height: 100vh;
+    height: 80vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,5 +22,11 @@
   cursor: pointer;
  }
 
+ .questions{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+ }
  
   

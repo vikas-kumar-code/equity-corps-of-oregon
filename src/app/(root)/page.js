@@ -10,7 +10,7 @@ export default async function Home() {
       <div className="bg-dark">
         <section>
           <div className="container">
-            <div className="row align-items-center py-lg-6 py-4">
+            <div className="row align-items-center">
               <div className="col-lg-6 text-center text-lg-start">
                 <h1 className="text-white fs-5 fs-xl-6">ECO Panel Attorney Program</h1>
                 <p className="text-white py-lg-3 py-2">Equity Corps of Oregon’s objective is to provide universal representation, which protects our communities by making sure that no individual faces the risk of deportation or exclusion without legal consultation and representation. Equity Corps ultimately aims to end unjust and unfair deportations and civic exclusions by providing access to an attorney and support services for every eligible Oregonian at risk of removal or civic exclusion on account of immigration status.</p>

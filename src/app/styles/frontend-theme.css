@@ -20147,12 +20147,12 @@ code {
 
 section {
   position: relative;
-  padding-top: 4rem;
+  padding-top: 2rem;
   padding-bottom: 4rem;
 }
-@media (min-width: 992px) {
+@media (max-width: 992px) {
   section {
-    padding-top: 5.65rem;
+    padding-top: 2.65rem;
     padding-bottom: 5.65rem;
   }
 }

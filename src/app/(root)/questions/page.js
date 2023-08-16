@@ -44,14 +44,16 @@ const page = () => {
 
   const handleChange = (e) => {
     const selected = parseInt(e.target.value, 10);
-    const newAnswers = [...answers];
-    newAnswers[currentQues] = selected;
-    setAnswers(newAnswers);
-    setCurrentQues(currentQues + 1);
-    setIsActive(true);
+    const newAnswers = { ...answers };
+    newAnswers[currentQues] = selected;   
+    setAnswers(newAnswers);  
+    setTimeout(() => {
+      setIsActive(true);
+      setCurrentQues(currentQues + 1);
+    }, 400);     
     setTimeout(() => {
       setIsActive(false);
-    }, 1000);
+    }, 2000);
   };
 
   const handlePrev = () => {
@@ -62,14 +64,31 @@ const page = () => {
     }, 1000);
   };
 
+  const handleInputClick = (index) => {
+    const newAnswers = { ...answers };
+    newAnswers[currentQues] = index;   
+    setAnswers(newAnswers);  
+    setTimeout(() => {
+      setIsActive(true);
+      setCurrentQues(currentQues + 1);
+    }, 400);     
+    setTimeout(() => {
+      setIsActive(false);
+    }, 2000);
+};
+
   const handleSubmit = () => {
     console.log(answers);
   };
   return (
-    <div className="container-scroller my-5">
-      <div className="question-bg">
+    <div className="container-scroller">
+      <div className={`question-bg ${
+                  prevAnime
+                    ? "animate__animated animate__fadeInDown animate__delay-.2s"
+                    : ""
+                }`}>
         <div
-          className={` ${
+          className={`questions ${
             isActive
               ? "animate__animated animate__fadeInUp animate__delay-.2s"
               : ""
@@ -78,11 +97,7 @@ const page = () => {
           {currentQues < data.length ? (
             <div>
               <div
-                className={` ${
-                  prevAnime
-                    ? "animate__animated animate__fadeInDown animate__delay-.2s"
-                    : ""
-                }`}
+                
               >
                 <h4 className="ques fw-bold">
                   {currentQues + 1}. {data[currentQues].ques}
@@ -104,6 +119,7 @@ const page = () => {
                           value={option.opt}
                           checked={answers[currentQues] === i}
                           onChange={() => {}}
+                          onClick={() => handleInputClick(i)}
                           readOnly
                         />
                       </InputGroup>
@@ -113,18 +129,18 @@ const page = () => {
               </div>
             </div>
           ) : (
-            <div className="test_done text-center">
-              <h2 className="text-light mb-5">
+            <div className="text-center">
+              <h2 className="mb-5">
                 You Have Successfully completed your test
               </h2>
-              <Button className="btn btn-sm btn-success" onClick={handleSubmit}>
+              <Button className="btn btn-sm text-dark btn-success" onClick={handleSubmit}>
                 Submit
               </Button>
             </div>
           )}
           {currentQues > 0 && (
             <Button
-              className="btn btn-sm btn-success text-dark fs-1 my-2"
+              className="btn btn-sm btn-success text-dark my-2"
               onClick={handlePrev}
             >
               Prev
