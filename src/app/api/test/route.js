@@ -1,8 +1,23 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-export async function GET(request, data) {
+import sendMail from "@/utils/sendMail";
 
-  return NextResponse.json({
-    success: request.nextUrl.searchParams.get('q')
-  });
+export async function GET(request, data) {
+  try {
+    const mail = sendMail({
+      to: "vishalkumarmx@gmail.com",
+      templateId: 1,
+      modelsData:{
+        users:{
+          name:'Vishal Kumar'
+        }
+      }
+    });
+    return NextResponse.json({
+      success: mail ? 'Sent' : 'Failed',
+    });
+  } catch (error) {
+    return NextResponse.json({
+      error: error.message,
+    });
+  }
 }

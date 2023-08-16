@@ -6,8 +6,8 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-    title: 'Equity Corps of Oregon',
-    description: 'Equity Corps of Oregon',
+    title: `${process.env.APP_NAME}`,
+    description: `${process.env.APP_NAME}`,
 }
 
 export default function RootLayout({ children }) {
@@ -35,17 +35,19 @@ export default function RootLayout({ children }) {
                         {children}
                     </main>
                     <section>
-                        <div className="container bg-dark overflow-hidden rounded-1">
-                            <div className="bg-holder promo-bg">
-                            </div>
-                            <div className="px-5 py-7 position-relative">
-                                <h1 className="text-center w-lg-75 mx-auto fs-lg-6 fs-md-4 fs-3 text-white">An enterprise template to ramp up your company website</h1>
-                                <div className="row justify-content-center mt-5">
-                                    <div className="col-auto w-100 w-lg-50">
-                                        <input className="form-control mb-2 border-light fs-1" type="email" placeholder="Your email address" />
-                                    </div>
-                                    <div className="col-auto mt-2 mt-lg-0">
-                                        <button className="btn btn-success text-dark fs-1">Start now</button>
+                        <div className="bg-dark overflow-hidden rounded-1">
+                            <div className="container">
+                                <div className="bg-holder promo-bg">
+                                </div>
+                                <div className="px-5 py-7 position-relative">
+                                    <h1 className="text-center w-lg-75 mx-auto fs-lg-6 fs-md-4 fs-3 text-white">An enterprise template to ramp up your company website</h1>
+                                    <div className="row justify-content-center mt-5">
+                                        <div className="col-auto w-100 w-lg-50">
+                                            <input className="form-control mb-2 border-light fs-1" type="email" placeholder="Your email address" />
+                                        </div>
+                                        <div className="col-auto mt-2 mt-lg-0">
+                                            <button className="btn btn-success text-dark fs-1">Start now</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

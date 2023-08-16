@@ -1,4 +1,3 @@
-import RecentLoans from './components/loans';
 import DashboardData from './components/dashboard-data';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../api/auth/[...nextauth]/route';
@@ -6,7 +5,6 @@ import { authOptions } from '../../../api/auth/[...nextauth]/route';
 export default async function Dashboard() {
     const session = await getServerSession(authOptions)
     return (
-
         <div className="content-wrapper">
             {JSON.stringify(session)}
             <div className="row">

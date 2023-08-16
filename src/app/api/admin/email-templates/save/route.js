@@ -13,7 +13,6 @@ export async function POST(request) {
       from_email: Joi.string().required(),
       from_label: Joi.string().required(),
       content: Joi.string().required()
-
     });
     data = await schema.validateAsync(data, { abortEarly: false });
     // Create a new question with options

@@ -14,30 +14,37 @@ import {
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
-LoadingOverlay.propTypes = undefined
+LoadingOverlay.propTypes = undefined;
 
-const Editor = dynamic(() => import("../../../components/Editor"), { ssr: false });
+const Editor = dynamic(() => import("../../../components/Editor"), {
+  ssr: false,
+});
 
 export default function AddEditTemplate(props) {
   const [loader, setLoader] = useState(false);
-  const [fields, setFields] = useState({ content: '' });
+  const [fields, setFields] = useState({ content: "" });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
 
-  const handleEmailCotent = useCallback((emailContent) => {
-    setContent(emailContent)
-  }, [content])
+  const handleEmailCotent = useCallback(
+    (emailContent) => {
+      setContent(emailContent);
+    },
+    [content]
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitted(true);
     setErrors({});
     fields.content = content;
-    let REQUEST_URI = common.apiPath("api/email-templates/save");
+    let REQUEST_URI = common.apiPath("admin/email-templates/save");
     let REQUEST_METHOD = "POST";
     if (props.recordId) {
-      REQUEST_URI = common.apiPath(`api/email-templates/save/${props.recordId}`);
+      REQUEST_URI = common.apiPath(
+        `admin/email-templates/save/${props.recordId}`
+      );
       REQUEST_METHOD = "PUT";
     }
     fetch(REQUEST_URI, { method: REQUEST_METHOD, body: JSON.stringify(fields) })
@@ -59,7 +66,7 @@ export default function AddEditTemplate(props) {
         toast.error(error.message);
       })
       .finally(() => setSubmitted(false));
-  }
+  };
 
   const getRecord = async (id) => {
     setLoader(true);
@@ -101,7 +108,7 @@ export default function AddEditTemplate(props) {
         <Modal.Body>
           <LoadingOverlay active={loader} spinner text="Loading...">
             <Row>
-              <Form.Group as={Col} md={12} className='mb-2'>
+              <Form.Group as={Col} md={12} className="mb-2">
                 <FloatingLabel
                   controlId="floatingInput"
                   label="Subject"
@@ -111,53 +118,66 @@ export default function AddEditTemplate(props) {
                     type="text"
                     name="subject"
                     placeholder="subject"
-                    onChange={(event) => setFields({ ...fields, ['subject']: event.target.value })}
+                    onChange={(event) =>
+                      setFields({ ...fields, ["subject"]: event.target.value })
+                    }
                     isInvalid={!!errors.subject}
-                    value={fields.subject ? fields.subject : ''}
+                    value={fields.subject ? fields.subject : ""}
                   />
-                  <Form.Control.Feedback type="invalid">{errors.subject}</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.subject}
+                  </Form.Control.Feedback>
                 </FloatingLabel>
               </Form.Group>
-              <Form.Group as={Col} md={6} className='mb-2'>
-                <FloatingLabel
-                  label="From Label"
-                  className="mb-3"
-                >
-                  <Form.Control
-                    type="text"
-                    name="from_email"
-                    placeholder="from_email"
-                    onChange={(event) => setFields({ ...fields, ['from_email']: event.target.value })}
-                    isInvalid={!!errors.from_email}
-                    value={fields.from_email ? fields.from_email : ''}
-                  />
-                  <Form.Control.Feedback type="invalid">{errors.from_email}</Form.Control.Feedback>
-                </FloatingLabel>
-              </Form.Group>
-              <Form.Group as={Col} md={6} className='mb-2'>
-                <FloatingLabel
-                  label="From Email"
-                  className="mb-3"
-                >
+              <Form.Group as={Col} md={6} className="mb-2">
+                <FloatingLabel label="From Label" className="mb-3">
                   <Form.Control
                     type="text"
                     name="from_label"
                     placeholder="from_label"
-                    onChange={(event) => setFields({ ...fields, ['from_label']: event.target.value })}
+                    onChange={(event) =>
+                      setFields({
+                        ...fields,
+                        ["from_label"]: event.target.value,
+                      })
+                    }
                     isInvalid={!!errors.from_label}
-                    value={fields.from_label ? fields.from_label : ''}
+                    value={fields.from_label ? fields.from_label : ""}
                   />
-                  <Form.Control.Feedback type="invalid">{errors.from_label}</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.from_email}
+                  </Form.Control.Feedback>
+                </FloatingLabel>
+              </Form.Group>
+              <Form.Group as={Col} md={6} className="mb-2">
+                <FloatingLabel label="From Email" className="mb-3">
+                  <Form.Control
+                    type="text"
+                    name="from_email"
+                    placeholder="from_email"
+                    onChange={(event) =>
+                      setFields({
+                        ...fields,
+                        ["from_email"]: event.target.value,
+                      })
+                    }
+                    isInvalid={!!errors.from_email}
+                    value={fields.from_email ? fields.from_email : ""}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.from_label}
+                  </Form.Control.Feedback>
                 </FloatingLabel>
               </Form.Group>
 
-              <Form.Group as={Col} md={12} className='mb-2' style={{ height: 371 }}>
+              <Form.Group
+                as={Col}
+                md={12}
+                className="mb-2"
+                style={{ height: 371 }}
+              >
                 <Form.Label>Email Content</Form.Label>
-                <Editor
-                  value={content}
-                  handleContent={handleEmailCotent}
-                />
-
+                <Editor value={content} handleContent={handleEmailCotent} />
               </Form.Group>
             </Row>
           </LoadingOverlay>

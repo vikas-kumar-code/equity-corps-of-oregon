@@ -1,10 +1,13 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import common from "@/utils/common";
 import { PrismaClient } from "@prisma/client";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
 export async function GET(request) {
+  const session = await getServerSession(authOptions);
   let records = [];
   let totalRecords = 0;
   let response = {};
@@ -29,20 +32,24 @@ export async function GET(request) {
         status: request.get("status"),
       };
     }
+    where = {
+      ...where,
+      case_invitations: {
+        some: {
+          user_id: {
+            equals: session.user.id,
+          },
+        },
+      },
+    };
     records = await prisma.cases.findMany({
       where,
       ...paginate,
       orderBy: [{ id: "desc" }],
       include: {
         case_invitations: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
+          where: {
+            user_id: session.user.id,
           },
         },
       },
@@ -50,7 +57,7 @@ export async function GET(request) {
     totalRecords = await prisma.cases.count({ where: where });
     // output response
     response.success = true;
-    response.message = "Cases list";
+    response.message = "Case invitations list";
     response.records = records;
     response.totalRecords = totalRecords;
   } catch (error) {
