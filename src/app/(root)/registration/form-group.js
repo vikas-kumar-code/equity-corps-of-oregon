@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import { Form } from "react-bootstrap";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -22,7 +21,7 @@ const FormGroup = ({
   check,
   errors,
   handleDropdownChange,
-  selectedOptions
+  selectedOptions,
 }) => {
 
   const options = [
@@ -30,20 +29,20 @@ const FormGroup = ({
     { value: 'option2', label: 'Spanish' },
     { value: 'option3', label: 'Vietnamese' },
     { value: 'option4', label: 'Filipino' },
-    { value: 'option1', label: 'Pashto' },
-    { value: 'option2', label: 'Dari / Persian' },
-    { value: 'option3', label: 'Arabic' },
-    { value: 'option4', label: 'Bengali' },
-    { value: 'option1', label: 'Chinese' },
-    { value: 'option2', label: 'Haitian Creole' },
-    { value: 'option3', label: 'French' },
-    { value: 'option4', label: 'Punjabi' },
-    { value: 'option1', label: 'Hindi' },
-    { value: 'option2', label: 'Portuguese' },
-    { value: 'option3', label: 'Tigrinya' },
-    { value: 'option4', label: 'Russian' },
-    { value: 'option3', label: 'Turkish' },
-    { value: 'option4', label: 'Other' },
+    { value: 'option5', label: 'Pashto' },
+    { value: 'option6', label: 'Dari / Persian' },
+    { value: 'option7', label: 'Arabic' },
+    { value: 'option8', label: 'Bengali' },
+    { value: 'option9', label: 'Chinese' },
+    { value: 'option10', label: 'Haitian Creole' },
+    { value: 'option11', label: 'French' },
+    { value: 'option12', label: 'Punjabi' },
+    { value: 'option13', label: 'Hindi' },
+    { value: 'option14', label: 'Portuguese' },
+    { value: 'option15', label: 'Tigrinya' },
+    { value: 'option16', label: 'Russian' },
+    { value: 'option17', label: 'Turkish' },
+    { value: 'option18', label: 'Other' },
   ];
 
   return (
@@ -52,7 +51,7 @@ const FormGroup = ({
         <Form.Group>
           {label && (
             <Form.Label className="form_label">
-              {label} {required && <span className="text-danger">*</span>}{" "}
+              {label} {required && <span className="text-danger">*</span>}
             </Form.Label>
           )}
           {note && <p className="text-dark opacity-50">{note}</p>}
@@ -70,6 +69,7 @@ const FormGroup = ({
           ) : select ? (
             <Select
               isMulti
+              className="languages"
               placeholder="Type your answer here"
               ref={steps === id ? firstOptionRef : null}
               options={options}
@@ -78,22 +78,21 @@ const FormGroup = ({
               onKeyDown={handleKeyDown}
             />
           ) : check ? (
-            <div className="d-flex ">
-              <Form.Check className="mx-3 mt-1">
-              <Form.Check.Input
+            <div className="d-flex">
+              <Form.Check
                 type="checkbox"
+                className="mx-3 mt-1"
                 checked={fields.eco_panel_attorney}
+                id="eco-panel-attorney"
                 placeholder="Type your answer here"
                 ref={steps === id ? firstOptionRef : null}
                 value={fields[`${keyName}`] || ""}
                 onChange={(e) => handleChange(e, `${keyName}`)}
-                onKeyDown={handleKeyDown}
               />
-              <Form.Label className="form_label"  htmlFor="eco-panel-attorney">
+              <Form.Label className="form_label" htmlFor="eco-panel-attorney">
                 I have read and accept the terms of the ECO Panel Attorney
                 Program.<span className="text-danger">*</span>
               </Form.Label>
-              </Form.Check>
             </div>
           ) : (
             <Form.Control

@@ -85,7 +85,7 @@ const Registration = () => {
   const handleChange = (e, field) => {
     setFields({ ...fields, [field]: e.target.value });
     if(selectedOptions){
-      setFields({...fields, ['language'] : selectedOptions})
+      setFields({...fields, [field] : selectedOptions})
     }
      if (field == "eco_panel_attorney") {
       setFields({ ...fields, [field]: e.target.checked });
@@ -207,7 +207,7 @@ const Registration = () => {
     : "";
 
   return (
-    <div className="container d-flex align-items-center justify-content-center flex-column registration">
+    <div className={`container d-flex align-items-center justify-content-center flex-column registration`}>
       <h2 className="text-dark my-5 fw-bolder">Registration</h2>
       <div className={animationClass}>
         <Form className={`form `} onSubmit={handleSubmit}>
