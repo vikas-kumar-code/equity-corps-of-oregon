@@ -49,10 +49,11 @@ model users {
 }
 
 model roles {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique @db.VarChar(150)
-  status Int     @default(1)
-  users  users[]
+  id          Int           @id @default(autoincrement())
+  name        String        @unique @db.VarChar(150)
+  status      Int           @default(1)
+  users       users[]
+  permissions permissions[]
 }
 
 model cases {
@@ -121,6 +122,7 @@ model permissions {
   role_id  Int
   route_id Int
   route    routes @relation(fields: [route_id], references: [id])
+  role     roles? @relation(fields: [role_id], references: [id])  
 }
 
 model questions {
