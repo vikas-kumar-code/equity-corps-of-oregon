@@ -3371,7 +3371,7 @@ progress {
 .form-control {
   display: block;
   width: 100%;
-  padding: 1rem 1.8rem;
+  padding: .7rem 1.8rem;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.45;
@@ -3382,7 +3382,7 @@ progress {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  border-radius: 5rem;
+  border-radius: .5rem;
   -webkit-box-shadow: "null";
   box-shadow: "null";
   -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
@@ -5091,7 +5091,7 @@ textarea.form-control-lg {
 .dropdown-item:hover, .dropdown-item:focus {
   color: var(--fg-dropdown-link-hover-color);
   text-decoration: none;
-  background-color: var(--fg-dropdown-link-hover-bg);
+  background-color: var(--fg-dropdown-link-hover-color);
 }
 .dropdown-item.active, .dropdown-item:active {
   color: var(--fg-dropdown-link-active-color);
@@ -5300,7 +5300,7 @@ textarea.form-control-lg {
   }
 }
 .nav-link:hover, .nav-link:focus {
-  color: #727272;
+  color: #20c997;
   text-decoration: none;
 }
 .nav-link.disabled {
@@ -6010,6 +6010,26 @@ textarea.form-control-lg {
   color: #65E4A3;
 }
 
+.drop_down{
+  cursor: pointer;
+}
+.dropdown-menu{
+  border-radius: 1rem !important;
+  background-color: #0A2640 ;
+}
+.dropdown-menu .dropdown-item .nav-link:hover{
+  /* background-color: #0A2640 !important; */
+  color:  var(--fg-green) !important;
+}
+
+a{
+  text-decoration: none;
+}
+
+.text_link:hover{
+  text-decoration: underline !important;
+  color: #65E4A3 !important;
+}
 .card {
   position: relative;
   display: -webkit-box;
@@ -20127,12 +20147,12 @@ code {
 
 section {
   position: relative;
-  padding-top: 4rem;
+  padding-top: 2rem;
   padding-bottom: 4rem;
 }
-@media (min-width: 992px) {
+@media (max-width: 992px) {
   section {
-    padding-top: 5.65rem;
+    padding-top: 2.65rem;
     padding-bottom: 5.65rem;
   }
 }
