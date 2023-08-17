@@ -89,7 +89,7 @@ const FormGroup = ({
                 value={fields[`${keyName}`] || ""}
                 onChange={(e) => handleChange(e, `${keyName}`)}
               />
-              <Form.Label className="form_label" htmlFor="eco-panel-attorney">
+              <Form.Label className="form_label_terms" htmlFor="eco-panel-attorney">
                 I have read and accept the terms of the ECO Panel Attorney
                 Program.<span className="text-danger">*</span>
               </Form.Label>
