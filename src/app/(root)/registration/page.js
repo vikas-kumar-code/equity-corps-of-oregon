@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import "animate.css";
 import "./style.css";
@@ -75,15 +74,22 @@ const Registration = () => {
   const [errors, setErrors] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [prevAnime, setPrevAnime] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState(null);
+
+  const handleDropdownChange = (selected) => {
+    setSelectedOptions(selected)
+  };
 
   const firstOptionRef = useRef(null);
 
-  console.log(firstOptionRef);
   const handleChange = (e, field) => {
     setFields({ ...fields, [field]: e.target.value });
-    if (field === "eco_panel_attorney") {
-      setFields({ ...fields, [field]: e.target.checked });
+    if(selectedOptions){
+      setFields({...fields, [field] : selectedOptions})
     }
+     if (field == "eco_panel_attorney") {
+      setFields({ ...fields, [field]: e.target.checked });
+    } 
   };
 
   const handlePhone = (phone, field_name) => {
@@ -137,28 +143,36 @@ const Registration = () => {
   };
 
   const prevStep = () => {
-    setSteps((prev) => prev - 1);
-    setPrevAnime(true);
+    setIsActive(true);
+    setTimeout(() => {
+      setPrevAnime(true);
+      setSteps(prev => prev-1);
+      setIsActive(false);
+    }, 400);
+    setPrevAnime(false);
     setErrors("");
-    setTimeout(() => setPrevAnime(false), 1000);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (handleValidation()) {
-      console.log("hello", fields);
+      console.log("hello", fields, selectedOptions);
     }
   };
 
   const handleNext = (e) => {
     e.preventDefault();
     if (handleValidation()) {
-      setSteps((prev) => prev + 1);
       if (firstOptionRef.current) {
         firstOptionRef.current.focus();
       }
       setIsActive(true);
-      setTimeout(() => setIsActive(false), 1000);
+      setTimeout(() => {
+        setPrevAnime(true);
+        setSteps((prev) => prev + 1);
+        setIsActive(false)
+      }, 400);
+      setPrevAnime(false);
     }
   };
 
@@ -166,12 +180,16 @@ const Registration = () => {
     if (e.key === "Enter") {
       e.preventDefault();
       if (handleValidation()) {
-        setSteps((prev) => prev + 1);
         if (firstOptionRef.current) {
           firstOptionRef.current.focus();
         }
         setIsActive(true);
-        setTimeout(() => setIsActive(false), 1000);
+        setTimeout(() => {
+          setPrevAnime(true);
+          setSteps((prev) => prev + 1);
+          setIsActive(false)
+        }, 400);
+        setPrevAnime(false);
       }
     }
   };
@@ -182,24 +200,17 @@ const Registration = () => {
     }
   }, [steps]);
 
+  const animationClass = isActive
+    ? "animate__animated animate__fadeOutUp"
+    : prevAnime
+    ? "animate__animated animate__fadeInUp"
+    : "";
+
   return (
-    <div className="container d-flex align-items-center justify-content-center flex-column registration">
+    <div className={`container d-flex align-items-center justify-content-center flex-column registration`}>
       <h2 className="text-dark my-5 fw-bolder">Registration</h2>
-      <div
-        className={` ${
-          isActive
-            ? "animate__animated animate__fadeInUp animate__delay-.2s"
-            : ""
-        }`}
-      >
-        <Form
-          className={`form ${
-            prevAnime
-              ? "animate__animated animate__fadeInDown animate__delay-.2s"
-              : ""
-          }`}
-          onSubmit={handleSubmit}
-        >
+      <div className={animationClass}>
+        <Form className={`form `} onSubmit={handleSubmit}>
           <FormGroup
             label={FormFields[0].name}
             keyName={FormFields[0].field}
@@ -324,6 +335,8 @@ const Registration = () => {
             steps={steps}
             fields={fields}
             note={FormFields[9].note}
+            handleDropdownChange={handleDropdownChange}
+            selectedOptions={selectedOptions}
             select={true}
           />
           <FormGroup

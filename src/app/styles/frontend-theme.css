@@ -20146,6 +20146,7 @@ code {
 }
 
 section {
+  z-index: -1;
   position: relative;
   padding-top: 2rem;
   padding-bottom: 4rem;

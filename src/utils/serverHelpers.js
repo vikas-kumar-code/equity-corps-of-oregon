@@ -1,5 +1,7 @@
 const path = require("path");
 const fs = require("fs");
+const { authOptions } = require("@/app/api/auth/[...nextauth]/route");
+const { getServerSession } = require("next-auth");
 
 // Move file
 const moveFile = (sourceFilePath = "", destinationFilePath = "") => {
@@ -24,6 +26,12 @@ const moveFile = (sourceFilePath = "", destinationFilePath = "") => {
   }
 };
 
+// Get session
+const getSession = async () => {
+  return await getServerSession(authOptions);
+};
+
 module.exports = {
   moveFile,
+  getSession,
 };
