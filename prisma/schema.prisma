@@ -73,7 +73,7 @@ model cases {
 model case_invitations {
   id      Int      @id @default(autoincrement())
   case_id Int
-  user_id Int  
+  user_id Int
   status  Int      @default(0) // [0=>sent, 1=> accepted, 2=>expired]
   case    cases    @relation(fields: [case_id], references: [id])
   user    users    @relation(fields: [user_id], references: [id])
@@ -107,10 +107,13 @@ model case_documents {
 model routes {
   id          Int           @id @default(autoincrement())
   parent_id   Int           @default(0)
-  label       String        @db.VarChar(50)
+  label       String?       @db.VarChar(50)
   url         String?       @db.VarChar(200)
   icon        String?       @db.VarChar(50)
   permissions permissions[]
+
+  parent   routes?  @relation("ParentToRoutes", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children routes[] @relation("ParentToRoutes")
 }
 
 model permissions {

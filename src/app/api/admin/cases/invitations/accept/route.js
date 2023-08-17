@@ -13,6 +13,7 @@ export async function POST(request) {
     const data = await request.json();
     let caseModel = null;
     if (data?.id) {
+      // Find case by id
       caseModel = await prisma.cases.findUnique({
         where: {
           id: parseInt(data?.id),
@@ -21,7 +22,7 @@ export async function POST(request) {
           case_invitations: {
             where: {
               status: {
-                equals: 1, // it means already accepted
+                equals: 1, // select accepted case invitation
               },
             },
           },
@@ -33,7 +34,7 @@ export async function POST(request) {
       await prisma.$transaction(async (tx) => {
         console.log("here-----");
         // First update all with expired.
-        await tx.case_invitations.update({
+        await tx.case_invitations.updateMany({
           data: {
             status: 2,
           },
@@ -44,14 +45,19 @@ export async function POST(request) {
           },
         });
 
-        // First update one with accepted.
+        // update accepted by id.
+        const caseInvUserId = await tx.case_invitations.findFirst({
+          where: {
+            case_id: caseModel.id,
+            user_id: caseModel.user_id,
+          },
+        });
         await tx.case_invitations.update({
           data: {
             status: 1,
           },
           where: {
-            case_id: caseModel.id,
-            user_id: caseModel.user_id,
+            id: caseInvUserId.id,
           },
         });
 
