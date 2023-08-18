@@ -59,7 +59,7 @@ export const authOptions = {
         error: "/error"
     },
     callbacks: {
-        async session({ session, token, user }) {
+        async session({ session, token }) {
             session.user.id = token.id;
             session.user.role_id = token.role_id;
             return session;
