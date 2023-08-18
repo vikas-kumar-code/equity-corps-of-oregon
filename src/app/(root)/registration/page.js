@@ -77,16 +77,19 @@ const Registration = () => {
   const [selectedOptions, setSelectedOptions] = useState(null);
 
   const handleDropdownChange = (selected) => {
+    // console.log(selected);
     setSelectedOptions(selected)
+    setFields({...fields, ['language'] : selected})
   };
 
   const firstOptionRef = useRef(null);
 
   const handleChange = (e, field) => {
     setFields({ ...fields, [field]: e.target.value });
-    if(selectedOptions){
-      setFields({...fields, [field] : selectedOptions})
-    }
+    // if(selectedOptions !== null){
+    //   setFields({...fields, [field] : selectedOptions})
+    //   console.log(field, selectedOptions);
+    // }
      if (field == "eco_panel_attorney") {
       setFields({ ...fields, [field]: e.target.checked });
     } 
