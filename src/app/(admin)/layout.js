@@ -4,7 +4,7 @@ import '../styles/backend-theme.css'
 import '../styles/globals.css'
 import '../styles/whitetheme.css'
 import { Inter } from 'next/font/google'
-import Provider from '../components/provider'
+import Provider from '../components/Provider'
 import Navigation from "./components/navigation"
 import SignOut from '../components/SignOut'
 import Image from 'next/image'
@@ -29,7 +29,7 @@ export default function AdminLayout({ children }) {
                             <div className="container-fluid page-body-wrapper">
                                 <nav className="navbar p-0 fixed-top d-flex flex-row">
                                     <div className="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
-                                        <a className="navbar-brand brand-logo-mini" href="index.html">
+                                        <a className="navbar-brand brand-logo-mini" href="/">
 
                                             <Image
                                                 src="/images/logo.png"

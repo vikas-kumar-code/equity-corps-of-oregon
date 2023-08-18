@@ -1,0 +1,26 @@
+.registration{
+    height: 70vh;
+    /* background-color: black; */
+    width: 100vw;
+    z-index: 999;
+    margin-bottom: 4rem;
+}
+.form{
+    width: 55rem;
+}
+.form_label_terms{
+    font-size: 20px;
+    font-weight: bolder;
+    cursor: pointer;
+}
+.form_label{
+    font-size: 20px;
+    font-weight: bolder;
+    cursor: pointer;
+}
+.phone-input input{
+    width: 55rem !important;
+    height: 2.7rem !important;
+    border-radius: .5rem !important;
+    border: 2px solid #8e8e8e !important;
+}

@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
@@ -6,26 +5,24 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   async function middleware(req) {
-    const prisma = new PrismaClient();
-    const user_id = req.nextauth.token.id;
+    const token = req.nextauth.token;
     // remove first and last "/" in pathname
-    let currentPath = req.nextUrl.pathname.replace(/^\/|\/$/g, "");
-    const user = prisma.users.findUnique({
-      where: {
-        id: user_id,
-      },
-    }).role({
-        where:{
-            permisssions:{
-                
-            }
+    const requestPath = req.nextUrl.pathname.replace(/^\/|\/$/g, "");
+        
+    // Accessibe paths and roles without permission
+    const superPaths = ["api/admin/modules"];
+    const superRoles = [1];
+
+    console.log(requestPath);
+    if (!superRoles.includes(1)) {
+      if (!superPaths.includes(requestPath)) {
+        if (!token?.routes || !token?.routes?.includes(requestPath)) {
+          return NextResponse.json({
+            error: true,
+            message: "You are not allowed to access this page.",
+          });
         }
-    })
-    if (
-      req.nextUrl.pathname === "/admin/roles" &&
-      req.nextauth.token.role !== 3
-    ) {
-      return new NextResponse("You are not allowed to access this page.");
+      }
     }
   },
   {

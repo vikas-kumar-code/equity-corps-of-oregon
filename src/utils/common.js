@@ -6,7 +6,7 @@ const params = {
   templateId: {
     sendCaseInvitation: 1,
     forgetPassword: 2,
-  },
+  },  
 };
 
 const common = {

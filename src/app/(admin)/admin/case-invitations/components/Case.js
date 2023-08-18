@@ -29,7 +29,7 @@ export default function Case({
           .then((response) => {
             if (response.success) {
               toast.success(response.message);
-              props.reloadRecords();
+              getRecords();
             } else if (response.error) {
               toast.error(response.message);
             }
@@ -73,7 +73,7 @@ export default function Case({
             {btnStatus[record.case_invitations[0]?.status].label || "N/A"}
           </Badge>
         </td>
-        <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
+        <td>{moment(record.case_invitations[0].sent_on).format("D MMM,  YYYY")}</td>
         <td>
           {(!record?.case_invitations[0]?.status ||
             record?.case_invitations[0]?.status !== 1) && (

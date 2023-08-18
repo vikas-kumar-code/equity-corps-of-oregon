@@ -1,19 +1,12 @@
+import moment from "moment";
 import React from "react";
-import {
-  Button,
-  Modal,
-  Spinner,
-  Form,
-  Col,
-  Table,
-  Badge,
-} from "react-bootstrap";
+import { Modal, Table, Badge } from "react-bootstrap";
 
-const InvitationDetails = (props) => {
+const InvitationDetails = ({ showModal, closeModal, record }) => {
   const iStatus = {
     0: {
       label: "Pending",
-      bg: "info",
+      bg: "warning",
     },
     1: {
       label: "Accepted",
@@ -21,14 +14,14 @@ const InvitationDetails = (props) => {
     },
     2: {
       label: "Expired",
-      bg: "warning",
+      bg: "danger",
     },
   };
 
   return (
     <Modal
-      show={props.showModal}
-      onHide={props.closeModal}
+      show={showModal}
+      onHide={closeModal}
       backdrop="static"
       keyboard={false}
       centered
@@ -37,8 +30,8 @@ const InvitationDetails = (props) => {
       <Modal.Header closeButton className="border-bottom-0">
         <h3>Invitation Details</h3>
       </Modal.Header>
-      <Modal.Body className="show-error">
-        <div className="table-responsive mb-2" style={{ maxHeight: "200px" }}>
+      <Modal.Body className="show-error pt-0">
+        <div className="table-responsive mb-2" style={{ maxHeight: "400px" }}>
           <Table
             bordered
             hover
@@ -50,30 +43,35 @@ const InvitationDetails = (props) => {
               <tr>
                 <th colSpan={3}>Case Details</th>
               </tr>
-              <tr>
-                <th>User</th>
-                <th className="text-center">Status</th>
-                <th className="text-center">Sent On</th>
-              </tr>
             </thead>
             <tbody>
-              {props?.invitedUsers.map((data) => {
-                return (
-                  <tr>
-                    <td>
-                      {`${data?.user?.name}`} <br /> {`${data?.user?.email}`}
-                    </td>
-                    <td className="text-center">
-                      <Badge bg={iStatus[data.status].bg || "info"}>
-                        {iStatus[data.status].label || "N/A"}
-                      </Badge>
-                    </td>
-                    <td className="text-center">
-                      {moment(data.sent_on).format("D MMM, YYYY")}
-                    </td>
-                  </tr>
-                );
-              })}
+              <tr>
+                <th>Case Number</th>
+                <td>{record.case_number}</td>
+              </tr>
+              <tr>
+                <th>Title</th>
+                <td>{record.title}</td>
+              </tr>
+              <tr>
+                <th>Description</th>
+                <td>{record.description}</td>
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td>
+                  <Badge
+                    pill
+                    bg={iStatus[record.case_invitations[0].status].bg || "info"}
+                  >
+                    {iStatus[record.case_invitations[0].status].label || "N/A"}
+                  </Badge>
+                </td>
+              </tr>
+              <tr>
+                <th>Added On</th>
+                <td>{moment(record.case_invitations[0].sent_on).format("D MMM, YYYY")}</td>
+              </tr>
             </tbody>
           </Table>
         </div>
