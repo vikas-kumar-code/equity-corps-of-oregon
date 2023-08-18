@@ -75,9 +75,9 @@ const Registration = () => {
   const [isActive, setIsActive] = useState(false);
   const [prevAnime, setPrevAnime] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(null);
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
 
   const handleDropdownChange = (selected) => {
-    // console.log(selected);
     setSelectedOptions(selected)
     setFields({...fields, ['language'] : selected})
   };
@@ -86,10 +86,6 @@ const Registration = () => {
 
   const handleChange = (e, field) => {
     setFields({ ...fields, [field]: e.target.value });
-    // if(selectedOptions !== null){
-    //   setFields({...fields, [field] : selectedOptions})
-    //   console.log(field, selectedOptions);
-    // }
      if (field == "eco_panel_attorney") {
       setFields({ ...fields, [field]: e.target.checked });
     } 
@@ -196,6 +192,24 @@ const Registration = () => {
       }
     }
   };
+
+  const handleSelectKeyDown = (e)=>{
+    if (e.key === "Enter" && !menuIsOpen) {
+      e.preventDefault();
+      if (handleValidation()) {
+        if (firstOptionRef.current) {
+          firstOptionRef.current.focus();
+        }
+        setIsActive(true);
+        setTimeout(() => {
+          setPrevAnime(true);
+          setSteps((prev) => prev + 1);
+          setIsActive(false)
+        }, 400);
+        setPrevAnime(false);
+      }
+    }
+  }
 
   useEffect(() => {
     if (firstOptionRef.current) {
@@ -333,7 +347,7 @@ const Registration = () => {
             errors={errors}
             id={9}
             handleChange={handleChange}
-            handleKeyDown={handleKeyDown}
+            handleSelectKeyDown={handleSelectKeyDown}
             firstOptionRef={firstOptionRef}
             steps={steps}
             fields={fields}
@@ -341,6 +355,7 @@ const Registration = () => {
             handleDropdownChange={handleDropdownChange}
             selectedOptions={selectedOptions}
             select={true}
+            setMenuIsOpen={setMenuIsOpen}
           />
           <FormGroup
             label={FormFields[10].name}
@@ -367,11 +382,12 @@ const Registration = () => {
             check={true}
             required={true}
           />
-          <div className="mt-3 me-2">
+          <div className="mt-3 me-2 registration_btn">
             {steps > 0 && (
               <Button
                 size="sm"
-                className="btn btn-success mx-2"
+                variant="secondary"
+                className="me-2 secondary"
                 onClick={prevStep}
               >
                 Prev
@@ -380,7 +396,8 @@ const Registration = () => {
             {steps < 11 ? (
               <Button
                 size="sm"
-                className="btn btn-success"
+                variant="success"
+                // className="btn"
                 onClick={handleNext}
               >
                 Next

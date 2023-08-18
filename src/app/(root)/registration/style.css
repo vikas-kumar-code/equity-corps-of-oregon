@@ -23,3 +23,19 @@
     border-radius: .5rem !important;
     border: 2px solid #8e8e8e !important;
 }
+
+.registration_btn button{
+    width: 8rem;
+    height: 2.6rem;
+}
+.secondary{
+    background-color: #c5c4c4;
+    border-color: #c5c4c4;
+    color: #455153;
+}
+
+.secondary:hover{
+    background-color: #888383;
+    border-color: #888383;
+    color: rgb(255, 255, 255);
+}
