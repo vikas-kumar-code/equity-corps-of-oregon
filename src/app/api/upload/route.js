@@ -7,7 +7,7 @@ import common from "@/utils/common";
 export async function POST(request) {
   const data = await request.formData();
   let response = {};
-  return NextResponse.json({ success: true });
+
   try {
     const file = data.get("document") || data.get("file");
     const bytes = await file.arrayBuffer();
@@ -36,7 +36,7 @@ export async function POST(request) {
     }
 
     if (!existsSync(tempPath)) {
-      mkdirSync(tempPath, { recursive: true });
+      mkdirSync(tempPath, { recursive: true, mode: "777" });
     }
     await writeFile(destPath, buffer);
     response.success = true;
