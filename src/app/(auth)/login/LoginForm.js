@@ -20,6 +20,7 @@ export default function LoginForm() {
             redirect: false,
             callbackUrl: '/admin/dashboard'
         });
+        console.log(result);
         if (result.error) {
             setError('Email or password is invalid!');
             setLoader(false);

@@ -16,15 +16,28 @@ export async function GET(request) {
       },
     });
     let routeIds = permissions.map((item) => item.route_id);
-    const records = await prisma.routes.findMany({
-      where: {
+    let where = {
+      parent_id: {
+        lte: 0,
+      },
+      id: {
+        in: routeIds,
+      },
+    };
+    if (parseInt(session.user.role_id) === 1) {
+      where = {
         parent_id: {
           lte: 0,
         },
-        id: {
-          in: routeIds,
+        NOT: {
+          id: {
+            in: [8], // Case invitations
+          },
         },
-      },
+      };
+    }
+    const records = await prisma.routes.findMany({
+      where,
     });
     // output response
     response.success = true;

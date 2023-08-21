@@ -16,7 +16,6 @@
 .form_label{
     font-size: 20px;
     font-weight: bolder;
-    cursor: pointer;
 }
 .phone-input input{
     width: 55rem !important;

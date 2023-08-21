@@ -44,6 +44,7 @@ const FormGroup = ({
     { value: 'option17', label: 'Turkish' },
     { value: 'option18', label: 'Other' },
   ];
+  console.log(fields);
 
   return (
     <div>

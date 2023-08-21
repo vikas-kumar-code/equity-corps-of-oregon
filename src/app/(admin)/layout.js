@@ -4,7 +4,7 @@ import '../styles/backend-theme.css'
 import '../styles/globals.css'
 import '../styles/whitetheme.css'
 import { Inter } from 'next/font/google'
-import Provider from '../components/Provider'
+import Provider from '@/app/components/Provider'
 import Navigation from "./components/navigation"
 import SignOut from '../components/SignOut'
 import Image from 'next/image'
@@ -20,17 +20,16 @@ export const metadata = {
 export default function AdminLayout({ children }) {
     return (
         <html lang="en">
-            <body>
+            <body className='whitetheme'>
                 <Provider>
                     <NotificationContainer />
-                    <main className='whitetheme'>
+                    <main>
                         <div className="container-scroller">
                             <Navigation />
                             <div className="container-fluid page-body-wrapper">
                                 <nav className="navbar p-0 fixed-top d-flex flex-row">
                                     <div className="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
                                         <a className="navbar-brand brand-logo-mini" href="/">
-
                                             <Image
                                                 src="/images/logo.png"
                                                 width={35}
@@ -53,7 +52,7 @@ export default function AdminLayout({ children }) {
                                     {children}
                                     <footer className="footer">
                                         <div className="d-sm-flex justify-content-center justify-content-sm-between">
-                                            <span className="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © {process.env.APP_NAME} of Oregon {new Date().getFullYear()}</span>
+                                            <span className="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © {process.env.APP_NAME} {new Date().getFullYear()}</span>
                                             <span className="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Powered By <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Mitiz Technologies</a></span>
                                         </div>
                                     </footer>

@@ -10,8 +10,7 @@ import common from "@/utils/common";
 import { toast } from "react-toastify";
 import Case from "./Case";
 import AddEditCase from "./AddEditCase";
-LoadingOverlay.propTypes = undefined
-
+LoadingOverlay.propTypes = undefined;
 
 export default function ListCases() {
   const [loader, setLoader] = useState(false);
@@ -27,7 +26,6 @@ export default function ListCases() {
     { label: "Case Title", type: "text", name: "case_title" },
     { label: "Eco Provider", type: "text", name: "user_id" },
   ];
-
 
   const getRecords = async () => {
     setLoader(true);
@@ -54,17 +52,22 @@ export default function ListCases() {
   };
 
   const deleteRecord = async (id) => {
-    if (window.confirm("Are you sure to delete?")) {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/cases/delete/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      const data = await response.json();
-      if (data.success) {
-        getRecords();
-      }
+    if (window.confirm("Are you sure to delete this question?")) {
+      setLoader(true);
+      fetch(common.apiPath(`/admin/cases/delete/${id}`), { method: "DELETE" })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            toast.success(response.message);
+            getRecords();
+          } else if (response.error) {
+            toast.error(response.message);
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        })
+        .finally(() => setLoader(false));
     }
   };
 
@@ -86,7 +89,11 @@ export default function ListCases() {
           >
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
           </Button>
-          <Button variant="primary" type="button" onClick={() => setShowModal(true)}>
+          <Button
+            variant="primary"
+            type="button"
+            onClick={() => setShowModal(true)}
+          >
             Add New Case
           </Button>
         </Col>
@@ -116,7 +123,7 @@ export default function ListCases() {
                         <th>#</th>
                         <th>Case Number</th>
                         <th>Ttile</th>
-                        <th>Accepted By</th>
+                        <th>Status</th>
                         <th>Added On</th>
                         <th>Action</th>
                       </tr>
