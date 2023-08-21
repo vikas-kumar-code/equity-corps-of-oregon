@@ -6,7 +6,7 @@ const params = {
   templateId: {
     sendCaseInvitation: 1,
     forgetPassword: 2,
-  },  
+  },
 };
 
 const common = {
@@ -14,7 +14,7 @@ const common = {
   pathJoin: pathJoin,
   //return API full path
   apiPath: (path = "") => {
-    return pathJoin(process.cwd(), "api", path);
+    return process.env.NEXT_PUBLIC_API_URL + "/" + pathJoin("api", path);
   },
   //return app path
   basePath: (path = "") => {
@@ -67,6 +67,5 @@ const common = {
     };
   },
 };
-
 
 export default common;
