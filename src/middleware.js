@@ -14,7 +14,7 @@ export default withAuth(
     const superRoles = [1];
 
     console.log(requestPath);
-    if (!superRoles.includes(1)) {
+    if (!superRoles.includes(token.role_id)) {
       if (!superPaths.includes(requestPath)) {
         if (!token?.routes || !token?.routes?.includes(requestPath)) {
           return NextResponse.json({

@@ -1,5 +1,5 @@
-import { compare, hash } from "bcrypt";
 import LoginForm from "./LoginForm";
+import { getServerSession } from "next-auth";
 
 export default function Login() {
   return (
@@ -17,5 +17,5 @@ export default function Login() {
         </div>
       </div>
     </div>
-  )
+  );
 }

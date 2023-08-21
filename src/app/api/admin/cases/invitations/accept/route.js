@@ -7,7 +7,7 @@ import { getSession } from "@/utils/serverHelpers";
 const prisma = new PrismaClient();
 
 export async function POST(request) {
-  const session = await getSession();
+  const session = await getSession();  
   let response = {};
   try {
     const data = await request.json();
@@ -18,30 +18,31 @@ export async function POST(request) {
         where: {
           id: parseInt(data?.id),
         },
-        include: {
+        include: {        
           case_invitations: {
             where: {
-              user_id: session.id,
+              user_id: session.user.id,
             },
           },
         },
       });
     }
 
+    console.log(caseModel);
+
     if (caseModel) {
       if (caseModel?.case_invitations.length > 0) {
         if (caseModel?.case_invitations[0].status === 0) {
           await prisma.$transaction(async (tx) => {
                              
-            await tx.case_invitations.update({
+            const updateInvitation = await tx.case_invitations.update({
               data: {
                 status: 1,
               },
               where: {
-                id: caseModel.id,
+                id: caseModel.case_invitations[0].id,
               },
-            });
-
+            });            
             response.success = true;
             response.message = "Invitation has been accepted successfully.";
           });

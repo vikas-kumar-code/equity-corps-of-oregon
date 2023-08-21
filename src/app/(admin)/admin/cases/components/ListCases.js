@@ -123,7 +123,7 @@ export default function ListCases() {
                         <th>#</th>
                         <th>Case Number</th>
                         <th>Ttile</th>
-                        <th>Accepted By</th>
+                        <th>Status</th>
                         <th>Added On</th>
                         <th>Action</th>
                       </tr>
