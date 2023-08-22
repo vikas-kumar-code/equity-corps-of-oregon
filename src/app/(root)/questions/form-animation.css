@@ -6,14 +6,6 @@
   margin-top: 5rem;
 }
 
-.qs-last-container{
-  height: 40vh;
-  background-color: white;
-  position: relative;
-  width: 100%;
-  margin-top: 5rem;
-}
-
 .qs-buttons {
   position: fixed;
   bottom: 4rem;
@@ -110,4 +102,8 @@
   justify-content: center;
   align-items: center;
   
+}
+
+.form_label_terms{
+  cursor: pointer;
 }

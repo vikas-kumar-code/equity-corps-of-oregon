@@ -104,7 +104,7 @@ const FormGroup = ({
             onChange={handleDropdownChange}
             onMenuOpen={() => setMenuIsOpen(true)}
             onMenuClose={() => setMenuIsOpen(false)}
-            onKeyDown={handleSelectKeyDown}
+            // onKeyDown={handleSelectKeyDown}
           />
         ) : type === "checkbox" ? (
           <div className="d-flex">

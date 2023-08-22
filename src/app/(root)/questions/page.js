@@ -63,7 +63,7 @@ const questions = [
     note: "This email address should match the email address registered with the Oregon State Bar, or the appropriate bar. We will use this email address for all official correspondence.",
     field: "email",
     required: true,
-    validation: Joi.string().required(),
+    validation: Joi.string().email({ tlds: { allow: false } }).required(),
   },
   {
     id: 8,
@@ -79,7 +79,7 @@ const questions = [
     label: "Enter the name of your law firm.",
     type: "text",
     field: "law_firm",
-    validation: Joi.string(),
+    validation: Joi.string().optional(),
   },
   {
     id: 10,
@@ -132,7 +132,10 @@ const questions = [
     type: "checkbox",
     field: "eco_panel_attorney",
     required: true,
-    validation: Joi.required(),
+    validation: Joi.boolean().valid(true).required().messages({
+    'any.only': 'You must accept the terms and conditions.',
+    'any.required': 'Terms and conditions checkbox is required.'
+  }),
   },
 ];
 
@@ -149,6 +152,14 @@ export default function Page() {
     }
   };
 
+  function capitalizeEachWord(str) {
+    return str
+      .replace(/[_"]/g, " ")
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
+
   const next = () => {
     if (questions[index].component !== "question") {
       const currentQuestionData = {
@@ -161,13 +172,18 @@ export default function Page() {
       const { error } = schema.validate(currentQuestionData);
 
       if (error) {
-        setErrors({ [questions[index].field]: error.details[0].message });
+        let err = error.details[0].message;
+        setErrors({ [questions[index].field]: capitalizeEachWord(err)});
       } else {
         setErrors({});
-        setIndex(index + 1);
+        if(index < questions.length -1){
+          setIndex(index + 1);
+        }
       }
     } else {
-      setIndex(index + 1);
+      if(index < questions.length -1){
+          setIndex(index + 1);
+        }
     }
   };
 
@@ -178,17 +194,15 @@ export default function Page() {
   };
 
   const handleEnterPress = (e) => {
-    if (e.key === 'Enter') {
-      next()
+    if (e.key === "Enter") {
+      next();
     }
   };
 
   return (
     <div className="h-75">
       <div
-        className={
-          index === questions.length - 1 ? `qs-last-container` : `qs-container`
-        }
+        className='qs-container'
       >
         {questions.map((ques, q) => {
           const {
@@ -266,17 +280,20 @@ export default function Page() {
       </div>
       <div className="buttn_group">
         <div className="ok_qs">
-        {index > 0 && (
-          <Button onClick={()=>{
-            next();
-          }} variant="secondary">
-            OK
-          </Button>
-        )}
+          {index > 0 && index < questions.length-1 && (
+            <Button
+              onClick={() => {
+                next();
+              }}
+              variant="secondary"
+            >
+              OK
+            </Button>
+          )}
         </div>
         <div className="submit_qs">
           {index === questions.length - 1 && (
-            <Button variant="success">Submit</Button>
+            <Button variant="success" onClick={()=>{alert('You have successfully registered for Eco Attorney Program')}}>Submit</Button>
           )}
         </div>
       </div>
