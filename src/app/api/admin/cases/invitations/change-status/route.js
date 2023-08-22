@@ -18,8 +18,7 @@ export async function POST(request) {
       });
     }
 
-    if (caseInvitation) {
-      console.log(data?.status,'zzzzzzzzzzzzzzzzzz');
+    if (caseInvitation) {      
       if (status.includes(parseInt(data?.status))) {
         await prisma.$transaction(async (tx) => {
           const updateInvitation = await tx.case_invitations.update({

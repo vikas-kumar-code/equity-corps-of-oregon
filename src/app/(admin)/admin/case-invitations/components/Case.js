@@ -17,32 +17,6 @@ export default function Case({
 }) {
   const [showModal, setShowModal] = useState(false);
   const [showConfirmation, setConfirmation] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleAccept = async (case_id = "") => {
-    if (window.confirm("Are you sure to accept?")) {
-      setSubmitted(true);
-      try {
-        await fetch(common.apiPath(`/admin/cases/invitations/accept`), {
-          method: "POST",
-          body: JSON.stringify({ id: case_id }),
-        })
-          .then((response) => response.json())
-          .then((response) => {
-            if (response.success) {
-              toast.success(response.message);
-              getRecords();
-            } else if (response.error) {
-              toast.error(response.message);
-            }
-          });
-      } catch (error) {
-        toast.error(error.message);
-      } finally {
-        setSubmitted(false);
-      }
-    }
-  };
 
   const btnStatus = {
     0: {
@@ -86,9 +60,6 @@ export default function Case({
               variant="success"
               onClick={() => setConfirmation(true)}
             >
-              {submitted && (
-                <Spinner className="me-1" color="light" size="sm" />
-              )}
               Accept
             </Button>
           )}
@@ -119,6 +90,7 @@ export default function Case({
             setConfirmation(false);
           }}
           record={record}
+          getRecords={getRecords}
         />
       )}
     </>
