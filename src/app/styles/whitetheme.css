@@ -137,24 +137,28 @@
 .whitetheme .modal-content .modal-header .btn-close:focus {
   box-shadow: none;
 }
-.whitetheme .modal-content .tab-content {
-  border: 1px solid #dee2e6;
-}
-.whitetheme .modal-content .nav-tabs {
-  border-bottom: 1px solid #dee2e6;
-  background-color: #f9f9f9;
-}
 .whitetheme .rti--container {
   background-color: #f9f9f9 !important;
 }
 .whitetheme .rti--container .rti--input {
   background-color: #f9f9f9 !important;
+  color: #0f1015 !important;
+}
+/* Modal Tabing */
+.whitetheme .modal-content .nav-tabs {
+  border-bottom: 1px solid #dee2e6;
 }
 .whitetheme .modal-content .nav-tabs .nav-link.active {
-  background-color: #dee2e6;
+  background-color: transparent;
   color: #0f1015;
   border: 1px solid #dee2e6;
+  border-bottom-color: #fff;
 }
+.whitetheme .modal-content .tab-content {
+  border: 1px solid #dee2e6;
+  border-top: 0;
+}
+/* Modal Tabing */
 .whitetheme .q-opt-remove {
   background-color: #dee2e6 !important;
 }
