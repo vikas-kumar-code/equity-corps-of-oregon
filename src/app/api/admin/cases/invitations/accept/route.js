@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import common from "@/utils/common";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
+import { getSession } from "@/utils/serverHelpers";
 
 const prisma = new PrismaClient();
 
 export async function POST(request) {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();  
   let response = {};
   try {
     const data = await request.json();
@@ -18,55 +18,45 @@ export async function POST(request) {
         where: {
           id: parseInt(data?.id),
         },
-        include: {
+        include: {        
           case_invitations: {
             where: {
-              status: {
-                equals: 1, // select accepted case invitation
-              },
+              user_id: session.user.id,
             },
           },
         },
       });
     }
 
-    if (caseModel && caseModel?.case_invitations.length <= 0) {
-      await prisma.$transaction(async (tx) => {
-        console.log("here-----");
-        // First update all with expired.
-        await tx.case_invitations.updateMany({
-          data: {
-            status: 2,
-          },
-          where: {
-            case_id: {
-              equals: caseModel.id,
-            },
-          },
-        });
+    console.log(caseModel);
 
-        // update accepted by id.
-        const caseInvUserId = await tx.case_invitations.findFirst({
-          where: {
-            case_id: caseModel.id,
-            user_id: caseModel.user_id,
-          },
-        });
-        await tx.case_invitations.update({
-          data: {
-            status: 1,
-          },
-          where: {
-            id: caseInvUserId.id,
-          },
-        });
-
-        response.success = true;
-        response.message = "Invitation has been accepted successfully.";
-      });
+    if (caseModel) {
+      if (caseModel?.case_invitations.length > 0) {
+        if (caseModel?.case_invitations[0].status === 0) {
+          await prisma.$transaction(async (tx) => {
+                             
+            const updateInvitation = await tx.case_invitations.update({
+              data: {
+                status: 1,
+              },
+              where: {
+                id: caseModel.case_invitations[0].id,
+              },
+            });            
+            response.success = true;
+            response.message = "Invitation has been accepted successfully.";
+          });
+        } else {
+          response.error = true;
+          response.message = "You can not accept case.";
+        }
+      } else {
+        response.error = true;
+        response.message = "Your invitation not found.";
+      }
     } else {
       response.error = true;
-      response.message = "Selected case has been expired.";
+      response.message = "Record not found.";
     }
   } catch (error) {
     response.error = true;

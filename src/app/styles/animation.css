@@ -1,0 +1,31 @@
+.show-up-animation {
+  animation-delay: 1s;
+  animation: showUpAnimation 1s ease forwards;
+}
+
+.show-down-animation {
+  animation-delay: 1s;
+  animation: showDownAnimation 1s ease forwards;
+}
+
+@keyframes showUpAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(30%);
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes showDownAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(-30%);
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}

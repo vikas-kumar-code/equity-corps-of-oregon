@@ -15,8 +15,6 @@ export async function POST(request) {
         abortEarly: false,
       }
     );
-
-    // Select a case with pending invitation status
     const caseModel = await prisma.cases.findUnique({
       where: {
         id: data.case_id,
@@ -30,76 +28,63 @@ export async function POST(request) {
         id: {
           in: data.users,
         },
-        role_id: 3,
+        role_id: 3, // Eco providers
       },
     });
 
-    // Check, whether the case invitation has been accepted?
-    let isAccepted = false;
-    if (caseModel?.id) {
-      caseModel.case_invitations?.forEach((item) => {
-        if (parseInt(item.status) === 1) {
-          isAccepted = true;
-        }
-      });
-    }
-
     if (caseModel) {
       if (usersModel) {
-        if (!isAccepted) {
-          await prisma.$transaction(async (tx) => {
-            let activeInvitations = await tx.case_invitations.findMany({
-              where: {
+        await prisma.$transaction(async (tx) => {
+          // Select already exists invitations for given case_id
+          let activeInvitations = await tx.case_invitations.findMany({
+            where: {
+              case_id: data.case_id,
+              user_id: {
+                in: data.users,
+              },              
+            },
+          });
+
+          let createInvUsers = usersModel;
+          // Filter new users
+          if (activeInvitations && activeInvitations.length > 0) {
+            let activeUsers = activeInvitations.map((item) => item.user_id);
+            createInvUsers = createInvUsers.filter(
+              (item) => !activeUsers.includes(item.id)
+            );
+          }
+
+          // Add Entry of only new users
+          await tx.case_invitations.createMany({
+            data: createInvUsers.map((user) => {
+              return {
                 case_id: data.case_id,
-                user_id: {
-                  in: data.users,
-                },
-                status: 0,
+                user_id: user.id,
+              };
+            }),
+          });
+          
+          // Email will be sent to all requested users
+          await usersModel.forEach(async (user) => {
+            await sendMail({
+              to: process.env.TEST_USER_EMAIL || user.email,
+              templateId: common.params.templateId.sendCaseInvitation,
+              modelsData: {
+                users: user,
+                cases: caseModel,
               },
             });
-
-            let createInvUsers = usersModel;
-            if (activeInvitations && activeInvitations.length > 0) {
-              let activeUsers = activeInvitations.map((item) => item.id);
-              createInvUsers = createInvUsers.filter(
-                (item) => !activeUsers.includes(item.id)
-              );
-            }
-
-            // Entry invited users
-            await tx.case_invitations.createMany({
-              data: createInvUsers.map((user) => {
-                return {
-                  case_id: data.case_id,
-                  user_id: user.id,
-                };
-              }),
-            });
-            // Send mail to invite eco providers
-            await usersModel.forEach(async (user) => {
-              await sendMail({
-                to: process.env.TEST_USER_EMAIL || user.email,
-                templateId: common.params.templateId.sendCaseInvitation,
-                modelsData: {
-                  users: user,
-                  cases: caseModel,
-                },
-              });
-            });
-            response.success = true;
-            response.message = "Invitation has been sent successfully.";
           });
-        } else {
-          response.error = true;
-          response.message = "This case has already been assigned an echo provider.";
-        }
+          response.success = true;
+          response.message = "Invitation has been sent successfully.";
+        });
       } else {
         response.error = true;
         response.message = "The selected users are not valid.";
       }
     } else {
       response.error = true;
-      response.message = "Selected case has been expired.";
+      response.message = "Selected case not found.";
     }
   } catch (error) {
     response.error = true;

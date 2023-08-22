@@ -2,16 +2,27 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 export async function DELETE(request, data) {
-    const prisma = new PrismaClient();
-    const deleted = await prisma.users.delete({
+  const prisma = new PrismaClient();
+  let response = {};
+  let deletedId = Number(data.params.id);
+  try {
+    if (deletedId) {
+      const deleted = await prisma.cases.delete({
         where: {
-            id: Number(data.params.id),
+          id: deletedId,
         },
-    });
-    if (deleted) {
-        return NextResponse.json({
-            success: true,
-            message: 'User has been deleted successfully.'
-        });
+      });
+      if (deleted) {
+        response.success = true;
+        response.message = "Case has been deleted successfully.";
+      }
+    } else {
+      response.error = true;
+      response.message = "Record not found.";
     }
+  } catch (error) {
+    response.error = true;
+    response.message = error.message;
+  }
+  return NextResponse.json(response);
 }

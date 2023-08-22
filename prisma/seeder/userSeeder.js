@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 
 const userSeeder = async () => {
-
   await prisma.users.upsert({
     where: { email: "admin@gmail.com" },
     update: {},
@@ -43,6 +42,33 @@ const userSeeder = async () => {
     },
   });
 
+  // Eco Provider
+  await prisma.users.upsert({
+    where: { email: "vishal@gmail.com" },
+    update: {},
+    create: {
+      email: "vishal@gmail.com",
+      name: "Vishal",
+      password: await bcrypt.hashSync("password", 10),
+      role_id: 3,
+      status: 1,
+      verified: 1,
+    },
+  });
+
+  // Eco Provider
+  await prisma.users.upsert({
+    where: { email: "vikas@gmail.com" },
+    update: {},
+    create: {
+      email: "vikas@gmail.com",
+      name: "Vikas",
+      password: await bcrypt.hashSync("password", 10),
+      role_id: 3,
+      status: 1,
+      verified: 1,
+    },
+  });
 };
 
 module.exports = userSeeder;

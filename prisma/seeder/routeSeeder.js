@@ -14,6 +14,7 @@ const routeSeeder = async () => {
       url: "admin/cases",
       children: {
         create: [
+          { label: "Api", url: "api/admin/cases" },
           { label: "Api", url: "api/admin/cases/get" },
           { label: "Api", url: "api/admin/cases/save" },
           { label: "Api", url: "api/admin/cases/delete" },
@@ -29,6 +30,7 @@ const routeSeeder = async () => {
         create: [
           { label: "Api", url: "api/admin/cases/invitations" },
           { label: "Api", url: "api/admin/cases/invitations/accept" },
+          { label: "Api", url: "api/admin/cases/invitations/status" },
         ],
       },
     },

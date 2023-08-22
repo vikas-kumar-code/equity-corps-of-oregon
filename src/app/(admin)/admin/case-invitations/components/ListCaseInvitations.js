@@ -68,10 +68,7 @@ export default function ListCaseInvitations() {
             onClick={() => setShowSearchBox(!showSearchBox)}
           >
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
-          </Button>
-          <Button variant="primary" type="button" onClick={() => setShowModal(true)}>
-            Add New Case
-          </Button>
+          </Button>          
         </Col>
       </Row>
       <SearchBox

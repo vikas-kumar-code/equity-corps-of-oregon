@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Row,
   Col,
@@ -118,6 +118,12 @@ export default function Documents(props) {
       }
     }
   };
+  useEffect(() => {
+    console.log(props?.documents);
+  
+    
+  }, [props?.documents])
+  
   return (
     <>
       {props?.errors?.documents && (
@@ -228,7 +234,7 @@ export default function Documents(props) {
                             <DownloadButton
                               fileName={record.document_name}
                               path={common.downloadLink(
-                                "uploads/case_documents/" + record.file_name
+                                "uploads/case_documents/" + record.file_name+'?temp=true'
                               )}
                             />
                           </div>

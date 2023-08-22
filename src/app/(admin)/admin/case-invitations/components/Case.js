@@ -6,6 +6,7 @@ import { Badge, Button, Spinner } from "react-bootstrap";
 import InvitationDetails from "./InvitationDetails";
 import { toast } from "react-toastify";
 import common from "@/utils/common";
+import AcceptConfirmation from "./AcceptConfirmation";
 
 export default function Case({
   record,
@@ -15,32 +16,7 @@ export default function Case({
   recordPerPage,
 }) {
   const [showModal, setShowModal] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleAccept = async (case_id = "") => {
-    if (window.confirm("Are you sure to accept?")) {
-      setSubmitted(true);
-      try {
-        await fetch(common.apiPath(`/admin/cases/invitations/accept`), {
-          method: "POST",
-          body: JSON.stringify({ id: case_id }),
-        })
-          .then((response) => response.json())
-          .then((response) => {
-            if (response.success) {
-              toast.success(response.message);
-              props.reloadRecords();
-            } else if (response.error) {
-              toast.error(response.message);
-            }
-          });
-      } catch (error) {
-        toast.error(error.message);
-      } finally {
-        setSubmitted(false);
-      }
-    }
-  };
+  const [showConfirmation, setConfirmation] = useState(false);
 
   const btnStatus = {
     0: {
@@ -73,18 +49,17 @@ export default function Case({
             {btnStatus[record.case_invitations[0]?.status].label || "N/A"}
           </Badge>
         </td>
-        <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
+        <td>
+          {moment(record.case_invitations[0].sent_on).format("D MMM,  YYYY")}
+        </td>
         <td>
           {(!record?.case_invitations[0]?.status ||
             record?.case_invitations[0]?.status !== 1) && (
             <Button
               className="me-2"
               variant="success"
-              onClick={() => handleAccept(record.id)}
+              onClick={() => setConfirmation(true)}
             >
-              {submitted && (
-                <Spinner className="me-1" color="light" size="sm" />
-              )}
               Accept
             </Button>
           )}
@@ -105,6 +80,17 @@ export default function Case({
             setShowModal(false);
           }}
           record={record}
+        />
+      )}
+
+      {showConfirmation && (
+        <AcceptConfirmation
+          showModal={showConfirmation}
+          closeModal={() => {
+            setConfirmation(false);
+          }}
+          record={record}
+          getRecords={getRecords}
         />
       )}
     </>
