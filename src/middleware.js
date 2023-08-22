@@ -12,8 +12,7 @@ export default withAuth(
     // Accessibe paths and roles without permission
     const superPaths = ["api/admin/modules"];
     const superRoles = [1];
-
-    console.log(requestPath);
+    
     if (!superRoles.includes(token.role_id)) {
       if (!superPaths.includes(requestPath)) {
         if (!token?.routes || !token?.routes?.includes(requestPath)) {

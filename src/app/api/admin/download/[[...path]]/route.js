@@ -5,12 +5,24 @@ import { NextResponse } from "next/server";
 
 export async function GET(request, data) {
   try {
-    const filePath = path.join(
+    const params = request.nextUrl.searchParams;
+    const downloadFile = data.params.path[data.params.path.length - 1];
+
+    // if url has temp param
+    // and the file is not found, it will also be searched for in the temporary folder.
+    const tempPath = path.join(process.cwd(), "public/temp", downloadFile);
+
+    let filePath = path.join(
       process.cwd(),
       "public",
       data.params.path.join("/")
     );
-    if (!fs.existsSync(filePath)) {
+
+    if (fs.existsSync(filePath)) {
+      // pass
+    } else if (params.get("temp") && fs.existsSync(tempPath)) {
+      filePath = tempPath;
+    } else {
       return new NextResponse.json(
         { error: "File not found..!" },
         { status: 404 }
