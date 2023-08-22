@@ -36,7 +36,7 @@ export async function POST(request) {
     }
 
     if (!existsSync(tempPath)) {
-      mkdirSync(tempPath, { recursive: true });
+      mkdirSync(tempPath, { recursive: true, mode: "777" });
     }
     await writeFile(destPath, buffer);
     response.success = true;

@@ -30637,6 +30637,12 @@ div.tagsinput span.tag a {
   flex-grow: 1;
 }
 
+/* Input Focus */
+.form-control:focus {
+  color: #fff;
+}
+/* Input Focus */
+
 /* button close */
 .btn-close {
   background-color: #fff;

@@ -20,10 +20,10 @@ export const metadata = {
 export default function AdminLayout({ children }) {
     return (
         <html lang="en">
-            <body>
+            <body className='whitetheme'>
                 <Provider>
                     <NotificationContainer />
-                    <main className='whitetheme'>
+                    <main>
                         <div className="container-scroller">
                             <Navigation />
                             <div className="container-fluid page-body-wrapper">
