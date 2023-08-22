@@ -6,6 +6,7 @@ import { Badge, Button, Spinner } from "react-bootstrap";
 import InvitationDetails from "./InvitationDetails";
 import { toast } from "react-toastify";
 import common from "@/utils/common";
+import AcceptConfirmation from "./AcceptConfirmation";
 
 export default function Case({
   record,
@@ -15,6 +16,7 @@ export default function Case({
   recordPerPage,
 }) {
   const [showModal, setShowModal] = useState(false);
+  const [showConfirmation, setConfirmation] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleAccept = async (case_id = "") => {
@@ -73,14 +75,16 @@ export default function Case({
             {btnStatus[record.case_invitations[0]?.status].label || "N/A"}
           </Badge>
         </td>
-        <td>{moment(record.case_invitations[0].sent_on).format("D MMM,  YYYY")}</td>
+        <td>
+          {moment(record.case_invitations[0].sent_on).format("D MMM,  YYYY")}
+        </td>
         <td>
           {(!record?.case_invitations[0]?.status ||
             record?.case_invitations[0]?.status !== 1) && (
             <Button
               className="me-2"
               variant="success"
-              onClick={() => handleAccept(record.id)}
+              onClick={() => setConfirmation(true)}
             >
               {submitted && (
                 <Spinner className="me-1" color="light" size="sm" />
@@ -103,6 +107,16 @@ export default function Case({
           showModal={showModal}
           closeModal={() => {
             setShowModal(false);
+          }}
+          record={record}
+        />
+      )}
+
+      {showConfirmation && (
+        <AcceptConfirmation
+          showModal={showConfirmation}
+          closeModal={() => {
+            setConfirmation(false);
           }}
           record={record}
         />
