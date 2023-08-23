@@ -3,7 +3,7 @@ import { Form } from "react-bootstrap";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import Select, { components } from "react-select";
-import "./form-animation.css";
+import "./style.css";
 
 const Option = (props) => {
   return (

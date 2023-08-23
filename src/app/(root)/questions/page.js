@@ -1,72 +1,139 @@
 "use client";
-import { useState } from "react";
-import { Button, Form } from "react-bootstrap";
-import "./form-animation.css";
-import FormGroup from "./form-group";
+import { useState, useRef, useEffect } from "react";
+import "./style.css";
+import "../../styles/animation.css";
+
 import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
 import Joi from "joi";
+import Question from "./components/Question";
+import Registration from "./components/Registration";
 
-const questions = [
+const data = [
   {
     id: 1,
+    sn: 1,
     component: "question",
-    question: "What is Computer",
-    options: ["Electronic", "Mechanical", "IT", "Robot"],
+    question:
+      "Are you an attorney in good standing with all relevant bar associations, including the Oregon State Bar or a state bar within the United States, and registered to practice before the immigration courts?This question is required.",
+    options: [
+      { id: 1, option: "Yes" },
+      { id: 2, option: "No" },
+    ],
     required: true,
   },
   {
     id: 2,
+    sn: 2,
     component: "question",
-    question: "What is Mobile",
-    options: ["Electronic", "Mechanical", "IT", "Robot"],
+    question:
+      "Are you covered and can demonstrate coverage of malpractice insurance covering at least $300,000 per claim through the Professional Liability Fund (PLF) or another similar malpractice insurance?This question is required.",
+    options: [
+      { id: 1, option: "Yes" },
+      { id: 2, option: "No" },
+    ],
     required: true,
   },
   {
     id: 3,
+    sn: 3,
     component: "question",
-    question: "What is Computer",
-    options: ["Electronic", "Mechanical", "IT", "Robot"],
+    question:
+      "Have you practiced immigration law for at least five years before the immigration authorities or are you working under supervision of attorney with at least 5 years of experience?This question is required.",
+    options: [
+      { id: 1, option: "Yes" },
+      { id: 2, option: "No" },
+    ],
     required: true,
   },
   {
     id: 4,
-    label: "First Name",
-    type: "text",
-    field: "first_name",
+    sn: 4,
+    component: "question",
+    question:
+      "Do you have experience or demonstrated ability to communicate with and advocate for immigrants from different cultures?",
+    options: [
+      { id: 1, option: "Yes" },
+      { id: 2, option: "No" },
+    ],
     required: true,
-    validation: Joi.string().required(),
   },
   {
     id: 5,
-    label: "Enter your surname",
-    type: "text",
-    field: "sur_name",
+    sn: 5,
+    component: "question",
+    question:
+      "Do you have experience practicing before the immigration courts?",
+    options: [
+      { id: 1, option: "Yes" },
+      { id: 2, option: "No" },
+    ],
     required: true,
-    validation: Joi.string().required(),
   },
   {
     id: 6,
-    label: "Enter your primary telephone",
-    type: "phoneInput",
-    note: "We will provide this telephone to ECO participants when you are engaged for representation. This number should be answered during normal business hours and be accessible, at a minimum, to individuals who speak English and Spanish.",
-    field: "telephone",
+    sn: 6,
+    component: "question",
+    question:
+      "Do you have experience in master hearings, motions practice, and merits hearings before the immigration court?This question is required.",
+    options: [
+      { id: 1, option: "Yes" },
+      { id: 2, option: "No" },
+    ],
     required: true,
-    validation: Joi.number().required(),
   },
   {
     id: 7,
+    sn: 7,
+    component: "question",
+    question:
+      "Do you have access to and regularly use legal research databases, and can you prepare and present written and oral arguments on behalf of immigrants beyond the filing of generic or canned briefs and the making of routine arguments?This question is required.",
+    options: [
+      { id: 1, option: "Yes" },
+      { id: 2, option: "No" },
+    ],
+    required: true,
+  },
+  {
+    id: 8,
+    sn: 8,
+    component: "question",
+    question:
+      "Do you possess good moral and ethical character and have you demonstrated professional demeanor with the immigration courts, the immigration bar, and the legal profession in general?",
+    options: [
+      { id: 1, option: "Yes" },
+      { id: 2, option: "No" },
+    ],
+    required: true,
+  },
+  {
+    id: 1,
+    sn: 1,
+    component: "registration",
+    label: "Enter your primary telephone",
+    type: "phoneInput",
+    note: "We will provide this telephone to ECO participants when you are engaged for representation. This number should be answered during normal business hours and be accessible, at a minimum, to individuals who speak English and Spanish.",
+    field: "phone",
+    validation: Joi.number().required(),
+  },
+  {
+    id: 2,
+    sn: 2,
+    component: "registration",
     label: "Enter your primary email address",
     type: "email",
     note: "This email address should match the email address registered with the Oregon State Bar, or the appropriate bar. We will use this email address for all official correspondence.",
     field: "email",
-    required: true,
-    validation: Joi.string().email({ tlds: { allow: false } }).required(),
+    validation: Joi.string()
+      .email({ tlds: { allow: false } })
+      .required(),
   },
   {
-    id: 8,
+    id: 3,
+    sn: 3,
+    component: "registration",
     label: "Enter your primary physical address",
     type: "text",
     note: "This address is the address where you typically see clients. We will list this address on the official ECO Provider list. This list is available to the public and is available on the internet.",
@@ -75,14 +142,18 @@ const questions = [
     validation: Joi.string().min(10).max(255).required(),
   },
   {
-    id: 9,
+    id: 4,
+    sn: 4,
+    component: "registration",
     label: "Enter the name of your law firm.",
     type: "text",
     field: "law_firm",
     validation: Joi.string().optional(),
   },
   {
-    id: 10,
+    id: 5,
+    sn: 5,
+    component: "registration",
     label: "Are you a member of the Oregon State Bar?",
     type: "text",
     field: "state_bar",
@@ -90,7 +161,9 @@ const questions = [
     validation: Joi.string().required(),
   },
   {
-    id: 11,
+    id: 6,
+    sn: 6,
+    component: "registration",
     label: "Enter your Oregon State Bar number.",
     type: "text",
     field: "bar_number",
@@ -98,7 +171,9 @@ const questions = [
     validation: Joi.number().required(),
   },
   {
-    id: 12,
+    id: 7,
+    sn: 7,
+    component: "registration",
     label:
       "Are you registered with EOIR and eligible to practice immediately before the Portland Immigration Court?",
     type: "text",
@@ -108,7 +183,9 @@ const questions = [
     validation: Joi.string().required(),
   },
   {
-    id: 13,
+    id: 8,
+    sn: 8,
+    component: "registration",
     label:
       "Select all the languages your office currently supports in providing services because you or a staff member speaks the language.",
     type: "select",
@@ -117,7 +194,9 @@ const questions = [
     validation: Joi.array(),
   },
   {
-    id: 14,
+    id: 9,
+    sn: 9,
+    component: "registration",
     label: "Select all your practice areas",
     type: "text",
     note: "We will publish the practice areas in an online directory of providers to help inform ECO participants in selecting service an attorney.",
@@ -126,24 +205,28 @@ const questions = [
     validation: Joi.string().required(),
   },
   {
-    id: 15,
+    id: 10,
+    sn: 10,
+    component: "registration",
     label:
       "I have read and accept the terms of the ECO Panel Attorney Program.",
     type: "checkbox",
     field: "eco_panel_attorney",
     required: true,
     validation: Joi.boolean().valid(true).required().messages({
-    'any.only': 'You must accept the terms and conditions.',
-    'any.required': 'Terms and conditions checkbox is required.'
-  }),
+      "any.only": "You must accept the terms and conditions.",
+      "any.required": "Terms and conditions checkbox is required.",
+    }),
   },
 ];
 
 export default function Page() {
-  const [index, setIndex] = useState(0);
+  const [count, setCount] = useState(0);
+  const [slideIndex, setSlideIndex] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [errors, setErrors] = useState({});
+  const [error, setError] = useState(null);
   const [fields, setFields] = useState({});
+  const divRef = useRef(null);
 
   const handleChange = (e, field) => {
     setFields({ ...fields, [field]: e.target.value });
@@ -161,152 +244,119 @@ export default function Page() {
   }
 
   const next = () => {
-    if (questions[index].component !== "question") {
-      const currentQuestionData = {
-        [questions[index].field]: fields[questions[index].field],
-      };
-      const schema = Joi.object({
-        [questions[index].field]: questions[index].validation,
-      });
-
-      const { error } = schema.validate(currentQuestionData);
-
-      if (error) {
-        let err = error.details[0].message;
-        setErrors({ [questions[index].field]: capitalizeEachWord(err)});
-      } else {
-        setErrors({});
-        if(index < questions.length -1){
-          setIndex(index + 1);
-        }
+    divRef.current.focus();
+    let next = true;
+    // Validation for questions
+    if (data[slideIndex].component === "question") {
+      if (
+        data[slideIndex].required &&
+        parseInt(answers[data[slideIndex]?.id] || 0) <= 0
+      ) {
+        setError(true);
+        next = false;
       }
-    } else {
-      if(index < questions.length -1){
-          setIndex(index + 1);
-        }
     }
+
+    //   const { error } = schema.validate(currentQuestionData);
+
+    //   if (error) {
+    //     let err = error.details[0].message;
+    //     setError({ [questions[index].field]: capitalizeEachWord(err) });
+    //   } else {
+    //     setError({});
+    //     if (index < questions.length - 1) {
+    //       setSlideIndex(index + 1);
+    //     }
+    //   }
+    // } else {
+    if (next && slideIndex < data.length - 1) {
+      setSlideIndex(slideIndex + 1);
+    }
+    // }
   };
 
   const prev = () => {
-    if (index > 0) {
-      setIndex(index - 1);
+    divRef.current.focus();
+    setError(null);
+    if (slideIndex > 0) {
+      setSlideIndex(slideIndex - 1);
     }
   };
 
-  const handleEnterPress = (e) => {
-    if (e.key === "Enter") {
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter" || event.keyCode === 13) {
       next();
+      // Enter key was pressed
+      // Add your code to handle the Enter key press here
     }
   };
+
+  useEffect(() => {
+    // Give the div focus when the component mounts
+    divRef.current.focus();
+  }, []);
+
+  useEffect(() => {
+    count > 0 && next();
+    setCount(count + 1);
+    console.log(answers);
+  }, [answers]);
 
   return (
-    <div className="h-75">
-      <div
-        className='qs-container'
-      >
-        {questions.map((ques, q) => {
-          const {
-            label,
-            question,
-            options,
-            type,
-            component,
-            id,
-            field,
-            note,
-            required,
-          } = ques;
-          let class_name =
-            q === index ? "active_qs" : q < index ? "prev_qs" : "next_qs";
-          return (
-            <div className={`question ` + class_name} key={`ques-${id}`}>
-              <div className="registration_form">
-                {component === "question" ? (
-                  <div>
-                    <h4>
-                      {q + 1}. {question}
-                    </h4>
-                    {options.map((option, i) => {
-                      return (
-                        <div
-                          key={`option-${q}-${i}`}
-                          className="qs_form"
-                          onClick={() => {
-                            setAnswers({ ...answers, [id]: i });
-                            next();
-                          }}
-                        >
-                          <Form.Check
-                            type="checkbox"
-                            id={`option-${q}-${i}`}
-                            label={option}
-                            checked={answers[id] === i}
-                            onChange={() => {}}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <>
-                    {index === id - 1 && (
-                      <div>
-                        <FormGroup
-                          label={label}
-                          field={field}
-                          type={type}
-                          id={id}
-                          note={note}
-                          index={index}
-                          setIndex={setIndex}
-                          required={required}
-                          errors={errors}
-                          fields={fields}
-                          setFields={setFields}
-                          handleChange={handleChange}
-                          handleEnterPress={handleEnterPress}
-                        />
-                        <span className="text-danger">
-                          {errors[questions[index].field]}
-                        </span>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      <div className="buttn_group">
-        <div className="ok_qs">
-          {index > 0 && index < questions.length-1 && (
-            <Button
-              onClick={() => {
-                next();
-              }}
-              variant="secondary"
-            >
-              OK
-            </Button>
-          )}
-        </div>
-        <div className="submit_qs">
-          {index === questions.length - 1 && (
-            <Button variant="success" onClick={()=>{alert('You have successfully registered for Eco Attorney Program')}}>Submit</Button>
-          )}
-        </div>
-      </div>
-      <div className="qs-buttons">
-        <button onClick={prev}>
-          <MdOutlineKeyboardArrowUp className="fs-3" />
-        </button>
+    <div
+      className="slide-container"
+      tabIndex="0" // Make the div focusable
+      ref={divRef} // Assign the ref to the div
+      onKeyUp={handleKeyPress}
+    >
+      {data.map((item, index) => {
+        let class_name =
+          index === slideIndex
+            ? "active_slide"
+            : index < slideIndex
+            ? "prev_slide"
+            : "next_slide";
+        return (
+          <div className={`slide-div ` + class_name} key={`slide-${index}`}>
+            {item?.component === "question" && (
+              <Question
+                index={index}
+                data={item}
+                setAnswers={setAnswers}
+                answers={answers}
+                error={error}
+                setError={setError}
+                next={next}
+              />
+            )}
+            {item?.component === "registration" && (
+              <Registration
+                index={index}
+                data={item}
+                setFields={setFields}
+                fields={fields}
+                error={error}
+                setError={setError}
+                next={next}
+              />
+            )}
+          </div>
+        );
+      })}
+
+      <div className="slide-buttons">
+        {slideIndex > 0 && (
+          <button onClick={prev} className="shadow-sm">
+            <MdOutlineKeyboardArrowUp className="fs-3 text-white" />
+          </button>
+        )}
         <button
           onClick={() => {
             next();
           }}
+          className="shadow-sm"
         >
-          <MdOutlineKeyboardArrowDown className="fs-3" />
+          <MdOutlineKeyboardArrowDown className="fs-3 text-white" />
         </button>
       </div>
     </div>
