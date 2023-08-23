@@ -1,6 +1,12 @@
+
 .show-up-animation {
   animation-delay: 1s;
   animation: showUpAnimation 1s ease forwards;
+}
+
+.show-up-animation-fast {
+  animation-delay: 0.5s;
+  animation: showUpAnimation 0.4s ease forwards;
 }
 
 .show-down-animation {
