@@ -65,6 +65,7 @@ export default function ListQuestions() {
 
   useEffect(() => {
     //saveOrder();
+    console.log(recordOrder);
   }, [recordOrder]);
 
   useEffect(() => {

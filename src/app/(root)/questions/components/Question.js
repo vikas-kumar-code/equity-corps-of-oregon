@@ -17,7 +17,7 @@ export default function Question(props) {
   return (
     <div className="qs-container">
       <p className="qs-label">
-        <span className="slide-sn">{data?.sn - 1}.)</span> {data?.question}
+        <span className="slide-sn">{data?.sn}.)</span> {data?.question}
       </p>
       {data?.note && <p>{data?.note}</p>}
       {data?.options?.map((option, i) => {
