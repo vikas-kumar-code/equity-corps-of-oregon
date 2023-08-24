@@ -10,26 +10,24 @@ import {
 import Joi from "joi";
 import Question from "./components/Question";
 import Registration from "./components/Registration";
+import Info from "./components/Info";
 
 const data = [
   {
     id: 1,
     sn: 1,
-    component: "question",
-    question:
-      "Are you an attorney in good standing with all relevant bar associations, including the Oregon State Bar or a state bar within the United States, and registered to practice before the immigration courts?This question is required.",
-    options: [
-      { id: 1, option: "Yes" },
-      { id: 2, option: "No" },
-    ],
-    required: true,
+    component: "info",
+    label: "ECO Panel Attorney Program Application & Registration",
+    imgUrl: "/images/qs-eco-logo.png",
+    button: true,
   },
   {
     id: 2,
     sn: 2,
     component: "question",
     question:
-      "Are you covered and can demonstrate coverage of malpractice insurance covering at least $300,000 per claim through the Professional Liability Fund (PLF) or another similar malpractice insurance?This question is required.",
+      "Are you an attorney in good standing with all relevant bar associations, including the Oregon State Bar or a state bar within the United States, and registered to practice before the immigration courts?This question is required.",
+      note: "Disciplinary history is not negatively dispositive for participation; additional information will be required, however.",
     options: [
       { id: 1, option: "Yes" },
       { id: 2, option: "No" },
@@ -41,7 +39,7 @@ const data = [
     sn: 3,
     component: "question",
     question:
-      "Have you practiced immigration law for at least five years before the immigration authorities or are you working under supervision of attorney with at least 5 years of experience?This question is required.",
+      "Are you covered and can demonstrate coverage of malpractice insurance covering at least $300,000 per claim through the Professional Liability Fund (PLF) or another similar malpractice insurance?This question is required.",
     options: [
       { id: 1, option: "Yes" },
       { id: 2, option: "No" },
@@ -53,7 +51,8 @@ const data = [
     sn: 4,
     component: "question",
     question:
-      "Do you have experience or demonstrated ability to communicate with and advocate for immigrants from different cultures?",
+      "Have you practiced immigration law for at least five years before the immigration authorities or are you working under supervision of attorney with at least 5 years of experience?This question is required.",
+      note: 'We will soon launch a new attorney panel program for lawyers with less than 5 years of experience.',
     options: [
       { id: 1, option: "Yes" },
       { id: 2, option: "No" },
@@ -65,7 +64,7 @@ const data = [
     sn: 5,
     component: "question",
     question:
-      "Do you have experience practicing before the immigration courts?",
+      "Do you have experience or demonstrated ability to communicate with and advocate for immigrants from different cultures?",
     options: [
       { id: 1, option: "Yes" },
       { id: 2, option: "No" },
@@ -77,7 +76,7 @@ const data = [
     sn: 6,
     component: "question",
     question:
-      "Do you have experience in master hearings, motions practice, and merits hearings before the immigration court?This question is required.",
+      "Do you have experience practicing before the immigration courts?",
     options: [
       { id: 1, option: "Yes" },
       { id: 2, option: "No" },
@@ -89,7 +88,7 @@ const data = [
     sn: 7,
     component: "question",
     question:
-      "Do you have access to and regularly use legal research databases, and can you prepare and present written and oral arguments on behalf of immigrants beyond the filing of generic or canned briefs and the making of routine arguments?This question is required.",
+      "Do you have experience in master hearings, motions practice, and merits hearings before the immigration court?This question is required.",
     options: [
       { id: 1, option: "Yes" },
       { id: 2, option: "No" },
@@ -99,6 +98,18 @@ const data = [
   {
     id: 8,
     sn: 8,
+    component: "question",
+    question:
+      "Do you have access to and regularly use legal research databases, and can you prepare and present written and oral arguments on behalf of immigrants beyond the filing of generic or canned briefs and the making of routine arguments?This question is required.",
+    options: [
+      { id: 1, option: "Yes" },
+      { id: 2, option: "No" },
+    ],
+    required: true,
+  },
+  {
+    id: 9,
+    sn: 9,
     component: "question",
     question:
       "Do you possess good moral and ethical character and have you demonstrated professional demeanor with the immigration courts, the immigration bar, and the legal profession in general?",
@@ -112,6 +123,24 @@ const data = [
     id: 1,
     sn: 1,
     component: "registration",
+    label: "Enter your first name",
+    type: "text",
+    field: "first_name",
+    validation: Joi.string().required(),
+  },
+  {
+    id: 2,
+    sn: 2,
+    component: "registration",
+    label: "Enter your sur name",
+    type: "text",
+    field: "sur_name",
+    validation: Joi.string().required(),
+  },
+  {
+    id: 3,
+    sn: 3,
+    component: "registration",
     label: "Enter your primary telephone",
     type: "phoneInput",
     note: "We will provide this telephone to ECO participants when you are engaged for representation. This number should be answered during normal business hours and be accessible, at a minimum, to individuals who speak English and Spanish.",
@@ -119,8 +148,8 @@ const data = [
     validation: Joi.number().required(),
   },
   {
-    id: 2,
-    sn: 2,
+    id: 4,
+    sn: 4,
     component: "registration",
     label: "Enter your primary email address",
     type: "text",
@@ -131,8 +160,8 @@ const data = [
       .required(),
   },
   {
-    id: 3,
-    sn: 3,
+    id: 5,
+    sn: 5,
     component: "registration",
     label: "Enter your primary physical address",
     type: "text",
@@ -142,8 +171,8 @@ const data = [
     validation: Joi.string().min(10).max(255).required(),
   },
   {
-    id: 4,
-    sn: 4,
+    id: 6,
+    sn: 6,
     component: "registration",
     label: "Enter the name of your law firm.",
     type: "text",
@@ -151,8 +180,8 @@ const data = [
     validation: Joi.string().optional(),
   },
   {
-    id: 5,
-    sn: 5,
+    id: 7,
+    sn: 7,
     component: "registration",
     label: "Are you a member of the Oregon State Bar?",
     type: "text",
@@ -161,8 +190,8 @@ const data = [
     validation: Joi.string().required(),
   },
   {
-    id: 6,
-    sn: 6,
+    id: 8,
+    sn: 8,
     component: "registration",
     label: "Enter your Oregon State Bar number.",
     type: "text",
@@ -171,8 +200,8 @@ const data = [
     validation: Joi.number().required(),
   },
   {
-    id: 7,
-    sn: 7,
+    id: 9,
+    sn: 9,
     component: "registration",
     label:
       "Are you registered with EOIR and eligible to practice immediately before the Portland Immigration Court?",
@@ -183,8 +212,8 @@ const data = [
     validation: Joi.string().required(),
   },
   {
-    id: 8,
-    sn: 8,
+    id: 10,
+    sn: 10,
     component: "registration",
     label:
       "Select all the languages your office currently supports in providing services because you or a staff member speaks the language.",
@@ -194,8 +223,8 @@ const data = [
     validation: Joi.array(),
   },
   {
-    id: 9,
-    sn: 9,
+    id: 11,
+    sn: 11,
     component: "registration",
     label: "Select all your practice areas",
     type: "text",
@@ -205,8 +234,8 @@ const data = [
     validation: Joi.string().required(),
   },
   {
-    id: 10,
-    sn: 10,
+    id: 12,
+    sn: 12,
     component: "registration",
     label:
       "I have read and accept the terms of the ECO Panel Attorney Program.",
@@ -218,6 +247,15 @@ const data = [
       "any.required": "Terms and conditions checkbox is required.",
     }),
   },
+  {
+    id: 13,
+    sn: 13,
+    component: "info",
+    label:
+      "Thank you. Your application has been submitted. We process applications quickly. If you are not an Oregon-barred lawyer, please be ready to provide proof of malpractice coverage.",
+    imgUrl: "/images/qs-eco-logo.png",
+    button: false,
+  },
 ];
 
 export default function Page() {
@@ -227,6 +265,15 @@ export default function Page() {
   const [error, setError] = useState(null);
   const [fields, setFields] = useState({});
   const divRef = useRef(null);
+  const inputRef = useRef(null);
+
+  function capitalizeEachWord(str) {
+    return str
+      .replace(/[_"]/g, " ")
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
 
   const next = () => {
     divRef.current.focus();
@@ -249,10 +296,11 @@ export default function Page() {
       });
       console.log(error);
       if (error) {
-        setError(error.details[0].message);
+        let errs = error.details[0].message;
+        setError(capitalizeEachWord(errs));
         next = false;
-      }else{
-        setError(null)
+      } else {
+        setError(null);
       }
     }
 
@@ -285,6 +333,13 @@ export default function Page() {
     setCount(count + 1);
     console.log(answers);
   }, [answers]);
+
+  useEffect(() => {
+    console.log(inputRef.current);
+    if (inputRef.current) {
+      inputRef.current.focus({ preventScroll: true });
+    }
+  }, [slideIndex]);
 
   return (
     <div
@@ -322,26 +377,34 @@ export default function Page() {
                 error={error}
                 setError={setError}
                 next={next}
+                inputRef={inputRef}
+                len={data.length - 2}
+                slideIndex={slideIndex}
               />
+            )}
+            {item?.component === "info" && (
+              <Info index={index} data={item} next={next} />
             )}
           </div>
         );
       })}
 
-      <div className="slide-buttons">
-        {slideIndex > 0 && (
-          <button onClick={prev} className="shadow-sm">
+      <div className="slide-buttons mb-5">
+        {slideIndex > 1 && (
+          <button onClick={prev} className="shadow-sm show-up-animation-fast">
             <MdOutlineKeyboardArrowUp className="fs-3 text-white" />
           </button>
         )}
-        <button
-          onClick={() => {
-            next();
-          }}
-          className="shadow-sm"
-        >
-          <MdOutlineKeyboardArrowDown className="fs-3 text-white" />
-        </button>
+        {slideIndex > 0 && slideIndex < data.length - 1 && (
+          <button
+            onClick={() => {
+              next();
+            }}
+            className="shadow-sm show-up-animation-fast"
+          >
+            <MdOutlineKeyboardArrowDown className="fs-3 text-white" />
+          </button>
+        )}
       </div>
     </div>
   );

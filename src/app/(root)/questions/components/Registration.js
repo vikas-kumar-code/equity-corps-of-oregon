@@ -37,7 +37,7 @@ const options = [
 ];
 
 export default function Registration(props) {
-  const { data, setFields, fields, error, setError, index, next } = props;
+  const { data, setFields, fields, error, next, inputRef, len, slideIndex } = props;
 
   return (
     <div className="qs-container">
@@ -104,7 +104,9 @@ export default function Registration(props) {
 
       {data?.type === "text" && (
         <Form.Control
+        id={data.id}
           type="text"
+          ref={inputRef}
           placeholder="Type your answer here"
           value={fields[data.field] || ""}
           onChange={(e) => {
@@ -125,7 +127,7 @@ export default function Registration(props) {
             </span>
           </Form.Control.Feedback>
         )}
-        {!error && (
+        {!error && slideIndex < len ? (
           <Button
             size="sm"
             variant="success"
@@ -134,6 +136,16 @@ export default function Registration(props) {
             onClick={() => next()}
           >
             OK
+          </Button>
+        ):(
+          <Button
+            size="md"
+            variant="success"
+            style={{ color: "white" }}
+            className="show-up-animation-fast"
+            onClick={() => next()}
+          >
+            Submit
           </Button>
         )}
       </div>
