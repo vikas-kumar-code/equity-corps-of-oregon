@@ -157,7 +157,7 @@ export default function AddEditQuestion(props) {
                 Add More
               </Button>
             </div>
-            <Form.Label>Answer</Form.Label>
+            <Form.Label>Correct Answer</Form.Label>
             <div className="ps-2 mb-2">
               <Row className={!!errors?.answer ? "show-error  " : ""}>
                 {fields.options.map((ans, index) => (
