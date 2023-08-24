@@ -275,6 +275,7 @@ export default function Page() {
       .join(" ");
   }
 
+  console.log(data[slideIndex].field, data[slideIndex].field.length);
   const next = () => {
     divRef.current.focus();
     let next = true;
@@ -294,7 +295,6 @@ export default function Page() {
       const { error } = schema.validate({
         [data[slideIndex].field]: fields[data[slideIndex].field],
       });
-      console.log(error);
       if (error) {
         let errs = error.details[0].message;
         setError(capitalizeEachWord(errs));
@@ -331,11 +331,9 @@ export default function Page() {
   useEffect(() => {
     count > 0 && next();
     setCount(count + 1);
-    console.log(answers);
   }, [answers]);
 
   useEffect(() => {
-    console.log(inputRef.current);
     if (inputRef.current) {
       inputRef.current.focus({ preventScroll: true });
     }
