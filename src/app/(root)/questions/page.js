@@ -3,121 +3,20 @@ import { useState, useRef, useEffect } from "react";
 import "./style.css";
 import "../../styles/animation.css";
 
-import {
-  MdOutlineKeyboardArrowDown,
-  MdOutlineKeyboardArrowUp,
-} from "react-icons/md";
 import Joi from "joi";
 import Question from "./components/Question";
 import Registration from "./components/Registration";
 import Info from "./components/Info";
+import LoadingOverlay from "react-loading-overlay";
+import common from "@/utils/common";
+import { toast } from "react-toastify";
 
-const data = [
+const slideData = [
   {
-    id: 1,
-    sn: 1,
     component: "info",
     label: "ECO Panel Attorney Program Application & Registration",
     imgUrl: "/images/qs-eco-logo.png",
     button: true,
-  },
-  {
-    id: 2,
-    sn: 2,
-    component: "question",
-    question:
-      "Are you an attorney in good standing with all relevant bar associations, including the Oregon State Bar or a state bar within the United States, and registered to practice before the immigration courts?This question is required.",
-      note: "Disciplinary history is not negatively dispositive for participation; additional information will be required, however.",
-    options: [
-      { id: 1, option: "Yes" },
-      { id: 2, option: "No" },
-    ],
-    required: true,
-  },
-  {
-    id: 3,
-    sn: 3,
-    component: "question",
-    question:
-      "Are you covered and can demonstrate coverage of malpractice insurance covering at least $300,000 per claim through the Professional Liability Fund (PLF) or another similar malpractice insurance?This question is required.",
-    options: [
-      { id: 1, option: "Yes" },
-      { id: 2, option: "No" },
-    ],
-    required: true,
-  },
-  {
-    id: 4,
-    sn: 4,
-    component: "question",
-    question:
-      "Have you practiced immigration law for at least five years before the immigration authorities or are you working under supervision of attorney with at least 5 years of experience?This question is required.",
-      note: 'We will soon launch a new attorney panel program for lawyers with less than 5 years of experience.',
-    options: [
-      { id: 1, option: "Yes" },
-      { id: 2, option: "No" },
-    ],
-    required: true,
-  },
-  {
-    id: 5,
-    sn: 5,
-    component: "question",
-    question:
-      "Do you have experience or demonstrated ability to communicate with and advocate for immigrants from different cultures?",
-    options: [
-      { id: 1, option: "Yes" },
-      { id: 2, option: "No" },
-    ],
-    required: true,
-  },
-  {
-    id: 6,
-    sn: 6,
-    component: "question",
-    question:
-      "Do you have experience practicing before the immigration courts?",
-    options: [
-      { id: 1, option: "Yes" },
-      { id: 2, option: "No" },
-    ],
-    required: true,
-  },
-  {
-    id: 7,
-    sn: 7,
-    component: "question",
-    question:
-      "Do you have experience in master hearings, motions practice, and merits hearings before the immigration court?This question is required.",
-    options: [
-      { id: 1, option: "Yes" },
-      { id: 2, option: "No" },
-    ],
-    required: true,
-  },
-  {
-    id: 8,
-    sn: 8,
-    component: "question",
-    question:
-      "Do you have access to and regularly use legal research databases, and can you prepare and present written and oral arguments on behalf of immigrants beyond the filing of generic or canned briefs and the making of routine arguments?This question is required.",
-    options: [
-      { id: 1, option: "Yes" },
-      { id: 2, option: "No" },
-    ],
-    required: true,
-  },
-  {
-    id: 9,
-    sn: 9,
-    component: "question",
-    question:
-      "Do you possess good moral and ethical character and have you demonstrated professional demeanor with the immigration courts, the immigration bar, and the legal profession in general?",
-    options: [
-      { id: 1, option: "Yes" },
-      { id: 2, option: "No" },
-    ],
-    required: true,
   },
   {
     id: 1,
@@ -248,8 +147,6 @@ const data = [
     }),
   },
   {
-    id: 13,
-    sn: 13,
     component: "info",
     label:
       "Thank you. Your application has been submitted. We process applications quickly. If you are not an Oregon-barred lawyer, please be ready to provide proof of malpractice coverage.",
@@ -259,13 +156,13 @@ const data = [
 ];
 
 export default function Page() {
+  const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [slideIndex, setSlideIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [error, setError] = useState(null);
   const [fields, setFields] = useState({});
   const divRef = useRef(null);
-  const inputRef = useRef(null);
 
   function capitalizeEachWord(str) {
     return str
@@ -276,7 +173,6 @@ export default function Page() {
   }
 
   const next = () => {
-    divRef.current.focus();
     let next = true;
     // Validation for questions
     if (data[slideIndex].component === "question") {
@@ -294,7 +190,6 @@ export default function Page() {
       const { error } = schema.validate({
         [data[slideIndex].field]: fields[data[slideIndex].field],
       });
-      console.log(error);
       if (error) {
         let errs = error.details[0].message;
         setError(capitalizeEachWord(errs));
@@ -310,7 +205,6 @@ export default function Page() {
   };
 
   const prev = () => {
-    divRef.current.focus();
     setError(null);
     if (slideIndex > 0) {
       setSlideIndex(slideIndex - 1);
@@ -323,8 +217,35 @@ export default function Page() {
     }
   };
 
+  const getQuestions = () => {
+    fetch(common.apiPath(`/questions`))
+      .then((response) => response.json())
+      .then((data) => {
+        let questions = [];
+        data.records.forEach((record, index) => {
+          questions.push({
+            id: record.id,
+            sn: index + 1,
+            component: "question",
+            question: record.question,
+            options: record.options,
+            required: true,
+          });
+        });
+        setData([
+          ...slideData.slice(0, 1),
+          ...questions,
+          ...slideData.slice(1, slideData.length),
+        ]);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })      
+  };
+
   useEffect(() => {
     // Give the div focus when the component mounts
+    getQuestions();
     divRef.current.focus();
   }, []);
 
@@ -334,78 +255,56 @@ export default function Page() {
     console.log(answers);
   }, [answers]);
 
-  useEffect(() => {
-    console.log(inputRef.current);
-    if (inputRef.current) {
-      inputRef.current.focus({ preventScroll: true });
-    }
-  }, [slideIndex]);
-
   return (
-    <div
-      className="slide-container"
-      tabIndex="0" // Make the div focusable
-      ref={divRef} // Assign the ref to the div
-      onKeyUp={handleKeyPress}
-    >
-      {data.map((item, index) => {
-        let class_name =
-          index === slideIndex
-            ? "active_slide"
-            : index < slideIndex
-            ? "prev_slide"
-            : "next_slide";
-        return (
-          <div className={`slide-div ` + class_name} key={`slide-${index}`}>
-            {item?.component === "question" && (
-              <Question
-                index={index}
-                data={item}
-                setAnswers={setAnswers}
-                answers={answers}
-                error={error}
-                setError={setError}
-                next={next}
-              />
-            )}
-            {item?.component === "registration" && (
-              <Registration
-                index={index}
-                data={item}
-                setFields={setFields}
-                fields={fields}
-                error={error}
-                setError={setError}
-                next={next}
-                inputRef={inputRef}
-                len={data.length - 2}
-                slideIndex={slideIndex}
-              />
-            )}
-            {item?.component === "info" && (
-              <Info index={index} data={item} next={next} />
-            )}
-          </div>
-        );
-      })}
-
-      <div className="slide-buttons mb-5">
-        {slideIndex > 1 && (
-          <button onClick={prev} className="shadow-sm show-up-animation-fast">
-            <MdOutlineKeyboardArrowUp className="fs-3 text-white" />
-          </button>
-        )}
-        {slideIndex > 0 && slideIndex < data.length - 1 && (
-          <button
-            onClick={() => {
-              next();
-            }}
-            className="shadow-sm show-up-animation-fast"
-          >
-            <MdOutlineKeyboardArrowDown className="fs-3 text-white" />
-          </button>
-        )}
+    <LoadingOverlay active={data.length <= 0} spinner>
+      <div
+        className="slide-container"
+        tabIndex="0" // Make the div focusable
+        ref={divRef} // Assign the ref to the div
+        onKeyUp={handleKeyPress}
+      >
+        {data.map((item, index) => {
+          let class_name =
+            index === slideIndex
+              ? "active_slide"
+              : index < slideIndex
+              ? "prev_slide"
+              : "next_slide";
+          return (
+            <div className={`slide-div ` + class_name} key={`slide-${index}`}>
+              {item?.component === "question" && (
+                <Question
+                  index={index}
+                  data={item}
+                  setAnswers={setAnswers}
+                  answers={answers}
+                  error={error}
+                  setError={setError}
+                  next={next}
+                  prev={prev}
+                />
+              )}
+              {item?.component === "registration" && (
+                <Registration
+                  index={index}
+                  dataLength={data.length}
+                  data={item}
+                  setFields={setFields}
+                  fields={fields}
+                  error={error}
+                  setError={setError}
+                  next={next}
+                  isActive={class_name === "active_slide"}
+                  prev={prev}
+                />
+              )}
+              {item?.component === "info" && (
+                <Info index={index} data={item} next={next} />
+              )}
+            </div>
+          );
+        })}
       </div>
-    </div>
+    </LoadingOverlay>
   );
 }
