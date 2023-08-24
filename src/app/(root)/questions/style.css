@@ -13,6 +13,13 @@
 }
 .slide-container .btn-success {
   background-color: #31c77a;
+  line-height: 1.5;
+}
+
+.slide-container .btn-secondary {
+  background-color: #7b889a;
+  border-color: #7b889a;
+  line-height: 1.5;
 }
 
 .slide-buttons {
@@ -98,6 +105,7 @@
   transition: transform 600ms ease 0s, opacity 300ms ease 0s;
   opacity: 0;
   transform: translateY(-100vh);
+  z-index: -1;
 }
 
 .active_slide {
@@ -108,6 +116,7 @@
   transition: transform 600ms ease 0s, opacity 300ms ease 0s;
   opacity: 0;
   transform: translateY(100vh);
+  z-index: -1;
 }
 .default_qs_layout{
   width: 40vw;
@@ -116,7 +125,4 @@
   align-items: center;
   flex-direction: column;
   gap: 2rem;
-}
-.show-up-animation-fast{
-  border-radius: .6rem;
 }

@@ -1,4 +1,6 @@
 "use client";
+import { useEffect } from "react";
+import { useRef } from "react";
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { BiSolidErrorCircle } from "react-icons/bi";
@@ -37,7 +39,34 @@ const options = [
 ];
 
 export default function Registration(props) {
-  const { data, setFields, fields, error, next, inputRef, len, slideIndex } = props;
+  const {
+    data,
+    setFields,
+    fields,
+    error,
+    setError,
+    index,
+    dataLength,
+    next,
+    prev,
+    isActive,
+  } = props;
+  const inputRef = useRef(null);
+
+  const handleInput = (value) => {
+    error && setError(null);
+    setFields(value);
+  };
+
+  useEffect(() => {
+    if (inputRef?.current && isActive) {
+      setTimeout(() => {
+        inputRef.current.focus({
+          preventScroll: true,
+        });
+      }, 200);
+    }
+  });
 
   return (
     <div className="qs-container">
@@ -48,20 +77,22 @@ export default function Registration(props) {
       )}
       {data?.note && <p>{data?.note}</p>}
 
-      {data?.type === "phoneInput" && (
-        <PhoneInput
+      {data?.type === "phoneInput" && isActive && (
+        <PhoneInput              
           onlyCountries={["us"]}
           placeholder="Type your answer here"
           value={fields[data.field] || null}
           onChange={(phone) =>
-            setFields({ ...fields, [data.field]: `+${phone}` })
+            handleInput({ ...fields, [data.field]: `+${phone}` })
           }
           country="us"
           className="phone-input"
+          onEnterKeyPress={() => next()}
         />
       )}
       {data?.type === "select" && (
         <Select
+          ref={inputRef}
           isMulti
           closeMenuOnSelect={false}
           hideSelectedOptions={false}
@@ -73,11 +104,8 @@ export default function Registration(props) {
           }}
           value={fields[data.field] || null}
           onChange={(selected) =>
-            setFields({ ...fields, [data.field]: selected })
+            handleInput({ ...fields, [data.field]: selected })
           }
-          // onMenuOpen={() => setMenuIsOpen(true)}
-          // onMenuClose={() => setMenuIsOpen(false)}
-          // onKeyDown={handleSelectKeyDown}
         />
       )}
       {data?.type === "checkbox" && (
@@ -85,15 +113,15 @@ export default function Registration(props) {
           <Form.Check
             type="checkbox"
             id="eco-panel-attorney"
-            className="mx-3 mt-2"
+            className="mt-1"
             placeholder="Type your answer here"
             checked={fields[data.field] || false}
             onChange={(e) =>
-              setFields({ ...fields, [data.field]: e.target.checked })
+              handleInput({ ...fields, [data.field]: e.target.checked })
             }
           />
           <Form.Label
-            className="form_label_terms fs-3  "
+            className="form_label_terms fs-1"
             htmlFor="eco-panel-attorney"
           >
             I have read and accept the terms of the ECO Panel Attorney Program.
@@ -104,13 +132,13 @@ export default function Registration(props) {
 
       {data?.type === "text" && (
         <Form.Control
-        id={data.id}
-          type="text"
           ref={inputRef}
+          id={data.id}
+          type="text"
           placeholder="Type your answer here"
           value={fields[data.field] || ""}
           onChange={(e) => {
-            setFields({ ...fields, [data.field]: e.target.value });
+            handleInput({ ...fields, [data.field]: e.target.value });
           }}
         />
       )}
@@ -118,7 +146,7 @@ export default function Registration(props) {
         {error && (
           <Form.Control.Feedback
             type="invalid"
-            className="d-block show-up-animation-fast"
+            className="d-block show-up-animation-fast mb-3"
           >
             <span className="error-text">
               {" "}
@@ -127,27 +155,30 @@ export default function Registration(props) {
             </span>
           </Form.Control.Feedback>
         )}
-        {!error && slideIndex < len ? (
-          <Button
-            size="sm"
-            variant="success"
-            style={{ color: "white" }}
-            className="show-up-animation-fast"
-            onClick={() => next()}
-          >
-            OK
-          </Button>
-        ):(
-          <Button
-            size="md"
-            variant="success"
-            style={{ color: "white" }}
-            className="show-up-animation-fast"
-            onClick={() => next()}
-          >
-            Submit
-          </Button>
-        )}
+        <div className="d-flex">
+          {index > 0 && (
+            <Button
+              size="sm"
+              variant="secondary"
+              style={{ color: "white" }}
+              className="show-up-animation-fast me-2"
+              onClick={() => prev()}
+            >
+              Prev
+            </Button>
+          )}
+          {dataLength - 1 !== index && (
+            <Button
+              size="sm"
+              variant="success"
+              style={{ color: "white" }}
+              className="show-up-animation-fast"
+              onClick={() => next()}
+            >
+              Next
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

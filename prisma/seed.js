@@ -3,6 +3,7 @@ const roleSeeder = require("./seeder/roleSeeder");
 const userSeeder = require("./seeder/userSeeder");
 const routeSeeder = require("./seeder/routeSeeder");
 const permissionSeeder = require("./seeder/permissionSeeder");
+const questionSeeder = require("./seeder/questionSeeder");
 const prisma = new PrismaClient();
 
 async function main() {
@@ -11,6 +12,7 @@ async function main() {
   await userSeeder();
   await routeSeeder();
   await permissionSeeder();
+  await questionSeeder();
   console.log("\x1b[32m",`
 
     Seeding completed.

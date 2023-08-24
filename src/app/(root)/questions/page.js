@@ -3,10 +3,6 @@ import { useState, useRef, useEffect } from "react";
 import "./style.css";
 import "../../styles/animation.css";
 
-import {
-  MdOutlineKeyboardArrowDown,
-  MdOutlineKeyboardArrowUp,
-} from "react-icons/md";
 import Joi from "joi";
 import Question from "./components/Question";
 import Registration from "./components/Registration";
@@ -265,7 +261,7 @@ export default function Page() {
   const [error, setError] = useState(null);
   const [fields, setFields] = useState({});
   const divRef = useRef(null);
-  const inputRef = useRef(null);
+  // const inputRef = useRef(null)
 
   function capitalizeEachWord(str) {
     return str
@@ -275,8 +271,7 @@ export default function Page() {
       .join(" ");
   }
 
-  const next = () => {
-    divRef.current.focus();
+  const next = () => {    
     let next = true;
     // Validation for questions
     if (data[slideIndex].component === "question") {
@@ -294,7 +289,6 @@ export default function Page() {
       const { error } = schema.validate({
         [data[slideIndex].field]: fields[data[slideIndex].field],
       });
-      console.log(error);
       if (error) {
         let errs = error.details[0].message;
         setError(capitalizeEachWord(errs));
@@ -310,7 +304,6 @@ export default function Page() {
   };
 
   const prev = () => {
-    divRef.current.focus();
     setError(null);
     if (slideIndex > 0) {
       setSlideIndex(slideIndex - 1);
@@ -334,12 +327,6 @@ export default function Page() {
     console.log(answers);
   }, [answers]);
 
-  useEffect(() => {
-    console.log(inputRef.current);
-    if (inputRef.current) {
-      inputRef.current.focus({ preventScroll: true });
-    }
-  }, [slideIndex]);
 
   return (
     <div
@@ -366,20 +353,21 @@ export default function Page() {
                 error={error}
                 setError={setError}
                 next={next}
+                prev={prev}
               />
             )}
             {item?.component === "registration" && (
               <Registration
                 index={index}
+                dataLength={data.length}
                 data={item}
                 setFields={setFields}
                 fields={fields}
                 error={error}
                 setError={setError}
                 next={next}
-                inputRef={inputRef}
-                len={data.length - 2}
-                slideIndex={slideIndex}
+                isActive={class_name === 'active_slide'}
+                prev={prev}
               />
             )}
             {item?.component === "info" && (
@@ -388,24 +376,6 @@ export default function Page() {
           </div>
         );
       })}
-
-      <div className="slide-buttons mb-5">
-        {slideIndex > 1 && (
-          <button onClick={prev} className="shadow-sm show-up-animation-fast">
-            <MdOutlineKeyboardArrowUp className="fs-3 text-white" />
-          </button>
-        )}
-        {slideIndex > 0 && slideIndex < data.length - 1 && (
-          <button
-            onClick={() => {
-              next();
-            }}
-            className="shadow-sm show-up-animation-fast"
-          >
-            <MdOutlineKeyboardArrowDown className="fs-3 text-white" />
-          </button>
-        )}
-      </div>
     </div>
   );
 }
