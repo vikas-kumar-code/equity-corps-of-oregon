@@ -4,13 +4,11 @@ import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 export async function GET(request) {
-  let records = [];
-  let totalRecords = 0;
+  let records = [];  
   let response = {};
   const searchParams = request.nextUrl.searchParams;
   
   try {
-    const paginate = common.paginate(searchParams);
     let where = {
       //status: 1,
     };
@@ -24,15 +22,12 @@ export async function GET(request) {
     }
     records = await prisma.questions.findMany({
       where,
-      ...paginate,
-      orderBy: [{ id: "desc" }],
-    });
-    totalRecords = await prisma.questions.count({ where: where });
+      orderBy: [{ sequence: "asc" }],
+    });    
     // output response
     response.success = true;
     response.message = "Questions list";
     response.records = records;
-    response.totalRecords = totalRecords;
   } catch (error) {
     response.error = true;
     response.message = error.message;

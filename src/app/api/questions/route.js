@@ -10,7 +10,7 @@ export async function GET(request) {
       where: {
         status: true,
       },
-      orderBy: [{ id: "desc" }],
+      orderBy: [{ sequence: "asc" }],
       include: {
         options: true,
       },
