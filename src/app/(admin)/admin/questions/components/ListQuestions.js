@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Component } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { Card, Row, Col, Button } from "react-bootstrap";
 import Pagination from "react-js-pagination";
@@ -9,25 +9,46 @@ import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+
 LoadingOverlay.propTypes = undefined
 
 export default function ListQuestions() {
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
   const [records, setRecords] = useState([]);
-  const recordPerPage = 10;
-  const [pageNumber, setPageNumber] = useState(1);
-  const [totalRecords, setTotalRecords] = useState(1);
+  const [recordOrder, setOrder] = useState([])
   const [showModal, setShowModal] = useState(false);
   const [recordId, setRecordId] = useState(null);
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [fields, setFields] = useState(null);
   const searchFields = [{ label: "Question", type: "text", name: "question" }];
 
+
+  const onDragEnd = (result) => {
+    const { source, destination, draggableId } = result;
+    if (!destination) return;
+    if (destination.index == source.index) return;
+    const t = records.filter((ele) => parseInt(ele.id) === parseInt(draggableId))[0];
+
+    const newList = [...records];
+    newList.splice(source.index, 1);
+    newList.splice(destination.index, 0, t);
+    setRecords(newList)
+    let recordOrder = newList.map((record, index) => {
+      return {
+        id: record.id,
+        sequence: index
+      }
+    })
+    setOrder(recordOrder);
+  }
+  const getRecord = (recordId = null) => {
+    setRecordId(recordId);
+    setShowModal(true);
+  };
   const getRecords = async () => {
-    setLoader(true);
-    let REQUEST_URI = common.apiPath(`/admin/questions?page=${pageNumber}`);
+    let REQUEST_URI = common.apiPath(`/admin/questions`);
     if (fields !== null) {
-      fields["page"] = pageNumber;
       const queryString = new URLSearchParams(fields).toString();
       REQUEST_URI = common.apiPath(`/admin/questions?${queryString}`);
     }
@@ -35,7 +56,6 @@ export default function ListQuestions() {
       .then((response) => response.json())
       .then((data) => {
         setRecords(data.records);
-        setTotalRecords(data.totalRecords);
       })
       .catch((error) => {
         toast.error(error.message);
@@ -44,8 +64,8 @@ export default function ListQuestions() {
   };
 
   useEffect(() => {
-    getRecords();
-  }, [pageNumber]);
+    //saveOrder();
+  }, [recordOrder]);
 
   useEffect(() => {
     getRecords();
@@ -71,10 +91,6 @@ export default function ListQuestions() {
     }
   };
 
-  const getRecord = (recordId = null) => {
-    setRecordId(recordId);
-    setShowModal(true);
-  };
 
   return (
     <div>
@@ -119,53 +135,56 @@ export default function ListQuestions() {
                       <tr>
                         <th>#</th>
                         <th>Question </th>
-                        <th>Action</th>
+                        <th colSpan={2}>Action</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      {records.map((record, index) => (
-                        <tr key={index}>
-                          <td>
-                            {pageNumber * recordPerPage -
-                              recordPerPage +
-                              Number(index + 1)}
-                            .
-                          </td>
-                          <td>{record.question}</td>
-                          <td>
-                            <Button
-                              className="me-2"
-                              variant="primary"
-                              onClick={() => getRecord(record.id)}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              variant="danger"
-                              onClick={() => deleteRecord(record.id)}
-                            >
-                              Delete
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
+                    <DragDropContext onDragEnd={onDragEnd}>
+                      <Droppable droppableId="droppable">
+                        {(provided) => (
+                          <tbody
+                            {...provided.droppableProps}
+                            ref={provided.innerRef}
+                          >
+                            {records.map((record, index) => (
+                              <Draggable key={record.id} draggableId={`${record.id}`} index={index}>
+                                {(provided) => (
+                                  <tr key={`{row-${index}}`} ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}>
+                                    <td>
+                                      {
+                                        Number(index + 1)}
+                                      .
+                                    </td>
+                                    <td>{record.question}</td>
+                                    <td>
+                                      <Button
+                                        className="me-2"
+                                        variant="primary"
+                                        onClick={() => getRecord(record.id)}
+                                      >
+                                        Edit
+                                      </Button>
+                                    </td>
+                                    <td>
+                                      <Button
+                                        variant="danger"
+                                        onClick={() => deleteRecord(record.id)}
+                                      >
+                                        Delete
+                                      </Button>
+                                    </td>
+                                  </tr>
+                                )}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+                          </tbody>
+                        )}
+                      </Droppable>
+                    </DragDropContext>
                   </table>
                 </div>
-                {totalRecords > recordPerPage && (
-                  <Card.Footer className="text-end">
-                    <Pagination
-                      activePage={pageNumber}
-                      itemsCountPerPage={recordPerPage}
-                      totalItemsCount={totalRecords}
-                      pageRangeDisplayed={recordPerPage}
-                      onChange={(page) => setPageNumber(page)}
-                      itemClass="page-item"
-                      linkClass="page-link"
-                      innerClass="pagination float-end"
-                    />
-                  </Card.Footer>
-                )}
               </Card.Body>
             </Card>
 
@@ -182,5 +201,6 @@ export default function ListQuestions() {
         reloadRecords={getRecords}
       />
     </div>
+
   );
 }
