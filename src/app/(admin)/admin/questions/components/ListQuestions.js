@@ -191,7 +191,7 @@ export default function ListQuestions() {
           </LoadingOverlay>
         </Col>
       </Row>
-      <AddEditQuestion
+      {showModal && <AddEditQuestion
         showModal={showModal}
         closeModal={() => {
           setShowModal(false);
@@ -199,7 +199,8 @@ export default function ListQuestions() {
         }}
         recordId={recordId}
         reloadRecords={getRecords}
-      />
+      />}
+
     </div>
 
   );
