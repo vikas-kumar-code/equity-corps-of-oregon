@@ -27,7 +27,7 @@ const data = [
     component: "question",
     question:
       "Are you an attorney in good standing with all relevant bar associations, including the Oregon State Bar or a state bar within the United States, and registered to practice before the immigration courts?This question is required.",
-      note: "Disciplinary history is not negatively dispositive for participation; additional information will be required, however.",
+    note: "Disciplinary history is not negatively dispositive for participation; additional information will be required, however.",
     options: [
       { id: 1, option: "Yes" },
       { id: 2, option: "No" },
@@ -52,7 +52,7 @@ const data = [
     component: "question",
     question:
       "Have you practiced immigration law for at least five years before the immigration authorities or are you working under supervision of attorney with at least 5 years of experience?This question is required.",
-      note: 'We will soon launch a new attorney panel program for lawyers with less than 5 years of experience.',
+    note: "We will soon launch a new attorney panel program for lawyers with less than 5 years of experience.",
     options: [
       { id: 1, option: "Yes" },
       { id: 2, option: "No" },
@@ -268,14 +268,15 @@ export default function Page() {
   const inputRef = useRef(null);
 
   function capitalizeEachWord(str) {
-    return str
-      .replace(/[_"]/g, " ")
-      .split(" ")
+    let name = str.match(/"([^"]+)"/)[1];
+    let capitalized = name
+      .split("_")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
+    let result = str.replace(`"${name}"`, capitalized);
+    return result;
   }
 
-  console.log(data[slideIndex].field, data[slideIndex].field.length);
   const next = () => {
     divRef.current.focus();
     let next = true;
