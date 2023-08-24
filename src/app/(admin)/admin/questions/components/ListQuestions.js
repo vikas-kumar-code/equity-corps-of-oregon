@@ -71,7 +71,7 @@ export default function ListQuestions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.success) {          
+        if (data.success) {
           toast.success(data.message);
         } else if (data.error) {
         }
@@ -83,8 +83,9 @@ export default function ListQuestions() {
   };
 
   useEffect(() => {
-    saveOrder();
-    console.log(recordOrder);
+    if (recordOrder && recordOrder?.length > 0) {
+      saveOrder();
+    }
   }, [recordOrder]);
 
   useEffect(() => {
