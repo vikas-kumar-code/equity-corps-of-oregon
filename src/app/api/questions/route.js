@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 // ----
 const prisma = new PrismaClient();
+console.log(prisma);
 export async function GET(request) {
   return NextResponse.json({
     success: true,

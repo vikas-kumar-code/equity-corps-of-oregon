@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
+LoadingOverlay.propTypes = undefined;
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -59,9 +60,10 @@ export default function Navigation() {
         </div>
 
         <ul className="nav">
-          {modules.map((module) => {
+          {modules.map((module, index) => {
             return (
               <li
+              key={`nav-${index}`}
                 className={
                   pathname === '/'+module.url
                     ? "nav-item menu-items active"

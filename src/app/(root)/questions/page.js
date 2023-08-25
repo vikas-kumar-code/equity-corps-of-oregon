@@ -19,6 +19,12 @@ const slideData = [
     button: true,
   },
   {
+    component: "info",
+    label: "Registration",
+    imgUrl: "/images/qs-eco-logo.png",
+    button: true,
+  },
+  {
     id: 1,
     sn: 1,
     component: "registration",

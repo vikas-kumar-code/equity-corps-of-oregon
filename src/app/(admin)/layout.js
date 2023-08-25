@@ -34,6 +34,7 @@ export default function AdminLayout({ children }) {
                                                 src="/images/logo.png"
                                                 width={35}
                                                 height={35}
+                                                alt='ECO-Logo'
                                             />
                                         </a>
                                     </div>
