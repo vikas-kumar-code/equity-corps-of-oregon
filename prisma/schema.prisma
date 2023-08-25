@@ -128,6 +128,7 @@ model permissions {
 model questions {
   id       Int       @id @default(autoincrement())
   question String    @db.Text
+  sequence Int       @default(0)
   status   Boolean   @default(true)
   options  options[]
 }

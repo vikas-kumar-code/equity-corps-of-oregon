@@ -11,37 +11,38 @@ import common from "@/utils/common";
 import { toast } from "react-toastify";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
-LoadingOverlay.propTypes = undefined
+LoadingOverlay.propTypes = undefined;
 
 export default function ListQuestions() {
   const [loader, setLoader] = useState(true);
   const [records, setRecords] = useState([]);
-  const [recordOrder, setOrder] = useState([])
+  const [recordOrder, setOrder] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [recordId, setRecordId] = useState(null);
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [fields, setFields] = useState(null);
   const searchFields = [{ label: "Question", type: "text", name: "question" }];
 
-
   const onDragEnd = (result) => {
     const { source, destination, draggableId } = result;
     if (!destination) return;
     if (destination.index == source.index) return;
-    const t = records.filter((ele) => parseInt(ele.id) === parseInt(draggableId))[0];
+    const t = records.filter(
+      (ele) => parseInt(ele.id) === parseInt(draggableId)
+    )[0];
 
     const newList = [...records];
     newList.splice(source.index, 1);
     newList.splice(destination.index, 0, t);
-    setRecords(newList)
+    setRecords(newList);
     let recordOrder = newList.map((record, index) => {
       return {
         id: record.id,
-        sequence: index
-      }
-    })
+        sequence: index,
+      };
+    });
     setOrder(recordOrder);
-  }
+  };
   const getRecord = (recordId = null) => {
     setRecordId(recordId);
     setShowModal(true);
@@ -63,9 +64,28 @@ export default function ListQuestions() {
       .finally(() => setLoader(false));
   };
 
+  const saveOrder = async () => {
+    fetch(common.apiPath(`/admin/questions/save/sequence`), {
+      method: "POST",
+      body: JSON.stringify({ orders: recordOrder }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          toast.success(data.message);
+        } else if (data.error) {
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => setLoader(false));
+  };
+
   useEffect(() => {
-    //saveOrder();
-    console.log(recordOrder);
+    if (recordOrder && recordOrder?.length > 0) {
+      saveOrder();
+    }
   }, [recordOrder]);
 
   useEffect(() => {
@@ -75,7 +95,9 @@ export default function ListQuestions() {
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this question?")) {
       setLoader(true);
-      fetch(common.apiPath(`/admin/questions/delete/${id}`), { method: "DELETE" })
+      fetch(common.apiPath(`/admin/questions/delete/${id}`), {
+        method: "DELETE",
+      })
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
@@ -91,7 +113,6 @@ export default function ListQuestions() {
         .finally(() => setLoader(false));
     }
   };
-
 
   return (
     <div>
@@ -147,16 +168,19 @@ export default function ListQuestions() {
                             ref={provided.innerRef}
                           >
                             {records.map((record, index) => (
-                              <Draggable key={record.id} draggableId={`${record.id}`} index={index}>
+                              <Draggable
+                                key={record.id}
+                                draggableId={`${record.id}`}
+                                index={index}
+                              >
                                 {(provided) => (
-                                  <tr key={`{row-${index}}`} ref={provided.innerRef}
+                                  <tr
+                                    key={`{row-${index}}`}
+                                    ref={provided.innerRef}
                                     {...provided.draggableProps}
-                                    {...provided.dragHandleProps}>
-                                    <td>
-                                      {
-                                        Number(index + 1)}
-                                      .
-                                    </td>
+                                    {...provided.dragHandleProps}
+                                  >
+                                    <td>{Number(index + 1)}.</td>
                                     <td>{record.question}</td>
                                     <td>
                                       <Button
@@ -188,7 +212,6 @@ export default function ListQuestions() {
                 </div>
               </Card.Body>
             </Card>
-
           </LoadingOverlay>
         </Col>
       </Row>
@@ -202,6 +225,5 @@ export default function ListQuestions() {
         reloadRecords={getRecords}
       />
     </div>
-
   );
 }
