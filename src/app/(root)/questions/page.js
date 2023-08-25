@@ -242,7 +242,7 @@ export default function Page() {
         });
         setData([
           ...slideData.slice(0, 1),
-          ...questions,
+          ...questions,          
           ...slideData.slice(1, slideData.length),
         ]);
       })

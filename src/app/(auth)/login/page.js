@@ -1,7 +1,14 @@
+import { getSession } from "@/utils/serverHelpers";
 import LoginForm from "./LoginForm";
-import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import common from "@/utils/common";
 
-export default function Login() {
+export default async function Login() {
+  const session = await getSession();
+  // if user alredy logged in
+  if (session?.user) {
+    redirect("./admin/dashboard");
+  }
   return (
     <div className="container-scroller">
       <div className="container-fluid page-body-wrapper full-page-wrapper">

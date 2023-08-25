@@ -46,6 +46,7 @@ model users {
   role              roles              @relation(fields: [role_id], references: [id])
   cases             cases[]
   case_invitations  case_invitations[]
+  // attorney_answers  attorney_answers[]
 }
 
 model roles {
@@ -126,11 +127,12 @@ model permissions {
 }
 
 model questions {
-  id       Int       @id @default(autoincrement())
-  question String    @db.Text
-  sequence Int       @default(0)
-  status   Boolean   @default(true)
-  options  options[]
+  id               Int                @id @default(autoincrement())
+  question         String             @db.Text
+  sequence         Int                @default(0)
+  status           Boolean            @default(true)
+  options          options[]
+  // attorney_answers attorney_answers[]
 }
 
 model options {
@@ -148,3 +150,13 @@ model email_templates {
   from_label String @db.VarChar(100)
   content    String @db.LongText
 }
+
+// model attorney_answers {
+//   id               Int                @id @default(autoincrement())
+//   user_id          Int
+//   question_id      Int
+//   answer_id        Int
+//   // answer           options   @relation(fields: [answer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+//   users            users?             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+//   questions        questions?         @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)  
+// }
