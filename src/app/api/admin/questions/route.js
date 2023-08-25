@@ -7,17 +7,18 @@ export async function GET(request) {
   let records = [];
   let totalRecords = 0;
   let response = {};
-  request = request.nextUrl.searchParams;
+  const searchParams = request.nextUrl.searchParams;
+  
   try {
-    const paginate = common.paginate(request);
+    const paginate = common.paginate(searchParams);
     let where = {
       //status: 1,
     };
-    if (request.get("question")) {
+    if (searchParams.get("question")) {
       where = {
         ...where,
         question: {
-          contains: request.get("question"),
+          contains: searchParams.get("question"),
         },
       };
     }

@@ -4,20 +4,20 @@ import { Button, Form } from "react-bootstrap";
 import { BiSolidErrorCircle } from "react-icons/bi";
 
 export default function Question(props) {
-  const { data, setAnswers, answers, error, setError, index, next } = props;
+  const { data, setAnswers, answers, error, setError, index, next, prev } = props;
   const [selected, setSelected] = useState(null);
   const handleSelect = (id) => {
     setSelected(id);
     setError(null);
     setTimeout(() => {
       setAnswers({ ...answers, [data?.id]: id });
-    }, 650);
+    }, 500);
   };
 
   return (
     <div className="qs-container">
       <p className="qs-label">
-        <span className="slide-sn">{data?.sn - 1}.)</span> {data?.question}
+        <span className="slide-sn">{data?.sn}.)</span> {data?.question}
       </p>
       {data?.note && <p>{data?.note}</p>}
       {data?.options?.map((option, i) => {
@@ -42,7 +42,7 @@ export default function Question(props) {
         {error && (
           <Form.Control.Feedback
             type="invalid"
-            className="d-block show-up-animation-fast"
+            className="d-block show-up-animation-fast mb-3"
           >
             <span className="error-text">
               {" "}
@@ -54,7 +54,18 @@ export default function Question(props) {
             </span>
           </Form.Control.Feedback>
         )}
-        {!error && selected && (
+        <div className="d-flex">
+          {index > 1 && (
+            <Button
+              size="sm"
+              variant="secondary"
+              style={{ color: "white" }}
+              className="show-up-animation-fast me-2"
+              onClick={() => prev()}
+            >
+              Prev
+            </Button>
+          )}
           <Button
             size="sm"
             variant="success"
@@ -62,9 +73,9 @@ export default function Question(props) {
             className="show-up-animation-fast"
             onClick={() => next()}
           >
-            OK
+            Next
           </Button>
-        )}
+        </div>
       </div>
     </div>
   );
