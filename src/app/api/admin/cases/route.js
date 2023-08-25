@@ -12,9 +12,7 @@ export async function GET(request) {
   try {
     const paginate = common.paginate(request);
     // Filters
-    let where = {
-      status: 1,
-    };
+    let where = {};
     if (request.get("case_number")) {
       where = {
         ...where,
@@ -26,7 +24,31 @@ export async function GET(request) {
     if (request.get("status")) {
       where = {
         ...where,
-        status: request.get("status"),
+        status: Number(request.get("status")),
+      };
+    }
+    if (request.get("title")) {
+      where = {
+        ...where,
+        title: {
+          contains: request.get("title"),
+        },
+      };
+    }
+    if (request.get("eco_provider")) {
+      where = {
+        ...where,
+        case_invitations: {
+          some: {
+            user: {
+              is: {
+                name: {
+                  contains: request.get("eco_provider"), 
+                }
+              },
+            },
+          },
+        },
       };
     }
     records = await prisma.cases.findMany({
