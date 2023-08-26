@@ -2,12 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Dropdown } from "react-bootstrap";
+import "../styles/frontNav.css";
+import { BiSolidDownArrow } from "react-icons/bi";
 
 export default function FrontNavigation() {
-  const [toggle, setToggle] = useState(false)
-  const [show, setShow] = useState(false)
   const pathname = usePathname();
   return (
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
@@ -30,85 +28,62 @@ export default function FrontNavigation() {
             Get Legal Help
           </Link>
         </li>
-        <li className="nav-item">
-          <Dropdown className="drop_down" show={toggle} onMouseEnter={()=>setToggle(true)} onMouseLeave={()=>setToggle(false)}>
-            <Dropdown.Toggle
-              as="div"
-              className={pathname.startsWith("/about") ? "nav-link active" : "nav-link"}
-            >
-              About
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-              <Dropdown.Item>
-                <Link
-                  href="/about"
-                  className={
-                    pathname === "/about" ? "nav-link active" : "nav-link"
-                  }
-                >
-                  About Eco
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <Link
-                  href="/about/impact"
-                  className={
-                    pathname === "/about/impact"
-                      ? "nav-link active"
-                      : "nav-link"
-                  }
-                >
-                  Impact
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <Link
-                  href="/about/oregonWorkerRelief"
-                  className={
-                    pathname === "/about/oregonWorkerRelief"
-                      ? "nav-link active"
-                      : "nav-link"
-                  }
-                >
-                  Oregon Worker Relief
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <Link
-                  href="/about/attorneysInfo"
-                  className={
-                    pathname === "/about/attorneysInfo"
-                      ? "nav-link active"
-                      : "nav-link"
-                  }
-                >
-                  Info For Attorneys
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <Link
-                  href="/about/FAQ"
-                  className={
-                    pathname === "/about/FAQ" ? "nav-link active" : "nav-link"
-                  }
-                >
-                  FAQ
-                </Link>
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+        <li>
+          <div className="dropdown">
+            <button className="dropbtn">About <BiSolidDownArrow className="arrow" /></button>
+            <div class="dropdown-content">
+              <Link
+                href="/about"
+                className={
+                  pathname === "/about" ? "nav-link active" : "nav-link"
+                }
+              >
+                About Eco
+              </Link>
+              <Link
+                href="/about/impact"
+                className={
+                  pathname === "/about/impact" ? "nav-link active" : "nav-link"
+                }
+              >
+                Impact
+              </Link>
+              <Link
+                href="/about/oregonWorkerRelief"
+                className={
+                  pathname === "/about/oregonWorkerRelief"
+                    ? "nav-link active"
+                    : "nav-link"
+                }
+              >
+                Oregon Worker Relief
+              </Link>
+              <Link
+                href="/about/attorneysInfo"
+                className={
+                  pathname === "/about/attorneysInfo"
+                    ? "nav-link active"
+                    : "nav-link"
+                }
+              >
+                Info For Attorneys
+              </Link>
+              <Link
+                href="/about/FAQ"
+                className={
+                  pathname === "/about/FAQ" ? "nav-link active" : "nav-link"
+                }
+              >
+                FAQ
+              </Link>
+            </div>
+          </div>
         </li>
-
-        <li className="nav-item ms-3">
-          <Dropdown className="drop_down" show={show} onMouseEnter={()=>setShow(true)} onMouseLeave={()=>setShow(false)}>
-            <Dropdown.Toggle as="div" className={
-                    pathname.startsWith("/getInvolved") ? "nav-link active" : "nav-link"
-                  }>Get Involved</Dropdown.Toggle>
-
-            <Dropdown.Menu>
-              <Dropdown.Item>
-                <Link
+        <li>
+          <div class="dropdown">
+            <button class="dropbtn">Get Involved <BiSolidDownArrow className="arrow"/></button>
+            <div class="dropdown-content">
+            <Link
                   href="/getInvolved"
                   className={
                     pathname === "/getInvolved" ? "nav-link active" : "nav-link"
@@ -116,8 +91,6 @@ export default function FrontNavigation() {
                 >
                   Become an ECO Attorney
                 </Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
                 <Link
                   href="/getInvolved/attorneyProgram"
                   className={
@@ -128,8 +101,6 @@ export default function FrontNavigation() {
                 >
                   ECO Panel Attorney Program
                 </Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
                 <Link
                   href="/getInvolved/ecoClinic"
                   className={
@@ -140,9 +111,8 @@ export default function FrontNavigation() {
                 >
                   ECO Clinics
                 </Link>
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+            </div>
+          </div>
         </li>
         <li className="nav-item">
           <Link

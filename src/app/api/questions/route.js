@@ -1,8 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-// ----
+
 const prisma = new PrismaClient();
-console.log(prisma);
 export async function GET(request) {
   return NextResponse.json({
     success: true,
@@ -11,7 +10,7 @@ export async function GET(request) {
       where: {
         status: true,
       },
-      orderBy: [{ sequence: "asc" }],
+      orderBy: [{ id: "desc" }],
       include: {
         options: true,
       },
