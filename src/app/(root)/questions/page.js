@@ -31,9 +31,9 @@ const slideData = [
     id: 2,
     sn: 2,
     component: "registration",
-    label: "Enter your sur name",
+    label: "Enter your surname",
     type: "text",
-    field: "sur_name",
+    field: "surname",
     validation: Joi.string().required(),
   },
   {
