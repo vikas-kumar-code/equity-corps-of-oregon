@@ -32,21 +32,30 @@ model states {
 }
 
 model users {
-  id                Int                @id @default(autoincrement())
-  name              String             @db.VarChar(150)
-  email             String             @unique @db.VarChar(150)
-  role_id           Int                @default(0)
-  password          String             @db.VarChar(255)
-  created_at        DateTime?          @default(now())
-  updated_at        DateTime?          @db.Timestamp(0)
-  status            Int                @default(1)
-  verified          Int                @default(0)
-  verification_code String?            @db.VarChar(20)
-  code_valid_till   DateTime?
-  role              roles              @relation(fields: [role_id], references: [id])
-  cases             cases[]
-  case_invitations  case_invitations[]
-  // attorney_answers  attorney_answers[]
+  id                         Int                @id @default(autoincrement())
+  first_name                 String?            @db.VarChar(100)
+  last_name                  String?            @db.VarChar(100)
+  phone                      String?            @db.VarChar(100)
+  email                      String?            @unique @db.VarChar(150)
+  address                    String?            @db.Text()
+  law_firm_name              String?            @db.VarChar(255)
+  is_oregon_state_bar_member Int                @default(0)
+  oregon_state_bar_number    String?            @db.VarChar(100)
+  eoir_registered            Int?               @default(0)
+  languages_supports         String?            @db.Text()
+  practice_areas             String?            @db.Text()
+  role_id                    Int               @default(0)
+  password                   String?            @db.VarChar(255)
+  created_at                 DateTime?          @default(now())
+  updated_at                 DateTime?          @db.Timestamp(0)
+  status                     Int                @default(1)
+  verified                   Int                @default(0)
+  verification_code          String?            @db.VarChar(20)
+  code_valid_till            DateTime?
+  role                       roles              @relation(fields: [role_id], references: [id])
+  cases                      cases[]
+  case_invitations           case_invitations[]
+  attorney_answers           attorney_answers[]
 }
 
 model roles {
@@ -132,15 +141,16 @@ model questions {
   sequence         Int                @default(0)
   status           Boolean            @default(true)
   options          options[]
-  // attorney_answers attorney_answers[]
+  attorney_answers attorney_answers[]
 }
 
 model options {
-  id          Int       @id @default(autoincrement())
-  question_id Int
-  option      String    @db.Text
-  status      Boolean   @default(false)
-  question    questions @relation(fields: [question_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id               Int                @id @default(autoincrement())
+  question_id      Int
+  option           String             @db.Text
+  status           Boolean            @default(false)
+  question         questions          @relation(fields: [question_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  attorney_answers attorney_answers[]
 }
 
 model email_templates {
@@ -151,12 +161,12 @@ model email_templates {
   content    String @db.LongText
 }
 
-// model attorney_answers {
-//   id               Int                @id @default(autoincrement())
-//   user_id          Int
-//   question_id      Int
-//   answer_id        Int
-//   // answer           options   @relation(fields: [answer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-//   users            users?             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-//   questions        questions?         @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)  
-// }
+model attorney_answers {
+  id          Int        @id @default(autoincrement())
+  user_id     Int
+  question_id Int
+  answer_id   Int
+  user        users?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  answer      options?   @relation(fields: [answer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  question    questions? @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
