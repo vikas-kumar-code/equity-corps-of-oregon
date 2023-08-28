@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 
 import Joi from "joi";
 import common from "@/utils/common";
+import prisma from "@/utils/prisma";
 
 export async function PUT(request, data) {
   let response = {};
-  import prisma from "@/utils/prisma";
+
   const recordId = Number(data.params.id) || null;
 
   try {

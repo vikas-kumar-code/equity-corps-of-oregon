@@ -4,9 +4,10 @@ import casesSchema from "@/joi/casesSchema";
 import common from "@/utils/common";
 import fs from "fs";
 import { moveFile } from "@/utils/serverHelpers";
+import prisma from "@/utils/prisma";
 
 export async function PUT(request, data) {
-  import prisma from "@/utils/prisma";
+
   let response = {};
   const caseId = parseInt(data.params.id);
   try {
