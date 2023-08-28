@@ -1,4 +1,3 @@
-
 .show-up-animation {
   animation-delay: 1s;
   animation: showUpAnimation 1s ease forwards;
@@ -12,6 +11,10 @@
 .show-down-animation {
   animation-delay: 1s;
   animation: showDownAnimation 1s ease forwards;
+}
+.show-down-animation-2 {
+  animation-delay: 0.5s;
+  animation: showDownAnimation2 0.3s ease forwards;
 }
 
 @keyframes showUpAnimation {
@@ -29,6 +32,17 @@
   from {
     opacity: 0;
     transform: translateY(-30%);
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes showDownAnimation2 {
+  from {
+    opacity: 0;
+    transform: translateY(-10%);
   }
   to {
     transform: translateY(0%);

@@ -1,12 +1,14 @@
 "use client";
+import common from "@/utils/common";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Spinner } from "react-bootstrap";
 import { BiSolidErrorCircle } from "react-icons/bi";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import Select, { components } from "react-select";
+import { toast } from "react-toastify";
 
 const Option = (props) => {
   return (
@@ -50,12 +52,38 @@ export default function Registration(props) {
     next,
     prev,
     isActive,
+    answers,
   } = props;
   const inputRef = useRef(null);
+  const [checked, setChecked] = useState(true);
+  const [loader, setLoader] = useState(false);
 
   const handleInput = (value) => {
     error && setError(null);
     setFields(value);
+  };
+
+  const handleSubmit = () => {
+    setLoader(true);
+    fetch(common.apiPath(`/questions/save`), {
+      method: "POST",
+      body: JSON.stringify({
+        registration: fields,
+        attorney_answers: answers,
+      }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.success) {
+          // next();
+        } else if (res.error) {
+          setError(res.message?.registration || res?.message?.attorney_answers);
+        }
+      })
+      .catch((error) => {
+        setError(error.message);
+      })
+      .finally(() => setLoader(false));
   };
 
   useEffect(() => {
@@ -76,9 +104,8 @@ export default function Registration(props) {
         </p>
       )}
       {data?.note && <p>{data?.note}</p>}
-
       {data?.type === "phoneInput" && isActive && (
-        <PhoneInput              
+        <PhoneInput
           onlyCountries={["us"]}
           placeholder="Type your answer here"
           value={fields[data.field] || null}
@@ -115,10 +142,8 @@ export default function Registration(props) {
             id="eco-panel-attorney"
             className="mt-1"
             placeholder="Type your answer here"
-            checked={fields[data.field] || false}
-            onChange={(e) =>
-              handleInput({ ...fields, [data.field]: e.target.checked })
-            }
+            checked={checked}
+            onChange={(e) => setChecked(!checked)}
           />
           <Form.Label
             className="form_label_terms fs-1"
@@ -129,7 +154,6 @@ export default function Registration(props) {
           </Form.Label>
         </div>
       )}
-
       {data?.type === "text" && (
         <Form.Control
           ref={inputRef}
@@ -142,6 +166,7 @@ export default function Registration(props) {
           }}
         />
       )}
+      
       <div style={{ height: "50px" }} className="mt-3">
         {error && (
           <Form.Control.Feedback
@@ -167,16 +192,31 @@ export default function Registration(props) {
               Prev
             </Button>
           )}
-          {dataLength - 1 !== index && (
+
+          {data?.declaration ? (
             <Button
+              disabled={!checked}
               size="sm"
               variant="success"
               style={{ color: "white" }}
               className="show-up-animation-fast"
-              onClick={() => next()}
+              onClick={() => handleSubmit()}
             >
-              Next
+              {loader && <Spinner size="sm" variant="light" className="me-1" />}
+              Submit
             </Button>
+          ) : (
+            dataLength - 1 !== index && (
+              <Button
+                size="sm"
+                variant="success"
+                style={{ color: "white" }}
+                className="show-up-animation-fast"
+                onClick={() => next()}
+              >
+                Next
+              </Button>
+            )
           )}
         </div>
       </div>

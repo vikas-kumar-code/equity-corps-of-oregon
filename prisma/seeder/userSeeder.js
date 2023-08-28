@@ -8,7 +8,8 @@ const userSeeder = async () => {
     update: {},
     create: {
       email: "admin@gmail.com",
-      name: "Clearing House",
+      first_name: "Clearing",
+      last_name: "House",
       password: await bcrypt.hashSync("password", 10),
       role_id: 1,
       status: 1,
@@ -21,7 +22,7 @@ const userSeeder = async () => {
     update: {},
     create: {
       email: "attorney@gmail.com",
-      name: "Attorney",
+      first_name: "Attorney",
       password: await bcrypt.hashSync("password", 10),
       role_id: 2,
       status: 1,
@@ -34,7 +35,7 @@ const userSeeder = async () => {
     update: {},
     create: {
       email: "ecoprovider@gmail.com",
-      name: "Eco Provider",
+      first_name: "Eco Provider",
       password: await bcrypt.hashSync("password", 10),
       role_id: 3,
       status: 1,
@@ -48,7 +49,7 @@ const userSeeder = async () => {
     update: {},
     create: {
       email: "vishal@gmail.com",
-      name: "Vishal",
+      first_name: "Vishal",
       password: await bcrypt.hashSync("password", 10),
       role_id: 3,
       status: 1,
@@ -62,7 +63,7 @@ const userSeeder = async () => {
     update: {},
     create: {
       email: "vikas@gmail.com",
-      name: "Vikas",
+      first_name: "Vikas",
       password: await bcrypt.hashSync("password", 10),
       role_id: 3,
       status: 1,

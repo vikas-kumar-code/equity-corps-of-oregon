@@ -39,7 +39,7 @@ const slideData = [
     component: "registration",
     label: "Enter your surname",
     type: "text",
-    field: "surname",
+    field: "last_name",
     validation: Joi.string().required(),
   },
   {
@@ -137,6 +137,7 @@ const slideData = [
     field: "practice_areas",
     required: true,
     validation: Joi.string().required(),
+    options:[{label:'',value:''},{},{}]
   },
   {
     id: 12,
@@ -151,6 +152,7 @@ const slideData = [
       "any.only": "You must accept the terms and conditions.",
       "any.required": "Terms and conditions checkbox is required.",
     }),
+    declaration: true,
   },
   {
     component: "info",
@@ -242,13 +244,13 @@ export default function Page() {
         });
         setData([
           ...slideData.slice(0, 1),
-          ...questions,          
+          ...questions,
           ...slideData.slice(1, slideData.length),
         ]);
       })
       .catch((error) => {
         toast.error(error.message);
-      })      
+      });
   };
 
   useEffect(() => {
@@ -305,6 +307,7 @@ export default function Page() {
                   next={next}
                   isActive={class_name === "active_slide"}
                   prev={prev}
+                  answers={answers}
                 />
               )}
               {item?.component === "info" && (

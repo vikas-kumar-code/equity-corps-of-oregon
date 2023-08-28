@@ -5,7 +5,7 @@ const pathJoin = (...parts) => {
 const params = {
   templateId: {
     sendCaseInvitation: 1,
-    forgetPassword: 2,
+    forgotPassword: 2,
   },
 };
 

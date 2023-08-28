@@ -10,20 +10,23 @@ export async function POST(request) {
   try {
     const data = await request.json();
     const schema = Joi.object({
-      registration: Joi.array().required(),
-      answers: Joi.array().required(),
+      registration: Joi.object().required(),
+      attorney_answers: Joi.object().required(),
     });
     const fields = await schema.validateAsync(data, { abortEarly: true });
     await prisma.$transaction(async (tx) => {
       await tx.users.create({
         data: {
           ...fields.registration,
-          attorney_answers: fields.attorney_answers.map((item) => {
-            return {
-              question_id: item.question_id,
-              answer_id: item.answer_id,
-            };
-          }),
+          languages_supports: fields?.registration?.languages_supports.join(','),
+          attorney_answers: Object.entries(fields.attorney_answers).map(
+            (ans) => {
+              return {
+                question_id: Number(ans[0]),
+                answer_id: Number(ans[1]),
+              };
+            }
+          ),
         },
       });
       response.success = true;

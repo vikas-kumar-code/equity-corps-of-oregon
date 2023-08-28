@@ -41,7 +41,7 @@ model users {
   law_firm_name              String?            @db.VarChar(255)
   is_oregon_state_bar_member Int                @default(0)
   oregon_state_bar_number    String?            @db.VarChar(100)
-  eoir_registered            Int?               @default(0)
+  eoir_registered            Int               @default(0)
   languages_supports         String?            @db.Text()
   practice_areas             String?            @db.Text()
   role_id                    Int                @default(0)

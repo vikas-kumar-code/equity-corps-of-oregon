@@ -1,4 +1,5 @@
 import '../styles/frontend-theme.css'
+import '../styles/animation.css'
 import Image from 'next/image'
 import FrontNavigation from '../components/FrontNavigation'
 import { Inter } from 'next/font/google'
