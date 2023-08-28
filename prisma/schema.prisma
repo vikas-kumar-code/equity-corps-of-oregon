@@ -74,7 +74,7 @@ model cases {
   description           String                  @db.LongText
   added_by              Int
   status                Int                     @default(1)
-  user                  users                   @relation(fields: [added_by], references: [id])
+  user                  users                   @relation(fields: [added_by], references: [id], onUpdate: NoAction, onDelete: NoAction)
   case_associated_names case_associated_names[]
   case_milestones       case_milestones[]
   case_documents        case_documents[]
