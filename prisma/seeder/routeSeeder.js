@@ -36,7 +36,7 @@ const routeSeeder = async () => {
     },
     {
       label: "Questions",
-      icon: "mdi mdi-progress-question",
+      icon: "mdi mdi-help-circle",
       url: "admin/questions",
       children: {
         create: [
@@ -87,7 +87,7 @@ const routeSeeder = async () => {
     },
     {
       label: "Settings",
-      icon: "mdi mdi-account-cog-outline",
+      icon: "mdi mdi-tune-vertical",
       url: "admin/settings",
       children: {
         create: [
