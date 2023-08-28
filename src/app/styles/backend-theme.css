@@ -30593,6 +30593,7 @@ div.tagsinput span.tag a {
   padding-right: 0;
   transition: all 0.25s ease;
   width: calc(100% - 244px);
+  width: calc(100%);
 }
 
 .page-body-wrapper.full-page-wrapper {
