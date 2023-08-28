@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 
 import Joi from "joi";
 import common from "@/utils/common";
+import prisma from "@/utils/prisma";
 
 export async function POST(request) {
   let response = {};
-  import prisma from "@/utils/prisma";
+
   try {
     let data = await request.json();
     const schema = Joi.object({

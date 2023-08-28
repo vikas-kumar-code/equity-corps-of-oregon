@@ -5,10 +5,11 @@ import common from "@/utils/common";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { moveFile } from "@/utils/serverHelpers";
+import prisma from "@/utils/prisma";
 
 export async function POST(request) {
   const session = await getServerSession(authOptions);
-  import prisma from "@/utils/prisma";
+
   let response = {};
   try {
     const data = await casesSchema.validateAsync(await request.json(), {
