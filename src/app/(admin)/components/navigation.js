@@ -40,14 +40,26 @@ export default function Navigation() {
         menu.addEventListener("mouseover", (event) => {
           if (document.body.className.includes("sidebar-icon-only")) {
             if (currentMenu !== "") {
-              currentMenu.className = `nav-item menu-items admin-panel-nav-item`;
+              if (currentMenu.className.includes('active')) {
+                currentMenu.className = `nav-item menu-items active admin-panel-nav-item`;
+              }
+              else {
+                currentMenu.className = `nav-item menu-items admin-panel-nav-item`;
+              }
+
             }
             menu.className = `${menu.className} hover-open`;
             currentMenu = menu;
           }
         });
         menu.addEventListener("mouseout", (event) => {
-          menu.className = `nav-item menu-items admin-panel-nav-item`;
+          if (menu.className.includes('active')) {
+            menu.className = `nav-item menu-items active admin-panel-nav-item`;
+          }
+          else {
+            menu.className = `nav-item menu-items admin-panel-nav-item`;
+          }
+
         });
       });
     }
