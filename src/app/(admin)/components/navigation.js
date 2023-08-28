@@ -63,14 +63,14 @@ export default function Navigation() {
             return (
               <li
                 className={
-                  pathname === '/'+module.url
+                  pathname === '/' + module.url
                     ? "nav-item menu-items active"
                     : "nav-item menu-items"
                 }
               >
                 <Link href={common.basePath(module.url)} className="nav-link">
                   <span className="menu-icon">
-                    <i className="mdi mdi-speedometer"></i>
+                    <i className="mdi mdi-alpha-c-circle"></i>
                   </span>
                   <span className="menu-title">{module.label}</span>
                 </Link>

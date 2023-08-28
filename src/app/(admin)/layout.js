@@ -3,6 +3,7 @@ import '../styles/backend-theme.css'
 
 import '../styles/globals.css'
 import '../styles/whitetheme.css'
+import '../styles/materialdesignicons.min.css'
 import { Inter } from 'next/font/google'
 import Provider from '@/app/components/Provider'
 import Navigation from "./components/navigation"
@@ -52,7 +53,7 @@ export default function AdminLayout({ children }) {
                                     {children}
                                     <footer className="footer">
                                         <div className="d-sm-flex justify-content-center justify-content-sm-between">
-                                            <span className="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © {process.env.APP_NAME} {new Date().getFullYear()}</span>                                            
+                                            <span className="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © {process.env.APP_NAME} {new Date().getFullYear()}</span>
                                         </div>
                                     </footer>
                                 </div>
