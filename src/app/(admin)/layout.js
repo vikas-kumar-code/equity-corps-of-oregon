@@ -3,12 +3,15 @@ import '../styles/backend-theme.css'
 
 import '../styles/globals.css'
 import '../styles/whitetheme.css'
+import '../styles/materialdesignicons.min.css'
+import '../styles/animation.css'
 import { Inter } from 'next/font/google'
 import Provider from '@/app/components/Provider'
 import Navigation from "./components/navigation"
 import SignOut from '../components/SignOut'
 import Image from 'next/image'
 import NotificationContainer from './components/NotificationContainer'
+import Script from 'next/script'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,7 +20,9 @@ export const metadata = {
     description: `${process.env.APP_NAME} - Admin Panel`,
 }
 
+
 export default function AdminLayout({ children }) {
+
     return (
         <html lang="en">
             <body className='whitetheme'>
@@ -34,11 +39,12 @@ export default function AdminLayout({ children }) {
                                                 src="/images/logo.png"
                                                 width={35}
                                                 height={35}
+                                                alt='ECO-Logo'
                                             />
                                         </a>
                                     </div>
                                     <div className="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
-                                        <button className="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                                        <button className="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize" id='toggle-menu'>
                                             <span className="mdi mdi-menu"></span>
                                         </button>
                                         <SignOut />
@@ -52,13 +58,16 @@ export default function AdminLayout({ children }) {
                                     {children}
                                     <footer className="footer">
                                         <div className="d-sm-flex justify-content-center justify-content-sm-between">
-                                            <span className="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © {process.env.APP_NAME} {new Date().getFullYear()}</span>                                            
+                                            <span className="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © {process.env.APP_NAME} {new Date().getFullYear()}</span>
                                         </div>
                                     </footer>
                                 </div>
                             </div>
                         </div>
                     </main>
+                    <Script
+                        src="/script.js"
+                    />
                 </Provider>
             </body>
         </html>

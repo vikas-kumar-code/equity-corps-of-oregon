@@ -19,9 +19,14 @@
   background: #e8e8e8;
 }
 
-.whitetheme .sidebar .nav:not(.sub-menu)>.nav-item:hover:not(.nav-category):not(.account-dropdown)>.nav-link span,
-.whitetheme .sidebar .nav .nav-item.active>.nav-link span {
+.whitetheme .sidebar .nav .nav-item.active>.nav-link span.menu-icon, .whitetheme .sidebar .nav .nav-item.active>.nav-link span.menu-icon:hover {
+  background-color: rgba(108, 114, 147, 0.2);
+}
+
+.whitetheme .sidebar .nav:not(.sub-menu)>.nav-item:hover:not(.nav-category):not(.account-dropdown)>.nav-link span.menu-title,
+.whitetheme .sidebar .nav .nav-item.active>.nav-link span.menu-title {
   color: #0f1015;
+  background-color: #e8e8e8;
 }
 
 .whitetheme .sidebar .sidebar-brand-wrapper {

@@ -30666,3 +30666,8 @@ div.tagsinput span.tag a {
 }
 /* Tab */
 /*# sourceMappingURL=maps/style.css.map */
+
+.invalid-feedback::first-letter,
+.uc-first::first-letter {
+  text-transform: uppercase;
+}

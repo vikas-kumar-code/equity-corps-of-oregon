@@ -167,7 +167,7 @@ export default function ListQuestions() {
                             {...provided.droppableProps}
                             ref={provided.innerRef}
                           >
-                            {records.map((record, index) => (
+                            {records?.map((record, index) => (
                               <Draggable
                                 key={record.id}
                                 draggableId={`${record.id}`}
@@ -215,7 +215,7 @@ export default function ListQuestions() {
           </LoadingOverlay>
         </Col>
       </Row>
-      <AddEditQuestion
+      {showModal && <AddEditQuestion
         showModal={showModal}
         closeModal={() => {
           setShowModal(false);
@@ -223,7 +223,8 @@ export default function ListQuestions() {
         }}
         recordId={recordId}
         reloadRecords={getRecords}
-      />
+      />}
+
     </div>
   );
 }

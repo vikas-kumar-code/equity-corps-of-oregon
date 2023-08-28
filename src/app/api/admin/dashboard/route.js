@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { headers } from 'next/headers'
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+
+import prisma from "@/utils/prisma";
 export async function GET(request) {
     const headerList = headers();
 

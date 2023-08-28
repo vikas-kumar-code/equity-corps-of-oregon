@@ -1,14 +1,18 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+
 import casesSchema from "@/joi/casesSchema";
 import common from "@/utils/common";
 import fs from "fs";
-import { moveFile } from "@/utils/serverHelpers";
+import { getSession, moveFile } from "@/utils/serverHelpers";
+import prisma from "@/utils/prisma";
 
 export async function PUT(request, data) {
-  const prisma = new PrismaClient();
   let response = {};
   const caseId = parseInt(data.params.id);
+  const session = await getSession();
+  const authUser = await prisma.users.findUnique({
+    where: { id: session.user.id },
+  });
   try {
     const record = await casesSchema.validateAsync(await request.json(), {
       abortEarly: false,
@@ -60,6 +64,11 @@ export async function PUT(request, data) {
                 uploaded_on: doc.uploaded_on,
               };
             }),
+          },
+          logs: {
+            create: {
+              content: `Case updated by ${authUser.name}.`,
+            },
           },
         },
       });

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import Joi from "joi";
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+
+import prisma from "@/utils/prisma";
 export async function GET(request, data) {
     const record = await prisma.roles.findUnique({
         where: {

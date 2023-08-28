@@ -23,7 +23,8 @@ import {
 } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
-LoadingOverlay.propTypes = undefined
+import CaseActivities from "./CaseActivities";
+LoadingOverlay.propTypes = undefined;
 
 export default function AddEditCase(props) {
   const [loader, setLoader] = useState(false);
@@ -34,6 +35,7 @@ export default function AddEditCase(props) {
     description: "",
     milestones: [],
     documents: [],
+    logs: [],
   };
   const [fields, setFields] = useState(initialValues);
   const [errors, setErrors] = useState({});
@@ -95,7 +97,10 @@ export default function AddEditCase(props) {
           REQUEST_METHOD = "PUT";
         }
         // Set deleted docs
-        let fieldsData = deletedDocuments.length > 0 ? {...fields,deleted_documents:deletedDocuments} : fields;
+        let fieldsData =
+          deletedDocuments.length > 0
+            ? { ...fields, deleted_documents: deletedDocuments }
+            : fields;
         await fetch(REQUEST_URI, {
           method: REQUEST_METHOD,
           body: JSON.stringify(fieldsData),
@@ -190,11 +195,17 @@ export default function AddEditCase(props) {
             Back
           </Button>
         )}
-
-        <Button size="lg" type="submit" variant="success" disabled={submitted}>
-          {submitted && <Spinner className="mr-1" color="light" size="sm" />}
-          {activeTab === 3 ? " Save" : " Next"}
-        </Button>
+        {step < 4 && (
+          <Button
+            size="lg"
+            type="submit"
+            variant="success"
+            disabled={submitted}
+          >
+            {submitted && <Spinner className="mr-1" color="light" size="sm" />}
+            {activeTab === 3 ? " Save" : " Next"}
+          </Button>
+        )}
       </React.Fragment>
     );
   };
@@ -320,6 +331,12 @@ export default function AddEditCase(props) {
                   errors={errors}
                   setErrors={setErrors}
                 />
+              </Tab>
+              <Tab
+                eventKey={4}
+                title="Case Activities"                
+              >
+                <CaseActivities logs={fields?.logs || []} />
               </Tab>
             </Tabs>
           </Modal.Body>

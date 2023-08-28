@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+
 import { sendInvitationSchema } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import sendMail from "@/utils/sendMail";
 
-const prisma = new PrismaClient();
+import prisma from "@/utils/prisma";
 
 export async function POST(request) {
   let response = {};

@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+
 import { NextResponse } from "next/server";
-// ----
-const prisma = new PrismaClient();
+
+import prisma from "@/utils/prisma";
 export async function GET(request) {
   return NextResponse.json({
     success: true,
@@ -10,7 +10,23 @@ export async function GET(request) {
       where: {
         status: true,
       },
-      orderBy: [{ sequence: "asc" }],
+      orderBy: [{ id: "desc" }],
+      include: {
+        options: true,
+      },
+    }),
+  });
+}
+
+export async function PUT(request) {
+  return NextResponse.json({
+    success: true,
+    message: "Question list",
+    records: await prisma.questions.findMany({
+      where: {
+        status: true,
+      },
+      orderBy: [{ id: "desc" }],
       include: {
         options: true,
       },

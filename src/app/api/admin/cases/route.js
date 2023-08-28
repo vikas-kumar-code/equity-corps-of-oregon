@@ -1,8 +1,8 @@
 import common from "@/utils/common";
-import { PrismaClient } from "@prisma/client";
+
 import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+import prisma from "@/utils/prisma";
 
 export async function GET(request) {
   let records = [];
@@ -43,8 +43,8 @@ export async function GET(request) {
             user: {
               is: {
                 name: {
-                  contains: request.get("eco_provider"), 
-                }
+                  contains: request.get("eco_provider"),
+                },
               },
             },
           },
@@ -66,7 +66,7 @@ export async function GET(request) {
               },
             },
           },
-        },
+        },        
       },
     });
     totalRecords = await prisma.cases.count({ where: where });

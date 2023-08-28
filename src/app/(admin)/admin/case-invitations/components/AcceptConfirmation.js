@@ -19,7 +19,6 @@ export default function AcceptConfirmation({
 
   const handleAccept = async () => {
     setAcceptStatus(1);
-    console.log("testing........");
     try {
       await fetch(
         common.apiPath(`/admin/cases/invitations/status?id=${record.id}`)

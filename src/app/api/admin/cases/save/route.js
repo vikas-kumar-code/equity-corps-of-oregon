@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+
 import casesSchema from "@/joi/casesSchema";
 import common from "@/utils/common";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { moveFile } from "@/utils/serverHelpers";
+import { getSession, moveFile } from "@/utils/serverHelpers";
+import prisma from "@/utils/prisma";
 
 export async function POST(request) {
-  const session = await getServerSession(authOptions);
-  const prisma = new PrismaClient();
+  
+  const session = await getSession();
+  const authUser = await prisma.users.findUnique({
+    where: { id: session.user.id },
+  });
+
   let response = {};
   try {
     const data = await casesSchema.validateAsync(await request.json(), {
@@ -35,6 +38,11 @@ export async function POST(request) {
               uploaded_on: doc.uploaded_on,
             };
           }),
+        },
+        logs: {
+          create: {
+            content: `A case added by ${authUser.name}.`,
+          },
         },
       },
     });

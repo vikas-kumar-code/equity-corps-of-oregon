@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/utils/prisma";
 
 export async function DELETE(request, data) {
-    const prisma = new PrismaClient();
     const deleted = await prisma.roles.delete({
         where: {
             id: Number(data.params.id),

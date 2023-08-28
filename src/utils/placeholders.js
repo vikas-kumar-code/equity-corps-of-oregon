@@ -3,6 +3,7 @@ const placeholders = (models = {}) => {
     // Populating user placeholders
     user_name: `${models?.users?.name || "N/A"}`,
     user_email: `${models?.users?.email || "N/A"}`,
+    verification_code: `${models?.users?.verification_code || "N/A"}`,
 
     // Populating case placeholders
     case_number: `${models?.cases?.case_number || "N/A"}`,

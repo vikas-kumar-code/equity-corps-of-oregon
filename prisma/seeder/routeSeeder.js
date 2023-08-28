@@ -5,12 +5,12 @@ const routeSeeder = async () => {
   const records = [
     {
       label: "Dashboard",
-      icon: "",
+      icon: "mdi mdi-view-dashboard",
       url: "admin/dashboard",
     },
     {
       label: "Cases",
-      icon: "",
+      icon: "mdi mdi-alpha-c-circle",
       url: "admin/cases",
       children: {
         create: [
@@ -24,7 +24,7 @@ const routeSeeder = async () => {
     },
     {
       label: "Case Invitations",
-      icon: "",
+      icon: "mdi mdi-calendar",
       url: "admin/case-invitations",
       children: {
         create: [
@@ -36,7 +36,7 @@ const routeSeeder = async () => {
     },
     {
       label: "Questions",
-      icon: "",
+      icon: "mdi mdi-help-circle",
       url: "admin/questions",
       children: {
         create: [
@@ -49,7 +49,7 @@ const routeSeeder = async () => {
     },
     {
       label: "Users",
-      icon: "",
+      icon: "mdi mdi-account",
       url: "admin/users",
       children: {
         create: [
@@ -62,7 +62,7 @@ const routeSeeder = async () => {
     },
     {
       label: "Email templates",
-      icon: "",
+      icon: "mdi mdi-email-multiple-outline",
       url: "admin/email-templates",
       children: {
         create: [
@@ -75,7 +75,7 @@ const routeSeeder = async () => {
     },
     {
       label: "Roles",
-      icon: "",
+      icon: "mdi mdi-account-group",
       url: "admin/roles",
       children: {
         create: [
@@ -87,7 +87,7 @@ const routeSeeder = async () => {
     },
     {
       label: "Settings",
-      icon: "",
+      icon: "mdi mdi-tune-vertical",
       url: "admin/settings",
       children: {
         create: [
@@ -130,7 +130,7 @@ async function processRecords(records) {
 async function waitForReaction() {
   return new Promise((resolve) => {
     // Simulate waiting for a reaction, e.g., wait for user input
-    setTimeout(() => {      
+    setTimeout(() => {
       resolve();
     }, 1000); // Change the timeout as needed
   });

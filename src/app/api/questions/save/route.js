@@ -1,40 +1,36 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import Joi from "joi";
 import common from "@/utils/common";
+import Joi from "joi";
+import prisma from "@/utils/prisma";
 
 export async function POST(request) {
   let response = {};
-  const prisma = new PrismaClient();
   try {
-    let data = await request.json();
+    const data = await request.json();
     const schema = Joi.object({
-      question: Joi.string().max(400).required(),
-      options: Joi.array()
-        .items(Joi.string().max(400).label("Option"))
-        .min(2)
-        .max(10)
-        .required(),
-      answer: Joi.number().min(1).required().messages({
-        "number.base": "Select a correct answer.",
-      }),
+      registration: Joi.object().required(),
+      attorney_answers: Joi.object().required(),
     });
-    data = await schema.validateAsync(data, { abortEarly: false });
-    // Create a new question with options
-    const addQuestion = await prisma.questions.create({
-      data: {
-        question: data.question,
-        options: {
-          create: data.options.map((opt, index) => {
-            return { option: opt, status: index+1 === data.answer };
-          }),
+    const fields = await schema.validateAsync(data, { abortEarly: true });
+    await prisma.$transaction(async (tx) => {
+      await tx.users.create({
+        data: {
+          ...fields.registration,
+          languages_supports:
+            fields?.registration?.languages_supports.join(","),
+          attorney_answers: Object.entries(fields.attorney_answers).map(
+            (ans) => {
+              return {
+                question_id: Number(ans[0]),
+                answer_id: Number(ans[1]),
+              };
+            }
+          ),
         },
-      },
-    });
-    if (addQuestion) {
+      });
       response.success = true;
-      response.message = "New question added successfully.";
-    }
+      response.message = "Registration submitted successfully.";
+    });
   } catch (error) {
     response.error = true;
     response.message = await common.getErrors(error);

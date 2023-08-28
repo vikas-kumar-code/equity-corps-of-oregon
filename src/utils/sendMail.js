@@ -1,10 +1,9 @@
 import nodemailer from "nodemailer";
 import placeholders from "./placeholders";
-import { PrismaClient } from "@prisma/client";
+
 import common from "./common";
 import ejs from "ejs";
-
-const prisma = new PrismaClient();
+import prisma from "@/utils/prisma";
 
 const sendMail = async (
   options = {
