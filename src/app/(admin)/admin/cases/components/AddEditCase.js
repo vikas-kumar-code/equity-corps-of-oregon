@@ -23,7 +23,8 @@ import {
 } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
-LoadingOverlay.propTypes = undefined
+import CaseActivities from "./CaseActivities";
+LoadingOverlay.propTypes = undefined;
 
 export default function AddEditCase(props) {
   const [loader, setLoader] = useState(false);
@@ -95,7 +96,10 @@ export default function AddEditCase(props) {
           REQUEST_METHOD = "PUT";
         }
         // Set deleted docs
-        let fieldsData = deletedDocuments.length > 0 ? {...fields,deleted_documents:deletedDocuments} : fields;
+        let fieldsData =
+          deletedDocuments.length > 0
+            ? { ...fields, deleted_documents: deletedDocuments }
+            : fields;
         await fetch(REQUEST_URI, {
           method: REQUEST_METHOD,
           body: JSON.stringify(fieldsData),
@@ -320,6 +324,13 @@ export default function AddEditCase(props) {
                   errors={errors}
                   setErrors={setErrors}
                 />
+              </Tab>
+              <Tab
+                eventKey={4}
+                title="Case Activities"
+                disabled={activated < 3 && !props.recordId}
+              >
+                <CaseActivities />
               </Tab>
             </Tabs>
           </Modal.Body>

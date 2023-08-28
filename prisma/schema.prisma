@@ -35,13 +35,14 @@ model users {
   id                         Int                @id @default(autoincrement())
   first_name                 String?            @db.VarChar(100)
   last_name                  String?            @db.VarChar(100)
+  name                       String?            @db.VarChar(200)
   phone                      String?            @db.VarChar(100)
   email                      String?            @unique @db.VarChar(150)
   address                    String?            @db.Text()
   law_firm_name              String?            @db.VarChar(255)
   is_oregon_state_bar_member Int                @default(0)
   oregon_state_bar_number    String?            @db.VarChar(100)
-  eoir_registered            Int               @default(0)
+  eoir_registered            Int                @default(0)
   languages_supports         String?            @db.Text()
   practice_areas             String?            @db.Text()
   role_id                    Int                @default(0)
@@ -79,6 +80,7 @@ model cases {
   case_documents        case_documents[]
   case_invitations      case_invitations[]
   created_at            DateTime                @default(now())
+  logs                  logs[]
 }
 
 model case_invitations {
@@ -169,4 +171,12 @@ model attorney_answers {
   user        users?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   answer      options?   @relation(fields: [answer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   question    questions? @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model logs {
+  id         Int      @id @default(autoincrement())
+  case_id    Int?
+  content    String?  @db.LongText
+  created_at DateTime
+  case       cases?   @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
 }

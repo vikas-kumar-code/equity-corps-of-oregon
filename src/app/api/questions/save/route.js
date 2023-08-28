@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-
 import common from "@/utils/common";
 import Joi from "joi";
-
 import prisma from "@/utils/prisma";
 
 export async function POST(request) {
@@ -18,7 +16,8 @@ export async function POST(request) {
       await tx.users.create({
         data: {
           ...fields.registration,
-          languages_supports: fields?.registration?.languages_supports.join(','),
+          languages_supports:
+            fields?.registration?.languages_supports.join(","),
           attorney_answers: Object.entries(fields.attorney_answers).map(
             (ans) => {
               return {

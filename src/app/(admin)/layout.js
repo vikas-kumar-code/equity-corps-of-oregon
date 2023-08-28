@@ -4,6 +4,7 @@ import '../styles/backend-theme.css'
 import '../styles/globals.css'
 import '../styles/whitetheme.css'
 import '../styles/materialdesignicons.min.css'
+import '../styles/animation.css'
 import { Inter } from 'next/font/google'
 import Provider from '@/app/components/Provider'
 import Navigation from "./components/navigation"
