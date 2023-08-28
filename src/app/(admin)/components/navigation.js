@@ -35,6 +35,27 @@ export default function Navigation() {
     getModules();
   }, []);
 
+  useEffect(() => {
+    if (modules.length > 0) {
+      let navigationMenu = document.querySelectorAll(".admin-panel-nav-item");
+      let currentMenu = '';
+      navigationMenu.forEach(menu => {
+        menu.addEventListener('mouseover', (event) => {
+          if (document.body.className.includes('sidebar-icon-only')) {
+            if (currentMenu !== '') {
+              currentMenu.className = `nav-item menu-items admin-panel-nav-item`;
+            }
+            menu.className = `${menu.className} hover-open`;
+            currentMenu = menu;
+          }
+        });
+        menu.addEventListener('mouseout', (event) => {
+          menu.className = `nav-item menu-items admin-panel-nav-item`;
+        });
+      })
+    }
+  }, [modules]);
+
   return (
     <LoadingOverlay active={loader} spinner>
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
@@ -66,8 +87,8 @@ export default function Navigation() {
                 key={`nav-${index}`}
                 className={
                   pathname === '/' + module.url
-                    ? "nav-item menu-items active"
-                    : "nav-item menu-items"
+                    ? "nav-item menu-items active admin-panel-nav-item"
+                    : "nav-item menu-items admin-panel-nav-item"
                 }
               >
                 <Link href={common.basePath(module.url)} className="nav-link">

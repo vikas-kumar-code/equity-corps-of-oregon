@@ -10,6 +10,7 @@ import Navigation from "./components/navigation"
 import SignOut from '../components/SignOut'
 import Image from 'next/image'
 import NotificationContainer from './components/NotificationContainer'
+import Script from 'next/script'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,7 +19,9 @@ export const metadata = {
     description: `${process.env.APP_NAME} - Admin Panel`,
 }
 
+
 export default function AdminLayout({ children }) {
+
     return (
         <html lang="en">
             <body className='whitetheme'>
@@ -40,7 +43,7 @@ export default function AdminLayout({ children }) {
                                         </a>
                                     </div>
                                     <div className="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
-                                        <button className="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                                        <button className="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize" id='toggle-menu'>
                                             <span className="mdi mdi-menu"></span>
                                         </button>
                                         <SignOut />
@@ -61,6 +64,9 @@ export default function AdminLayout({ children }) {
                             </div>
                         </div>
                     </main>
+                    <Script
+                        src="/script.js"
+                    />
                 </Provider>
             </body>
         </html>
