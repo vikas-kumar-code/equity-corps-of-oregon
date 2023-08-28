@@ -23,8 +23,8 @@ export default function ListCases() {
   const [showModal, setShowModal] = useState(false);
   const searchFields = [
     { label: "Case Number", type: "text", name: "case_number" },
-    { label: "Case Title", type: "text", name: "case_title" },
-    { label: "Eco Provider", type: "text", name: "user_id" },
+    { label: "Case Title", type: "text", name: "title" },
+    { label: "Eco Provider", type: "text", name: "eco_provider" },
   ];
 
   const getRecords = async () => {
@@ -74,6 +74,10 @@ export default function ListCases() {
   useEffect(() => {
     getRecords();
   }, [pageNumber]);
+
+  useEffect(() => {
+    getRecords();
+  }, [fields]);
 
   return (
     <div>

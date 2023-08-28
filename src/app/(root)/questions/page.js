@@ -19,6 +19,12 @@ const slideData = [
     button: true,
   },
   {
+    component: "info",
+    label: "Registration",
+    imgUrl: "/images/qs-eco-logo.png",
+    button: true,
+  },
+  {
     id: 1,
     sn: 1,
     component: "registration",
@@ -31,9 +37,9 @@ const slideData = [
     id: 2,
     sn: 2,
     component: "registration",
-    label: "Enter your sur name",
+    label: "Enter your surname",
     type: "text",
-    field: "sur_name",
+    field: "surname",
     validation: Joi.string().required(),
   },
   {
@@ -75,7 +81,7 @@ const slideData = [
     component: "registration",
     label: "Enter the name of your law firm.",
     type: "text",
-    field: "law_firm",
+    field: "law_firm_name",
     validation: Joi.string().optional(),
   },
   {
@@ -84,7 +90,7 @@ const slideData = [
     component: "registration",
     label: "Are you a member of the Oregon State Bar?",
     type: "text",
-    field: "state_bar",
+    field: "is_oregon_state_bar_member",
     required: true,
     validation: Joi.string().required(),
   },
@@ -94,7 +100,7 @@ const slideData = [
     component: "registration",
     label: "Enter your Oregon State Bar number.",
     type: "text",
-    field: "state_bar_number",
+    field: "oregon_state_bar_number",
     required: true,
     validation: Joi.number().required(),
   },
@@ -106,7 +112,7 @@ const slideData = [
       "Are you registered with EOIR and eligible to practice immediately before the Portland Immigration Court?",
     type: "text",
     note: "In order to be a panel provider, you must be registered with the Portland Immigration Court under the EOIR eRegistry.",
-    field: "immigration_court",
+    field: "eoir_registered",
     required: true,
     validation: Joi.string().required(),
   },
@@ -118,7 +124,7 @@ const slideData = [
       "Select all the languages your office currently supports in providing services because you or a staff member speaks the language.",
     type: "select",
     note: "ECO panel attorneys are required to have staff who speak English and Spanish. For languages other than English or Spanish, panel attorneys have access to the ECO language line and ECO contract interpreters in over 100 languages. We will publish the language information in an online directory of providers to help inform ECO participants in selecting service an attorney. Choose as many as you like",
-    field: "language",
+    field: "languages_supports",
     validation: Joi.array(),
   },
   {
@@ -165,11 +171,13 @@ export default function Page() {
   const divRef = useRef(null);
 
   function capitalizeEachWord(str) {
-    return str
-      .replace(/[_"]/g, " ")
-      .split(" ")
+    let name = str.match(/"([^"]+)"/)[1];
+    let capitalized = name
+      .split("_")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
+    let result = str.replace(`"${name}"`, capitalized);
+    return result;
   }
 
   const next = () => {
@@ -252,9 +260,10 @@ export default function Page() {
   useEffect(() => {
     count > 0 && next();
     setCount(count + 1);
-    console.log(answers);
   }, [answers]);
 
+  console.log(fields);
+  console.log(answers);
   return (
     <LoadingOverlay active={data.length <= 0} spinner>
       <div

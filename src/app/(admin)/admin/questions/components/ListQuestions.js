@@ -167,7 +167,7 @@ export default function ListQuestions() {
                             {...provided.droppableProps}
                             ref={provided.innerRef}
                           >
-                            {records.map((record, index) => (
+                            {records?.map((record, index) => (
                               <Draggable
                                 key={record.id}
                                 draggableId={`${record.id}`}
