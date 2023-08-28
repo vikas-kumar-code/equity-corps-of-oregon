@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import Joi from "joi";
 import { hash } from "bcrypt";
+import prisma from "@/utils/prisma";
 
 export async function POST(request) {
-  const prisma = new PrismaClient();
   const user = await request.json();
   const userSchema = Joi.object({
     name: Joi.required(),

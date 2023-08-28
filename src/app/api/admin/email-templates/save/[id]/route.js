@@ -5,7 +5,7 @@ import common from "@/utils/common";
 
 export async function PUT(request, data) {
   let response = {};
-  const prisma = new PrismaClient();
+  import prisma from "@/utils/prisma";
   const recordId = Number(data.params.id) || null;
 
   try {

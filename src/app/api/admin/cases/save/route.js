@@ -8,7 +8,7 @@ import { moveFile } from "@/utils/serverHelpers";
 
 export async function POST(request) {
   const session = await getServerSession(authOptions);
-  const prisma = new PrismaClient();
+  import prisma from "@/utils/prisma";
   let response = {};
   try {
     const data = await casesSchema.validateAsync(await request.json(), {

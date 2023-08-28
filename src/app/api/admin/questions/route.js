@@ -1,8 +1,8 @@
 import common from "@/utils/common";
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import prisma from "@/utils/prisma";
 
-const prisma = new PrismaClient();
 export async function GET(request) {
   let records = [];  
   let response = {};

@@ -4,7 +4,7 @@ import common from "@/utils/common";
 import resetPasswordSchema from "@/joi/resetPasswordSchema";
 import { hash } from "bcrypt";
 
-const prisma = new PrismaClient();
+import prisma from "@/utils/prisma";
 
 const getRndInteger = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;

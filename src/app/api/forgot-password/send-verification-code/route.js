@@ -5,7 +5,7 @@ import emailSchema from "@/joi/emailSchema";
 import moment from "moment";
 import sendMail from "@/utils/sendMail";
 
-const prisma = new PrismaClient();
+import prisma from "@/utils/prisma";
 
 const getRndInteger = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;

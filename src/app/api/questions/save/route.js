@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import common from "@/utils/common";
 import Joi from "joi";
 
-const prisma = new PrismaClient();
+import prisma from "@/utils/prisma";
 
 export async function POST(request) {
   let response = {};

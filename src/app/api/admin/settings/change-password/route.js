@@ -5,7 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { compare, hash } from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import prisma from "@/utils/prisma";
 export async function PUT(request) {
     const data = await request.json();
     const fieldsSchema = Joi.object({

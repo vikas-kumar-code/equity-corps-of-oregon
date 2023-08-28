@@ -6,7 +6,7 @@ import fs from "fs";
 import { moveFile } from "@/utils/serverHelpers";
 
 export async function PUT(request, data) {
-  const prisma = new PrismaClient();
+  import prisma from "@/utils/prisma";
   let response = {};
   const caseId = parseInt(data.params.id);
   try {

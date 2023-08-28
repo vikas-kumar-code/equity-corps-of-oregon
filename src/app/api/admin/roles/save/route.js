@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Joi from "joi";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import prisma from "@/utils/prisma";
 
 export async function POST(request) {
     const role = await request.json();

@@ -5,7 +5,7 @@ const routeSeeder = require("./seeder/routeSeeder");
 const permissionSeeder = require("./seeder/permissionSeeder");
 const questionSeeder = require("./seeder/questionSeeder");
 const emailTemplateSeeder = require("./seeder/emailTemplateSeeder");
-const prisma = new PrismaClient();
+import prisma from "@/utils/prisma";
 
 async function main() {
   // Start Seeding...

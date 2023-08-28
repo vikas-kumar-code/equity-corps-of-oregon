@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import prisma from "@/utils/prisma";
 
 export async function POST(request) {
   let response = {};
-  const prisma = new PrismaClient();
   try {
     const data = await request.json();
     await prisma.$transaction(async (tx) => {

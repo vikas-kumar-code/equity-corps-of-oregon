@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import prisma from "@/utils/prisma";
 
-const prisma = new PrismaClient();
 export async function GET(request) {
     const pageNumber = request.nextUrl.searchParams.get('page') ? parseInt(request.nextUrl.searchParams.get('page')) : 1;
     const recordPerPage = 10;

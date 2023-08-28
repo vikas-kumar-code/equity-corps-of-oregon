@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import Joi from "joi";
 import common from "@/utils/common";
+import prisma from "@/utils/prisma";
 
 export async function PUT(request, data) {
   let response = {};
-  const prisma = new PrismaClient();
   const questionId = Number(data.params.id) || null;
 
   try {

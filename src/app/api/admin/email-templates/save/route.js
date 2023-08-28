@@ -5,7 +5,7 @@ import common from "@/utils/common";
 
 export async function POST(request) {
   let response = {};
-  const prisma = new PrismaClient();
+  import prisma from "@/utils/prisma";
   try {
     let data = await request.json();
     const schema = Joi.object({
