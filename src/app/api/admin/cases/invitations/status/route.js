@@ -1,6 +1,6 @@
 import common from "@/utils/common";
 import { getSession } from "@/utils/serverHelpers";
-import { PrismaClient } from "@prisma/client";
+
 import { NextResponse } from "next/server";
 
 import prisma from "@/utils/prisma";

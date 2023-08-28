@@ -3,7 +3,7 @@ import Joi from "joi";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { compare, hash } from "bcrypt";
-import { PrismaClient } from "@prisma/client";
+
 
 import prisma from "@/utils/prisma";
 export async function PUT(request) {

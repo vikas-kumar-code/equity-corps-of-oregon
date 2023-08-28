@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+
 
 export async function DELETE(request, data) {
   import prisma from "@/utils/prisma";

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+
 import Joi from "joi";
 import { hash } from "bcrypt";
 import prisma from "@/utils/prisma";

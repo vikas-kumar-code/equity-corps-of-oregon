@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Joi from "joi";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { PrismaClient } from "@prisma/client";
+
 
 import prisma from "@/utils/prisma";
 export async function GET(request) {

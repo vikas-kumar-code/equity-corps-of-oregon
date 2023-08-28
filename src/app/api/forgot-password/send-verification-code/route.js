@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+
 import common from "@/utils/common";
 import emailSchema from "@/joi/emailSchema";
 import moment from "moment";
@@ -35,7 +35,7 @@ export async function POST(request) {
         },
       });
       await sendMail({
-        to: "mitizdeveloper@gmail.com", //userModel.email,
+        to: process.env.TEST_USER_EMAIL || userModel.email,
         templateId: common.params.templateId.forgotPassword,
         modelsData: {
           users: user,
