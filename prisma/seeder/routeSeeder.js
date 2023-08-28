@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-import prisma from "@/utils/prisma";
+const prisma = new PrismaClient();
 
 const routeSeeder = async () => {
   const records = [

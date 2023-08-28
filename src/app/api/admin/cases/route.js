@@ -43,8 +43,8 @@ export async function GET(request) {
             user: {
               is: {
                 name: {
-                  contains: request.get("eco_provider"), 
-                }
+                  contains: request.get("eco_provider"),
+                },
               },
             },
           },
@@ -66,7 +66,7 @@ export async function GET(request) {
               },
             },
           },
-        },
+        },        
       },
     });
     totalRecords = await prisma.cases.count({ where: where });

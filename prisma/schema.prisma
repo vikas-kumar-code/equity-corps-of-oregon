@@ -177,6 +177,6 @@ model logs {
   id         Int      @id @default(autoincrement())
   case_id    Int?
   content    String?  @db.LongText
-  created_at DateTime
+  created_at DateTime @default(now())
   case       cases?   @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
 }

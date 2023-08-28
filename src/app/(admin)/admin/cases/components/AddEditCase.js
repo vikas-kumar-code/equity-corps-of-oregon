@@ -35,6 +35,7 @@ export default function AddEditCase(props) {
     description: "",
     milestones: [],
     documents: [],
+    logs: [],
   };
   const [fields, setFields] = useState(initialValues);
   const [errors, setErrors] = useState({});
@@ -194,11 +195,17 @@ export default function AddEditCase(props) {
             Back
           </Button>
         )}
-
-        <Button size="lg" type="submit" variant="success" disabled={submitted}>
-          {submitted && <Spinner className="mr-1" color="light" size="sm" />}
-          {activeTab === 3 ? " Save" : " Next"}
-        </Button>
+        {step < 4 && (
+          <Button
+            size="lg"
+            type="submit"
+            variant="success"
+            disabled={submitted}
+          >
+            {submitted && <Spinner className="mr-1" color="light" size="sm" />}
+            {activeTab === 3 ? " Save" : " Next"}
+          </Button>
+        )}
       </React.Fragment>
     );
   };
@@ -327,10 +334,9 @@ export default function AddEditCase(props) {
               </Tab>
               <Tab
                 eventKey={4}
-                title="Case Activities"
-                disabled={activated < 3 && !props.recordId}
+                title="Case Activities"                
               >
-                <CaseActivities />
+                <CaseActivities logs={fields?.logs || []} />
               </Tab>
             </Tabs>
           </Modal.Body>

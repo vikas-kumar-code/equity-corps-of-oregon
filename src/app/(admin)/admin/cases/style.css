@@ -28,7 +28,7 @@
     position: relative;
     top: -5px;
     color: #8c96a3;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 13px;
 }
 .activity-feed .feed-item .text {

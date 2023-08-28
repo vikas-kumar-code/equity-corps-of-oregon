@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-import prisma from "@/utils/prisma";
+const prisma = new PrismaClient();
 
 const emailTemplateSeeder = async () => {
   await prisma.email_templates.upsert({

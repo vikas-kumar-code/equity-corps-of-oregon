@@ -5,20 +5,23 @@ const routeSeeder = require("./seeder/routeSeeder");
 const permissionSeeder = require("./seeder/permissionSeeder");
 const questionSeeder = require("./seeder/questionSeeder");
 const emailTemplateSeeder = require("./seeder/emailTemplateSeeder");
-import prisma from "@/utils/prisma";
+const prisma = new PrismaClient();
 
 async function main() {
   // Start Seeding...
-  // await roleSeeder();
-  // await userSeeder();
+  await roleSeeder();
+  await userSeeder();
   await routeSeeder();
   await permissionSeeder();
-  // await questionSeeder();
-  // await emailTemplateSeeder();
-  console.log("\x1b[32m",`
+  await questionSeeder();
+  await emailTemplateSeeder();
+  console.log(
+    "\x1b[32m",
+    `
 
     Seeding completed.
-  `);
+  `
+  );
   console.log("\x1b[0m");
 }
 main()
@@ -29,4 +32,4 @@ main()
     console.error(e);
     await prisma.$disconnect();
     process.exit(1);
-});
+  });

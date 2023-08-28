@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-
 import prisma from "@/utils/prisma";
 
 export async function GET(request, data) {
@@ -14,6 +13,7 @@ export async function GET(request, data) {
         case_associated_names: true,
         case_milestones: true,
         case_documents: true,
+        logs: true,
       },
     });
     response.success = true;
@@ -40,6 +40,7 @@ export async function GET(request, data) {
             uploaded_on: doc.uploaded_on,
           };
         }) || [],
+      logs: record?.logs,
     };
   } catch (error) {
     response.error = true;

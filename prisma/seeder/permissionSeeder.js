@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-import prisma from "@/utils/prisma";
+const prisma = new PrismaClient();
 
 const permissionSeeder = async () => {
   const totalRoutes = await prisma.routes.count();
