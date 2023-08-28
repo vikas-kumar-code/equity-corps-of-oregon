@@ -63,7 +63,7 @@ export default function Navigation() {
           {modules.map((module, index) => {
             return (
               <li
-              key={`nav-${index}`}
+                key={`nav-${index}`}
                 className={
                   pathname === '/' + module.url
                     ? "nav-item menu-items active"
@@ -72,7 +72,7 @@ export default function Navigation() {
               >
                 <Link href={common.basePath(module.url)} className="nav-link">
                   <span className="menu-icon">
-                    <i className="mdi mdi-alpha-c-circle"></i>
+                    <i className={module.icon}></i>
                   </span>
                   <span className="menu-title">{module.label}</span>
                 </Link>
