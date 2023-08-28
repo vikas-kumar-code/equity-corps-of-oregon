@@ -1,11 +1,9 @@
-import moment from "moment";
-
 const CaseActivities = () => {
   return (
     <ol class="activity-feed">
       <li class="feed-item">
         <time class="date">
-          {moment()}
+          Sep 25
         </time>
         <span class="text">
           Responded to need{" "}
