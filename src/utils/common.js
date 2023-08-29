@@ -66,6 +66,11 @@ const common = {
       take: recordPerPage,
     };
   },
+  exclude : (modelData, keys) =>{
+    return Object.fromEntries(
+      Object.entries(modelData).filter(([key]) => !keys.includes(key))
+    );
+  }
 };
 
 export default common;

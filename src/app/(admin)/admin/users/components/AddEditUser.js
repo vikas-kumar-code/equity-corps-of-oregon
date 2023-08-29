@@ -72,7 +72,7 @@ export default function AddEditUser(props) {
             if (data.success) {
                 setSubmitted(false);
                 props.closeModal();
-                props.reloadeUsers();
+                props.reloadRecords();
             }
             else {
                 setSubmitted(false);
@@ -134,7 +134,7 @@ export default function AddEditUser(props) {
                                 placeholder="name"
                                 onChange={(event) => handleChange(event, "name")}
                                 isInvalid={!!errors.name}
-                                value={fields.name ? fields.name : ''}
+                                value={fields.name || ''}
                             />
                             <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                         </FloatingLabel>
@@ -150,7 +150,7 @@ export default function AddEditUser(props) {
                                 placeholder="email"
                                 onChange={(event) => handleChange(event, "email")}
                                 isInvalid={!!errors.email}
-                                value={fields.email ? fields.email : ''}
+                                value={fields.email || ''}
                             />
                             <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
                         </FloatingLabel>
@@ -183,7 +183,7 @@ export default function AddEditUser(props) {
                             <Form.Control.Feedback type="invalid">{errors.confirm_password}</Form.Control.Feedback>
                         </FloatingLabel>
                         <FloatingLabel label="Select Role" className="mb-3" controlId="floatingInput">
-                            <Form.Select name="role_id" onChange={(event) => handleChange(event, "role_id")}>
+                            <Form.Select name="role_id" value={fields?.role_id || ''} onChange={(event) => handleChange(event, "role_id")}>
                                 <option value="">--Select Role--</option>
                                 {roles.map((role, index) => <option value={role.id} key={`role-${index}`}>{role.name}</option>)}
                             </Form.Select>

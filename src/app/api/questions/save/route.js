@@ -18,27 +18,22 @@ export async function POST(request) {
       },
     });
 
-    if (userModel && userModel?.status > 0) {
+    if (userModel) {
       response.error = true;
       response.message =
         "User is already registered with this email. Please try a different email.";
     } else {
-      if (userModel) {
-        await prisma.users.delete({
-          where: {
-            id: userModel.id,
-          },
-        });
-      }
       await prisma.$transaction(async (tx) => {
         const practice_areas = fields.registration.practice_areas.map(
+          (item) => item.value
+        );
+        const languages_supports = fields.registration.languages_supports.map(
           (item) => item.value
         );
         await tx.users.create({
           data: {
             ...fields.registration,
-            languages_supports:
-              fields?.registration?.languages_supports.join(","),
+            languages_supports: languages_supports.join(", "),
             attorney_answers: {
               create: Object.entries(fields.attorney_answers).map((ans) => {
                 return {
@@ -47,8 +42,13 @@ export async function POST(request) {
                 };
               }),
             },
-            practice_areas: practice_areas.join(","),
+            practice_areas: practice_areas.join(", "),
+            role_id: 2,
             status: 0,
+            name:
+              fields.registration?.first_name +
+              " " +
+              fields.registration?.last_name,
           },
         });
         response.success = true;
