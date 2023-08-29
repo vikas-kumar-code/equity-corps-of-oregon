@@ -89,10 +89,12 @@ const slideData = [
     sn: 7,
     component: "registration",
     label: "Are you a member of the Oregon State Bar?",
-    type: "text",
+    type: "check",
     field: "is_oregon_state_bar_member",
+    options: [{ label: 'Yes', value: 1},
+    { label: 'No', value: 0}],
     required: true,
-    validation: Joi.string().required(),
+    validation: Joi.required()
   },
   {
     id: 8,
@@ -110,11 +112,13 @@ const slideData = [
     component: "registration",
     label:
       "Are you registered with EOIR and eligible to practice immediately before the Portland Immigration Court?",
-    type: "text",
+    type: "check",
     note: "In order to be a panel provider, you must be registered with the Portland Immigration Court under the EOIR eRegistry.",
     field: "eoir_registered",
+    options: [{ label: 'Yes', value: 1},
+    { label: 'No', value: 0}],
     required: true,
-    validation: Joi.string().required(),
+    validation: Joi.required(),
   },
   {
     id: 10,
@@ -125,6 +129,24 @@ const slideData = [
     type: "select",
     note: "ECO panel attorneys are required to have staff who speak English and Spanish. For languages other than English or Spanish, panel attorneys have access to the ECO language line and ECO contract interpreters in over 100 languages. We will publish the language information in an online directory of providers to help inform ECO participants in selecting service an attorney. Choose as many as you like",
     field: "languages_supports",
+    options:[{ value: "English", label: "English" },
+    { value: "Spanish", label: "Spanish" },
+    { value: "Vietnamese", label: "Vietnamese" },
+    { value: "Filipino", label: "Filipino" },
+    { value: "Pashto", label: "Pashto" },
+    { value: "Dari / Persian", label: "Dari / Persian" },
+    { value: "Arabic", label: "Arabic" },
+    { value: "Bengali", label: "Bengali" },
+    { value: "Chinese", label: "Chinese" },
+    { value: "Haitian Creole", label: "Haitian Creole" },
+    { value: "French", label: "French" },
+    { value: "Punjabi", label: "Punjabi" },
+    { value: "Hindi", label: "Hindi" },
+    { value: "Portuguese", label: "Portuguese" },
+    { value: "Tigrinya", label: "Tigrinya" },
+    { value: "Russian", label: "Russian" },
+    { value: "Turkish", label: "Turkish" },
+    { value: "Other", label: "Other" },],
     validation: Joi.array(),
   },
   {
@@ -132,12 +154,23 @@ const slideData = [
     sn: 11,
     component: "registration",
     label: "Select all your practice areas",
-    type: "text",
+    type: "select",
     note: "We will publish the practice areas in an online directory of providers to help inform ECO participants in selecting service an attorney.",
     field: "practice_areas",
     required: true,
-    validation: Joi.string().required(),
-    options:[{label:'',value:''},{},{}]
+    options:[{ value: "Adoption", label: "Adoption" },
+    { value: "Asylum & Protection", label: "Asylum & Protection" },
+    { value: "Business & Employment", label: "Business & Employment" },
+    { value: "Consular Processing", label: "Consular Processing" },
+    { value: "Deportation - Removal Defense", label: "Deportation - Removal Defense" },
+    { value: "Detention Work", label: "Detention Work" },
+    { value: "Family", label: "Family" },
+    { value: "Naturalization", label: "Naturalization" },
+    { value: "Waivers", label: "Waivers" },
+    { value: "TPS", label: "TPS" },
+    { value: "DACA", label: "DACA" },
+    { value: "Other", label: "Other" },],
+    validation: Joi.array().required(),
   },
   {
     id: 12,
@@ -265,7 +298,7 @@ export default function Page() {
   }, [answers]);
 
   console.log(fields);
-  console.log(answers);
+
   return (
     <LoadingOverlay active={data.length <= 0} spinner>
       <div
@@ -301,6 +334,7 @@ export default function Page() {
                   dataLength={data.length}
                   data={item}
                   setFields={setFields}
+                  setAnswers={setAnswers}
                   fields={fields}
                   error={error}
                   setError={setError}

@@ -19,27 +19,6 @@ const Option = (props) => {
   );
 };
 
-const options = [
-  { value: "English", label: "English" },
-  { value: "Spanish", label: "Spanish" },
-  { value: "Vietnamese", label: "Vietnamese" },
-  { value: "Filipino", label: "Filipino" },
-  { value: "Pashto", label: "Pashto" },
-  { value: "Dari / Persian", label: "Dari / Persian" },
-  { value: "Arabic", label: "Arabic" },
-  { value: "Bengali", label: "Bengali" },
-  { value: "Chinese", label: "Chinese" },
-  { value: "Haitian Creole", label: "Haitian Creole" },
-  { value: "French", label: "French" },
-  { value: "Punjabi", label: "Punjabi" },
-  { value: "Hindi", label: "Hindi" },
-  { value: "Portuguese", label: "Portuguese" },
-  { value: "Tigrinya", label: "Tigrinya" },
-  { value: "Russian", label: "Russian" },
-  { value: "Turkish", label: "Turkish" },
-  { value: "Other", label: "Other" },
-];
-
 export default function Registration(props) {
   const {
     data,
@@ -57,6 +36,12 @@ export default function Registration(props) {
   const inputRef = useRef(null);
   const [checked, setChecked] = useState(true);
   const [loader, setLoader] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const handleSelect = (val) => {
+    setSelected(val);
+    setError(null);
+      setFields({ ...fields, [data?.field]: val });
+  };
 
   const handleInput = (value) => {
     error && setError(null);
@@ -89,7 +74,7 @@ export default function Registration(props) {
   useEffect(() => {
     if (inputRef?.current && isActive) {
       setTimeout(() => {
-        inputRef.current.focus({
+        inputRef?.current?.focus({
           preventScroll: true,
         });
       }, 200);
@@ -125,7 +110,7 @@ export default function Registration(props) {
           hideSelectedOptions={false}
           className="languages"
           placeholder="Type your answer here"
-          options={options}
+          options={data.options}
           components={{
             Option,
           }}
@@ -153,6 +138,26 @@ export default function Registration(props) {
             <span className="text-danger">*</span>
           </Form.Label>
         </div>
+      )}
+      {data?.type === "check" && (
+        data?.options?.map((option, i) => {
+        return (
+          <Form.Check
+            key={`option-${index}-${i}`}
+            type="checkbox"
+            id={`option-${index}-${i}-${option.id}`}
+          > 
+            <Form.Check.Input
+              type="checkbox"
+              checked={option.value === selected}
+              onClick={() => {
+                handleSelect(option?.value);
+              }}
+            />
+            <Form.Check.Label>{option.label}</Form.Check.Label>
+          </Form.Check>
+        );
+      })
       )}
       {data?.type === "text" && (
         <Form.Control
