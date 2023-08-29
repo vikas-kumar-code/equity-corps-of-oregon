@@ -1,49 +1,53 @@
-
 import { NextResponse } from "next/server";
-
 import prisma from "@/utils/prisma";
+import common from "@/utils/common";
 export async function GET(request) {
-    const pageNumber = request.nextUrl.searchParams.get('page') ? parseInt(request.nextUrl.searchParams.get('page')) : 1;
-    const recordPerPage = 10;
+  let records = [];
+  let totalRecords = 0;
+  let response = {};
+  const searchParams = request.nextUrl.searchParams;
+  try {
+    const paginate = common.paginate(searchParams);
+    // Filters
     let where = {};
-    if (request.nextUrl.searchParams.get('name')) {
-        where = {
-            ...where,
-            name: {
-                contains: request.nextUrl.searchParams.get('name')
-            }
-        }
-    }
-    if (request.nextUrl.searchParams.get('email')) {
-        where = {
-            ...where,
-            email: {
-                contains: request.nextUrl.searchParams.get('email')
-            }
-        }
-    }
-
-
-    const skip = (pageNumber * recordPerPage) - recordPerPage;
-    const records = await prisma.users.findMany({
-        skip: skip,
-        take: recordPerPage,
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            status: true,
-            created_at: true,
-            role: true
+    if (searchParams.get("name")) {
+      where = {
+        ...where,
+        name: {
+          contains: searchParams.get("name"),
         },
-        where: { ...where },
-        orderBy: [
-            { id: 'desc' }
-        ]
+      };
+    }
+    if (searchParams.get("email")) {
+      where = {
+        ...where,
+        email: {
+          contains: searchParams.get("email"),
+        },
+      };
+    }
+    records = await prisma.users.findMany({
+      where,
+      ...paginate,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        status: true,
+        created_at: true,
+        role: true,
+      },
+      orderBy: [{ id: "desc" }],
     });
-    const totalRecords = await prisma.users.count();
-    return NextResponse.json({
-        records: JSON.stringify(records, (key, value) => (typeof value === 'bigint' ? value.toString() : value)),
-        totalRecords: totalRecords
-    });
+    totalRecords = await prisma.cases.count({ where: where });
+    // output response
+    response.success = true;
+    response.message = "Users List";
+    response.records = records;
+    response.totalRecords = totalRecords;
+  } catch (error) {
+    response.error = true;
+    response.message = error.message;
+  }
+  return NextResponse.json(response);
 }

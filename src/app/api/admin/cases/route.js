@@ -1,7 +1,5 @@
 import common from "@/utils/common";
-
 import { NextResponse } from "next/server";
-
 import prisma from "@/utils/prisma";
 
 export async function GET(request) {
