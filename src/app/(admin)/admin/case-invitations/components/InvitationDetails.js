@@ -1,8 +1,26 @@
 import moment from "moment";
-import React from "react";
-import { Modal, Table, Badge } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import {
+  Modal,
+  Table,
+  Badge,
+  Tabs,
+  Row,
+  Tab,
+  Button,
+  Spinner,
+} from "react-bootstrap";
+import LoadingOverlay from "react-loading-overlay";
+import Milestones from "../../cases/components/Milestones";
+import Documents from "../../cases/components/Documents";
+import CaseActivities from "../../cases/components/CaseActivities";
 
 const InvitationDetails = ({ showModal, closeModal, record }) => {
+  const [activeTab, setActiveTab] = useState(1);
+  const [loader, setLoader] = useState(false);
+  const [activated, setActivated] = useState(1);
+  const [submitted, setSubmitted] = useState(false);
+
   const iStatus = {
     0: {
       label: "Pending",
@@ -18,6 +36,43 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
     },
   };
 
+  // const renderButtons = (step) => {
+  //   return (
+  //     <React.Fragment>
+  //       {step > 1 && (
+  //         <Button
+  //           size="lg"
+  //           variant="secondary"
+  //           onClick={() => {
+  //             setActiveTab(activeTab - 1);
+  //           }}
+  //           className="me-1"
+  //           style={{ width: "auto" }}
+  //         >
+  //           Back
+  //         </Button>
+  //       )}
+  //       {step < 4 && (
+  //         <Button
+  //           size="lg"
+  //           type="submit"
+  //           variant="success"
+  //           disabled={submitted}
+  //         >
+  //           {submitted && <Spinner className="mr-1" color="light" size="sm" />}
+  //           {activeTab === 3 ? " Save" : " Next"}
+  //         </Button>
+  //       )}
+  //     </React.Fragment>
+  //   );
+  // };
+
+  useEffect(() => {
+    if (activeTab > activated) {
+      setActivated(activeTab);
+    }
+  }, [activeTab]);
+
   return (
     <Modal
       show={showModal}
@@ -25,57 +80,118 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
       backdrop="static"
       keyboard={false}
       centered
-      size="md"
+      size="lg"
     >
-      <Modal.Header closeButton className="border-bottom-0">
-        <h3>Invitation Details</h3>
-      </Modal.Header>
-      <Modal.Body className="show-error pt-0">
-        <div className="table-responsive mb-2" style={{ maxHeight: "400px" }}>
-          <Table
-            bordered
-            hover
-            variant="dark"
-            size="sm"
-            className="table-padding-1"
+      <LoadingOverlay active={loader} spinner text="Loading...">
+        <Modal.Header closeButton className="border-bottom-0">
+          <h3> Case Details</h3>
+        </Modal.Header>
+        <Modal.Body>
+          <Tabs
+            activeKey={activeTab}
+            id="justify-tab-example"
+            justify
+            onSelect={(k) => setActiveTab(parseInt(k))}
           >
-            <thead>
-              <tr>
-                <th colSpan={3}>Case Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th>Case Number</th>
-                <td>{record.case_number}</td>
-              </tr>
-              <tr>
-                <th>Title</th>
-                <td>{record.title}</td>
-              </tr>
-              <tr>
-                <th>Description</th>
-                <td>{record.description}</td>
-              </tr>
-              <tr>
-                <th>Status</th>
-                <td>
-                  <Badge
-                    pill
-                    bg={iStatus[record.case_invitations[0].status].bg || "info"}
-                  >
-                    {iStatus[record.case_invitations[0].status].label || "N/A"}
-                  </Badge>
-                </td>
-              </tr>
-              <tr>
-                <th>Added On</th>
-                <td>{moment(record.case_invitations[0].sent_on).format("D MMM, YYYY")}</td>
-              </tr>
-            </tbody>
-          </Table>
-        </div>
-      </Modal.Body>
+            <Tab eventKey={1} >
+              <Row>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th colSpan={3}>Case Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>Case Number</th>
+                      <td>{record.case_number}</td>
+                    </tr>
+                    <tr>
+                      <th>Title</th>
+                      <td>{record.title}</td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>{record.description}</td>
+                    </tr>
+                    <tr>
+                      <th>Status</th>
+                      <td>
+                        <Badge
+                          pill
+                          bg={
+                            iStatus[record.case_invitations[0].status].bg ||
+                            "info"
+                          }
+                        >
+                          {iStatus[record.case_invitations[0].status].label ||
+                            "N/A"}
+                        </Badge>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Added On</th>
+                      <td>
+                        {moment(record.case_invitations[0].sent_on).format(
+                          "D MMM, YYYY"
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </Row>
+            </Tab>
+            {/* <Tab
+              eventKey={2}
+              title="Milestones"
+              disabled={activated < 2 && record.id}
+            >
+              <Milestones
+                errors={errors}
+                setErrors={setErrors}
+                milestones={fields?.milestones || []}
+                updateMilestones={(milestones) =>
+                  setFields({
+                    ...fields,
+                    milestones: milestones,
+                  })
+                }
+              />
+            </Tab>
+            <Tab
+              eventKey={3}
+              title="Documents"
+              disabled={activated < 3 && record.id}
+            >
+              <Documents
+                updateDocuments={(documents) =>
+                  setFields({ ...fields, documents: documents })
+                }
+                setDeletedDocument={(doc) => {
+                  setDeletedDocuments([...deletedDocuments, doc]);
+                }}
+                documents={fields.documents}
+                errors={errors}
+                setErrors={setErrors}
+              />
+            </Tab>
+            <Tab eventKey={4} title="Case Activities">
+              <CaseActivities logs={fields?.logs || []} />
+            </Tab> */}
+          </Tabs>
+        </Modal.Body>
+        {/* <Modal.Footer>{renderButtons(activeTab)}</Modal.Footer> */}
+        <Modal.Footer>
+          <Button
+            size="lg"
+            type="submit"
+            variant="success"
+            onClick={closeModal}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </LoadingOverlay>
     </Modal>
   );
 };
