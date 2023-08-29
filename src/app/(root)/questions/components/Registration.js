@@ -8,7 +8,6 @@ import { BiSolidErrorCircle } from "react-icons/bi";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import Select, { components } from "react-select";
-import { toast } from "react-toastify";
 
 const Option = (props) => {
   return (
@@ -40,7 +39,7 @@ export default function Registration(props) {
   const handleSelect = (val) => {
     setSelected(val);
     setError(null);
-      setFields({ ...fields, [data?.field]: val });
+    setFields({ ...fields, [data?.field]: val });
   };
 
   const handleInput = (value) => {
@@ -60,9 +59,15 @@ export default function Registration(props) {
       .then((response) => response.json())
       .then((res) => {
         if (res.success) {
-          // next();
+          next();
         } else if (res.error) {
-          setError(res.message?.registration || res?.message?.attorney_answers);
+          if (typeof res.message === "string") {
+            setError(res.message);
+          } else {
+            setError(
+              res.message?.registration || res?.message?.attorney_answers || ""
+            );
+          }
         }
       })
       .catch((error) => {
@@ -139,26 +144,25 @@ export default function Registration(props) {
           </Form.Label>
         </div>
       )}
-      {data?.type === "check" && (
+      {data?.type === "check" &&
         data?.options?.map((option, i) => {
-        return (
-          <Form.Check
-            key={`option-${index}-${i}`}
-            type="checkbox"
-            id={`option-${index}-${i}-${option.id}`}
-          > 
-            <Form.Check.Input
+          return (
+            <Form.Check
+              key={`option-${index}-${i}`}
               type="checkbox"
-              checked={option.value === selected}
-              onClick={() => {
-                handleSelect(option?.value);
-              }}
-            />
-            <Form.Check.Label>{option.label}</Form.Check.Label>
-          </Form.Check>
-        );
-      })
-      )}
+              id={`option-${index}-${i}-${option.id}`}
+            >
+              <Form.Check.Input
+                type="checkbox"
+                checked={option.value === selected}
+                onClick={() => {
+                  handleSelect(option?.value);
+                }}
+              />
+              <Form.Check.Label>{option.label}</Form.Check.Label>
+            </Form.Check>
+          );
+        })}
       {data?.type === "text" && (
         <Form.Control
           ref={inputRef}
@@ -171,7 +175,7 @@ export default function Registration(props) {
           }}
         />
       )}
-      
+
       <div style={{ height: "50px" }} className="mt-3">
         {error && (
           <Form.Control.Feedback
