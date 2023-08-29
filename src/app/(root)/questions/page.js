@@ -181,7 +181,7 @@ const slideData = [
     type: "checkbox",
     field: "eco_panel_attorney",
     required: true,
-    validation: Joi.boolean().valid(true).required().messages({
+    validation: Joi.boolean().valid(true).optional().messages({
       "any.only": "You must accept the terms and conditions.",
       "any.required": "Terms and conditions checkbox is required.",
     }),
@@ -234,6 +234,7 @@ export default function Page() {
         [data[slideIndex].field]: fields[data[slideIndex].field],
       });
       if (error) {
+        console.log(error.details,'Errrrrrroooooooorrrrrrssss');
         let errs = error.details[0].message;
         setError(capitalizeEachWord(errs));
         next = false;
@@ -296,8 +297,6 @@ export default function Page() {
     count > 0 && next();
     setCount(count + 1);
   }, [answers]);
-
-  console.log(fields);
 
   return (
     <LoadingOverlay active={data.length <= 0} spinner>

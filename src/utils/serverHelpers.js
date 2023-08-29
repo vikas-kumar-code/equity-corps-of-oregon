@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const { authOptions } = require("@/app/api/auth/[...nextauth]/route");
 const { getServerSession } = require("next-auth");
+const { redirect } = require("next/navigation");
 
 // Move file
 const moveFile = (sourceFilePath = "", destinationFilePath = "") => {
@@ -31,7 +32,22 @@ const getSession = async () => {
   return await getServerSession(authOptions);
 };
 
+// Redirect to dashboard based on user's role (if authenticated)
+// [1 => Admin, 2 => Attorney, 3 => Eco Provider]
+const redirectToDashboard = async () => {
+  const session = await getSession();
+  const WEB_URL = process.env.NEXT_PUBLIC_API_URL;
+  if (session?.user) {
+    if (session.user.role_id === 1 || session.user.role_id === 3) {
+      redirect(WEB_URL + "/admin" + "/dashboard");
+    } else if (session.user.role_id === 2) {
+      redirect(WEB_URL + "/account");
+    }
+  }
+};
+
 module.exports = {
   moveFile,
   getSession,
+  redirectToDashboard,
 };

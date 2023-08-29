@@ -1,14 +1,8 @@
-import { getSession } from "@/utils/serverHelpers";
+import { redirectToDashboard } from "@/utils/serverHelpers";
 import LoginForm from "./LoginForm";
-import { redirect } from "next/navigation";
-import common from "@/utils/common";
 
 export default async function Login() {
-  const session = await getSession();
-  // if user alredy logged in
-  if (session?.user) {
-    redirect("./admin/dashboard");
-  }
+  await redirectToDashboard();
   return (
     <div className="container-scroller">
       <div className="container-fluid page-body-wrapper full-page-wrapper">
