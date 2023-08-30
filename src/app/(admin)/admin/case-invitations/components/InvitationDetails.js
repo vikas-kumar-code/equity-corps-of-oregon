@@ -19,7 +19,6 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
   const [activeTab, setActiveTab] = useState(1);
   const [loader, setLoader] = useState(false);
   const [activated, setActivated] = useState(1);
-  const [submitted, setSubmitted] = useState(false);
 
   const iStatus = {
     0: {
@@ -35,37 +34,6 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
       bg: "danger",
     },
   };
-
-  // const renderButtons = (step) => {
-  //   return (
-  //     <React.Fragment>
-  //       {step > 1 && (
-  //         <Button
-  //           size="lg"
-  //           variant="secondary"
-  //           onClick={() => {
-  //             setActiveTab(activeTab - 1);
-  //           }}
-  //           className="me-1"
-  //           style={{ width: "auto" }}
-  //         >
-  //           Back
-  //         </Button>
-  //       )}
-  //       {step < 4 && (
-  //         <Button
-  //           size="lg"
-  //           type="submit"
-  //           variant="success"
-  //           disabled={submitted}
-  //         >
-  //           {submitted && <Spinner className="mr-1" color="light" size="sm" />}
-  //           {activeTab === 3 ? " Save" : " Next"}
-  //         </Button>
-  //       )}
-  //     </React.Fragment>
-  //   );
-  // };
 
   useEffect(() => {
     if (activeTab > activated) {
@@ -93,7 +61,9 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
             justify
             onSelect={(k) => setActiveTab(parseInt(k))}
           >
-            <Tab eventKey={1} >
+            <Tab eventKey={1} 
+              title="Basic Details"
+              disabled={activated < 1 && record.id}>
               <Row>
                 <Table>
                   <thead>
@@ -141,46 +111,25 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                 </Table>
               </Row>
             </Tab>
-            {/* <Tab
+            <Tab
               eventKey={2}
               title="Milestones"
               disabled={activated < 2 && record.id}
             >
-              <Milestones
-                errors={errors}
-                setErrors={setErrors}
-                milestones={fields?.milestones || []}
-                updateMilestones={(milestones) =>
-                  setFields({
-                    ...fields,
-                    milestones: milestones,
-                  })
-                }
-              />
+              <div>Hello</div>
             </Tab>
             <Tab
               eventKey={3}
               title="Documents"
               disabled={activated < 3 && record.id}
             >
-              <Documents
-                updateDocuments={(documents) =>
-                  setFields({ ...fields, documents: documents })
-                }
-                setDeletedDocument={(doc) => {
-                  setDeletedDocuments([...deletedDocuments, doc]);
-                }}
-                documents={fields.documents}
-                errors={errors}
-                setErrors={setErrors}
-              />
+              <div>Hello</div>
             </Tab>
             <Tab eventKey={4} title="Case Activities">
-              <CaseActivities logs={fields?.logs || []} />
-            </Tab> */}
+              <div>Hello</div>
+            </Tab>
           </Tabs>
         </Modal.Body>
-        {/* <Modal.Footer>{renderButtons(activeTab)}</Modal.Footer> */}
         <Modal.Footer>
           <Button
             size="lg"
