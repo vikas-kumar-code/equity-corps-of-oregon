@@ -1,0 +1,16 @@
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.circle-icon-btn {
+  height: 28px;
+  width: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: unset !important;
+}
+
+.on-board-icon-1{
+    /* color: #ccc !important; */
+}

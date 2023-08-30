@@ -37,7 +37,8 @@ export async function PUT(request, data) {
   });
 
   try {
-    const record = await userSchema.validateAsync(user);
+    const record = await userSchema.validateAsync(user, { stripUnknown: true });
+    console.log(record,'user fields......');
     if (record) {
       let response;
       if (record.password) {

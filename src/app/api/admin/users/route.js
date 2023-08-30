@@ -34,6 +34,7 @@ export async function GET(request) {
         name: true,
         email: true,
         status: true,
+        on_board_status: true,
         created_at: true,
         role: true,
       },
