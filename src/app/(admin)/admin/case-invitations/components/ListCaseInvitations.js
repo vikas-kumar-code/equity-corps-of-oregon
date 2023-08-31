@@ -23,8 +23,7 @@ export default function ListCaseInvitations() {
 
   const searchFields = [
     { label: "Case Number", type: "text", name: "case_number" },
-    { label: "Case Title", type: "text", name: "case_title" },
-    { label: "Eco Provider", type: "text", name: "user_id" },
+    { label: "Case Title", type: "text", name: "case_title" }
   ];
 
   const getRecords = async () => {
@@ -68,14 +67,14 @@ export default function ListCaseInvitations() {
             onClick={() => setShowSearchBox(!showSearchBox)}
           >
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
-          </Button>          
+          </Button>
         </Col>
       </Row>
       <SearchBox
         open={showSearchBox}
         title={"Search Case"}
         searchFields={searchFields}
-        col={4}
+        col={6}
         searchRecords={(fields) => {
           setFields(fields);
         }}
@@ -107,7 +106,7 @@ export default function ListCaseInvitations() {
                           record={record}
                           index={index}
                           key={`cases-key-${index}`}
-                          getRecords={getRecords}                          
+                          getRecords={getRecords}
                           pageNumber={pageNumber}
                           recordPerPage={recordPerPage}
                         />

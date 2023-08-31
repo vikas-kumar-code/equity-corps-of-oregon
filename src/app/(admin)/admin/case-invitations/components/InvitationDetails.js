@@ -57,8 +57,7 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
             justify
             onSelect={(k) => setActiveTab(parseInt(k))}
           >
-            <Tab
-              eventKey={1}
+            <Tab eventKey={1}
               title="Basic Details"
               disabled={activated < 1 && record.id}
             >
@@ -72,15 +71,15 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                   <tbody>
                     <tr>
                       <th>Case Number</th>
-                      <td>{record.case_number}</td>
+                      <td>{record.case.case_number}</td>
                     </tr>
                     <tr>
                       <th>Title</th>
-                      <td>{record.title}</td>
+                      <td>{record.case.title}</td>
                     </tr>
                     <tr>
                       <th>Description</th>
-                      <td>{record.description}</td>
+                      <td>{record.case.description}</td>
                     </tr>
                     <tr>
                       <th>Status</th>
@@ -88,11 +87,11 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                         <Badge
                           pill
                           bg={
-                            iStatus[record.case_invitations[0].status].bg ||
+                            iStatus[record.status].bg ||
                             "info"
                           }
                         >
-                          {iStatus[record.case_invitations[0].status].label ||
+                          {iStatus[record.status].label ||
                             "N/A"}
                         </Badge>
                       </td>
@@ -100,7 +99,7 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                     <tr>
                       <th>Added On</th>
                       <td>
-                        {moment(record.case_invitations[0].sent_on).format(
+                        {moment(record.sent_on).format(
                           "D MMM, YYYY"
                         )}
                       </td>
