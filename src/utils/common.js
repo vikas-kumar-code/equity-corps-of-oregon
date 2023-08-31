@@ -6,6 +6,7 @@ const params = {
   templateId: {
     sendCaseInvitation: 1,
     forgotPassword: 2,
+    attorneyOnBoard: 3,
   },
 };
 
@@ -66,11 +67,11 @@ const common = {
       take: recordPerPage,
     };
   },
-  exclude : (modelData, keys) =>{
+  exclude: (modelData, keys) => {
     return Object.fromEntries(
       Object.entries(modelData).filter(([key]) => !keys.includes(key))
     );
-  }
+  },
 };
 
 export default common;

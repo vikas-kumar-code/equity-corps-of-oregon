@@ -1,13 +1,13 @@
-import ListUsers from './components/ListUsers'
-
+import ListUsers from "./components/ListUsers";
+import "./style.css";
 export default function Users() {
-    return (
-        <div className="content-wrapper">
-            <div className="row ">
-                <div className="col-12 grid-margin">
-                    <ListUsers />
-                </div>
-            </div>
+  return (
+    <div className="content-wrapper">
+      <div className="row ">
+        <div className="col-12 grid-margin">
+          <ListUsers />
         </div>
-    )
+      </div>
+    </div>
+  );
 }

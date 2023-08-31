@@ -57,6 +57,14 @@ export default function SearchBox(props) {
                       />
                     </FloatingLabel>
                   )}
+                  {field.type === "select" && (
+                    <FloatingLabel label={field.label} className="mb-3">
+                      <Form.Select name={field.name} value={fields[field.name] ? fields[field.name] : ""} onChange={(event) => handleChange(event, field.name)}>
+                        <option value="">Select Eco Provider</option>
+                        {field.values.map((value, index) => <option value={value.id} key={`eco-provider-${index}`}>{value.name}</option>)}
+                      </Form.Select>
+                    </FloatingLabel>
+                  )}
                 </Form.Group>
               ))}
             </Row>

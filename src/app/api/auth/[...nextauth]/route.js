@@ -3,7 +3,6 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt";
 
-
 import prisma from "@/utils/prisma";
 export const authOptions = {
   session: {
@@ -44,7 +43,7 @@ export const authOptions = {
             },
           },
         });
-        //console.log(user)
+
         if (!user) {
           return null;
         }
@@ -57,7 +56,23 @@ export const authOptions = {
           return null;
         }
         // If no error and we have user data, return it
-        if (user) {
+        if (user) {          
+          // Only Active(status) users can login
+          if (user.status === 1) {
+            if (user.on_board_status === 1) {
+              await prisma.users.update({
+                where: {
+                  id: user.id,
+                },
+                data: {
+                  on_board_status: 2, // set on-boarded
+                },
+              });
+            }
+          } else {
+            return null;
+          }
+
           // fetch all authorized routes
           let routes = [];
           if (user?.role?.permissions && user?.role?.permissions.length > 0) {

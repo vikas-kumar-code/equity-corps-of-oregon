@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Spinner, Form, Tabs, Tab } from "react-bootstrap";
+import {  Modal, Tabs, Tab } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import common from "@/utils/common";
+import { toast } from "react-toastify";
 LoadingOverlay.propTypes = undefined;
 
 export default function ViewDetails(props) {
@@ -43,8 +44,7 @@ export default function ViewDetails(props) {
           <Tabs
             defaultActiveKey={1}
             id="user-details-tabs"
-            justify
-            //   onSelect={(k) => setActiveTab(parseInt(k))}
+            justify            
           >
             <Tab eventKey={1} title="Basic Details">
               <table class="table table-borderless table-striped">

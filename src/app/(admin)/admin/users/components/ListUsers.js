@@ -11,6 +11,8 @@ import {
   DropdownButton,
   Dropdown,
   ButtonGroup,
+  OverlayTrigger,
+  Tooltip,
 } from "react-bootstrap";
 import Pagination from "react-js-pagination";
 import AddEditUser from "./AddEditUser";
@@ -24,6 +26,8 @@ import {
   IoCheckmarkCircle,
   IoAlertCircle,
 } from "react-icons/io5";
+import SendCredentials from "./SendCredentials";
+import BlankCircle from "./BlankCircle";
 LoadingOverlay.propTypes = undefined;
 
 export default function ListUsers() {
@@ -91,6 +95,28 @@ export default function ListUsers() {
   const getUser = (userId = null, view) => {
     setUserId(userId);
     view === "edit" ? setShowModal(true) : setDetailsModal(true);
+  };
+
+  const resendOnBoardEmail = (userId) => {
+    if (confirm("Are you sure to resend on-board email?")) {
+      setLoader(true);
+      fetch(common.apiPath(`/admin/users/attorney-on-board`), {
+        method: "POST",
+        body: JSON.stringify({ userId: userId, resend: true }),
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            toast.success(response.message);
+          } else if (response.error) {
+            toast.error(response.message);
+          }
+        })
+        .catch((error) => {
+          toast.error(response.message);
+        })
+        .finally(() => setLoader(false));
+    }
   };
 
   return (
@@ -168,9 +194,14 @@ export default function ListUsers() {
                             )}
                           </td>
                           <td className="text-center">
-                            <IoEllipseOutline size={28} />
-                            {/* <IoAlertCircle color="#ffab00" size={28} /> */}
-                            {/* <IoCheckmarkCircle color="green" size={28} /> */}
+                            {record.on_board_status <= 0 && (
+                              <BlankCircle
+                                userId={record.id}
+                                reloadRecords={getRecords}
+                              />
+                            )}
+                            {record.on_board_status === 1 && <YelloCircle />}
+                            {record.on_board_status === 2 && <GreenCircle />}
                           </td>
                           <td>
                             {moment(record.created_at).format("D MMM,  YYYY")}
@@ -202,6 +233,14 @@ export default function ListUsers() {
                               >
                                 Delete
                               </Dropdown.Item>
+                              {record.on_board_status === 1 && (
+                                <Dropdown.Item
+                                  eventKey="3"
+                                  onClick={() => resendOnBoardEmail(record.id)}
+                                >
+                                  Resend On-board email
+                                </Dropdown.Item>
+                              )}
                             </DropdownButton>
                           </td>
                         </tr>
@@ -251,3 +290,37 @@ export default function ListUsers() {
     </div>
   );
 }
+const YelloCircle = () => {
+  return (
+    <OverlayTrigger
+      placement="top"
+      overlay={
+        <Tooltip>
+          On-board email has been sent.
+          <br /> Waiting for user login.
+        </Tooltip>
+      }
+    >
+      <button className="circle-icon-btn">
+        <IoAlertCircle color="#ffab00" size={28} className="on-board-icon" />
+      </button>
+    </OverlayTrigger>
+  );
+};
+
+const GreenCircle = () => {
+  return (
+    <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip>Attorney On-boarded</Tooltip>}
+    >
+      <button className="circle-icon-btn">
+        <IoCheckmarkCircle
+          color="#00d25b"
+          size={28}
+          className="on-board-icon"
+        />
+      </button>
+    </OverlayTrigger>
+  );
+};

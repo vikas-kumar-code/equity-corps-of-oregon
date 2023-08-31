@@ -18,7 +18,7 @@ export default function LoginForm() {
             email: fields.email,
             password: fields.password,
             redirect: false,
-            callbackUrl: '/admin/dashboard'
+            callbackUrl: '/login'
         });
         console.log(result);
         if (result.error) {
@@ -26,7 +26,7 @@ export default function LoginForm() {
             setLoader(false);
         }
         else if (result.ok) {
-            route.push('/admin/dashboard');
+            route.push('/login');
         }
     }
     return (
