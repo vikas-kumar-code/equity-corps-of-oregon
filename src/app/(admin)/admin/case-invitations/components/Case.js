@@ -53,8 +53,7 @@ export default function Case({
           {moment(record.sent_on).format("D MMM,  YYYY")}
         </td>
         <td>
-          {(!record?.status ||
-            record?.status !== 1) && (
+          {record?.status === 0 && (
               <Button
                 className="me-2"
                 variant="success"

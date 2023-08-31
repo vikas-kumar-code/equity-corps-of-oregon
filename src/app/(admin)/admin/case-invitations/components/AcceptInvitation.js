@@ -19,21 +19,22 @@ export default function AcceptInvitation({
   const [errors, setErrors] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [fields, setFields] = useState({
+    id: record.id,
     accept: 0,
-    first_name: record?.case_invitations[0].first_name || "",
-    last_name: record?.case_invitations[0].first_name || "",
-    contract: record?.case_invitations[0]?.contract || "",
+    first_name: record?.first_name || "",
+    last_name: record?.first_name || "",
+    contract: record?.contract || "",
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitted(true);
+    setErrors({});
     try {
       const schema = Joi.object({
         accept: Joi.number().min(1).required(),
         first_name: Joi.string().max(100).required(),
         last_name: Joi.string().max(100).required(),
-        contract: Joi.string().required(),
       });
       await schema.validateAsync(fields, {
         abortEarly: false,
@@ -41,15 +42,17 @@ export default function AcceptInvitation({
       });
       await fetch(common.apiPath(`/admin/cases/invitations/accept`), {
         method: "POST",
-        body: JSON.stringify({ fields }),
+        body: JSON.stringify(fields),
       })
         .then((response) => response.json())
         .then((response) => {
+          setSubmitted(false);
           if (response.success) {
             toast.success(response.message);
+            closeModal();
             reloadRecords();
           } else if (response.error) {
-            if (response.message === 'object') {
+            if (typeof response.message === "object") {
               setErrors(response.message);
             } else {
               toast.error(response.message);
@@ -90,9 +93,6 @@ export default function AcceptInvitation({
                   dangerouslySetInnerHTML={{ __html: fields.contract }}
                 ></div>
               </div>
-              <Form.Control.Feedback type="invalid">
-                {errors.contract}
-              </Form.Control.Feedback>
             </Col>
             <Col md={12} className="pt-2">
               <Form.Check
@@ -100,6 +100,9 @@ export default function AcceptInvitation({
                 type="checkbox"
                 id="checkbox-contract"
                 label="I have read the above contract and accepted."
+                onChange={(e) => {
+                  setFields({ ...fields, accept: e.target?.checked ? 1 : 0 });
+                }}
               />
               {errors.accept && (
                 <Form.Control.Feedback type="invalid">
@@ -117,6 +120,10 @@ export default function AcceptInvitation({
                   type="text"
                   placeholder="Enter first name"
                   isInvalid={!!errors.first_name}
+                  value={fields.first_name}
+                  onChange={(e) =>
+                    setFields({ ...fields, first_name: e.target.value })
+                  }
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.first_name}
@@ -133,6 +140,10 @@ export default function AcceptInvitation({
                   type="text"
                   placeholder="Enter last name"
                   isInvalid={!!errors.last_name}
+                  value={fields.last_name}
+                  onChange={(e) =>
+                    setFields({ ...fields, last_name: e.target.value })
+                  }
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.last_name}
@@ -149,6 +160,9 @@ export default function AcceptInvitation({
               Cancel
             </Button>
             <Button type="submit" variant="primary">
+              {submitted && (
+                <Spinner className="me-1" color="light" size="sm" />
+              )}
               Accept
             </Button>
           </div>
