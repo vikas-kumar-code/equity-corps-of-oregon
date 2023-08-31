@@ -18,23 +18,20 @@ export async function GET(request) {
     let where = {
       user_id: session.user.id,
     };
-    /* if (request.get("case_number")) {
-      where = {
-        ...where,
+    /* let caseWhere = {};
+    if (request.get("case_number")) {
+      caseWhere = {
         case_number: {
           contains: request.get("case_number"),
         },
       };
     }
     if (request.get("status")) {
-      where = {
-        ...where,
+      caseWhere = {
+        ...caseWhere,
         status: request.get("status"),
       };
     } */
-    where = {
-      ...where,
-    };
     records = await prisma.case_invitations.findMany({
       where,
       ...paginate,
@@ -43,7 +40,8 @@ export async function GET(request) {
         case: {
           include: {
             case_milestones: true,
-            case_documents: true
+            case_documents: true,
+            logs: true
           }
         },
       },
