@@ -10,21 +10,25 @@ import common from "@/utils/common";
 import { toast } from "react-toastify";
 import Case from "./Case";
 import AddEditCase from "./AddEditCase";
+import UpdateContract from "./UpdateContract";
+
 LoadingOverlay.propTypes = undefined;
 
 export default function ListCases() {
   const [loader, setLoader] = useState(false);
   const [records, setRecords] = useState([]);
+  const [ecoProviders, setEcoProviders] = useState([]);
   const recordPerPage = 10;
   const [pageNumber, setPageNumber] = useState(1);
   const [totalRecords, setTotalRecords] = useState(1);
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [fields, setFields] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [updateContractModal, setUpdateContractModal] = useState(false);
   const searchFields = [
     { label: "Case Number", type: "text", name: "case_number" },
     { label: "Case Title", type: "text", name: "title" },
-    { label: "Eco Provider", type: "text", name: "eco_provider" },
+    { label: "Eco Provider", type: "select", name: "eco_provider", values: ecoProviders },
   ];
 
   const getRecords = async () => {
@@ -78,6 +82,25 @@ export default function ListCases() {
   useEffect(() => {
     getRecords();
   }, [fields]);
+  useEffect(async () => {
+    let REQUEST_URI = common.apiPath(`/admin/cases/eco-providers`);
+    fetch(REQUEST_URI)
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          let ecoProviders = [];
+          response.records.forEach((provider, index) => {
+            ecoProviders[index] = { id: provider.user.id, name: provider.user.name }
+          })
+          setEcoProviders(ecoProviders)
+        } else {
+          toast.error(response.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+  }, []);
 
   return (
     <div>
@@ -85,14 +108,24 @@ export default function ListCases() {
         <Col md={6} sm={12}>
           <h3>Cases</h3>
         </Col>
-        <Col md={6} sm={12} className="text-end">
+        <Col md={2} sm={12} className="text-end d-grid">
           <Button
             variant="warning"
-            className="me-2"
             onClick={() => setShowSearchBox(!showSearchBox)}
           >
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
           </Button>
+        </Col>
+        <Col md={2} sm={12} className="text-end d-grid">
+          <Button
+            variant="dark"
+            type="button"
+            onClick={() => setUpdateContractModal(true)}
+          >
+            Update Contract
+          </Button>
+        </Col>
+        <Col md={2} sm={12} className="text-end d-grid">
           <Button
             variant="primary"
             type="button"
@@ -175,6 +208,15 @@ export default function ListCases() {
           reloadRecords={getRecords}
         />
       )}
+      {updateContractModal && (
+        <UpdateContract
+          showModal={updateContractModal}
+          closeModal={() => {
+            setUpdateContractModal(false);
+          }}
+        />
+      )}
+
     </div>
   );
 }
