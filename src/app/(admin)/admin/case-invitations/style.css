@@ -1,0 +1,9 @@
+.contract-box {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-height: 200px;
+  max-height: 205px;
+  overflow-y: auto;
+  padding: 5px;
+  background-color: #fafafa;
+}

@@ -28,7 +28,12 @@ export default function ListCases() {
   const searchFields = [
     { label: "Case Number", type: "text", name: "case_number" },
     { label: "Case Title", type: "text", name: "title" },
-    { label: "Eco Provider", type: "select", name: "eco_provider", values: ecoProviders },
+    {
+      label: "Eco Provider",
+      type: "select",
+      name: "eco_provider",
+      values: ecoProviders,
+    },
   ];
 
   const getRecords = async () => {
@@ -75,14 +80,7 @@ export default function ListCases() {
     }
   };
 
-  useEffect(() => {
-    getRecords();
-  }, [pageNumber]);
-
-  useEffect(() => {
-    getRecords();
-  }, [fields]);
-  useEffect(async () => {
+  const getEcoProviders = async () => {
     let REQUEST_URI = common.apiPath(`/admin/cases/eco-providers`);
     fetch(REQUEST_URI)
       .then((response) => response.json())
@@ -90,16 +88,30 @@ export default function ListCases() {
         if (response.success) {
           let ecoProviders = [];
           response.records.forEach((provider, index) => {
-            ecoProviders[index] = { id: provider.user.id, name: provider.user.name }
-          })
-          setEcoProviders(ecoProviders)
+            ecoProviders[index] = {
+              id: provider.user.id,
+              name: provider.user.name,
+            };
+          });
+          setEcoProviders(ecoProviders);
         } else {
           toast.error(response.message);
         }
       })
       .catch((error) => {
         toast.error(error.message);
-      })
+      });
+  };
+
+  useEffect(() => {
+    getRecords();
+  }, [pageNumber]);
+
+  useEffect(() => {
+    getRecords();
+  }, [fields]);
+  useEffect(() => {
+    getEcoProviders();
   }, []);
 
   return (
@@ -216,7 +228,6 @@ export default function ListCases() {
           }}
         />
       )}
-
     </div>
   );
 }

@@ -2,14 +2,7 @@
 
 import common from "@/utils/common";
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  Button,
-  Modal,
-  Spinner,
-  Form,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Button, Modal, Spinner, Form, Row, Col } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
@@ -21,14 +14,13 @@ const Editor = dynamic(() => import("../../../components/Editor"), {
 
 export default function UpdateContract(props) {
   const [loader, setLoader] = useState(false);
-  const [fields, setFields] = useState({ content: "" });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(" ");
 
-  const handleEmailCotent = useCallback(
-    (emailContent) => {
-      setContent(emailContent);
+  const handleContent = useCallback(
+    (content) => {
+      setContent(content);
     },
     [content]
   );
@@ -37,22 +29,15 @@ export default function UpdateContract(props) {
     e.preventDefault();
     setSubmitted(true);
     setErrors({});
-    fields.content = content;
-    let REQUEST_URI = common.apiPath("admin/email-templates/save");
-    let REQUEST_METHOD = "POST";
-    if (props.recordId) {
-      REQUEST_URI = common.apiPath(
-        `admin/email-templates/save/${props.recordId}`
-      );
-      REQUEST_METHOD = "PUT";
-    }
-    fetch(REQUEST_URI, { method: REQUEST_METHOD, body: JSON.stringify(fields) })
+    fetch(common.apiPath("admin/contract/save"), {
+      method: "POST",
+      body: JSON.stringify({ content: content }),
+    })
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
           toast.success(response.message);
           props.closeModal();
-          props.reloadRecords();
         } else if (response.error) {
           if (typeof response.message === "object") {
             setErrors(response.message);
@@ -67,14 +52,13 @@ export default function UpdateContract(props) {
       .finally(() => setSubmitted(false));
   };
 
-  const getRecord = async (id) => {
+  const getRecord = async () => {
     setLoader(true);
-    fetch(common.apiPath(`/admin/email-templates/get/${props.recordId}`))
+    fetch(common.apiPath(`/admin/contract/get`))
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
-          setFields(response.data);
-          setContent(response.data.content);
+          setContent(response?.record?.content || " ");
         } else if (response.error) {
           toast.error(response.message);
         }
@@ -86,8 +70,8 @@ export default function UpdateContract(props) {
   };
 
   useEffect(() => {
-    if (props.recordId && props.showModal) {
-      getRecord(props.recordId);
+    if (props.showModal) {
+      getRecord();
     }
   }, []);
 
@@ -113,7 +97,12 @@ export default function UpdateContract(props) {
                 className="mb-2"
                 style={{ height: 371 }}
               >
-                <Editor value={content} handleContent={handleEmailCotent} />
+                <Editor value={content} handleContent={handleContent} />
+                {errors.content && (
+                  <Form.Control.Feedback className="d-block" type="invalid">
+                    {errors.content}
+                  </Form.Control.Feedback>
+                )}
               </Form.Group>
             </Row>
           </LoadingOverlay>

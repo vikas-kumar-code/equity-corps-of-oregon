@@ -72,38 +72,35 @@ const SendInvitation = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors(null);
-    setSubmitted(true);
-    try {
-      let fieldsData = await sendInvitationSchema.validateAsync(
-        {
-          case_id: props?.recordId,
-          users: selected.map((user) => user.value),
-        },
-        {
-          abortEarly: true,
-        }
-      );
-      await fetch(common.apiPath(`/admin/cases/invitations/send`), {
-        method: "POST",
-        body: JSON.stringify(fieldsData),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            toast.success(response.message);
-            props.closeModal();
-            props.reloadRecords();
-            setSelected([]);
-          } else if (response.error) {
-            setErrors(response.message);
-          }
-        });
-    } catch (error) {
-      let errors = common.getErrors(error);
-      setErrors(errors);
-    } finally {
-      setSubmitted(false);
+    if (selected.length > 0) {
+      setErrors(null);
+      setSubmitted(true);
+      try {
+        await fetch(common.apiPath(`/admin/cases/invitations/send`), {
+          method: "POST",
+          body: JSON.stringify({
+            case_id: props?.recordId,
+            users: selected.map((user) => user.value),
+          }),
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.success) {
+              toast.success(response.message);
+              props.closeModal();
+              props.reloadRecords();
+              setSelected([]);
+            } else if (response.error) {
+              setErrors(response.message);
+            }
+          });
+      } catch (error) {
+        setErrors(errors);
+      } finally {
+        setSubmitted(false);
+      }
+    } else {
+      setErrors("Select at leat one user.");
     }
   };
 
