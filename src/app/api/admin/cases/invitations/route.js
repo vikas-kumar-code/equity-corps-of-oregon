@@ -16,9 +16,9 @@ export async function GET(request) {
     const paginate = common.paginate(request);
     // Filters
     let where = {
-      status: 1,
+      user_id: session.user.id,
     };
-    if (request.get("case_number")) {
+    /* if (request.get("case_number")) {
       where = {
         ...where,
         case_number: {
@@ -31,30 +31,24 @@ export async function GET(request) {
         ...where,
         status: request.get("status"),
       };
-    }
+    } */
     where = {
       ...where,
-      case_invitations: {
-        some: {
-          user_id: {
-            equals: session.user.id,
-          },
-        },
-      },
     };
-    records = await prisma.cases.findMany({
+    records = await prisma.case_invitations.findMany({
       where,
       ...paginate,
       orderBy: [{ id: "desc" }],
       include: {
-        case_invitations: {
-          where: {
-            user_id: session.user.id,
-          },
+        case: {
+          include: {
+            case_milestones: true,
+            case_documents: true
+          }
         },
       },
     });
-    totalRecords = await prisma.cases.count({ where: where });
+    totalRecords = await prisma.case_invitations.count({ where: where });
     // output response
     response.success = true;
     response.message = "Case invitations list";

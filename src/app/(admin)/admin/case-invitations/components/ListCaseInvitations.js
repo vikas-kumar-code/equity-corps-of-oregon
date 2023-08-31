@@ -68,7 +68,7 @@ export default function ListCaseInvitations() {
             onClick={() => setShowSearchBox(!showSearchBox)}
           >
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
-          </Button>          
+          </Button>
         </Col>
       </Row>
       <SearchBox
@@ -107,7 +107,7 @@ export default function ListCaseInvitations() {
                           record={record}
                           index={index}
                           key={`cases-key-${index}`}
-                          getRecords={getRecords}                          
+                          getRecords={getRecords}
                           pageNumber={pageNumber}
                           recordPerPage={recordPerPage}
                         />
