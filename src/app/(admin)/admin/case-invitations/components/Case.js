@@ -39,30 +39,30 @@ export default function Case({
         <td>
           {pageNumber * recordPerPage - recordPerPage + Number(index + 1)}.
         </td>
-        <td>{record.case_number}</td>
-        <td>{record.title}</td>
+        <td>{record.case.case_number}</td>
+        <td>{record.case.title}</td>
         <td>
           <Badge
             pill
-            bg={btnStatus[record.case_invitations[0]?.status].bg || "info"}
+            bg={btnStatus[record.status].bg || "info"}
           >
-            {btnStatus[record.case_invitations[0]?.status].label || "N/A"}
+            {btnStatus[record.status].label || "N/A"}
           </Badge>
         </td>
         <td>
-          {moment(record.case_invitations[0].sent_on).format("D MMM,  YYYY")}
+          {moment(record.sent_on).format("D MMM,  YYYY")}
         </td>
         <td>
-          {(!record?.case_invitations[0]?.status ||
-            record?.case_invitations[0]?.status !== 1) && (
-            <Button
-              className="me-2"
-              variant="success"
-              onClick={() => setConfirmation(true)}
-            >
-              Accept
-            </Button>
-          )}
+          {(!record?.status ||
+            record?.status !== 1) && (
+              <Button
+                className="me-2"
+                variant="success"
+                onClick={() => setConfirmation(true)}
+              >
+                Accept
+              </Button>
+            )}
           <Button
             className="me-2"
             variant="primary"
