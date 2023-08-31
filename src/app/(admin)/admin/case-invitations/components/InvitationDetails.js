@@ -9,11 +9,9 @@ import {
   Tab,
   Button,
   Spinner,
+  Col,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
-import Milestones from "../../cases/components/Milestones";
-import Documents from "../../cases/components/Documents";
-import CaseActivities from "../../cases/components/CaseActivities";
 
 const InvitationDetails = ({ showModal, closeModal, record }) => {
   const [activeTab, setActiveTab] = useState(1);
@@ -61,9 +59,11 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
             justify
             onSelect={(k) => setActiveTab(parseInt(k))}
           >
-            <Tab eventKey={1} 
+            <Tab
+              eventKey={1}
               title="Basic Details"
-              disabled={activated < 1 && record.id}>
+              disabled={activated < 1 && record.id}
+            >
               <Row>
                 <Table>
                   <thead>
@@ -114,16 +114,50 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
             <Tab
               eventKey={2}
               title="Milestones"
-              disabled={activated < 2 && record.id}
+              // disabled={activated < 2 && record.id}
             >
-              <div>Hello</div>
+              <Table>
+                <thead>
+                  <tr className="mx-5">
+                    <th colSpan={4}>#</th>
+                    <th colSpan={4}>Comment</th>
+                    <th colSpan={4}>Updated On</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="mt-5 mx-5">
+                    <td colSpan={4}>1</td>
+                    <td colSpan={4}>Testing</td>
+                    <td colSpan={4}>
+                      <Badge>30 Aug 2023</Badge>
+                    </td>
+                  </tr>
+                </tbody>
+              </Table>
             </Tab>
             <Tab
               eventKey={3}
               title="Documents"
-              disabled={activated < 3 && record.id}
+              // disabled={activated < 3 && record.id}
             >
-              <div>Hello</div>
+              <Table>
+                <thead>
+                  <tr className="mx-5">
+                    <th colSpan={4}>#</th>
+                    <th colSpan={4}>Document Name</th>
+                    <th colSpan={4}>Updated On</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="mt-5 mx-5">
+                    <td colSpan={4}>1</td>
+                    <td colSpan={4}>Testing</td>
+                    <td colSpan={4}>
+                      <Badge>30 Aug 2023</Badge>
+                    </td>
+                  </tr>
+                </tbody>
+              </Table>
             </Tab>
             <Tab eventKey={4} title="Case Activities">
               <div>Hello</div>
