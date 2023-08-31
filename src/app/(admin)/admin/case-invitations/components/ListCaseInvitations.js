@@ -23,8 +23,7 @@ export default function ListCaseInvitations() {
 
   const searchFields = [
     { label: "Case Number", type: "text", name: "case_number" },
-    { label: "Case Title", type: "text", name: "case_title" },
-    { label: "Eco Provider", type: "text", name: "user_id" },
+    { label: "Case Title", type: "text", name: "case_title" }
   ];
 
   const getRecords = async () => {
@@ -75,7 +74,7 @@ export default function ListCaseInvitations() {
         open={showSearchBox}
         title={"Search Case"}
         searchFields={searchFields}
-        col={4}
+        col={6}
         searchRecords={(fields) => {
           setFields(fields);
         }}

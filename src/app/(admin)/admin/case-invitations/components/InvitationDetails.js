@@ -8,12 +8,8 @@ import {
   Row,
   Tab,
   Button,
-  Spinner,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
-import Milestones from "../../cases/components/Milestones";
-import Documents from "../../cases/components/Documents";
-import CaseActivities from "../../cases/components/CaseActivities";
 
 const InvitationDetails = ({ showModal, closeModal, record }) => {
   const [activeTab, setActiveTab] = useState(1);
@@ -63,7 +59,8 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
           >
             <Tab eventKey={1}
               title="Basic Details"
-              disabled={activated < 1 && record.id}>
+              disabled={activated < 1 && record.id}
+            >
               <Row>
                 <Table>
                   <thead>
@@ -114,20 +111,64 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
             <Tab
               eventKey={2}
               title="Milestones"
-              disabled={activated < 2 && record.id}
+              // disabled={activated < 2 && record.id}
             >
-              <div>Hello</div>
+              <Table>
+                <thead>
+                  <tr className="mx-5">
+                    <th colSpan={4}>#</th>
+                    <th colSpan={4}>Comment</th>
+                    <th colSpan={4}>Updated On</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {record.case.case_milestones.map((mile,i)=>{
+                    return (
+                  <tr className="mt-5 mx-5">
+                      <td colSpan={4}>{mile.id}</td>
+                    <td colSpan={4}>{mile.comment}</td>
+                    <td colSpan={4}>
+                      <Badge>{moment(mile.milestone_date).format("D MMM,  YYYY")}</Badge>
+                    </td>
+                  </tr>
+                    )
+                  })}
+                    
+                </tbody>
+              </Table>
             </Tab>
             <Tab
               eventKey={3}
               title="Documents"
-              disabled={activated < 3 && record.id}
+              // disabled={activated < 3 && record.id}
             >
-              <div>Hello</div>
+              <Table>
+                <thead>
+                  <tr className="mx-5">
+                    <th colSpan={4}>#</th>
+                    <th colSpan={4}>Document Name</th>
+                    <th colSpan={4}>Updated On</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {record.case.case_documents.map((rec,i)=>{
+                    return (
+                  <tr className="mt-5 mx-5">
+                      <td colSpan={4}>{rec.id}</td>
+                    <td colSpan={4}>{rec.document_name}</td>
+                    <td colSpan={4}>
+                      <Badge>{moment(rec.uploaded_on).format("D MMM,  YYYY")}</Badge>
+                    </td>
+                  </tr>
+                    )
+                  })}
+                    
+                </tbody>
+              </Table>
             </Tab>
-            <Tab eventKey={4} title="Case Activities">
+            {/* <Tab eventKey={4} title="Case Activities">
               <div>Hello</div>
-            </Tab>
+            </Tab> */}
           </Tabs>
         </Modal.Body>
         <Modal.Footer>
