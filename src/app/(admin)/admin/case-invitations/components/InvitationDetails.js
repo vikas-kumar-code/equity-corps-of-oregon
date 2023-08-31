@@ -16,6 +16,7 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
   const [loader, setLoader] = useState(false);
   const [activated, setActivated] = useState(1);
 
+  console.log(record.case.case_milestones);
   const iStatus = {
     0: {
       label: "Pending",
@@ -122,13 +123,18 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                   </tr>
                 </thead>
                 <tbody>
+                  {record.case.case_milestones.map((mile,i)=>{
+                    return (
                   <tr className="mt-5 mx-5">
-                    <td colSpan={4}>1</td>
-                    <td colSpan={4}>Testing</td>
+                      <td colSpan={4}>{mile.id}</td>
+                    <td colSpan={4}>{mile.comment}</td>
                     <td colSpan={4}>
-                      <Badge>30 Aug 2023</Badge>
+                      <Badge>{moment(mile.milestone_date).format("D MMM,  YYYY")}</Badge>
                     </td>
                   </tr>
+                    )
+                  })}
+                    
                 </tbody>
               </Table>
             </Tab>
@@ -146,19 +152,24 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                   </tr>
                 </thead>
                 <tbody>
+                  {record.case.case_documents.map((rec,i)=>{
+                    return (
                   <tr className="mt-5 mx-5">
-                    <td colSpan={4}>1</td>
-                    <td colSpan={4}>Testing</td>
+                      <td colSpan={4}>{rec.id}</td>
+                    <td colSpan={4}>{rec.document_name}</td>
                     <td colSpan={4}>
-                      <Badge>30 Aug 2023</Badge>
+                      <Badge>{moment(rec.uploaded_on).format("D MMM,  YYYY")}</Badge>
                     </td>
                   </tr>
+                    )
+                  })}
+                    
                 </tbody>
               </Table>
             </Tab>
-            <Tab eventKey={4} title="Case Activities">
+            {/* <Tab eventKey={4} title="Case Activities">
               <div>Hello</div>
-            </Tab>
+            </Tab> */}
           </Tabs>
         </Modal.Body>
         <Modal.Footer>
