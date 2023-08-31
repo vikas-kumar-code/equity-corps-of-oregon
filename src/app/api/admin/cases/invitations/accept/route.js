@@ -1,9 +1,5 @@
 import { NextResponse } from "next/server";
-
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getServerSession } from "next-auth";
 import { getSession } from "@/utils/serverHelpers";
-
 import prisma from "@/utils/prisma";
 
 export async function POST(request) {
@@ -26,9 +22,7 @@ export async function POST(request) {
           },
         },
       });
-    }
-
-    console.log(caseModel);
+    }  
 
     if (caseModel) {
       if (caseModel?.case_invitations.length > 0) {

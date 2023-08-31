@@ -24940,8 +24940,7 @@ code {
 }
 
 .form-check .form-check-label {
-  display: block;
-  padding-left: 0.625rem;
+  display: block;  
   font-size: 0.875rem;
   line-height: 1.5;
   color: #6c7293;

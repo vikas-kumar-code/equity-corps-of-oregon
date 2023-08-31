@@ -85,14 +85,23 @@ model cases {
   logs                  logs[]
 }
 
+model contracts {
+  id       Int      @id @default(autoincrement())
+  content  String   @db.LongText
+  added_on DateTime @default(now())  
+}
+
 model case_invitations {
-  id      Int      @id @default(autoincrement())
-  case_id Int
-  user_id Int
-  status  Int      @default(0) // [0=>sent, 1=> accepted, 2=>expired]
-  case    cases    @relation(fields: [case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user    users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  sent_on DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  case_id    Int
+  user_id    Int
+  status     Int      @default(0) // [0=>sent, 1=> accepted, 2=>expired]
+  first_name String?  @db.VarChar(100)
+  last_name  String?  @db.VarChar(100)
+  contract   String?  @db.LongText
+  case       cases    @relation(fields: [case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user       users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  sent_on    DateTime @default(now())
 }
 
 model case_associated_names {

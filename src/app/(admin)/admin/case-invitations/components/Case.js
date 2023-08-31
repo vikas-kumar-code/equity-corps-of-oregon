@@ -6,7 +6,7 @@ import { Badge, Button, Spinner } from "react-bootstrap";
 import InvitationDetails from "./InvitationDetails";
 import { toast } from "react-toastify";
 import common from "@/utils/common";
-import AcceptConfirmation from "./AcceptConfirmation";
+import AcceptInvitation from "./AcceptInvitation";
 
 export default function Case({
   record,
@@ -84,13 +84,13 @@ export default function Case({
       )}
 
       {showConfirmation && (
-        <AcceptConfirmation
+        <AcceptInvitation
           showModal={showConfirmation}
           closeModal={() => {
             setConfirmation(false);
           }}
           record={record}
-          getRecords={getRecords}
+          reloadRecords={getRecords}
         />
       )}
     </>
