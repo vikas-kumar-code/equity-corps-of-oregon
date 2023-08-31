@@ -16,7 +16,6 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
   const [loader, setLoader] = useState(false);
   const [activated, setActivated] = useState(1);
 
-  console.log(record.case.case_milestones);
   const iStatus = {
     0: {
       label: "Pending",
