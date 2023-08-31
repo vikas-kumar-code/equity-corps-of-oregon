@@ -10,6 +10,8 @@ import {
   Button,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
+import DownloadButton from "../../cases/components/DownloadButton";
+import common from "@/utils/common";
 
 const InvitationDetails = ({ showModal, closeModal, record }) => {
   const [activeTab, setActiveTab] = useState(1);
@@ -145,19 +147,28 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
               <Table>
                 <thead>
                   <tr className="mx-5">
-                    <th colSpan={4}>#</th>
-                    <th colSpan={4}>Document Name</th>
-                    <th colSpan={4}>Updated On</th>
+                    <th colSpan={3}>#</th>
+                    <th colSpan={3}>Document Name</th>
+                    <th colSpan={3}>Updated On</th>
+                    <th colSpan={3}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {record.case.case_documents.map((rec,i)=>{
                     return (
                   <tr className="mt-5 mx-5">
-                      <td colSpan={4}>{rec.id}</td>
-                    <td colSpan={4}>{rec.document_name}</td>
-                    <td colSpan={4}>
+                      <td colSpan={3}>{rec.id}</td>
+                    <td colSpan={3}>{rec.document_name}</td>
+                    <td colSpan={3}>
                       <Badge>{moment(rec.uploaded_on).format("D MMM,  YYYY")}</Badge>
+                    </td>
+                    <td colSpan={3}>
+                    <DownloadButton
+                              fileName={record.document_name}
+                              path={common.downloadLink(
+                                "uploads/case_documents/" + rec.file_name+'?temp=true'
+                              )}
+                            />
                     </td>
                   </tr>
                     )
