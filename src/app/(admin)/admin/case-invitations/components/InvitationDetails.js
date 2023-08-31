@@ -8,8 +8,6 @@ import {
   Row,
   Tab,
   Button,
-  Spinner,
-  Col,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 
