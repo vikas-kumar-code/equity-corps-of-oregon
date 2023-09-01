@@ -1,9 +1,7 @@
 import Image from 'next/image'
-import { getServerSession } from 'next-auth'
 import myImage from '../../../public/images/logos/eco_logo.png';
 
 export default async function Home() {
-  const session = await getServerSession();
   return (
     <div>
       {/* {JSON.stringify(session)} */}

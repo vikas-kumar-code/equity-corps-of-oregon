@@ -2,13 +2,10 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import {
   Modal,
-  Table,
   Badge,
   Tabs,
-  Row,
   Tab,
   Button,
-  Col,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import DownloadButton from "../../cases/components/DownloadButton";
@@ -64,35 +61,44 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
             <Tab
               eventKey={1}
               title="Basic Details"
-              className="case_invitation"
+              // className="case_invitation"
             >
-              <Row>
-                <Col>Case Number</Col>
-                <Col>{record.case.case_number}</Col>
-              </Row>
-              <Row>
-                <Col>Title</Col>
-                <Col>{record.case.title}</Col>
-              </Row>
-              <Row>
-                <Col>Description</Col>
-                <Col>{record.case.description}</Col>
-              </Row>
-              <Row>
-                <Col>Status</Col>
-                <Col>
-                  <Badge pill bg={iStatus[record.status].bg || "info"}>
-                    {iStatus[record.status].label || "N/A"}
-                  </Badge>
-                </Col>
-              </Row>
-              <Row>
-                <Col>Added On</Col>
-                <Col>{moment(record.sent_on).format("D MMM, YYYY")}</Col>
-              </Row>
+              <table className="table table-borderless table-striped">
+              <thead>
+                    <tr>
+                      <th colSpan={3}>Case Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>Case Number</th>
+                      <td>{record.case.case_number}</td>
+                    </tr>
+                    <tr>
+                      <th>Title</th>
+                      <td>{record.case.title}</td>
+                    </tr>
+                    <tr>
+                      <th>Description</th>
+                      <td>{record.case.description}</td>
+                    </tr>
+                    <tr>
+                      <th>Status</th>
+                      <td>
+                        <Badge pill bg={iStatus[record.status].bg || "info"}>
+                          {iStatus[record.status].label || "N/A"}
+                        </Badge>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Added On</th>
+                      <td>{moment(record.sent_on).format("D MMM, YYYY")}</td>
+                    </tr>
+                  </tbody>
+              </table>
             </Tab>
             <Tab eventKey={2} title="Milestones">
-              <table  className="table">
+              <table className="table table-borderless table-striped">
                 <thead>
                   <tr className="mx-5">
                     <th colSpan={4}>#</th>
@@ -103,7 +109,7 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                 <tbody>
                   {record.case.case_milestones.map((mile, i) => {
                     return (
-                      <tr className="milestones mt-5 mx-5" key={i}>
+                      <tr key={i}>
                         <td colSpan={4}>{mile.id}</td>
                         <td colSpan={4}>{mile.comment}</td>
                         <td colSpan={4}>
@@ -119,9 +125,9 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
               eventKey={3}
               title="Documents"
             >
-              <Table>
+              <table className="table table-borderless table-striped">
                 <thead>
-                  <tr className="mx-5">
+                  <tr>
                     <th colSpan={3}>#</th>
                     <th colSpan={3}>Document Name</th>
                     <th colSpan={3}>Updated On</th>
@@ -151,7 +157,7 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                     );
                   })}
                 </tbody>
-              </Table>
+              </table>
             </Tab>
             <Tab eventKey={4} title="Case Activities">
               <ol className="activity-feed">

@@ -47,7 +47,7 @@ export default function ViewDetails(props) {
             justify            
           >
             <Tab eventKey={1} title="Basic Details">
-              <table class="table table-borderless table-striped">
+              <table className="table table-borderless table-striped">
                 <tbody>
                   <tr>
                     <th>Name</th>
@@ -93,7 +93,7 @@ export default function ViewDetails(props) {
               </table>
             </Tab>
             <Tab eventKey={2} title="Questions">
-              <table class="table table-borderless table-striped">
+              <table className="table table-borderless table-striped">
                 <tbody>
                   {record?.attorney_answers?.map((item) => {
                     return (
