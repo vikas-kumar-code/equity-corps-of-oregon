@@ -1,6 +1,12 @@
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { Modal, Table, Badge, Tabs, Row, Tab, Button } from "react-bootstrap";
+import {
+  Modal,
+  Badge,
+  Tabs,
+  Tab,
+  Button,
+} from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import DownloadButton from "../../cases/components/DownloadButton";
 import common from "@/utils/common";
@@ -25,7 +31,6 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
     },
   };
 
-  console.log(record.case.logs);
   useEffect(() => {
     if (activeTab > activated) {
       setActivated(activeTab);
@@ -51,15 +56,15 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
             id="justify-tab-example"
             justify
             onSelect={(k) => setActiveTab(parseInt(k))}
+            
           >
             <Tab
               eventKey={1}
               title="Basic Details"
-              disabled={activated < 1 && record.id}
+              // className="case_invitation"
             >
-              <Row>
-                <Table>
-                  <thead>
+              <table className="table table-borderless table-striped">
+              <thead>
                     <tr>
                       <th colSpan={3}>Case Details</th>
                     </tr>
@@ -90,15 +95,10 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                       <td>{moment(record.sent_on).format("D MMM, YYYY")}</td>
                     </tr>
                   </tbody>
-                </Table>
-              </Row>
+              </table>
             </Tab>
-            <Tab
-              eventKey={2}
-              title="Milestones"
-              // disabled={activated < 2 && record.id}
-            >
-              <Table>
+            <Tab eventKey={2} title="Milestones">
+              <table className="table table-borderless table-striped">
                 <thead>
                   <tr className="mx-5">
                     <th colSpan={4}>#</th>
@@ -109,28 +109,25 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                 <tbody>
                   {record.case.case_milestones.map((mile, i) => {
                     return (
-                      <tr className="mt-5 mx-5">
+                      <tr key={i}>
                         <td colSpan={4}>{mile.id}</td>
                         <td colSpan={4}>{mile.comment}</td>
                         <td colSpan={4}>
-                          <Badge>
                             {moment(mile.milestone_date).format("D MMM,  YYYY")}
-                          </Badge>
                         </td>
                       </tr>
                     );
                   })}
                 </tbody>
-              </Table>
+              </table>
             </Tab>
             <Tab
               eventKey={3}
               title="Documents"
-              // disabled={activated < 3 && record.id}
             >
-              <Table>
+              <table className="table table-borderless table-striped">
                 <thead>
-                  <tr className="mx-5">
+                  <tr>
                     <th colSpan={3}>#</th>
                     <th colSpan={3}>Document Name</th>
                     <th colSpan={3}>Updated On</th>
@@ -140,13 +137,11 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                 <tbody>
                   {record.case.case_documents.map((rec, i) => {
                     return (
-                      <tr className="mt-5 mx-5">
+                      <tr className="milestones mt-5 mx-5" key={i}>
                         <td colSpan={3}>{rec.id}</td>
                         <td colSpan={3}>{rec.document_name}</td>
                         <td colSpan={3}>
-                          <Badge>
                             {moment(rec.uploaded_on).format("D MMM,  YYYY")}
-                          </Badge>
                         </td>
                         <td colSpan={3}>
                           <DownloadButton
@@ -162,20 +157,21 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                     );
                   })}
                 </tbody>
-              </Table>
+              </table>
             </Tab>
             <Tab eventKey={4} title="Case Activities">
-            {record.case.logs.map((log,i)=>{
-              return (
-                <li class="feed-item">
-                <time class="date">
-                  {moment(log.created_at).format("DD MMMM YYYY")}
-                </time>
-                <span class="text">{log.content}</span>
-              </li>
-              )
-            })}
-              {/*  */}
+              <ol className="activity-feed">
+                {record.case.logs.map((log, i) => {
+                  return (
+                    <li class="feed-item">
+                      <time class="date">
+                        {moment(log.created_at).format("DD MMMM YYYY")}
+                      </time>
+                      <span class="text">{log.content}</span>
+                    </li>
+                  );
+                })}
+              </ol>
             </Tab>
           </Tabs>
         </Modal.Body>
@@ -183,7 +179,7 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
           <Button
             size="lg"
             type="submit"
-            variant="success"
+            variant="secondary"
             onClick={closeModal}
           >
             Close

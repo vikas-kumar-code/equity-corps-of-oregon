@@ -4,9 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import "../styles/frontNav.css";
 import { BiSolidDownArrow } from "react-icons/bi";
+import { useSession } from "next-auth/react";
 
 export default function FrontNavigation() {
   const pathname = usePathname();
+  const session = useSession()
   return (
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav ms-auto mt-2 mt-lg-0">
@@ -136,7 +138,19 @@ export default function FrontNavigation() {
             Downloads
           </Link>
         </li>
-        <li className="nav-item mt-2 mt-lg-0">
+        {session.data !== null && session.status === 'authenticated' ? (
+          <li className="nav-item mt-2 mt-lg-0">
+          <Link
+            href="/login"
+            className={
+              pathname.startsWith("/login") ? "nav-link active" : "nav-link"
+            }
+          >
+            My Account
+          </Link>
+        </li>
+        ):(
+          <li className="nav-item mt-2 mt-lg-0">
           <Link
             href="/login"
             className={
@@ -146,6 +160,7 @@ export default function FrontNavigation() {
             Log In
           </Link>
         </li>
+        )}
       </ul>
     </div>
   );

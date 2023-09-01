@@ -3,6 +3,7 @@ import '../styles/animation.css'
 import Image from 'next/image'
 import FrontNavigation from '../components/FrontNavigation'
 import { Inter } from 'next/font/google'
+import Provider from '@/app/components/Provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
         <html lang="en">
             <body className={inter.className}>
 
+                <Provider>
                 <main>
                     <main className="main" id="top">
                         <nav className="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" data-navbar-on-scroll="data-navbar-on-scroll">
@@ -89,6 +91,7 @@ export default function RootLayout({ children }) {
                         </div>
                     </section>
                 </main>
+                </Provider>
 
             </body>
         </html>

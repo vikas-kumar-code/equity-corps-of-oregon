@@ -4,7 +4,7 @@ import Link from 'next/link'
 export default function About() {
   return (
     <div>
-      <section className="bg-dark text-center py-9">
+      <section className="bg-dark text-center py-3">
         <div className="container">
           <div className="col-12 col-md-7 mx-auto">
             <h2 className="text-white fs-lg-5 fs-md-4 fs-3 my-4 fw-bolder">About Equity Corps of Oregon</h2>
