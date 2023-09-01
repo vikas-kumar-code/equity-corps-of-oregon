@@ -7,7 +7,6 @@ import prisma from "@/utils/prisma";
 export async function POST(request) {
   let response = {};
   const data = await request.json();
-  console.log(data.content);
   try {
     // Validation
     const schema = Joi.object({
@@ -17,24 +16,26 @@ export async function POST(request) {
       allowUnknown: true,
       stripUnknown: true,
     });
-    const contract = await prisma.contracts.upsert({
-      where: {
-        id: 1,
-      },
-      update: {
-        content: fields.content,
-      },
-      create: {
-        content: fields.content,
-      },
-    });
+    const contract = await prisma.contracts.findUnique({ where: { id: 1 } });
     if (contract) {
-      response.success = true;
-      response.message = "Contract udpated successfully.";
+      await prisma.contracts.update({
+        where: {
+          id: 1,
+        },
+        data: {
+          content: fields.content,
+        },
+      });
     } else {
-      response.error = true;
-      response.message = "Something went wrong. please try again.";
+      await prisma.contracts.create({
+        data: {
+          content: fields.content,
+        },
+      });
     }
+
+    response.success = true;
+    response.message = "Contract udpated successfully.";
   } catch (error) {
     response.error = true;
     response.message = await common.getErrors(error);
