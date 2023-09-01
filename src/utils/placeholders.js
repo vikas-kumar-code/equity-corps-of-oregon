@@ -9,7 +9,7 @@ const placeholders = (models = {}) => {
     // Populating case placeholders
     case_number: `${models?.cases?.case_number || "N/A"}`,
     case_title: `${models?.cases?.title || "N/A"}`,
-    case_url: `${process.env.NEXT_PUBLIC_API_URL}/admin/cases` || "N/A",
+    case_url: `${process.env.NEXT_PUBLIC_API_URL}/admin/case-invitations` || "N/A",
 
     // Populating case roles
     role_name: `${models?.roles?.name || "N/A"}`,
