@@ -55,7 +55,7 @@ export async function POST(request) {
                 }
               } else {
                 response.error = true;
-                response.message = "Failed to send mail.";
+                response.message = onBoardEmail;//"Failed to send mail.";
               }
             } else {
               response.error = true;
