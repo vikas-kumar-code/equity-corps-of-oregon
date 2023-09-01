@@ -64,11 +64,6 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
               // className="case_invitation"
             >
               <table className="table table-borderless table-striped">
-              <thead>
-                    <tr>
-                      <th colSpan={3}>Case Details</th>
-                    </tr>
-                  </thead>
                   <tbody>
                     <tr>
                       <th>Case Number</th>
