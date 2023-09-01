@@ -7,9 +7,10 @@ export async function GET(request) {
   revalidatePath(path)
   let response = {};
   try {
+    const recordId = 1;
     const contract = await prisma.contracts.findUnique({
       where: {
-        id: 1,
+        id: recordId,
       },
     });
     response.success = true;

@@ -14,7 +14,7 @@ async function main() {
   await routeSeeder();
   await permissionSeeder();
   await questionSeeder();
-  await emailTemplateSeeder();
+  // await emailTemplateSeeder();
   console.log(
     "\x1b[32m",
     `

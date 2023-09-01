@@ -35,7 +35,7 @@ export async function POST(request) {
         },
       });
       await sendMail({
-        to: process.env.TEST_USER_EMAIL || userModel.email,
+        to: userModel.email,
         templateId: common.params.templateId.forgotPassword,
         modelsData: {
           users: user,
