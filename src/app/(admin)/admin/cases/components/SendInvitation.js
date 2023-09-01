@@ -104,13 +104,13 @@ const SendInvitation = (props) => {
     }
   };
 
-  const changeStatus = async (params) => {
+  const cancelInvitation = async (id) => {
     if (confirm("Are you sure to proceed.")) {
       setLoader(true);
       try {
-        await fetch(common.apiPath(`/admin/cases/invitations/change-status`), {
+        await fetch(common.apiPath(`/admin/cases/invitations/cancel`), {
           method: "POST",
-          body: JSON.stringify(params),
+          body: JSON.stringify({ id: id }),
         })
           .then((response) => response.json())
           .then((response) => {
@@ -197,26 +197,12 @@ const SendInvitation = (props) => {
                               title={btnStatus[data.status].label || "N/A"}
                               align="end"
                             >
-                              {data.status <= 1 && (
-                                <Dropdown.Item
-                                  eventKey="1"
-                                  onClick={() =>
-                                    changeStatus({ id: data?.id, status: 2 })
-                                  }
-                                >
-                                  Cancel
-                                </Dropdown.Item>
-                              )}
-                              {data.status === 2 && (
-                                <Dropdown.Item
-                                  eventKey="1"
-                                  onClick={() =>
-                                    changeStatus({ id: data?.id, status: 0 })
-                                  }
-                                >
-                                  Re-assign
-                                </Dropdown.Item>
-                              )}
+                              <Dropdown.Item
+                                eventKey="1"
+                                onClick={() => cancelInvitation(data?.id)}
+                              >
+                                Cancel
+                              </Dropdown.Item>
                             </SplitButton>
                           </td>
                           <td className="text-center">

@@ -33,8 +33,12 @@ export default function AcceptInvitation({
     try {
       const schema = Joi.object({
         accept: Joi.number().min(1).required(),
-        first_name: Joi.string().max(100).required(),
-        last_name: Joi.string().max(100).required(),
+        first_name: Joi.string().max(100).required().messages({
+          'string.empty': 'First name can not be empty.'
+        }),
+        last_name: Joi.string().max(100).required().messages({
+          'string.empty': 'Last name can not be empty.'
+        }),
       });
       await schema.validateAsync(fields, {
         abortEarly: false,
@@ -59,11 +63,10 @@ export default function AcceptInvitation({
             }
           }
         });
-    } catch (error) {
-      console.log(error);
+    } catch (error) {   
+      console.log(error.details);   
       setSubmitted(false);
       let errs = common.getErrors(error);
-      console.log(errs);
       if (typeof errs === "object") {
         setErrors(errs);
       } else {
@@ -82,7 +85,7 @@ export default function AcceptInvitation({
       size="md"
     >
       <Modal.Header closeButton className="border-bottom-0">
-        <h3>Case Invitation</h3>
+        <h3>Accept Invitation</h3>
       </Modal.Header>
       <Modal.Body className="show-error pt-0">
         <Form onSubmit={handleSubmit}>
@@ -106,7 +109,7 @@ export default function AcceptInvitation({
               />
               {errors.accept && (
                 <Form.Control.Feedback type="invalid">
-                  Acceptence is required.
+                  Please check above checkbox to accept the contract.
                 </Form.Control.Feedback>
               )}
             </Col>

@@ -40,26 +40,22 @@ export default function Navigation() {
         menu.addEventListener("mouseover", (event) => {
           if (document.body.className.includes("sidebar-icon-only")) {
             if (currentMenu !== "") {
-              if (currentMenu.className.includes('active')) {
+              if (currentMenu.className.includes("active")) {
                 currentMenu.className = `nav-item menu-items active admin-panel-nav-item`;
-              }
-              else {
+              } else {
                 currentMenu.className = `nav-item menu-items admin-panel-nav-item`;
               }
-
             }
             menu.className = `${menu.className} hover-open`;
             currentMenu = menu;
           }
         });
         menu.addEventListener("mouseout", (event) => {
-          if (menu.className.includes('active')) {
+          if (menu.className.includes("active")) {
             menu.className = `nav-item menu-items active admin-panel-nav-item`;
-          }
-          else {
+          } else {
             menu.className = `nav-item menu-items admin-panel-nav-item`;
           }
-
         });
       });
     }
@@ -69,22 +65,10 @@ export default function Navigation() {
     <nav className="sidebar sidebar-offcanvas" id="sidebar">
       <div className="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
         <a className="sidebar-brand brand-logo" href="/admin/dashboard">
-          <Image
-            src="/images/logo.png"
-            alt="ECO"
-            width={140}
-            height={55}
-            priority
-          />
+          EC<span style={{color:'#ca8a2e'}}>O</span>
         </a>
         <a className="sidebar-brand brand-logo-mini" href="/admin/dashboard">
-          <Image
-            src="/images/logo.png"
-            alt="ECO"
-            width={120}
-            height={46}
-            priority
-          />
+        EC<span style={{color:'#ca8a2e'}}>O</span>
         </a>
       </div>
 

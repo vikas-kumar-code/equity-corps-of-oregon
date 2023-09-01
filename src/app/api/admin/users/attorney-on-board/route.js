@@ -37,7 +37,7 @@ export async function POST(request) {
             });
             if (userUpdate) {
               const onBoardEmail = await sendMail({
-                to: process.env.TEST_USER_EMAIL || user.email,
+                to: user.email,
                 templateId: common.params.templateId.attorneyOnBoard,
                 modelsData: {
                   users: user,

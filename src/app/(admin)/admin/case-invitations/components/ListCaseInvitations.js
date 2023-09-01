@@ -54,6 +54,10 @@ export default function ListCaseInvitations() {
     getRecords();
   }, [pageNumber]);
 
+  useEffect(() => {
+    getRecords();
+  }, [fields]);
+
   return (
     <div>
       <Row className="pb-2">
