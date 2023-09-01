@@ -1,14 +1,6 @@
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Table,
-  Badge,
-  Tabs,
-  Row,
-  Tab,
-  Button,
-} from "react-bootstrap";
+import { Modal, Table, Badge, Tabs, Row, Tab, Button } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import DownloadButton from "../../cases/components/DownloadButton";
 import common from "@/utils/common";
@@ -33,6 +25,7 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
     },
   };
 
+  console.log(record.case.logs);
   useEffect(() => {
     if (activeTab > activated) {
       setActivated(activeTab);
@@ -59,7 +52,8 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
             justify
             onSelect={(k) => setActiveTab(parseInt(k))}
           >
-            <Tab eventKey={1}
+            <Tab
+              eventKey={1}
               title="Basic Details"
               disabled={activated < 1 && record.id}
             >
@@ -86,25 +80,14 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                     <tr>
                       <th>Status</th>
                       <td>
-                        <Badge
-                          pill
-                          bg={
-                            iStatus[record.status].bg ||
-                            "info"
-                          }
-                        >
-                          {iStatus[record.status].label ||
-                            "N/A"}
+                        <Badge pill bg={iStatus[record.status].bg || "info"}>
+                          {iStatus[record.status].label || "N/A"}
                         </Badge>
                       </td>
                     </tr>
                     <tr>
                       <th>Added On</th>
-                      <td>
-                        {moment(record.sent_on).format(
-                          "D MMM, YYYY"
-                        )}
-                      </td>
+                      <td>{moment(record.sent_on).format("D MMM, YYYY")}</td>
                     </tr>
                   </tbody>
                 </Table>
@@ -124,18 +107,19 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {record.case.case_milestones.map((mile,i)=>{
+                  {record.case.case_milestones.map((mile, i) => {
                     return (
-                  <tr className="mt-5 mx-5">
-                      <td colSpan={4}>{mile.id}</td>
-                    <td colSpan={4}>{mile.comment}</td>
-                    <td colSpan={4}>
-                      <Badge>{moment(mile.milestone_date).format("D MMM,  YYYY")}</Badge>
-                    </td>
-                  </tr>
-                    )
+                      <tr className="mt-5 mx-5">
+                        <td colSpan={4}>{mile.id}</td>
+                        <td colSpan={4}>{mile.comment}</td>
+                        <td colSpan={4}>
+                          <Badge>
+                            {moment(mile.milestone_date).format("D MMM,  YYYY")}
+                          </Badge>
+                        </td>
+                      </tr>
+                    );
                   })}
-                    
                 </tbody>
               </Table>
             </Tab>
@@ -154,32 +138,45 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {record.case.case_documents.map((rec,i)=>{
+                  {record.case.case_documents.map((rec, i) => {
                     return (
-                  <tr className="mt-5 mx-5">
-                      <td colSpan={3}>{rec.id}</td>
-                    <td colSpan={3}>{rec.document_name}</td>
-                    <td colSpan={3}>
-                      <Badge>{moment(rec.uploaded_on).format("D MMM,  YYYY")}</Badge>
-                    </td>
-                    <td colSpan={3}>
-                    <DownloadButton
-                              fileName={record.document_name}
-                              path={common.downloadLink(
-                                "uploads/case_documents/" + rec.file_name+'?temp=true'
-                              )}
-                            />
-                    </td>
-                  </tr>
-                    )
+                      <tr className="mt-5 mx-5">
+                        <td colSpan={3}>{rec.id}</td>
+                        <td colSpan={3}>{rec.document_name}</td>
+                        <td colSpan={3}>
+                          <Badge>
+                            {moment(rec.uploaded_on).format("D MMM,  YYYY")}
+                          </Badge>
+                        </td>
+                        <td colSpan={3}>
+                          <DownloadButton
+                            fileName={record.document_name}
+                            path={common.downloadLink(
+                              "uploads/case_documents/" +
+                                rec.file_name +
+                                "?temp=true"
+                            )}
+                          />
+                        </td>
+                      </tr>
+                    );
                   })}
-                    
                 </tbody>
               </Table>
             </Tab>
-            {/* <Tab eventKey={4} title="Case Activities">
-              <div>Hello</div>
-            </Tab> */}
+            <Tab eventKey={4} title="Case Activities">
+            {record.case.logs.map((log,i)=>{
+              return (
+                <li class="feed-item">
+                <time class="date">
+                  {moment(log.created_at).format("DD MMMM YYYY")}
+                </time>
+                <span class="text">{log.content}</span>
+              </li>
+              )
+            })}
+              {/*  */}
+            </Tab>
           </Tabs>
         </Modal.Body>
         <Modal.Footer>
