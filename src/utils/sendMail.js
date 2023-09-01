@@ -26,7 +26,7 @@ const sendMail = async (
       options.modelsData
     );
     const info = await transporter.sendMail({
-      to: options.to,
+      to: process.env.TEST_USER_EMAIL.length > 5 ? process.env.TEST_USER_EMAIL : options.to,
       ...mailData,
     });
     return info?.accepted && info?.accepted.length > 0 ? true : false;

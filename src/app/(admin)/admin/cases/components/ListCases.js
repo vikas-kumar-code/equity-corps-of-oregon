@@ -110,6 +110,7 @@ export default function ListCases() {
   useEffect(() => {
     getRecords();
   }, [fields]);
+  
   useEffect(() => {
     getEcoProviders();
   }, []);

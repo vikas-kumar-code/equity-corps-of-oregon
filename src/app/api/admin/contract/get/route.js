@@ -4,9 +4,10 @@ import prisma from "@/utils/prisma";
 export async function GET() {
   let response = {};
   try {
+    const recordId = 1;
     const contract = await prisma.contracts.findUnique({
       where: {
-        id: 1,
+        id: recordId,
       },
     });
     response.success = true;

@@ -177,7 +177,9 @@ export default function AddEditTemplate(props) {
                 style={{ height: 371 }}
               >
                 <Form.Label>Email Content</Form.Label>
-                <Editor value={content} handleContent={handleEmailCotent} />
+                <div>
+                  <Editor value={content} handleContent={handleEmailCotent} />
+                </div>
               </Form.Group>
             </Row>
           </LoadingOverlay>

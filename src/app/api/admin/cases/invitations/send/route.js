@@ -64,7 +64,7 @@ export async function POST(request) {
             // Email will be sent to all requested users
             await createInvUsers.forEach(async (user) => {
               await sendMail({
-                to: process.env.TEST_USER_EMAIL || user.email,
+                to: user.email,
                 templateId: common.params.templateId.sendCaseInvitation,
                 modelsData: {
                   users: user,
