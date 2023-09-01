@@ -97,9 +97,9 @@ export default function AcceptInvitation({
                 ></div>
               </div>
             </Col>
-            <Col md={12} className="pt-2">
+            <Col md={12} className="pt-2 mb-2">
               <Form.Check
-                className="ms-1"
+                className="ms-1 mb-0"
                 type="checkbox"
                 id="checkbox-contract"
                 label="I have read the above contract and accepted."
@@ -108,7 +108,7 @@ export default function AcceptInvitation({
                 }}
               />
               {errors.accept && (
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback type="invalid" className="mt-0">
                   Please check above checkbox to accept the contract.
                 </Form.Control.Feedback>
               )}

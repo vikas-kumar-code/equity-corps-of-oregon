@@ -24,7 +24,6 @@ const SendInvitation = (props) => {
   const [submitted, setSubmitted] = useState(false);
   const [loader, setLoader] = useState(false);
   const [errors, setErrors] = useState(null);
-
   let searchTimeOut = 0;
 
   const promiseUserOptions = (inputValue) => {
@@ -44,7 +43,19 @@ const SendInvitation = (props) => {
             .then((response) => {
               if (response.success) {
                 let userResponse = JSON.parse(response.records);
-                let users = userResponse.map((user) => ({
+                const excludeUsers = [];
+                // Exclude invited users
+                if (props?.invitedUsers) {
+                  props?.invitedUsers.forEach((item) => {
+                    if (item?.user?.id) {
+                      excludeUsers.push(item?.user?.id);
+                    }
+                  });
+                }
+                let users = userResponse.filter(
+                  (user) => !excludeUsers.includes(user.id)
+                );
+                users = users.map((user) => ({
                   label: user.name,
                   value: user.id,
                 }));

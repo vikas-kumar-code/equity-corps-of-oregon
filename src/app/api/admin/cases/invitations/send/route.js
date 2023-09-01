@@ -49,7 +49,6 @@ export async function POST(request) {
                 (item) => !activeUsers.includes(item.id)
               );
             }
-
             // Add Entry of only new users
             await tx.case_invitations.createMany({
               data: createInvUsers.map((user) => {
@@ -60,17 +59,23 @@ export async function POST(request) {
                 };
               }),
             });
-
+            const userNames = createInvUsers.map(user => user.name);
+            await tx.logs.create({
+              data:{
+                case_id: caseModel.id,
+                content: `Invitation sent to users [${userNames.join(", ")}]`
+              }
+            })
             // Email will be sent to all requested users
             await createInvUsers.forEach(async (user) => {
-              // await sendMail({
-              //   to: user.email,
-              //   templateId: common.params.templateId.sendCaseInvitation,
-              //   modelsData: {
-              //     users: user,
-              //     cases: caseModel,
-              //   },
-              // });
+              await sendMail({
+                to: user.email,
+                templateId: common.params.templateId.sendCaseInvitation,
+                modelsData: {
+                  users: user,
+                  cases: caseModel,
+                },
+              });
             });
 
             response.success = true;
