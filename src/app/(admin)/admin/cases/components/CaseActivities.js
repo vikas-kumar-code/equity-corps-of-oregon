@@ -2,12 +2,12 @@ import moment from "moment";
 
 const CaseActivities = ({ logs = [] }) => {
   return (
-    <ol class="activity-feed">
+    <ol className="activity-feed">
       {logs.map((log) => {
         return (
-          <li class="feed-item">
-            <time class="date">{moment(log.created_at).format("LLLL")}</time>
-            <span class="text">
+          <li className="feed-item">
+            <time className="date">{moment(log.created_at).format("LLLL")}</time>
+            <span className="text">
               {log.content}
             </span>
           </li>

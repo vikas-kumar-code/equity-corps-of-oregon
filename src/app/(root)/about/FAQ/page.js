@@ -5,7 +5,7 @@ import React from "react";
 const FAQ = () => {
   return (
     <div>
-      <section className="bg-dark text-center py-9">
+      <section className="bg-dark text-center py-3">
         <div className="container">
           <div className="col-12 col-md-7 mx-auto">
             <h1 className="text-white fs-lg-5 fs-md-4 fs-3 my-4 fw-bolder">
