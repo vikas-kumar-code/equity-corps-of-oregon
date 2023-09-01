@@ -53,10 +53,20 @@ export async function POST(request) {
 
             //  delete all pending invitations
             if (caseInvitation?.case) {
-             await tx.case_invitations.deleteMany({
+              await tx.case_invitations.deleteMany({
                 where: {
                   case_id: caseInvitation?.case?.id,
                   status: 0,
+                },
+              });
+              await tx.logs.create({
+                data: {
+                  case_id: caseInvitation?.case?.id,
+                  content:
+                    "Case invitation accepted by " +
+                    fields.first_name +
+                    " " +
+                    fields.last_name,
                 },
               });
             }
