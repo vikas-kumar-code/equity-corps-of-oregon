@@ -6,7 +6,7 @@ const CaseActivities = ({ logs = [] }) => {
       {logs.map((log) => {
         return (
           <li class="feed-item">
-            <time class="date">{moment(log.created_at).format("DD MMMM YYYY")}</time>
+            <time class="date">{moment(log.created_at).format("LLLL")}</time>
             <span class="text">
               {log.content}
             </span>

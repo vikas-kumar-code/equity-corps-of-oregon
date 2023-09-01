@@ -332,12 +332,11 @@ export default function AddEditCase(props) {
                   setErrors={setErrors}
                 />
               </Tab>
-              <Tab
-                eventKey={4}
-                title="Case Activities"                
-              >
-                <CaseActivities logs={fields?.logs || []} />
-              </Tab>
+              {props.recordId && (
+                <Tab eventKey={4} title="Case Activities">
+                  <CaseActivities logs={fields?.logs || []} />
+                </Tab>
+              )}
             </Tabs>
           </Modal.Body>
           <Modal.Footer>{renderButtons(activeTab)}</Modal.Footer>
