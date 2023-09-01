@@ -179,7 +179,7 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
           <Button
             size="lg"
             type="submit"
-            variant="success"
+            variant="secondary"
             onClick={closeModal}
           >
             Close
