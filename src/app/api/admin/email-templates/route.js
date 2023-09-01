@@ -13,11 +13,11 @@ export async function GET(request) {
     let where = {
       //status: 1,
     };
-    if (request.get("question")) {
+    if (request.get("subject")) {
       where = {
         ...where,
         question: {
-          contains: request.get("question"),
+          contains: request.get("subject"),
         },
       };
     }

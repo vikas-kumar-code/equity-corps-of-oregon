@@ -29883,10 +29883,8 @@ div.tagsinput span.tag a {
   margin-right: 0;
   padding: 0rem 0rem 0rem 1.3rem;
   width: 100%;
-
   text-decoration: none;
-  font-weight: 800;
-  font-family: '__Inter_20951f';
+  font-weight: 600;
 }
 
 .sidebar .sidebar-brand-wrapper .sidebar-brand:active,
