@@ -61,7 +61,6 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
             <Tab
               eventKey={1}
               title="Basic Details"
-              // className="case_invitation"
             >
               <table className="table table-borderless table-striped">
                   <tbody>
@@ -94,14 +93,12 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
             </Tab>
             <Tab eventKey={2} title="Milestones">
               <table className="table table-borderless table-striped">
-                <thead>
+                <tbody>
                   <tr className="mx-5">
                     <th colSpan={4}>#</th>
                     <th colSpan={4}>Comment</th>
                     <th colSpan={4}>Updated On</th>
                   </tr>
-                </thead>
-                <tbody>
                   {record.case.case_milestones.map((mile, i) => {
                     return (
                       <tr key={i}>
@@ -121,15 +118,13 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
               title="Documents"
             >
               <table className="table table-borderless table-striped">
-                <thead>
+                <tbody>
                   <tr>
                     <th colSpan={3}>#</th>
                     <th colSpan={3}>Document Name</th>
                     <th colSpan={3}>Updated On</th>
                     <th colSpan={3}>Action</th>
                   </tr>
-                </thead>
-                <tbody>
                   {record.case.case_documents.map((rec, i) => {
                     return (
                       <tr className="milestones mt-5 mx-5" key={i}>
@@ -155,6 +150,12 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
               </table>
             </Tab>
             <Tab eventKey={4} title="Case Activities">
+              <tbody>
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
               <ol className="activity-feed">
                 {record.case.logs.map((log, i) => {
                   return (
@@ -167,6 +168,7 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
                   );
                 })}
               </ol>
+              </tbody>
             </Tab>
           </Tabs>
         </Modal.Body>
