@@ -22,13 +22,20 @@ export default function ListRoles() {
 
   const getRecords = async () => {
     setLoader(true);
-    const response = await fetch(
-      common.apiPath(`/admin/roles?page=${pageNumber}`)
-    );
-    const data = await response.json();
-    setLoader(false);
-    setRecords(JSON.parse(data.records));
-    setTotalRecords(data.totalRecords);
+    await fetch(common.apiPath(`/admin/roles?page=${pageNumber}`))
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          setRecords(JSON.parse(response.records));
+          setTotalRecords(response.totalRecords);
+        } else if (response.error) {
+          toast.error(response.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => setLoader(false));
   };
 
   useEffect(() => {
@@ -37,19 +44,22 @@ export default function ListRoles() {
 
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this role?")) {
-      const response = await fetch(
-        common.apiPath(`/admin/roles/delete/${id}`),
-        {
-          method: "DELETE",
-        }
-      );
-      const data = await response.json();
-      if (data.success) {
-        toast.success(data.message, {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-        getRecords();
-      }
+      await fetch(common.apiPath(`/admin/roles/delete/${id}`), {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            toast.success(response.message, {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            getRecords();
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        })
+        .finally(() => setLoader(false));
     }
   };
 
@@ -114,7 +124,15 @@ export default function ListRoles() {
                       )}
                     </td>
                     <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
-                    <td className="text-end">
+                    <td>
+                      <button
+                        className="btn btn-warning"
+                        onClick={() => getRecord(record.id)}
+                      >
+                        Set Permission
+                      </button>
+                    </td>
+                    <td>
                       <button
                         className="btn btn-primary"
                         onClick={() => getRecord(record.id)}
@@ -122,7 +140,7 @@ export default function ListRoles() {
                         Edit
                       </button>
                     </td>
-                    <td className="text-start ps-0">
+                    <td>
                       <button
                         className="btn btn-danger"
                         onClick={() => deleteRecord(record.id)}
