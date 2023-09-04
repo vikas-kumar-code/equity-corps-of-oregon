@@ -1,62 +1,60 @@
 import { NextResponse } from "next/server";
-import Joi from "joi";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
-
 import prisma from "@/utils/prisma";
-export async function GET(request) {
+import { getSession } from "@/utils/serverHelpers";
+import validateAsync from "@/utils/validateAsync";
+import updateProfileSchema from "@/joi/updateProfileSchema";
 
-    try {
-        const session = await getServerSession(authOptions);
-        const user = await prisma.users.findUnique({
-            where: {
-                id: Number(session.user.id),
-            },
-            select: {
-                name: true,
-                email: true
-            },
-        });
-        if (user) {
-            return NextResponse.json({
-                success: true,
-                record: user
-            });
-        }
+export async function GET() {
+  const response = {};
+  const session = await getSession();
+  try {
+    const user = await prisma.users.findUnique({
+      where: {
+        id: Number(session.user.id),
+      },
+      select: {
+        name: true,
+        email: true,
+      },
+    });
+    if (user) {
+      response.success = true;
+      response.record = user;
     }
-    catch (err) {
-        console.log(err);
-        return NextResponse.json({ error: true, message: err });
-    }
+  } catch (err) {
+    response.error = true;
+    response.message = err.message;
+  }
+  return NextResponse.json(response);
 }
 
 export async function PUT(request) {
-    const role = await request.json();
-    const fieldsSchema = Joi.object({
-        name: Joi.string().required(),
-        email: Joi.string().email().required()
-    })
-
-    try {
-        const record = await fieldsSchema.validateAsync(role);
-        if (record) {
-            const session = await getServerSession(authOptions);
-            const user = await prisma.users.update({
-                data: {
-                    name: record.name,
-                    email: record.email,
-                },
-                where: {
-                    id: Number(session.user.id),
-                }
-            });
-            if (user) {
-                return NextResponse.json({ success: true, message: 'Profile updated successfully.' });
-            }
-        }
+  const response = {};
+  const session = await getSession();
+  const formData = await request.json();
+  try {
+    const validated = await validateAsync(updateProfileSchema, formData);
+    if (validated.errors) {
+      response.error = true;
+      response.message = validated.errors;
+    } else {
+      const user = await prisma.users.update({
+        data: {
+          name: validated.name,
+          email: validated.email,
+        },
+        where: {
+          id: Number(session.user.id),
+        },
+      });
+      if (user) {
+        response.success = true;
+        response.message = "Profile updated successfully.";
+      }
     }
-    catch (err) {
-        return NextResponse.json({ error: true, message: err });
-    }
+  } catch (err) {
+    response.error = true;
+    response.message = err.message;
+  }
+  return NextResponse.json(response);
 }
