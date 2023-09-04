@@ -1,4 +1,5 @@
 const Joi = require("joi");
+
 const updateProfileSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string()
