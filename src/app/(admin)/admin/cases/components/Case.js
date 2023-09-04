@@ -10,6 +10,7 @@ export default function Case({ record, getRecords, deleteRecord, index, pageNumb
   const [showModal, setShowModal] = useState(false);
   const [showSendInvitationModal, setShowSendInvitationModal] = useState(false);
 
+  console.log(record);
   return (
     <>
       <tr key={`cases-key-${index}`}>
