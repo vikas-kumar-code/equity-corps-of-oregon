@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Joi from "joi";
 import prisma from "@/utils/prisma";
 import common from "@/utils/common";
+import { hash } from "bcrypt";
 
 const excludeFields = ["password", "verification_code", "code_valid_till"];
 
@@ -73,6 +74,6 @@ export async function PUT(request, data) {
       }
     }
   } catch (err) {
-    return NextResponse.json({ error: true, message: err });
+    return NextResponse.json({ error: true, message: err.message });
   }
 }
