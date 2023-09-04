@@ -1,5 +1,7 @@
 "use client";
 
+import rolesSchema from "@/joi/rolesSchema";
+import validateAsync from "@/utils/validateAsync";
 import React, { useState, useEffect } from "react";
 import {
   Button,
@@ -23,16 +25,6 @@ export default function SetPermission(props) {
   const handleChange = (e, field) => {
     setFields({ ...fields, [field]: e.target.value });
   };
-  const handleValidation = () => {
-    let errors = {};
-    let formIsValid = true;
-    if (!fields["name"]) {
-      formIsValid = false;
-      errors["name"] = "Please enter name.";
-    }
-    setErrors(errors);
-    return formIsValid;
-  };
 
   const handleErrors = (errors) => {
     if (typeof errors === "object") {
@@ -46,7 +38,10 @@ export default function SetPermission(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (handleValidation()) {
+    const validated = await validateAsync(rolesSchema, fields);
+    if(validated.error){
+        handleErrors(validated.errors);
+    }else {
       setSubmitted(true);
       let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save`;
       let REQUEST_METHOD = "POST";
