@@ -13,6 +13,7 @@ export default function ChangePasswordForm() {
   const handleChange = (e, field) => {
     setFields({ ...fields, [field]: e.target.value });
   };
+  
   const handleErrors = (errors) => {
     if (typeof errors === "object") {
       setErrors(errors);

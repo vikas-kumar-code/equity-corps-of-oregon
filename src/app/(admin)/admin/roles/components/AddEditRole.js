@@ -51,9 +51,6 @@ export default function AddEditRole(props) {
       }
       await fetch(REQUEST_URI, {
         method: REQUEST_METHOD,
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(fields),
       })
         .then((response) => response.json())
@@ -61,9 +58,7 @@ export default function AddEditRole(props) {
           if (response.success) {
             props.closeModal();
             props.reloadeRecords();
-            toast.success(response.message, {
-              position: toast.POSITION.TOP_RIGHT,
-            });
+            toast.success(response.message);
           } else if (response.error) {
             handleErrors(response.message);
           }
@@ -77,9 +72,7 @@ export default function AddEditRole(props) {
 
   const getRole = async () => {
     setLoader(true);
-    await fetch(common.apiPath(`/admin/roles/save/${props.recordId}`), {
-      method: "GET",
-    })
+    await fetch(common.apiPath(`/admin/roles/save/${props.recordId}`))
       .then((response) => response.json())
       .then((response) => {
         setLoader(false);
@@ -90,11 +83,13 @@ export default function AddEditRole(props) {
       })
       .finally(() => setLoader(false));
   };
+
   useEffect(() => {
     if (props.recordId) {
       getRole();
     }
   }, []);
+
   return (
     <Modal
       show={props.showModal}

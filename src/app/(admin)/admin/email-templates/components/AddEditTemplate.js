@@ -1,5 +1,4 @@
 "use client";
-
 import common from "@/utils/common";
 import React, { useState, useEffect, useCallback } from "react";
 import {
@@ -14,6 +13,8 @@ import {
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
+import emailTemplateSchema from "@/joi/emailTemplateSchema";
+import validateAsync from "@/utils/validateAsync";
 LoadingOverlay.propTypes = undefined;
 
 const Editor = dynamic(() => import("../../../components/Editor"), {
@@ -22,55 +23,72 @@ const Editor = dynamic(() => import("../../../components/Editor"), {
 
 export default function AddEditTemplate(props) {
   const [loader, setLoader] = useState(false);
-  const [fields, setFields] = useState({ content: "" });
+  const [fields, setFields] = useState({});
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [content, setContent] = useState("");
 
-  const handleEmailCotent = useCallback(
-    (emailContent) => {
-      setContent(emailContent);
+  const handleCotent = useCallback(
+    (content) => {
+      setContent(content);
     },
     [content]
   );
 
+  const handleErrors = (errors) => {
+    if (typeof errors === "object") {
+      setErrors(errors);
+    } else if (typeof errors === "string") {
+      toast.error(errors);
+    } else {
+      toast.error("Something went wrong...! please try again.");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
     setErrors({});
-    fields.content = content;
-    let REQUEST_URI = common.apiPath("admin/email-templates/save");
-    let REQUEST_METHOD = "POST";
-    if (props.recordId) {
-      REQUEST_URI = common.apiPath(
-        `admin/email-templates/save/${props.recordId}`
-      );
-      REQUEST_METHOD = "PUT";
-    }
-    fetch(REQUEST_URI, { method: REQUEST_METHOD, body: JSON.stringify(fields) })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.success) {
-          toast.success(response.message);
-          props.closeModal();
-          props.reloadRecords();
-        } else if (response.error) {
-          if (typeof response.message === "object") {
-            setErrors(response.message);
-          } else {
-            toast.error(response.message);
+    const validated = await validateAsync(emailTemplateSchema, {
+      ...fields,
+      content: content,
+    });
+    if (validated.errors) {
+      handleErrors(validated.errors);
+    } else {
+      setSubmitted(true);
+      fields.content = content;
+      let REQUEST_URI = common.apiPath("admin/email-templates/save");
+      let REQUEST_METHOD = "POST";
+      if (props.recordId) {
+        REQUEST_URI = common.apiPath(
+          `admin/email-templates/save/${props.recordId}`
+        );
+        REQUEST_METHOD = "PUT";
+      }
+      fetch(REQUEST_URI, {
+        method: REQUEST_METHOD,
+        body: JSON.stringify(fields),
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            toast.success(response.message);
+            props.closeModal();
+            props.reloadRecords();
+          } else if (response.error) {
+            handleErrors(response.message);
           }
-        }
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      })
-      .finally(() => setSubmitted(false));
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        })
+        .finally(() => setSubmitted(false));
+    }
   };
 
   const getRecord = async (id) => {
     setLoader(true);
-    fetch(common.apiPath(`/admin/email-templates/get/${props.recordId}`))
+    await fetch(common.apiPath(`/admin/email-templates/get/${props.recordId}`))
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
@@ -169,7 +187,6 @@ export default function AddEditTemplate(props) {
                   </Form.Control.Feedback>
                 </FloatingLabel>
               </Form.Group>
-
               <Form.Group
                 as={Col}
                 md={12}
@@ -178,8 +195,11 @@ export default function AddEditTemplate(props) {
               >
                 <Form.Label>Email Content</Form.Label>
                 <div>
-                  <Editor value={content} handleContent={handleEmailCotent} />
+                  <Editor value={content} handleContent={handleCotent} />
                 </div>
+                <Form.Control.Feedback type="invalid" className="d-block">
+                  {errors.content}
+                </Form.Control.Feedback>
               </Form.Group>
             </Row>
           </LoadingOverlay>

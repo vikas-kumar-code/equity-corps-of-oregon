@@ -21,12 +21,7 @@ import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
 import ViewDetails from "./ViewDetails";
-import {
-  IoEllipseOutline,
-  IoCheckmarkCircle,
-  IoAlertCircle,
-} from "react-icons/io5";
-import SendCredentials from "./SendCredentials";
+import { IoCheckmarkCircle, IoAlertCircle } from "react-icons/io5";
 import BlankCircle from "./BlankCircle";
 LoadingOverlay.propTypes = undefined;
 
@@ -133,7 +128,11 @@ export default function ListUsers() {
           >
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
           </Button>
-          <Button variant="primary" type="button" onClick={() => getUser()}>
+          <Button
+            variant="primary"
+            type="button"
+            onClick={() => getUser(null, "edit")}
+          >
             Add New User
           </Button>
         </Col>

@@ -8,7 +8,7 @@ const changePasswordSchema = Joi.object({
     .valid(Joi.ref("new_password"))
     .required()
     .messages({
-      "any.only": "Confirm password must match",
+      "any.only": "Confirm password doest not match",
     }),
 });
 
