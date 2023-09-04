@@ -7572,6 +7572,18 @@ a{
   z-index: 1030;
 }
 
+/* Header Fixed */
+
+.navbar.sticky {
+  position: fixed !important;
+  transition: all 1s ease;
+  animation-delay: 150ms;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+/* Header Fixed */
+
 .fixed-bottom {
   position: fixed;
   right: 0;
