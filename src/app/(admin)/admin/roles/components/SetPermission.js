@@ -49,11 +49,8 @@ export default function SetPermission(props) {
         REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save/${props.recordId}`;
         REQUEST_METHOD = "PUT";
       }
-      const response = await fetch(REQUEST_URI, {
+      await fetch(REQUEST_URI, {
         method: REQUEST_METHOD,
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(fields),
       })
         .then((response) => response.json())
@@ -77,17 +74,15 @@ export default function SetPermission(props) {
 
   const getRole = async () => {
     setLoader(true);
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save/${props.recordId}`,
-      {
-        method: "GET",
-      }
-    )
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save/${props.recordId}`)
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
           setFields(response.record);
-        }
+        }else if (response.error) {
+            toast.error(response.message);
+          }
       })
       .catch((error) => {
         toast.error(error.message);

@@ -43,10 +43,10 @@ export default function ListRoles() {
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
-            toast.success(response.message, {
-              position: toast.POSITION.TOP_RIGHT,
-            });
+            toast.success(response.message);
             getRecords();
+          }else if(response.error){
+            toast.error(response.message);
           }
         })
         .catch((error) => {

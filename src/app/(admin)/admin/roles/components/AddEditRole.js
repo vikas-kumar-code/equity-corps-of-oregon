@@ -75,8 +75,11 @@ export default function AddEditRole(props) {
     await fetch(common.apiPath(`/admin/roles/save/${props.recordId}`))
       .then((response) => response.json())
       .then((response) => {
-        setLoader(false);
-        setFields(response.record);
+        if(response.success){
+            setFields(response.record);
+        }else if(response.error){
+            toast.error(response.message);
+        }
       })
       .catch((error) => {
         toast.error(error.message);
