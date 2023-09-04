@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import moment from "moment";
 import { Card, Row, Col, Button } from "react-bootstrap";
-import Pagination from "react-js-pagination";
 import AddEditRole from "./AddEditRole";
 import { toast } from "react-toastify";
 import common from "@/utils/common";
@@ -15,7 +14,6 @@ export default function ListRoles() {
   const [records, setRecords] = useState([]);
   const recordPerPage = 10;
   const [pageNumber, setPageNumber] = useState(1);
-  const [totalRecords, setTotalRecords] = useState(1);
   const [showAddEditModal, setShowAddEditModal] = useState(false);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [recordId, setRecordId] = useState(null);
@@ -27,7 +25,6 @@ export default function ListRoles() {
       .then((response) => {
         if (response.success) {
           setRecords(JSON.parse(response.records));
-          setTotalRecords(response.totalRecords);
         } else if (response.error) {
           toast.error(response.message);
         }
@@ -37,10 +34,6 @@ export default function ListRoles() {
       })
       .finally(() => setLoader(false));
   };
-
-  useEffect(() => {
-    getRecords();
-  }, [pageNumber]);
 
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this role?")) {
@@ -153,18 +146,6 @@ export default function ListRoles() {
               </tbody>
             </table>
           </div>
-          {/* <Card.Footer className='text-end'>
-                        <Pagination
-                            activePage={pageNumber}
-                            itemsCountPerPage={recordPerPage}
-                            totalItemsCount={totalRecords}
-                            pageRangeDisplayed={recordPerPage}
-                            onChange={(page) => setPageNumber(page)}
-                            itemClass="page-item"
-                            linkClass="page-link"
-                            innerClass="pagination float-end"
-                        />
-                    </Card.Footer> */}
         </Card.Body>
       </Card>
       {showAddEditModal && (
