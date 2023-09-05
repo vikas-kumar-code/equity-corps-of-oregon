@@ -163,7 +163,7 @@ export default function AddEditTemplate(props) {
                     value={fields.from_label ? fields.from_label : ""}
                   />
                   <Form.Control.Feedback type="invalid">
-                    {errors.from_email}
+                    {errors.from_label}
                   </Form.Control.Feedback>
                 </FloatingLabel>
               </Form.Group>
@@ -183,7 +183,7 @@ export default function AddEditTemplate(props) {
                     value={fields.from_email ? fields.from_email : ""}
                   />
                   <Form.Control.Feedback type="invalid">
-                    {errors.from_label}
+                    {errors.from_email}
                   </Form.Control.Feedback>
                 </FloatingLabel>
               </Form.Group>

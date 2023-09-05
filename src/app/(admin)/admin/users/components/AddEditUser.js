@@ -59,7 +59,7 @@ export default function AddEditUser(props) {
         REQUEST_URI = common.apiPath(`/admin/users/save/${props.userId}`);
         REQUEST_METHOD = "PUT";
       }
-      const response = await fetch(REQUEST_URI, {
+      await fetch(REQUEST_URI, {
         method: REQUEST_METHOD,
         body: JSON.stringify(fields),
       })

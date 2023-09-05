@@ -129,7 +129,7 @@ export default function ListTemplates() {
                       </tr>
                     </thead>
                     <tbody>
-                      {records.map((record, index) => (
+                      {records?.map((record, index) => (
                         <tr key={index}>
                           <td>
                             {pageNumber * recordPerPage -
@@ -138,8 +138,8 @@ export default function ListTemplates() {
                             .
                           </td>
                           <td>{record.subject}</td>
-                          <td>{record.from_label}</td>
                           <td>{record.from_email}</td>
+                          <td>{record.from_label}</td>
                           <td className="px-1 text-end">
                             <Button
                               variant="primary"
