@@ -1,51 +1,40 @@
 import { NextResponse } from "next/server";
-
-import Joi from "joi";
 import { hash } from "bcrypt";
 import prisma from "@/utils/prisma";
+import addUpdateUserSchema from "@/joi/addUpdateUserSchema";
+import validateAsync from "@/utils/validateAsync";
 
 export async function POST(request) {
-  const user = await request.json();
-  const userSchema = Joi.object({
-    name: Joi.required(),
-    email: Joi.string().email().required(),
-    password: Joi.required(),
-    confirm_password: Joi.ref("password"),
-    status: Joi.number().required(),
-    role_id: Joi.number(),
-  });
-
+  const response = {};
+  const formData = await request.json();
   try {
-    const record = await userSchema.validateAsync(user);
-    if (record) {
-      const response = await prisma.users.create({
+    const validated = await validateAsync(addUpdateUserSchema, formData);
+    if (validated.errors) {
+      response.error = true;
+      response.message = validated.errors;
+    } else {
+      const newUser = await prisma.users.create({
         data: {
-          name: record.name,
-          email: record.email,
-          password: await hash(record.password, 10),
-          status: record.status,
-          role_id: record.role_id,
-          /* role: {
-            create: {
-              name: "VK Role",
-              status: 1,
-            },
-          }, */
+          name: validated.name,
+          email: validated.email,
+          password: await hash(validated.password, 10),
+          status: validated.status,
+          role_id: validated.role_id,
         },
       });
-      if (response) {
-        return NextResponse.json({ success: true });
+      if (newUser) {
+        response.success = true;
+        response.message = "New user added successfully.";
       } else {
-        return NextResponse.json({ error: true });
+        response.error = true;
+        response.message = "Something went wrong..! please try again.";
       }
     }
-  } catch (err) {
+  } catch (err) {    
     if (err.code === "P2002") {
-      return NextResponse.json({
-        error: true,
-        message: { email: "Email already exists." },
-      });
+      response.error = true;
+      response.message = { email: "Email already exists." };
     }
-    return NextResponse.json({ error: true, message: err.message });
   }
+  return NextResponse.json(response);
 }

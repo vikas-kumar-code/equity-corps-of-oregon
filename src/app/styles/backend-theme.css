@@ -12365,6 +12365,7 @@ textarea.form-control-lg {
   border: 1px solid transparent;
   transform-origin: 0 0;
   transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+  color: #8a8a8a;
 }
 
 @media (prefers-reduced-motion: reduce) {
