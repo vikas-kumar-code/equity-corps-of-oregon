@@ -1,6 +1,9 @@
 import ListCases from "./components/ListCases";
 import "./style.css";
 
+export const metadata = {
+  title: `Cases - Admin Panel`
+}
 export default function Cases() {
   return (
     <div className="content-wrapper">

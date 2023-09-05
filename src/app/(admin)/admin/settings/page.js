@@ -2,6 +2,9 @@ import Image from 'next/image'
 import ChangePasswordForm from './components/change-password-form'
 import UpdateProfileForm from './components/update-profile-form'
 
+export const metadata = {
+    title: `Settings - Admin Panel`
+}
 export default function Settings() {
     return (
         <div className="content-wrapper">
