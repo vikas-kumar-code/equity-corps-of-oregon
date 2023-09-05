@@ -83,36 +83,36 @@ export default function FrontNavigation() {
         </li>
         <li>
           <div class="dropdown">
-            <button class="dropbtn">Get Involved <BiSolidDownArrow className="arrow"/></button>
+            <button class="dropbtn">Get Involved <BiSolidDownArrow className="arrow" /></button>
             <div class="dropdown-content">
-            <Link
-                  href="/getInvolved"
-                  className={
-                    pathname === "/getInvolved" ? "nav-link active" : "nav-link"
-                  }
-                >
-                  Become an ECO Attorney
-                </Link>
-                <Link
-                  href="/getInvolved/attorneyProgram"
-                  className={
-                    pathname === "/getInvolved/attorneyProgram"
-                      ? "nav-link active"
-                      : "nav-link"
-                  }
-                >
-                  ECO Panel Attorney Program
-                </Link>
-                <Link
-                  href="/getInvolved/ecoClinic"
-                  className={
-                    pathname === "/getInvolved/ecoClinic"
-                      ? "nav-link active"
-                      : "nav-link"
-                  }
-                >
-                  ECO Clinics
-                </Link>
+              <Link
+                href="/getInvolved"
+                className={
+                  pathname === "/getInvolved" ? "nav-link active" : "nav-link"
+                }
+              >
+                Become an ECO Attorney
+              </Link>
+              <Link
+                href="/getInvolved/attorneyProgram"
+                className={
+                  pathname === "/getInvolved/attorneyProgram"
+                    ? "nav-link active"
+                    : "nav-link"
+                }
+              >
+                ECO Panel Attorney Program
+              </Link>
+              <Link
+                href="/getInvolved/ecoClinic"
+                className={
+                  pathname === "/getInvolved/ecoClinic"
+                    ? "nav-link active"
+                    : "nav-link"
+                }
+              >
+                ECO Clinics
+              </Link>
             </div>
           </div>
         </li>
@@ -140,26 +140,26 @@ export default function FrontNavigation() {
         </li>
         {session.data !== null && session.status === 'authenticated' ? (
           <li className="nav-item mt-2 mt-lg-0">
-          <Link
-            href="/login"
-            className={
-              pathname.startsWith("/login") ? "nav-link active" : "nav-link"
-            }
-          >
-            My Account
-          </Link>
-        </li>
-        ):(
+            <Link
+              href="/login"
+              className={
+                pathname.startsWith("/login") ? "nav-link active" : "nav-link"
+              }
+            >
+              My Account
+            </Link>
+          </li>
+        ) : (
           <li className="nav-item mt-2 mt-lg-0">
-          <Link
-            href="/login"
-            className={
-              pathname.startsWith("/login") ? "nav-link active" : "nav-link"
-            }
-          >
-            Log In
-          </Link>
-        </li>
+            <Link
+              href="/login"
+              className={
+                pathname.startsWith("/login") ? "nav-link active" : "nav-link"
+              }
+            >
+              Log In
+            </Link>
+          </li>
         )}
       </ul>
     </div>

@@ -15835,7 +15835,7 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
 .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item.disabled a,
 .jsgrid .jsgrid-pager .disabled.jsgrid-pager-page a {
   color: #6c757d;
-  pointer-events: none;  
+  pointer-events: none;
   border-color: #dee2e6;
 }
 
@@ -24940,7 +24940,7 @@ code {
 }
 
 .form-check .form-check-label {
-  display: block;  
+  display: block;
   font-size: 0.875rem;
   line-height: 1.5;
   color: #6c7293;
@@ -26753,7 +26753,7 @@ div.tagsinput {
 .jsgrid .jsgrid-table thead th {
   border-top: 0;
   border-bottom-width: 1px;
-  font-weight: 500;
+  font-weight: 900;
   color: #6c7293;
 }
 
@@ -26767,8 +26767,8 @@ div.tagsinput {
 .table td,
 .jsgrid .jsgrid-table td {
   vertical-align: middle;
-  font-size: 0.875rem;
-  line-height: 1.6;  
+  font-size: 0.895rem;
+  line-height: 1.6;
   padding: 0.9375rem;
 }
 
@@ -29331,7 +29331,7 @@ div.tagsinput span.tag a {
 }
 
 .auth .brand-logo {
-  margin-bottom: 2rem;  
+  margin-bottom: 2rem;
 }
 
 .auth .brand-logo img {
@@ -30645,6 +30645,7 @@ div.tagsinput span.tag a {
 .form-control:focus {
   color: #fff;
 }
+
 /* Input Focus */
 
 /* button close */
@@ -30655,6 +30656,7 @@ div.tagsinput span.tag a {
   padding: 6px !important;
   margin: -23.5px 0px -12.5px auto !important;
 }
+
 /* button close */
 
 /* Tab */
@@ -30662,11 +30664,13 @@ div.tagsinput span.tag a {
   border: transparent;
   border-bottom: 1px solid #2c2e33;
 }
+
 .nav-tabs .nav-link.active {
   border: 1px solid #2c2e33;
   border-bottom: none;
   border-radius: 6px 6px 0 0 !important;
 }
+
 /* Tab */
 /*# sourceMappingURL=maps/style.css.map */
 

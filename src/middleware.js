@@ -15,7 +15,7 @@ export default withAuth(
 
     if (!superRoles.includes(token.role_id)) {
       if (!superPaths.includes(requestPath)) {
-        if (!token?.routes || !token?.routes?.includes(requestPath)) {          
+        if (!token?.routes || !token?.routes?.includes(requestPath)) {
           if (requestPath.startsWith("api")) {
             return NextResponse.json({
               error: true,
