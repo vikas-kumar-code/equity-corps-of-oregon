@@ -14,6 +14,7 @@ import LoadingOverlay from "react-loading-overlay";
 import common from "@/utils/common";
 import addUpdateUserSchema from "@/joi/addUpdateUserSchema";
 import validateAsync from "@/utils/validateAsync";
+import { toast } from "react-toastify";
 LoadingOverlay.propTypes = undefined;
 
 export default function AddEditUser(props) {
@@ -59,7 +60,7 @@ export default function AddEditUser(props) {
         REQUEST_URI = common.apiPath(`/admin/users/save/${props.userId}`);
         REQUEST_METHOD = "PUT";
       }
-      const response = await fetch(REQUEST_URI, {
+      await fetch(REQUEST_URI, {
         method: REQUEST_METHOD,
         body: JSON.stringify(fields),
       })
