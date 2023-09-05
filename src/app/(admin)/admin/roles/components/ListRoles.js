@@ -25,7 +25,7 @@ export default function ListRoles() {
       .then((response) => {
         if (response.success) {
           setRecords(response.records);
-        } 
+        }
       })
       .catch((error) => {
         toast.error(error.message);
@@ -43,7 +43,7 @@ export default function ListRoles() {
           if (response.success) {
             toast.success(response.message);
             getRecords();
-          }else if(response.error){
+          } else if (response.error) {
             toast.error(response.message);
           }
         })
