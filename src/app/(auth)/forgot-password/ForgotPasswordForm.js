@@ -2,6 +2,7 @@
 import emailSchema from "@/joi/emailSchema";
 import resetPasswordSchema from "@/joi/resetPasswordSchema";
 import common from "@/utils/common";
+import validateAsync from "@/utils/validateAsync";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
@@ -14,31 +15,40 @@ export default function ForgotPasswordForm() {
   const [loader, setLoader] = useState(false);
   const [status, setStatus] = useState(1);
 
+  const handleErrors = (errors) => {
+    if (typeof errors === "object") {
+      setErrors(errors);
+    } else if (typeof errors === "string") {
+      toast.error(errors);
+    } else {
+      toast.error("Something went wrong...! please try again.");
+    }
+  };
+
   const sendVerificationCode = async (e) => {
     e.preventDefault();
     setLoader(true);
     setError(null);
     try {
-      await emailSchema.validateAsync(fields, { abortEarly: true });
-      await fetch(common.apiPath(`/forgot-password/send-verification-code`), {
-        method: "POST",
-        body: JSON.stringify(fields),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            setStatus(2);
-          } else if (response.error) {
-            if (typeof response.message === "string") {
-              toast.error(response.message);
-            } else {
-              setError(response.message);
+      const validated = await validateAsync(emailSchema, fields);
+      if (validated.errors) {
+        handleErrors(validated.errors);
+      } else {
+        await fetch(common.apiPath(`/forgot-password/send-verification-code`), {
+          method: "POST",
+          body: JSON.stringify(fields),
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.success) {
+              setStatus(2);
+            } else if (response.error) {
+              handleErrors(response.message);
             }
-          }
-        });
+          });
+      }
     } catch (error) {
-      const errors = common.getErrors(error);
-      setError(errors);
+      handleErrors(error.message);
     } finally {
       setLoader(false);
     }
@@ -49,27 +59,25 @@ export default function ForgotPasswordForm() {
     setLoader(true);
     setError(null);
     try {
-      await resetPasswordSchema.validateAsync(fields, { abortEarly: false });
-      await fetch(common.apiPath(`/forgot-password/submit-new-password`), {
-        method: "POST",
-        body: JSON.stringify(fields),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            setStatus(3);
-          } else if (response.error) {
-            if (typeof response.message === "string") {
-              toast.error(response.message);
-            } else {
-              setError(response.message);
+      const validated = await validateAsync(resetPasswordSchema, fields);
+      if (validated.errors) {
+        handleErrors(validated.errors);
+      } else {
+        await fetch(common.apiPath(`/forgot-password/submit-new-password`), {
+          method: "POST",
+          body: JSON.stringify(fields),
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.success) {
+              setStatus(3);
+            } else if (response.error) {
+              handleErrors(response.message);
             }
-          }
-        });
+          });
+      }
     } catch (error) {
-      console.log(error.details);
-      const errors = common.getErrors(error);
-      setError(errors);
+      handleErrors(error.message);
     } finally {
       setLoader(false);
     }

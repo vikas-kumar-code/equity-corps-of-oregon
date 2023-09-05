@@ -95,7 +95,7 @@ export async function POST(request) {
     }
   } catch (error) {
     response.error = true;
-    response.message = common.getErrors(error);
+    response.message = error.message;
   }
   return NextResponse.json(response);
 }

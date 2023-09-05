@@ -65,6 +65,7 @@ model roles {
   id          Int           @id @default(autoincrement())
   name        String        @unique @db.VarChar(150)
   status      Int           @default(1)
+  added_on    DateTime      @default(now())
   users       users[]
   permissions permissions[]
 }
@@ -88,7 +89,7 @@ model cases {
 model contracts {
   id       Int      @id @default(autoincrement())
   content  String   @db.LongText
-  added_on DateTime @default(now())  
+  added_on DateTime @default(now())
 }
 
 model case_invitations {

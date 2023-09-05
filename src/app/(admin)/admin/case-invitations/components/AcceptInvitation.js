@@ -7,6 +7,7 @@ import common from "@/utils/common";
 import "../../../../styles/animation.css";
 import "../style.css";
 import Joi, { object } from "joi";
+import validateAsync from "@/utils/validateAsync";
 
 export default function AcceptInvitation({
   showModal,
@@ -24,52 +25,58 @@ export default function AcceptInvitation({
     contract: record?.contract || "",
   });
 
+  const handleErrors = (errors) => {
+    if (typeof errors === "object") {
+      setErrors(errors);
+    } else if (typeof errors === "string") {
+      toast.error(errors);
+    } else {
+      toast.error("Something went wrong...! please try again.");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
     setErrors({});
     try {
       const schema = Joi.object({
         accept: Joi.number().min(1).required(),
         first_name: Joi.string().max(100).required().messages({
-          'string.empty': 'First name can not be empty.'
+          "string.empty": "First name can not be empty.",
         }),
         last_name: Joi.string().max(100).required().messages({
-          'string.empty': 'Last name can not be empty.'
+          "string.empty": "Last name can not be empty.",
         }),
       });
-      await schema.validateAsync(fields, {
-        abortEarly: false,
-        allowUnknown: true,
-      });
-      await fetch(common.apiPath(`/admin/cases/invitations/accept`), {
-        method: "POST",
-        body: JSON.stringify(fields),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          setSubmitted(false);
-          if (response.success) {
-            toast.success(response.message);
-            closeModal();
-            reloadRecords();
-          } else if (response.error) {
-            if (typeof response.message === "object") {
-              setErrors(response.message);
-            } else {
-              toast.error(response.message);
-            }
-          }
-        });
-    } catch (error) {   
-      console.log(error.details);   
-      setSubmitted(false);
-      let errs = common.getErrors(error);
-      if (typeof errs === "object") {
-        setErrors(errs);
+      const validated = await validateAsync(schema, fields);
+      if (validated.errors) {
+        handleErrors(validated.errors);
       } else {
-        toast.error(errs);
+        setSubmitted(true);
+        await fetch(common.apiPath(`/admin/cases/invitations/accept`), {
+          method: "POST",
+          body: JSON.stringify(fields),
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            setSubmitted(false);
+            if (response.success) {
+              toast.success(response.message);
+              closeModal();
+              reloadRecords();
+            } else if (response.error) {
+              if (typeof response.message === "object") {
+                setErrors(response.message);
+              } else {
+                toast.error(response.message);
+              }
+            }
+          });
       }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setSubmitted(false);
     }
   };
 
