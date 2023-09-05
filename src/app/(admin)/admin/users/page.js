@@ -1,5 +1,8 @@
 import ListUsers from "./components/ListUsers";
 import "./style.css";
+export const metadata = {
+  title: `Users - Admin Panel`
+}
 export default function Users() {
   return (
     <div className="content-wrapper">
