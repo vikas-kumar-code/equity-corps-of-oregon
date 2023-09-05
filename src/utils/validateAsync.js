@@ -10,12 +10,14 @@ const validateAsync = async (
     errorKey: false,
     abortEarly: false,
     allowUnknown: true,
+    stripUnknown: false,
   }
 ) => {
   try {
     const validatedFields = await schema.validateAsync(data, {
-      abortEarly: options.abortEarly,
-      allowUnknown: options.allowUnknown,
+      abortEarly: options?.abortEarly ? options?.abortEarly : false,
+      allowUnknown: options?.allowUnknown ? options?.allowUnknown : true,
+      stripUnknown: options?.stripUnknown ? options?.stripUnknown : false,
     });
     return validatedFields;
   } catch (error) {
