@@ -40,6 +40,11 @@ export default function Registration(props) {
     setSelected(val);
     setError(null);
     setFields({ ...fields, [data?.field]: val });
+    if(data?.type === 'check'){
+      setTimeout(() => {
+        setFields({ ...fields, [data?.field]: val });
+      }, 500);
+    }
   };
 
   const handleInput = (value) => {
