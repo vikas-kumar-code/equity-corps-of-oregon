@@ -74,16 +74,21 @@ export default function ListUsers() {
 
   const deleteUser = async (id) => {
     if (window.confirm("Are you sure to delete this use?")) {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users/delete/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      const data = await response.json();
-      if (data.success) {
-        getRecords();
-      }
+      await fetch(common.apiPath(`/admin/users/delete/${id}`), {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            toast.success(response.message);
+            getRecords();
+          } else if (response.error) {
+            toast.error(error.message);
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
     }
   };
 

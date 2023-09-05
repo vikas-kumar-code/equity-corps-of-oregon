@@ -20,6 +20,7 @@ export async function POST(request) {
           password: await hash(validated.password, 10),
           status: validated.status,
           role_id: validated.role_id,
+          on_board_status: 2,
         },
       });
       if (newUser) {
@@ -30,7 +31,7 @@ export async function POST(request) {
         response.message = "Something went wrong..! please try again.";
       }
     }
-  } catch (err) {    
+  } catch (err) {
     if (err.code === "P2002") {
       response.error = true;
       response.message = { email: "Email already exists." };
