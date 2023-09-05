@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Joi from "joi";
 import prisma from "@/utils/prisma";
 import common from "@/utils/common";
+import { hash } from "bcrypt";
 
 const excludeFields = ["password", "verification_code", "code_valid_till"];
 
@@ -21,7 +22,7 @@ export async function GET(request, data) {
   });
   return NextResponse.json({
     success: true,
-    user: common.exclude(user, excludeFields),
+    user: common.excludeColumns(user, excludeFields),
   });
 }
 
@@ -38,7 +39,6 @@ export async function PUT(request, data) {
 
   try {
     const record = await userSchema.validateAsync(user, { stripUnknown: true });
-    console.log(record,'user fields......');
     if (record) {
       let response;
       if (record.password) {
@@ -74,6 +74,6 @@ export async function PUT(request, data) {
       }
     }
   } catch (err) {
-    return NextResponse.json({ error: true, message: err });
+    return NextResponse.json({ error: true, message: err.message });
   }
 }

@@ -20,11 +20,11 @@ const permissionSeeder = async () => {
 
   // Eco provider permissions
   const ecoProviderPermissions = [
-    "admin/dashboard",
-    "admin/case-invitations",
-    "api/admin/cases/invitations",
-    "api/admin/cases/invitations/accept",
-    "api/admin/cases/invitations/get",    
+    "/admin/dashboard",
+    "/admin/case-invitations",
+    "/api/admin/cases/invitations",
+    "/api/admin/cases/invitations/accept",
+    "/api/admin/cases/invitations/get",    
   ];
   const ecoRoutes = await prisma.routes.findMany({
     where: {

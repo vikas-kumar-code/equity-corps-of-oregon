@@ -1,41 +1,32 @@
 import { NextResponse } from "next/server";
-
-import Joi from "joi";
-import common from "@/utils/common";
 import prisma from "@/utils/prisma";
+import validateAsync from "@/utils/validateAsync";
+import emailTemplateSchema from "@/joi/emailTemplateSchema";
 
 export async function PUT(request, data) {
   let response = {};
-
   const recordId = Number(data.params.id) || null;
-
   try {
     if (recordId) {
-      let updateData = await request.json();
-      // Validation
-      const schema = Joi.object({
-        id: Joi.number().required(),
-        subject: Joi.string().required(),
-        from_email: Joi.string().required(),
-        from_label: Joi.string().required(),
-        content: Joi.string().required()
-      });
-      const data = await schema.validateAsync(updateData, {
-        abortEarly: false,
-      });
-
-      const result = await prisma.email_templates.update({
-        where: { id: recordId },
-        data: {
-          subject: data.subject,
-          from_email: data.from_email,
-          from_label: data.from_label,
-          content: data.content
-        },
-      });
-      if (result) {
-        response.success = true;
-        response.message = "Template udpated successfully.";
+      const formData = await request.json();
+      const validated = await validateAsync(emailTemplateSchema, formData);
+      if (validated.errors) {
+        response.error = true;
+        response.message = validated.errors;
+      } else {
+        const result = await prisma.email_templates.update({
+          where: { id: recordId },
+          data: {
+            subject: validated.subject,
+            from_email: validated.from_email,
+            from_label: validated.from_label,
+            content: validated.content,
+          },
+        });
+        if (result) {
+          response.success = true;
+          response.message = "Template udpated successfully.";
+        }
       }
     } else {
       response.error = true;
@@ -43,7 +34,7 @@ export async function PUT(request, data) {
     }
   } catch (error) {
     response.error = true;
-    response.message = await common.gerErrors(error);
+    response.message = error.message;
   }
   return NextResponse.json(response);
 }
