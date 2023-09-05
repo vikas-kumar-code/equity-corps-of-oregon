@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 export default withAuth(
   async function middleware(req) {
     const token = req.nextauth.token;
+    console.log(token);
     const requestedPath = req.nextUrl.pathname;
 
     // Accessibe paths and roles without permission
