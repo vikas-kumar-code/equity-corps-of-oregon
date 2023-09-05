@@ -20,12 +20,12 @@ export default function ListRoles() {
 
   const getRecords = async () => {
     setLoader(true);
-    await fetch(common.apiPath(`/admin/roles?page=${pageNumber}`))
+    await fetch(common.apiPath(`/admin/roles?page=${pageNumber}`),{cache:"no-cache"})
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
           setRecords(response.records);
-        } 
+        }
       })
       .catch((error) => {
         toast.error(error.message);
@@ -43,7 +43,7 @@ export default function ListRoles() {
           if (response.success) {
             toast.success(response.message);
             getRecords();
-          }else if(response.error){
+          } else if (response.error) {
             toast.error(response.message);
           }
         })

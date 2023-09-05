@@ -16,7 +16,7 @@ export async function GET(request) {
     if (request.get("subject")) {
       where = {
         ...where,
-        question: {
+        subject: {
           contains: request.get("subject"),
         },
       };

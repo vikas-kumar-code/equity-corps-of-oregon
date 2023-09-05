@@ -11,20 +11,20 @@ export async function POST(request) {
     const schema = Joi.object({
       content: Joi.string().required(),
     });
-    const fields = await validateAsync(schema, await request.json());
-    if (fields.errors) {
+    const validated = await validateAsync(schema, data);
+    if (validated.errors) {
       response.error = true;
-      response.message = fields.errors;
+      response.message = validated.errors;
     } else {
       const udpatedData = await prisma.contracts.upsert({
         where: {
           id: 1,
         },
         update: {
-          content: data.content,
+          content: validated.content,
         },
         create: {
-          content: data.content,
+          content: validated.content,
         },
       });
       response.success = true;

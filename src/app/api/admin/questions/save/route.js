@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
 import Joi from "joi";
-import common from "@/utils/common";
 import prisma from "@/utils/prisma";
 import validateAsync from "@/utils/validateAsync";
 
@@ -9,7 +8,7 @@ export async function POST(request) {
   let response = {};
   try {
     let data = await request.json();
-    
+
     const schema = Joi.object({
       question: Joi.string().max(400).required(),
       options: Joi.array()
@@ -22,7 +21,7 @@ export async function POST(request) {
       }),
     });
 
-    const validated = await validateAsync(schema, data);
+    const validated = await validateAsync(schema, data, { errorKey: true });
     if (validated.errors) {
       response.error = true;
       response.message = validated.errors;

@@ -11,7 +11,10 @@ import {
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import common from "@/utils/common";
-import addUpdateUserSchema from "@/joi/addUpdateUserSchema";
+import addUpdateUserSchema, {
+  addUserSchema,
+  updateUserSchema,
+} from "@/joi/addUpdateUserSchema";
 import validateAsync from "@/utils/validateAsync";
 import { toast } from "react-toastify";
 LoadingOverlay.propTypes = undefined;
@@ -48,7 +51,12 @@ export default function AddEditUser(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
-    const validated = await validateAsync(addUpdateUserSchema, fields);
+    let validated;
+    if (props.userId) {
+      validated = await validateAsync(updateUserSchema, fields);
+    } else {
+      validated = await validateAsync(addUserSchema, fields);
+    }
     if (validated.errors) {
       handleErrors(validated.errors);
     } else {
@@ -220,6 +228,9 @@ export default function AddEditUser(props) {
                   </option>
                 ))}
               </Form.Select>
+              <Form.Control.Feedback type="invalid" className="d-block">
+                {errors.role_id}
+              </Form.Control.Feedback>
             </FloatingLabel>
             <Form.Label>Status</Form.Label>
             <div className="ps-2">
