@@ -8,7 +8,7 @@ import prisma from "@/utils/prisma";
 export async function POST(request) {
   let response = {};
   try {
-    const data = await request.json();    
+    const data = await request.json();
     const caseModel = await prisma.cases.findUnique({
       where: {
         id: data?.case_id,
@@ -61,7 +61,7 @@ export async function POST(request) {
             });
             const userNames = createInvUsers.map(user => user.name);
             await tx.logs.create({
-              data:{
+              data: {
                 case_id: caseModel.id,
                 content: `Invitation sent to users [${userNames.join(", ")}]`
               }
