@@ -9,7 +9,7 @@ import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
-LoadingOverlay.propTypes = undefined
+LoadingOverlay.propTypes = undefined;
 
 export default function ListTemplates() {
   const [loader, setLoader] = useState(false);
@@ -21,13 +21,13 @@ export default function ListTemplates() {
   const [recordId, setRecordId] = useState(null);
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [fields, setFields] = useState(null);
-  const searchFields = [
-    { label: "Subject", type: "text", name: "subject" },
-  ];
+  const searchFields = [{ label: "Subject", type: "text", name: "subject" }];
 
   const getRecords = async () => {
     setLoader(true);
-    let REQUEST_URI = common.apiPath(`/admin/email-templates?page=${pageNumber}`);
+    let REQUEST_URI = common.apiPath(
+      `/admin/email-templates?page=${pageNumber}`
+    );
     if (fields !== null) {
       fields["page"] = pageNumber;
       const queryString = new URLSearchParams(fields).toString();
@@ -56,7 +56,9 @@ export default function ListTemplates() {
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete?")) {
       setLoader(true);
-      fetch(common.apiPath(`/admin/email-templates/delete/${id}`), { method: "DELETE" })
+      fetch(common.apiPath(`/admin/email-templates/delete/${id}`), {
+        method: "DELETE",
+      })
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
@@ -123,7 +125,7 @@ export default function ListTemplates() {
                         <th>Subject </th>
                         <th>From Email </th>
                         <th>From Label </th>
-                        <th>Action</th>
+                        <th colSpan={2}>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -138,14 +140,15 @@ export default function ListTemplates() {
                           <td>{record.subject}</td>
                           <td>{record.from_label}</td>
                           <td>{record.from_email}</td>
-                          <td>
+                          <td className="px-1 text-end">
                             <Button
-                              className="me-2"
                               variant="primary"
                               onClick={() => getRecord(record.id)}
                             >
                               Edit
                             </Button>
+                          </td>
+                          <td className="px-1 text-start">
                             <Button
                               variant="danger"
                               onClick={() => deleteRecord(record.id)}
@@ -177,15 +180,17 @@ export default function ListTemplates() {
           </LoadingOverlay>
         </Col>
       </Row>
-      {showModal && <AddEditTemplate
-        showModal={showModal}
-        closeModal={() => {
-          setShowModal(false);
-          setRecordId(null);
-        }}
-        recordId={recordId}
-        reloadRecords={getRecords}
-      />}
+      {showModal && (
+        <AddEditTemplate
+          showModal={showModal}
+          closeModal={() => {
+            setShowModal(false);
+            setRecordId(null);
+          }}
+          recordId={recordId}
+          reloadRecords={getRecords}
+        />
+      )}
     </div>
   );
 }

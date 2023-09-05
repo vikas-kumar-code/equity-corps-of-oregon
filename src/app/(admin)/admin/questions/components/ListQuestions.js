@@ -182,16 +182,15 @@ export default function ListQuestions() {
                                   >
                                     <td>{Number(index + 1)}.</td>
                                     <td>{record.question}</td>
-                                    <td>
-                                      <Button
-                                        className="me-2"
+                                    <td className="px-1">
+                                      <Button                                        
                                         variant="primary"
                                         onClick={() => getRecord(record.id)}
                                       >
                                         Edit
                                       </Button>
                                     </td>
-                                    <td>
+                                    <td className="px-1">
                                       <Button
                                         variant="danger"
                                         onClick={() => deleteRecord(record.id)}

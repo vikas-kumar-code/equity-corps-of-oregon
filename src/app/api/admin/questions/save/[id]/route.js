@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-
 import Joi from "joi";
-import common from "@/utils/common";
 import prisma from "@/utils/prisma";
+import validateAsync from "@/utils/validateAsync";
 
 export async function PUT(request, data) {
   let response = {};
@@ -23,29 +22,33 @@ export async function PUT(request, data) {
           "number.base": "Select a correct answer.",
         }),
       });
-      updateData = await schema.validateAsync(updateData, {
-        abortEarly: false,
-      });
-      // Create a new question with options
-      await prisma.options.deleteMany({
-        where: {
-          question_id: questionId,
-        },
-      });
-      const question = await prisma.questions.update({
-        where: { id: questionId },
-        data: {
-          question: updateData.question,
-          options: {
-            create: updateData.options.map((opt, index) => {
-              return { option: opt, status: index + 1 === updateData.answer };
-            }),
+
+      const validated = await validateAsync(schema, updateData);
+      if (validated.errors) {
+        response.error = true;
+        response.message = validated.errors;
+      } else {
+        // Create a new question with options
+        await prisma.options.deleteMany({
+          where: {
+            question_id: questionId,
           },
-        },
-      });
-      if (updateData) {
-        response.success = true;
-        response.message = "Question udpated successfully.";
+        });
+        const question = await prisma.questions.update({
+          where: { id: questionId },
+          data: {
+            question: validated.question,
+            options: {
+              create: validated.options.map((opt, index) => {
+                return { option: opt, status: index + 1 === validated.answer };
+              }),
+            },
+          },
+        });
+        if (question) {
+          response.success = true;
+          response.message = "Question udpated successfully.";
+        }
       }
     } else {
       response.error = true;
@@ -53,7 +56,7 @@ export async function PUT(request, data) {
     }
   } catch (error) {
     response.error = true;
-    response.message = await common.getErrors(error);
+    response.message = error.message;
   }
   return NextResponse.json(response);
 }

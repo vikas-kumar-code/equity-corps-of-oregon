@@ -118,15 +118,7 @@ export default function ListRoles() {
                       )}
                     </td>
                     <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
-                    <td>
-                      <button
-                        className="btn btn-warning"
-                        onClick={() => getRecord(record.id)}
-                      >
-                        Set Permission
-                      </button>
-                    </td>
-                    <td>
+                    <td className="px-1 text-end">
                       <button
                         className="btn btn-primary"
                         onClick={() => getRecord(record.id)}
@@ -134,7 +126,7 @@ export default function ListRoles() {
                         Edit
                       </button>
                     </td>
-                    <td>
+                    <td className="px-1 text-start">
                       <button
                         className="btn btn-danger"
                         onClick={() => deleteRecord(record.id)}
