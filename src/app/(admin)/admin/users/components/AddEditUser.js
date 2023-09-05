@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import {
   Button,
@@ -14,6 +13,7 @@ import LoadingOverlay from "react-loading-overlay";
 import common from "@/utils/common";
 import addUpdateUserSchema from "@/joi/addUpdateUserSchema";
 import validateAsync from "@/utils/validateAsync";
+import { toast } from "react-toastify";
 LoadingOverlay.propTypes = undefined;
 
 export default function AddEditUser(props) {
@@ -97,8 +97,7 @@ export default function AddEditUser(props) {
       .finally(() => setLoader(false));
   };
 
-  const getRoles = async () => {
-    
+  const getRoles = async () => {    
     setLoader(true);
     await fetch(common.apiPath(`/admin/roles`))
       .then((response) => response.json())

@@ -54,20 +54,32 @@ const common = {
 
   // This function returns prisma pgination properties
   paginate: (request) => {
-    const pageNo =
-      request?.nextUrl?.searchParams?.get("page") || request?.get("page") || 1;
-    const recordPerPage =
-      request?.nextUrl?.searchParams?.get("recordPerPage") ||
-      request?.get("recordPerPage") ||
-      10;
-    const pageNumber = parseInt(pageNo);
-    const skip = pageNumber * recordPerPage - recordPerPage;
+    let pageNo, recordPerPage, pageNumber, skip;
+    try {
+      pageNo =
+        request?.nextUrl?.searchParams?.get("page") ||
+        request?.get("page") ||
+        1;
+    } catch {
+      pageNo = 1;
+    }
+    try {
+      recordPerPage =
+        request?.nextUrl?.searchParams?.get("recordPerPage") ||
+        request?.get("recordPerPage") ||
+        10;
+    } catch {
+      recordPerPage = 10;
+    }
+    pageNumber = parseInt(pageNo);
+    skip = pageNumber * recordPerPage - recordPerPage;
     return {
       skip: skip,
       take: recordPerPage,
     };
   },
-  exclude: (modelData, keys) => {
+  // Exclude columns from record.
+  excludeColumns: (modelData, keys) => {
     return Object.fromEntries(
       Object.entries(modelData).filter(([key]) => !keys.includes(key))
     );

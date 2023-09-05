@@ -22,7 +22,7 @@ export async function GET(request, data) {
   });
   return NextResponse.json({
     success: true,
-    user: common.exclude(user, excludeFields),
+    user: common.excludeColumns(user, excludeFields),
   });
 }
 
