@@ -1,5 +1,8 @@
 import ListQuestions from './components/ListQuestions'
 
+export const metadata = {
+    title: `Questions - Admin Panel`
+}
 export default function Questions() {
     return (
         <div className="content-wrapper">

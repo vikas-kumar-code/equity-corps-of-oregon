@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import {
   Button,
@@ -99,7 +98,6 @@ export default function AddEditUser(props) {
   };
 
   const getRoles = async () => {
-    
     setLoader(true);
     await fetch(common.apiPath(`/admin/roles`))
       .then((response) => response.json())
@@ -122,7 +120,7 @@ export default function AddEditUser(props) {
     }
     getRoles();
   }, []);
-  
+
   return (
     <Modal
       show={props.showModal}
@@ -132,7 +130,7 @@ export default function AddEditUser(props) {
       centered
       size="md"
     >
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} autoComplete="off">
         <Modal.Header closeButton>
           <h3>{props.userId ? "Update" : "Add"} User</h3>
         </Modal.Header>

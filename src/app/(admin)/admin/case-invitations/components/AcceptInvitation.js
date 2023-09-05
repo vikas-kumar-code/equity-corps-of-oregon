@@ -4,9 +4,7 @@ import React, { useState } from "react";
 import { Button, Col, Form, Modal, Row, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import common from "@/utils/common";
-import { IoCheckmarkCircle } from "react-icons/io5";
 import "../../../../styles/animation.css";
-import LoadingOverlay from "react-loading-overlay";
 import "../style.css";
 import Joi, { object } from "joi";
 
