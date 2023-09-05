@@ -65,10 +65,10 @@ export default function Navigation() {
     <nav className="sidebar sidebar-offcanvas" id="sidebar">
       <div className="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
         <a className="sidebar-brand brand-logo" href="/admin/dashboard">
-          EC<span style={{color:'#ca8a2e'}}>O</span>
+          EC<span style={{ color: '#ca8a2e' }}>O</span>
         </a>
         <a className="sidebar-brand brand-logo-mini" href="/admin/dashboard">
-        EC<span style={{color:'#ca8a2e'}}>O</span>
+          EC<span style={{ color: '#ca8a2e' }}>O</span>
         </a>
       </div>
 
@@ -78,7 +78,7 @@ export default function Navigation() {
             <li
               key={`nav-${index}`}
               className={
-                pathname === "/" + module.url
+                pathname === module.url
                   ? "nav-item menu-items active admin-panel-nav-item"
                   : "nav-item menu-items admin-panel-nav-item"
               }

@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 LoadingOverlay.propTypes = undefined;
 
 export default function ListTemplates() {
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
   const [records, setRecords] = useState([]);
   const recordPerPage = 10;
   const [pageNumber, setPageNumber] = useState(1);
@@ -24,7 +24,6 @@ export default function ListTemplates() {
   const searchFields = [{ label: "Subject", type: "text", name: "subject" }];
 
   const getRecords = async () => {
-    setLoader(true);
     let REQUEST_URI = common.apiPath(
       `/admin/email-templates?page=${pageNumber}`
     );
@@ -158,6 +157,9 @@ export default function ListTemplates() {
                           </td>
                         </tr>
                       ))}
+                      {!loader && records.length === 0 && <tr>
+                        <td colSpan={6} className="text-center text-danger">Template not found!</td>
+                      </tr>}
                     </tbody>
                   </table>
                 </div>
