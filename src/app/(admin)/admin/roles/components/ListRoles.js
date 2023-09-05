@@ -20,7 +20,7 @@ export default function ListRoles() {
 
   const getRecords = async () => {
     setLoader(true);
-    await fetch(common.apiPath(`/admin/roles?page=${pageNumber}`))
+    await fetch(common.apiPath(`/admin/roles?page=${pageNumber}`),{cache:"no-cache"})
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {

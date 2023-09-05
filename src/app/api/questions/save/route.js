@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import common from "@/utils/common";
 import Joi from "joi";
 import prisma from "@/utils/prisma";
 import validateAsync from "@/utils/validateAsync";

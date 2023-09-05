@@ -298,12 +298,7 @@ const YelloCircle = () => {
   return (
     <OverlayTrigger
       placement="top"
-      overlay={
-        <Tooltip>
-          On-board email has been sent.
-          <br /> Waiting for user login.
-        </Tooltip>
-      }
+      overlay={<Tooltip>Login credential sent but not used yet.</Tooltip>}
     >
       <button className="circle-icon-btn">
         <IoAlertCircle color="#ffab00" size={28} className="on-board-icon" />

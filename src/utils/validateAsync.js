@@ -3,17 +3,24 @@ const { default: common } = require("./common");
 /* 
   This function is used to validate form fields.
 */
-const validateAsync = async (schema, data, options = {}) => {
+const validateAsync = async (
+  schema,
+  data,
+  options = {
+    errorKey: false,
+    abortEarly: false,
+    allowUnknown: true,
+  }
+) => {
   try {
     const validatedFields = await schema.validateAsync(data, {
-      abortEarly: false,
-      allowUnknown: true,
-      ...options,
+      abortEarly: options.abortEarly,
+      allowUnknown: options.allowUnknown,
     });
     return validatedFields;
   } catch (error) {
     return {
-      errors: common.getErrors(error),
+      errors: common.getErrors(error, { arrayKey: options.errorKey }),
     };
   }
 };

@@ -176,13 +176,13 @@ model email_templates {
 }
 
 model attorney_answers {
-  id          Int        @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   user_id     Int
   question_id Int
-  answer_id   Int
-  user        users?     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  answer      options?   @relation(fields: [answer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  question    questions? @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  answer_id   Int?
+  user        users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  answer      options?  @relation(fields: [answer_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  question    questions @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model logs {

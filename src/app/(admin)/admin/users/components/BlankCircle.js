@@ -42,7 +42,7 @@ const BlankCircle = ({ userId, reloadRecords }) => {
         key="on-board-tooltip"
         placement="top"
         overlay={
-          <Tooltip id="on-board-tooltip-1">Not On-board</Tooltip>
+          <Tooltip id="on-board-tooltip-1">Send login credential</Tooltip>
         }
       >
         <button className="circle-icon-btn">
@@ -69,9 +69,9 @@ const BlankCircle = ({ userId, reloadRecords }) => {
           <Modal.Body>
             <b>Are you sure to send login credential email?</b>
             <p className="text-secondary mt-2">
-              <b>Note:</b> An email will be sent to the user with the auto
-              generated credentials and once the user logs in, On boarding
-              process will be completed.
+              <b>Note:</b>Note: An email will be sent to the user with the auto
+              generated password with their username. Once user logs in, they
+              will be onboarded successfully.
             </p>
           </Modal.Body>
           <Modal.Footer>
