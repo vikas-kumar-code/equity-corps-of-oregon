@@ -13,6 +13,8 @@ import {
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import common from "@/utils/common";
+import validateAsync from "@/utils/validateAsync";
+import rolesSchema from "@/joi/rolesSchema";
 LoadingOverlay.propTypes = undefined;
 
 export default function AddEditRole(props) {
@@ -34,20 +36,12 @@ export default function AddEditRole(props) {
     }
   };
 
-  const handleValidation = () => {
-    let errors = {};
-    let formIsValid = true;
-    if (!fields["name"]) {
-      formIsValid = false;
-      errors["name"] = "Please enter name.";
-    }
-    setErrors(errors);
-    return formIsValid;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (handleValidation()) {
+    const validated = await validateAsync(rolesSchema, fields);
+    if(validated.errors){
+        handleErrors(validated.errors);
+    }else{
       setSubmitted(true);
       let REQUEST_URI = common.apiPath(`/admin/roles/save/`);
       let REQUEST_METHOD = "POST";
@@ -81,12 +75,16 @@ export default function AddEditRole(props) {
     await fetch(common.apiPath(`/admin/roles/save/${props.recordId}`))
       .then((response) => response.json())
       .then((response) => {
-        setLoader(false);
-        setFields(response.record);
+        if(response.success){
+            setFields(response.record);
+        }else if(response.error){
+            toast.error(response.message);
+        }
       })
       .catch((error) => {
         toast.error(error.message);
-      });
+      })
+      .finally(() => setLoader(false));
   };
 
   useEffect(() => {

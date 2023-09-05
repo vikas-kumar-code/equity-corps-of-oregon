@@ -1,5 +1,7 @@
 "use client";
 
+import rolesSchema from "@/joi/rolesSchema";
+import validateAsync from "@/utils/validateAsync";
 import React, { useState, useEffect } from "react";
 import {
   Button,
@@ -23,16 +25,6 @@ export default function SetPermission(props) {
   const handleChange = (e, field) => {
     setFields({ ...fields, [field]: e.target.value });
   };
-  const handleValidation = () => {
-    let errors = {};
-    let formIsValid = true;
-    if (!fields["name"]) {
-      formIsValid = false;
-      errors["name"] = "Please enter name.";
-    }
-    setErrors(errors);
-    return formIsValid;
-  };
 
   const handleErrors = (errors) => {
     if (typeof errors === "object") {
@@ -46,7 +38,10 @@ export default function SetPermission(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (handleValidation()) {
+    const validated = await validateAsync(rolesSchema, fields);
+    if(validated.error){
+        handleErrors(validated.errors);
+    }else {
       setSubmitted(true);
       let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save`;
       let REQUEST_METHOD = "POST";
@@ -54,11 +49,8 @@ export default function SetPermission(props) {
         REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save/${props.recordId}`;
         REQUEST_METHOD = "PUT";
       }
-      const response = await fetch(REQUEST_URI, {
+      await fetch(REQUEST_URI, {
         method: REQUEST_METHOD,
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(fields),
       })
         .then((response) => response.json())
@@ -82,17 +74,15 @@ export default function SetPermission(props) {
 
   const getRole = async () => {
     setLoader(true);
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save/${props.recordId}`,
-      {
-        method: "GET",
-      }
-    )
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save/${props.recordId}`)
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
           setFields(response.record);
-        }
+        }else if (response.error) {
+            toast.error(response.message);
+          }
       })
       .catch((error) => {
         toast.error(error.message);

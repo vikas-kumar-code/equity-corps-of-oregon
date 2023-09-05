@@ -24,10 +24,8 @@ export default function ListRoles() {
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
-          setRecords(JSON.parse(response.records));
-        } else if (response.error) {
-          toast.error(response.message);
-        }
+          setRecords(response.records);
+        } 
       })
       .catch((error) => {
         toast.error(error.message);
@@ -43,10 +41,10 @@ export default function ListRoles() {
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
-            toast.success(response.message, {
-              position: toast.POSITION.TOP_RIGHT,
-            });
+            toast.success(response.message);
             getRecords();
+          }else if(response.error){
+            toast.error(response.message);
           }
         })
         .catch((error) => {
@@ -60,6 +58,9 @@ export default function ListRoles() {
     setRecordId(recordId);
     setShowAddEditModal(true);
   };
+  useEffect(() => {
+    getRecords();
+  }, []);
 
   return (
     <LoadingOverlay active={loader} spinner text="Loading your content...">
