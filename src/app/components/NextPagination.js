@@ -1,3 +1,4 @@
+import common from "@/utils/common";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useState } from "react";
@@ -8,7 +9,6 @@ export default function NextPagination({ totalItemsCount = 0 }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const itemsCountPerPage = searchParams.get("recordPerPage") || 10;
 
   const handleChange = (pageNo) => {
     setPageNumber(pageNo);
@@ -21,9 +21,9 @@ export default function NextPagination({ totalItemsCount = 0 }) {
   return (
     <Pagination
       activePage={pageNumber}
-      itemsCountPerPage={itemsCountPerPage}
+      itemsCountPerPage={common.params.recordPerPage}
       totalItemsCount={totalItemsCount}
-      pageRangeDisplayed={itemsCountPerPage}
+      pageRangeDisplayed={common.params.recordPerPage}
       onChange={handleChange}
       itemClass="page-item"
       linkClass="page-link"

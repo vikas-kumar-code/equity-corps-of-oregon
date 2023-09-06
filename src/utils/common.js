@@ -8,6 +8,7 @@ const params = {
     forgotPassword: 2,
     attorneyOnBoard: 3,
   },
+  recordPerPage: 20,
 };
 
 const common = {
@@ -54,26 +55,21 @@ const common = {
 
   // This function returns prisma pgination properties
   paginate: (request) => {
-    let pageNo, recordPerPage, pageNumber, skip;
+    let recordPerPage = params.recordPerPage;
+    let pageNumber = 1;
+    let skip = 0;
     try {
-      pageNo =
+      pageNumber = parseInt(
         request?.nextUrl?.searchParams?.get("page") ||
-        request?.get("page") ||
-        1;
-    } catch {
-      pageNo = 1;
-    }
-    try {
+          request?.get("page") ||
+          pageNumber
+      );
       recordPerPage = parseint(
         request?.nextUrl?.searchParams?.get("recordPerPage") ||
           request?.get("recordPerPage") ||
-          10
+          recordPerPage
       );
-    } catch {
-      recordPerPage = 10;
-      // console.log(recordPerPage,'###############');
-    }
-    pageNumber = parseInt(pageNo);
+    } catch {}
     skip = pageNumber * recordPerPage - recordPerPage;
     return {
       skip: skip,
@@ -84,6 +80,14 @@ const common = {
   excludeColumns: (modelData, keys) => {
     return Object.fromEntries(
       Object.entries(modelData).filter(([key]) => !keys.includes(key))
+    );
+  },
+  sn: (searchParams, index = 0) => {
+    return (
+      parseInt(searchParams?.get("page") || 1) *
+        parseInt(params.recordPerPage) -
+      parseInt(params.recordPerPage) +
+      Number(index + 1)
     );
   },
 };

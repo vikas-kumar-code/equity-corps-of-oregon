@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { Card, Row, Col, Button } from "react-bootstrap";
-import Pagination from "react-js-pagination";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
@@ -11,20 +10,19 @@ import { toast } from "react-toastify";
 import Case from "./Case";
 import AddEditCase from "./AddEditCase";
 import UpdateContract from "./UpdateContract";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import NextPagination from "@/app/components/NextPagination";
 
 LoadingOverlay.propTypes = undefined;
 
 export default function ListCases() {
   const searchParams = useSearchParams();
+  const [totalRecords, setTotalRecords] = useState(1);
+
   const [loader, setLoader] = useState(false);
   const [records, setRecords] = useState([]);
   const [ecoProviders, setEcoProviders] = useState([]);
-  const recordPerPage = 10;
-  const [pageNumber, setPageNumber] = useState(1);
-  const [totalRecords, setTotalRecords] = useState(1);
   const [showSearchBox, setShowSearchBox] = useState(false);
-  //const [fields, setFields] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [updateContractModal, setUpdateContractModal] = useState(false);
   const searchFields = [
@@ -103,7 +101,6 @@ export default function ListCases() {
 
   useEffect(() => {
     getRecords();
-    console.log(searchParams.toString(), "zzzzzzzzxxxxxxxxxxxxxxxx");
   }, [searchParams]);
 
   useEffect(() => {
@@ -174,31 +171,18 @@ export default function ListCases() {
                       {records.map((record, index) => (
                         <Case
                           record={record}
-                          index={index}
                           key={`cases-key-${index}`}
                           getRecords={getRecords}
                           deleteRecord={deleteRecord}
-                          pageNumber={pageNumber}
-                          recordPerPage={recordPerPage}
+                          sn={common.sn(searchParams, index)}
                         />
                       ))}
                     </tbody>
                   </table>
                 </div>
-                {totalRecords > recordPerPage && (
-                  <Card.Footer className="text-end">
-                    <Pagination
-                      activePage={pageNumber}
-                      itemsCountPerPage={recordPerPage}
-                      totalItemsCount={totalRecords}
-                      pageRangeDisplayed={recordPerPage}
-                      onChange={(page) => setPageNumber(page)}
-                      itemClass="page-item"
-                      linkClass="page-link"
-                      innerClass="pagination float-end"
-                    />
-                  </Card.Footer>
-                )}
+                <Card.Footer className="text-end">
+                  <NextPagination totalItemsCount={totalRecords} />
+                </Card.Footer>
               </Card.Body>
             </Card>
           </LoadingOverlay>

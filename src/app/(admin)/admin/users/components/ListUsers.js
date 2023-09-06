@@ -29,8 +29,6 @@ LoadingOverlay.propTypes = undefined;
 export default function ListUsers() {
   const searchParams = useSearchParams();
   const [totalRecords, setTotalRecords] = useState(1);
-  const recordPerPage = searchParams.get("recordPerPage") || 10;
-  const pageNumber = searchParams.get("page") || 1;
 
   const [loader, setLoader] = useState(false);
   const [records, setRecords] = useState([]);
@@ -41,7 +39,7 @@ export default function ListUsers() {
 
   const searchFields = [
     { label: "Name", type: "text", name: "name" },
-    { label: "Email", type: "text", name: "email" },   
+    { label: "Email", type: "text", name: "email" },
   ];
 
   const getRecords = async () => {
@@ -143,10 +141,7 @@ export default function ListUsers() {
         open={showSearchBox}
         title={"Search User"}
         searchFields={searchFields}
-        col={4}
-        initialValues={{
-          recordPerPage: 10,
-        }}
+        col={6}
       />
       <Row>
         <Col>
@@ -174,12 +169,7 @@ export default function ListUsers() {
                     <tbody>
                       {records.map((record, index) => (
                         <tr>
-                          <td>
-                            {pageNumber * recordPerPage -
-                              recordPerPage +
-                              Number(index + 1)}
-                            .
-                          </td>
+                          <td>{common.sn(searchParams, index)}.</td>
                           <td>{record.name}</td>
                           <td>{record.email}</td>
                           <td>{record.role.name}</td>
@@ -250,16 +240,6 @@ export default function ListUsers() {
                   </table>
                 </div>
                 <Card.Footer className="text-end bg-white">
-                  {/* <Pagination
-                    activePage={pageNumber}
-                    itemsCountPerPage={recordPerPage}
-                    totalItemsCount={totalRecords}
-                    pageRangeDisplayed={recordPerPage}
-                    onChange={(page) => setPageNumber(page)}
-                    itemClass="page-item"
-                    linkClass="page-link"
-                    innerClass="pagination float-end"
-                  /> */}
                   <NextPagination totalItemsCount={totalRecords} />
                 </Card.Footer>
               </Card.Body>
