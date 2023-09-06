@@ -52,9 +52,9 @@ export async function POST(request) {
               role_id: 2,
               status: 0,
               name:
-                fields.registration?.first_name +
+              validated.registration?.first_name +
                 " " +
-                fields.registration?.last_name,
+                validated.registration?.last_name,
             },
           });
           response.success = true;

@@ -13,7 +13,7 @@ LoadingOverlay.propTypes = undefined
 
 
 export default function ListCaseInvitations() {
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
   const [records, setRecords] = useState([]);
   const recordPerPage = 10;
   const [pageNumber, setPageNumber] = useState(1);
@@ -27,7 +27,6 @@ export default function ListCaseInvitations() {
   ];
 
   const getRecords = async () => {
-    setLoader(true);
     let REQUEST_URI = common.apiPath(`/admin/cases/invitations?page=${pageNumber}`);
     if (fields !== null) {
       fields["page"] = pageNumber;
@@ -115,6 +114,9 @@ export default function ListCaseInvitations() {
                           recordPerPage={recordPerPage}
                         />
                       ))}
+                      {!loader && records.length === 0 && <tr>
+                        <td colSpan={6} className="text-center text-danger">No invitation found!</td>
+                      </tr>}
                     </tbody>
                   </table>
                 </div>

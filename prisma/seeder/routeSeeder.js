@@ -94,6 +94,8 @@ const routeSeeder = async () => {
           { label: "Api", url: "/api/admin/settings" },
           { label: "Api", url: "/api/admin/settings/delete" },
           { label: "Api", url: "/api/admin/settings/save" },
+          { label: "Api", url: "/api/admin/settings/update-profile" },
+          { label: "Api", url: "/api/admin/settings/change-password" },
         ],
       },
     },

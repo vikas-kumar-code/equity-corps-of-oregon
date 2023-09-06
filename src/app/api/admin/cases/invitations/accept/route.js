@@ -16,7 +16,7 @@ export async function POST(request) {
       last_name: Joi.string().max(100).required(),
     });
 
-    const validated = await validateAsync(schema, fields, {
+    const validated = await validateAsync(schema, data, {
       stripUnknown: true,
     });
     if (validated.errors) {
@@ -41,8 +41,8 @@ export async function POST(request) {
           await prisma.$transaction(async (tx) => {
             const updateInvitation = await tx.case_invitations.update({
               data: {
-                first_name: fields.first_name,
-                last_name: fields.last_name,
+                first_name: validated.first_name,
+                last_name: validated.last_name,
                 status: 1,
               },
               where: {
@@ -66,9 +66,9 @@ export async function POST(request) {
                     case_id: caseInvitation?.case?.id,
                     content:
                       "Case invitation accepted by " +
-                      fields.first_name +
+                      validated.first_name +
                       " " +
-                      fields.last_name,
+                      validated.last_name,
                   },
                 });
               }

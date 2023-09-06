@@ -73,7 +73,7 @@ export default function ListUsers() {
   }, [fields]);
 
   const deleteUser = async (id) => {
-    if (window.confirm("Are you sure to delete this use?")) {
+    if (window.confirm("Are you sure to delete this user?")) {
       await fetch(common.apiPath(`/admin/users/delete/${id}`), {
         method: "DELETE",
       })

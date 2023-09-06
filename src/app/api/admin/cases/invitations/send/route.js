@@ -63,7 +63,7 @@ export async function POST(request) {
             await tx.logs.create({
               data:{
                 case_id: caseModel.id,
-                content: `Invitation sent to users [${userNames.join(", ")}]`
+                content: `Invitation sent to ${userNames.join(", ")}`
               }
             })
             // Email will be sent to all requested users

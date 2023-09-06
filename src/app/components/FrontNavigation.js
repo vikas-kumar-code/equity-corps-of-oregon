@@ -5,10 +5,12 @@ import { usePathname } from "next/navigation";
 import "../styles/frontNav.css";
 import { BiSolidDownArrow } from "react-icons/bi";
 import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { Button } from "react-bootstrap";
 
 export default function FrontNavigation() {
   const pathname = usePathname();
-  const session = useSession()
+  const session = useSession();
   return (
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav ms-auto mt-2 mt-lg-0">
@@ -32,7 +34,9 @@ export default function FrontNavigation() {
         </li>
         <li>
           <div className="dropdown">
-            <button className="dropbtn">About <BiSolidDownArrow className="arrow" /></button>
+            <button className="dropbtn">
+              About <BiSolidDownArrow className="arrow" />
+            </button>
             <div class="dropdown-content">
               <Link
                 href="/about"
@@ -83,7 +87,9 @@ export default function FrontNavigation() {
         </li>
         <li>
           <div class="dropdown">
-            <button class="dropbtn">Get Involved <BiSolidDownArrow className="arrow" /></button>
+            <button class="dropbtn">
+              Get Involved <BiSolidDownArrow className="arrow" />
+            </button>
             <div class="dropdown-content">
               <Link
                 href="/getInvolved"
@@ -138,16 +144,25 @@ export default function FrontNavigation() {
             Downloads
           </Link>
         </li>
-        {session.data !== null && session.status === 'authenticated' ? (
+        {session.data !== null && session.status === "authenticated" ? (
           <li className="nav-item mt-2 mt-lg-0">
-            <Link
-              href="/login"
-              className={
-                pathname.startsWith("/login") ? "nav-link active" : "nav-link"
-              }
-            >
-              My Account
-            </Link>
+            <div class="dropdown">
+              <button class="dropbtn">
+                My Account <BiSolidDownArrow className="arrow" />
+              </button>
+              <div class="dropdown-content" style={{right:0}}>
+                <Link href="/login" className="nav-link">
+                  Dashboard
+                </Link>
+                <Link
+                  href="javascript:void(0)"
+                  className="nav-link"
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                >
+                  Sign Out
+                </Link>
+              </div>
+            </div>
           </li>
         ) : (
           <li className="nav-item mt-2 mt-lg-0">
