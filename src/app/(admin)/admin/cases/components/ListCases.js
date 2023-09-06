@@ -22,7 +22,7 @@ export default function ListCases() {
   const [pageNumber, setPageNumber] = useState(1);
   const [totalRecords, setTotalRecords] = useState(1);
   const [showSearchBox, setShowSearchBox] = useState(false);
-  const [fields, setFields] = useState(null);
+  //const [fields, setFields] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [updateContractModal, setUpdateContractModal] = useState(false);
   const searchFields = [
@@ -36,7 +36,7 @@ export default function ListCases() {
     },
   ];
 
-  const getRecords = async () => {
+  const getRecords = async (fields = null) => {
     setLoader(true);
     let REQUEST_URI = common.apiPath(`/admin/cases?page=${pageNumber}`);
     if (fields !== null) {
@@ -107,10 +107,10 @@ export default function ListCases() {
     getRecords();
   }, [pageNumber]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     getRecords();
-  }, [fields]);
-  
+  }, [fields]); */
+
   useEffect(() => {
     getEcoProviders();
   }, []);
@@ -154,7 +154,7 @@ export default function ListCases() {
         searchFields={searchFields}
         col={4}
         searchRecords={(fields) => {
-          setFields(fields);
+          getRecords(fields);
         }}
       />
       <Row>

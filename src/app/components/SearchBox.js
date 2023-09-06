@@ -22,11 +22,11 @@ export default function SearchBox(props) {
     setFields({ ...fields, [field]: e.target.value });
   };
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (Object.keys(fields).length === 0) {
       props.searchRecords({ page: 1 });
     }
-  }, [fields]);
+  }, [fields]); */
   return (
     <Collapse in={props.open}>
       <Form onSubmit={handleSubmit}>
