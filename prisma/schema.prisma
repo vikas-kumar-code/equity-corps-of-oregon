@@ -72,7 +72,7 @@ model roles {
 
 model cases {
   id                    Int                     @id @default(autoincrement())
-  case_number           String                  @db.VarChar(50)
+  case_number           String                  @unique @db.VarChar(50)
   title                 String                  @db.VarChar(255)
   description           String                  @db.LongText
   added_by              Int

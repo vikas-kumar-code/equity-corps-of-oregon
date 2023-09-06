@@ -14,7 +14,6 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
-import Pagination from "react-js-pagination";
 import AddEditUser from "./AddEditUser";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
@@ -23,31 +22,33 @@ import { toast } from "react-toastify";
 import ViewDetails from "./ViewDetails";
 import { IoCheckmarkCircle, IoAlertCircle } from "react-icons/io5";
 import BlankCircle from "./BlankCircle";
+import { useSearchParams } from "next/navigation";
+import NextPagination from "@/app/components/NextPagination";
 LoadingOverlay.propTypes = undefined;
 
 export default function ListUsers() {
+  const searchParams = useSearchParams();
+  const [totalRecords, setTotalRecords] = useState(1);
+  const recordPerPage = searchParams.get("recordPerPage") || 10;
+  const pageNumber = searchParams.get("page") || 1;
+
   const [loader, setLoader] = useState(false);
   const [records, setRecords] = useState([]);
-  const recordPerPage = 10;
-  const [pageNumber, setPageNumber] = useState(1);
-  const [totalRecords, setTotalRecords] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [detailsModal, setDetailsModal] = useState(false);
   const [userId, setUserId] = useState(null);
   const [showSearchBox, setShowSearchBox] = useState(false);
-  const [fields, setFields] = useState(null);
+
   const searchFields = [
     { label: "Name", type: "text", name: "name" },
-    { label: "Email", type: "text", name: "email" },
+    { label: "Email", type: "text", name: "email" },   
   ];
 
   const getRecords = async () => {
     setLoader(true);
-    let REQUEST_URI = common.apiPath(`/admin/users?page=${pageNumber}`);
-    if (fields !== null) {
-      const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/admin/users?${queryString}`);
-    }
+    const REQUEST_URI = common.apiPath(
+      `/admin/users?${searchParams.toString()}`
+    );
     fetch(REQUEST_URI)
       .then((response) => response.json())
       .then((response) => {
@@ -63,14 +64,6 @@ export default function ListUsers() {
       })
       .finally(() => setLoader(false));
   };
-
-  useEffect(() => {
-    getRecords();
-  }, [pageNumber]);
-
-  useEffect(() => {
-    getRecords();
-  }, [fields]);
 
   const deleteUser = async (id) => {
     if (window.confirm("Are you sure to delete this user?")) {
@@ -119,6 +112,10 @@ export default function ListUsers() {
     }
   };
 
+  useEffect(() => {
+    getRecords();
+  }, [searchParams]);
+
   return (
     <div>
       <Row>
@@ -146,9 +143,9 @@ export default function ListUsers() {
         open={showSearchBox}
         title={"Search User"}
         searchFields={searchFields}
-        col={6}
-        searchRecords={(fields) => {
-          setFields(fields);
+        col={4}
+        initialValues={{
+          recordPerPage: 10,
         }}
       />
       <Row>
@@ -253,7 +250,7 @@ export default function ListUsers() {
                   </table>
                 </div>
                 <Card.Footer className="text-end bg-white">
-                  <Pagination
+                  {/* <Pagination
                     activePage={pageNumber}
                     itemsCountPerPage={recordPerPage}
                     totalItemsCount={totalRecords}
@@ -262,7 +259,8 @@ export default function ListUsers() {
                     itemClass="page-item"
                     linkClass="page-link"
                     innerClass="pagination float-end"
-                  />
+                  /> */}
+                  <NextPagination totalItemsCount={totalRecords} />
                 </Card.Footer>
               </Card.Body>
             </Card>

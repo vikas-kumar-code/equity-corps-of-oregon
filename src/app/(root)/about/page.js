@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-export default function About() {
+export default function About() {  
   return (
     <div>
       <section className="bg-dark text-center py-3">

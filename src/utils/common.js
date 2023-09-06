@@ -64,12 +64,14 @@ const common = {
       pageNo = 1;
     }
     try {
-      recordPerPage =
+      recordPerPage = parseint(
         request?.nextUrl?.searchParams?.get("recordPerPage") ||
-        request?.get("recordPerPage") ||
-        10;
+          request?.get("recordPerPage") ||
+          10
+      );
     } catch {
       recordPerPage = 10;
+      // console.log(recordPerPage,'###############');
     }
     pageNumber = parseInt(pageNo);
     skip = pageNumber * recordPerPage - recordPerPage;

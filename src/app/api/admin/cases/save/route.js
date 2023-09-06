@@ -47,7 +47,7 @@ export async function POST(request) {
         },
       });
 
-      // move uploaded documents
+      // Move uploaded documents
       data.documents.forEach((doc) => {
         moveFile(
           common.publicPath("temp/" + doc.file_name), // source path
@@ -60,6 +60,10 @@ export async function POST(request) {
   } catch (error) {
     response.error = true;
     response.message = error.message;
+    console.log(error);
+    if (error.code === "P2002") {
+      response.message = { case_number: "Case number already exists." };
+    }
   }
   return NextResponse.json(response);
 }

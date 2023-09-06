@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { useState } from "react";
 import {
   Button,
   Card,
@@ -7,26 +8,28 @@ import {
   Form,
   Row,
   Col,
-  Spinner,
 } from "react-bootstrap";
 
 export default function SearchBox(props) {
-  const [submitted, setSubmitted] = useState(false);
-  const [fields, setFields] = useState({});
+  const [fields, setFields] = useState(props.initialValues || {});
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.searchRecords(fields);
+    const queryParams = new URLSearchParams(searchParams);
+    // update search params
+    Object.entries(fields).forEach((q) => {
+      queryParams.set(q[0], q[1]);
+    });
+    router.push(`${pathname}?${queryParams}`, { scroll: false });
   };
 
   const handleChange = (e, field) => {
     setFields({ ...fields, [field]: e.target.value });
   };
 
-  /* useEffect(() => {
-    if (Object.keys(fields).length === 0) {
-      props.searchRecords({ page: 1 });
-    }
-  }, [fields]); */
   return (
     <Collapse in={props.open}>
       <Form onSubmit={handleSubmit}>
@@ -59,9 +62,22 @@ export default function SearchBox(props) {
                   )}
                   {field.type === "select" && (
                     <FloatingLabel label={field.label} className="mb-3">
-                      <Form.Select name={field.name} value={fields[field.name] ? fields[field.name] : ""} onChange={(event) => handleChange(event, field.name)}>
-                        <option value="">Select Eco Provider</option>
-                        {field.values.map((value, index) => <option value={value.id} key={`eco-provider-${index}`}>{value.name}</option>)}
+                      <Form.Select
+                        name={field.name}
+                        value={fields[field.name] ? fields[field.name] : ""}
+                        onChange={(event) => handleChange(event, field.name)}
+                      >
+                        <option value="">
+                          Select {field.label.toLowerCase()}
+                        </option>
+                        {field.values.map((value, index) => (
+                          <option
+                            value={value.id}
+                            key={`eco-provider-${index}`}
+                          >
+                            {value.name}
+                          </option>
+                        ))}
                       </Form.Select>
                     </FloatingLabel>
                   )}
@@ -75,17 +91,13 @@ export default function SearchBox(props) {
                 size="lg"
                 onClick={() => {
                   setFields({});
+                  router.push(pathname, { scroll: false });
                 }}
               >
                 Clear
               </Button>
-              <Button
-                variant="success"
-                size="lg"
-                disabled={submitted}
-                type="submit"
-              >
-                {submitted && <Spinner size="sm" className="me-1" />}Search
+              <Button variant="success" size="lg" type="submit">
+                Search
               </Button>
             </div>
           </Card.Body>

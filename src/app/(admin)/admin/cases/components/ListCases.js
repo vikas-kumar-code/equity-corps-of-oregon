@@ -11,10 +11,12 @@ import { toast } from "react-toastify";
 import Case from "./Case";
 import AddEditCase from "./AddEditCase";
 import UpdateContract from "./UpdateContract";
+import { usePathname, useSearchParams } from "next/navigation";
 
 LoadingOverlay.propTypes = undefined;
 
 export default function ListCases() {
+  const searchParams = useSearchParams();
   const [loader, setLoader] = useState(false);
   const [records, setRecords] = useState([]);
   const [ecoProviders, setEcoProviders] = useState([]);
@@ -36,14 +38,10 @@ export default function ListCases() {
     },
   ];
 
-  const getRecords = async (fields = null) => {
+  const getRecords = async () => {
     setLoader(true);
-    let REQUEST_URI = common.apiPath(`/admin/cases?page=${pageNumber}`);
-    if (fields !== null) {
-      fields["page"] = pageNumber;
-      const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/admin/cases?${queryString}`);
-    }
+    let REQUEST_URI = common.apiPath(`/admin/cases`);
+    REQUEST_URI = common.apiPath(`/admin/cases?${searchParams.toString()}`);
     fetch(REQUEST_URI)
       .then((response) => response.json())
       .then((response) => {
@@ -105,11 +103,8 @@ export default function ListCases() {
 
   useEffect(() => {
     getRecords();
-  }, [pageNumber]);
-
-  /* useEffect(() => {
-    getRecords();
-  }, [fields]); */
+    console.log(searchParams.toString(), "zzzzzzzzxxxxxxxxxxxxxxxx");
+  }, [searchParams]);
 
   useEffect(() => {
     getEcoProviders();
@@ -153,9 +148,6 @@ export default function ListCases() {
         title={"Search Case"}
         searchFields={searchFields}
         col={4}
-        searchRecords={(fields) => {
-          getRecords(fields);
-        }}
       />
       <Row>
         <Col>

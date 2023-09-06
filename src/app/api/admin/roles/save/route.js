@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import Joi from "joi";
-
-
 import prisma from "@/utils/prisma";
 
 export async function POST(request) {
@@ -10,7 +8,6 @@ export async function POST(request) {
         name: Joi.required(),
         status: Joi.number().required(),
     })
-
     try {
         const record = await feldsSchema.validateAsync(role);
         if (record) {
