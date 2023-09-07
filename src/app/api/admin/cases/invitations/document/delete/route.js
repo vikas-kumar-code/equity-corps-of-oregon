@@ -14,7 +14,7 @@ export async function DELETE(request) {
           uploaded_by: session.user.id,
         },
       });
-      if (caseDocumentModel) {        
+      if (caseDocumentModel) {
         // delete file from server
         if (caseDocumentModel.file_name) {
           const filePath = path.join(

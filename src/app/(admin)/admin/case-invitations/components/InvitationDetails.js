@@ -106,6 +106,7 @@ const InvitationDetails = ({ showModal, closeModal, record, reloadRecords }) => 
               documents={fields.documents}
               errors={errors}
               setErrors={setErrors}
+              caseId={record.case.id}
             />
           </Tab>
           <Tab eventKey={4} title="Case Activities">

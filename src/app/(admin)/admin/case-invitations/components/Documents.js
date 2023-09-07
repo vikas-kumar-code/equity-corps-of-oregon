@@ -54,7 +54,7 @@ export default function Documents(props) {
       const data = new FormData();
       data.append("document", selectedDocument);
       data.append("document_name", documentName);
-      data.append("case_id", props?.case.id);
+      data.append("case_id", props?.caseId);
       const res = await fetch(
         common.apiPath("/api/admin/cases/invitations/document/upload"),
         {
