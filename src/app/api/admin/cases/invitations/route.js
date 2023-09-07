@@ -20,22 +20,27 @@ export async function GET(request) {
     };
     if (request.get("case_number")) {
       where = {
+        ...where,
         case: {
           is: {
-            case_number: request.get("case_number"),
+            case_number: {
+              contains: request.get("case_number"),
+            },
           },
         },
       };
     }
     if (request.get("case_title")) {
       where = {
+        ...where,
         case: {
           is: {
-            title: request.get("case_title"),
+            title: { contains: request.get("case_title") },
           },
         },
       };
     }
+
     records = await prisma.case_invitations.findMany({
       where,
       ...paginate,

@@ -66,7 +66,6 @@ export const authOptions = {
                   });
                   user.routes = authorizedRoutes.map((route) => route.url);
                 }
-
                 return user;
               } else {
                 throw new Error("Your account is not verified.");

@@ -12,7 +12,7 @@ import {
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import common from "@/utils/common";
-import DownloadButton from "./DownloadButton";
+import DownloadButton from "../../cases/components/DownloadButton";
 
 export default function Documents(props) {
   const [documentName, setDocumentName] = useState("");
@@ -53,20 +53,18 @@ export default function Documents(props) {
       setSubmitted(true);
       const data = new FormData();
       data.append("document", selectedDocument);
-      const res = await fetch(common.apiPath("/upload"), {
-        method: "POST",
-        body: data,
-      });
+      data.append("document_name", documentName);
+      data.append("case_id", props?.case.id);
+      const res = await fetch(
+        common.apiPath("/api/admin/cases/invitations/document/upload"),
+        {
+          method: "POST",
+          body: data,
+        }
+      );
       const response = await res.json();
       if (response.success) {
-        props?.updateDocuments([
-          ...props?.documents,
-          {
-            document_name: documentName,
-            file_name: response.file,
-            uploaded_on: new Date(),
-          },
-        ]);
+        props.reloadRecords();
         setDocumentName("");
         setSelectedDocument(null);
         window.document.getElementById("document").value = "";
@@ -92,35 +90,34 @@ export default function Documents(props) {
     return formIsValid;
   };
 
-  const deleteRecord = async (index) => {
+  const deleteRecord = async (document_id) => {
     if (window.confirm("Are you sure to delete?")) {
-      if (props?.documents[index] || false) {
-        let deleteDoc = props?.documents[index];
-        try {
-          setLoader(true);
-          await fetch(common.apiPath("/upload/delete"), {
-            method: "POST",
-            body: JSON.stringify({
-              file: deleteDoc.file_name,
-            }),
+      try {
+        setLoader(true);
+        await fetch(
+          common.apiPath("/admin/cases/invitations/document/delete"),
+          {
+            method: "DELETE",
+            body: JSON.stringify({ id: document_id }),
+          }
+        )
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.success) {
+              props.reloadRecords();
+              toast.success(response.message);
+            } else {
+              toast.error(response.message);
+            }
           });
-          let newDocuments = props?.documents.filter(
-            (r, indx) => index !== indx
-          );
-          await props.updateDocuments(newDocuments);
-          await props?.setDeletedDocument(deleteDoc.file_name);
-          toast.success("File deleted successfully");
-        } catch (error) {
-          toast.error(error.message);
-        } finally {
-          setLoader(false);
-        }
-      } else {
-        toast.error("Document not found.");
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setLoader(false);
       }
     }
   };
-    
+
   return (
     <>
       {props?.errors?.documents && (
@@ -220,9 +217,9 @@ export default function Documents(props) {
                         </td>
                         <td>
                           <div className="d-flex">
-                            <Button                            
+                            <Button
                               variant="danger"
-                              onClick={() => deleteRecord(index)}
+                              onClick={() => deleteRecord(record.id)}
                               size="sm"
                               className="me-2"
                             >
@@ -231,7 +228,7 @@ export default function Documents(props) {
                             <DownloadButton
                               fileName={record.document_name}
                               path={common.downloadLink(
-                                "uploads/case_documents/" + record.file_name+'?temp=true'
+                                "uploads/case_documents/" + record.file_name
                               )}
                             />
                           </div>

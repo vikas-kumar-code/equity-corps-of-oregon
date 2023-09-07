@@ -4,17 +4,9 @@ import React, { useState } from "react";
 import moment from "moment";
 import { Badge, Button, Spinner } from "react-bootstrap";
 import InvitationDetails from "./InvitationDetails";
-import { toast } from "react-toastify";
-import common from "@/utils/common";
 import AcceptInvitation from "./AcceptInvitation";
 
-export default function Case({
-  record,
-  getRecords,
-  index,
-  pageNumber,
-  recordPerPage,
-}) {
+export default function Case({ record, getRecords, index, sn }) {
   const [showModal, setShowModal] = useState(false);
   const [showConfirmation, setConfirmation] = useState(false);
 
@@ -36,32 +28,25 @@ export default function Case({
   return (
     <>
       <tr key={`cases-key-${index}`}>
-        <td>
-          {pageNumber * recordPerPage - recordPerPage + Number(index + 1)}.
-        </td>
+        <td>{sn}.</td>
         <td>{record.case.case_number}</td>
         <td>{record.case.title}</td>
         <td>
-          <Badge
-            pill
-            bg={btnStatus[record.status].bg || "info"}
-          >
+          <Badge pill bg={btnStatus[record.status].bg || "info"}>
             {btnStatus[record.status].label || "N/A"}
           </Badge>
         </td>
-        <td>
-          {moment(record.sent_on).format("D MMM,  YYYY")}
-        </td>
+        <td>{moment(record.sent_on).format("D MMM,  YYYY")}</td>
         <td>
           {record?.status === 0 && (
-              <Button
-                className="me-2"
-                variant="success"
-                onClick={() => setConfirmation(true)}
-              >
-                Accept
-              </Button>
-            )}
+            <Button
+              className="me-2"
+              variant="success"
+              onClick={() => setConfirmation(true)}
+            >
+              Accept
+            </Button>
+          )}
           <Button
             className="me-2"
             variant="primary"
@@ -79,6 +64,7 @@ export default function Case({
             setShowModal(false);
           }}
           record={record}
+          reloadRecords={getRecords}
         />
       )}
 
