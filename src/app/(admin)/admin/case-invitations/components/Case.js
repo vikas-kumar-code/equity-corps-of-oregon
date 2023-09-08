@@ -79,6 +79,7 @@ export default function Case({
             setShowModal(false);
           }}
           record={record}
+          reloadRecords={getRecords}
         />
       )}
 

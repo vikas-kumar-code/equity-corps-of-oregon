@@ -1,20 +1,17 @@
 import moment from "moment";
-import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Badge,
-  Tabs,
-  Tab,
-  Button,
-} from "react-bootstrap";
-import LoadingOverlay from "react-loading-overlay";
-import DownloadButton from "../../cases/components/DownloadButton";
-import common from "@/utils/common";
+import React, { useState } from "react";
+import { Modal, Badge, Tabs, Tab, Button, Row, Col } from "react-bootstrap";
+import Documents from "./Documents";
 
-const InvitationDetails = ({ showModal, closeModal, record }) => {
+const InvitationDetails = ({
+  showModal,
+  closeModal,
+  record,
+  reloadRecords,
+}) => {
   const [activeTab, setActiveTab] = useState(1);
-  const [loader, setLoader] = useState(false);
-  const [activated, setActivated] = useState(1);
+  const [errors, setErrors] = useState({});
+  const [deletedDocuments, setDeletedDocuments] = useState([]);
 
   const iStatus = {
     0: {
@@ -31,12 +28,6 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
     },
   };
 
-  useEffect(() => {
-    if (activeTab > activated) {
-      setActivated(activeTab);
-    }
-  }, [activeTab]);
-
   return (
     <Modal
       show={showModal}
@@ -46,143 +37,142 @@ const InvitationDetails = ({ showModal, closeModal, record }) => {
       centered
       size="lg"
     >
-      <LoadingOverlay active={loader} spinner text="Loading...">
-        <Modal.Header closeButton className="border-bottom-0">
-          <h3> Case Details</h3>
-        </Modal.Header>
-        <Modal.Body>
-          <Tabs
-            activeKey={activeTab}
-            id="justify-tab-example"
-            justify
-            onSelect={(k) => setActiveTab(parseInt(k))}
-            
-          >
-            <Tab
-              eventKey={1}
-              title="Basic Details"
-            >
-              <table className="table table-borderless table-striped">
-                  <tbody>
-                    <tr>
-                      <th>Case Number</th>
-                      <td>{record.case.case_number}</td>
-                    </tr>
-                    <tr>
-                      <th>Title</th>
-                      <td>{record.case.title}</td>
-                    </tr>
-                    <tr>
-                      <th>Description</th>
-                      <td>{record.case.description}</td>
-                    </tr>
-                    <tr>
-                      <th>Status</th>
-                      <td>
-                        <Badge pill bg={iStatus[record.status].bg || "info"}>
-                          {iStatus[record.status].label || "N/A"}
-                        </Badge>
+      <Modal.Header closeButton className="border-bottom-0">
+        <h3> Case Details</h3>
+      </Modal.Header>
+      <Modal.Body>
+        <Tabs
+          activeKey={activeTab}
+          id="justify-tab-example"
+          justify
+          onSelect={(k) => setActiveTab(parseInt(k))}
+        >
+          <Tab eventKey={1} title="Basic Details">
+            <table className="table table-borderless table-striped">
+              <tbody>
+                <tr>
+                  <th>Case Number</th>
+                  <td>{record.case.case_number}</td>
+                </tr>
+                <tr>
+                  <th>Title</th>
+                  <td>{record.case.title}</td>
+                </tr>
+                <tr>
+                  <th>Description</th>
+                  <td>{record.case.description}</td>
+                </tr>
+                <tr>
+                  <th>Status</th>
+                  <td>
+                    <Badge pill bg={iStatus[record.status].bg || "info"}>
+                      {iStatus[record.status].label || "N/A"}
+                    </Badge>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Added On</th>
+                  <td>{moment(record.sent_on).format("D MMM, YYYY")}</td>
+                </tr>
+              </tbody>
+            </table>
+          </Tab>
+          <Tab eventKey={2} title="Milestones">
+            <table className="table table-borderless table-striped">
+              <tbody>
+                <tr className="mx-5">
+                  <th colSpan={4}>#</th>
+                  <th colSpan={4}>Comment</th>
+                  <th colSpan={4}>Updated On</th>
+                </tr>
+                {record.case.case_milestones.map((mile, i) => {
+                  return (
+                    <tr key={i}>
+                      <td colSpan={4}>{mile.id}</td>
+                      <td colSpan={4}>{mile.comment}</td>
+                      <td colSpan={4}>
+                        {moment(mile.milestone_date).format("D MMM,  YYYY")}
                       </td>
                     </tr>
-                    <tr>
-                      <th>Added On</th>
-                      <td>{moment(record.sent_on).format("D MMM, YYYY")}</td>
-                    </tr>
-                  </tbody>
-              </table>
-            </Tab>
-            <Tab eventKey={2} title="Milestones">
-              <table className="table table-borderless table-striped">
-                <tbody>
-                  <tr className="mx-5">
-                    <th colSpan={4}>#</th>
-                    <th colSpan={4}>Comment</th>
-                    <th colSpan={4}>Updated On</th>
-                  </tr>
-                  {record.case.case_milestones.map((mile, i) => {
-                    return (
-                      <tr key={i}>
-                        <td colSpan={4}>{mile.id}</td>
-                        <td colSpan={4}>{mile.comment}</td>
-                        <td colSpan={4}>
-                            {moment(mile.milestone_date).format("D MMM,  YYYY")}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </Tab>
-            <Tab
-              eventKey={3}
-              title="Documents"
-            >
-              <table className="table table-borderless table-striped">
-                <tbody>
-                  <tr>
-                    <th colSpan={3}>#</th>
-                    <th colSpan={3}>Document Name</th>
-                    <th colSpan={3}>Updated On</th>
-                    <th colSpan={3}>Action</th>
-                  </tr>
-                  {record.case.case_documents.map((rec, i) => {
-                    return (
-                      <tr className="milestones mt-5 mx-5" key={i}>
-                        <td colSpan={3}>{rec.id}</td>
-                        <td colSpan={3}>{rec.document_name}</td>
-                        <td colSpan={3}>
-                            {moment(rec.uploaded_on).format("D MMM,  YYYY")}
-                        </td>
-                        <td colSpan={3}>
-                          <DownloadButton
-                            fileName={record.document_name}
-                            path={common.downloadLink(
-                              "uploads/case_documents/" +
-                                rec.file_name +
-                                "?temp=true"
-                            )}
-                          />
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </Tab>
-            <Tab eventKey={4} title="Case Activities">
-              <tbody>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-              <ol className="activity-feed">
-                {record.case.logs.map((log, i) => {
-                  return (
-                    <li class="feed-item">
-                      <time class="date">
-                        {moment(log.created_at).format("DD MMMM YYYY")}
-                      </time>
-                      <span class="text">{log.content}</span>
-                    </li>
                   );
                 })}
-              </ol>
               </tbody>
-            </Tab>
-          </Tabs>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            size="lg"
-            type="submit"
-            variant="secondary"
-            onClick={closeModal}
-          >
-            Close
-          </Button>
-        </Modal.Footer>
-      </LoadingOverlay>
+            </table>
+          </Tab>
+          <Tab eventKey={3} title="Documents">
+            {record.status === 1 ? (
+              <Documents
+                reloadRecords={reloadRecords}
+                setDeletedDocument={(doc) => {
+                  setDeletedDocuments([...deletedDocuments, doc]);
+                }}
+                documents={record.case.case_documents}
+                errors={errors}
+                setErrors={setErrors}
+                caseId={record.case.id}
+              />
+            ) : (
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Document Name </th>
+                    <th>Uploaded On</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {record.case.case_documents?.map((record, index) => (
+                    <tr key={`documents-key-${index}`}>
+                      <td>{Number(index + 1)}.</td>
+                      <td>{record.document_name}</td>
+                      <td>
+                        {moment(record?.uploaded_on || new Date()).format(
+                          "MMMM DD, YYYY"
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </Tab>
+          <Tab eventKey={4} title="Case Activities">
+            <div style={{ maxHeight: "250px", overflowY: "auto" }}>
+              <table>
+                <tbody>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                  <ol className="activity-feed">
+                    {record.case.logs.map((log, i) => {
+                      return (
+                        <li class="feed-item">
+                          <time class="date">
+                            {moment(log.created_at).format("LLLL")}
+                          </time>
+                          <span class="text">{log.content}</span>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </tbody>
+              </table>
+            </div>
+          </Tab>
+        </Tabs>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          size="lg"
+          type="submit"
+          variant="secondary"
+          onClick={closeModal}
+        >
+          Close
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
 };
