@@ -6,7 +6,6 @@ import "../styles/frontNav.css";
 import { BiSolidDownArrow } from "react-icons/bi";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
-import { Button } from "react-bootstrap";
 
 export default function FrontNavigation() {
   const pathname = usePathname();
@@ -34,7 +33,7 @@ export default function FrontNavigation() {
         </li>
         <li>
           <div className="dropdown">
-            <button className="dropbtn">
+            <button className={`dropbtn ${pathname.startsWith("/about")? "nav-link active" : "nav-link"}`}>
               About <BiSolidDownArrow className="arrow" />
             </button>
             <div class="dropdown-content">
@@ -86,11 +85,11 @@ export default function FrontNavigation() {
           </div>
         </li>
         <li>
-          <div class="dropdown">
-            <button class="dropbtn">
+          <div className="dropdown">
+            <button className={`dropbtn ${pathname.startsWith("/getInvolved")? "nav-link active" : "nav-link"}`}>
               Get Involved <BiSolidDownArrow className="arrow" />
             </button>
-            <div class="dropdown-content">
+            <div className="dropdown-content">
               <Link
                 href="/getInvolved"
                 className={
@@ -146,11 +145,11 @@ export default function FrontNavigation() {
         </li>
         {session.data !== null && session.status === "authenticated" ? (
           <li className="nav-item mt-2 mt-lg-0">
-            <div class="dropdown">
-              <button class="dropbtn">
+            <div className="dropdown">
+              <button className="dropbtn">
                 My Account <BiSolidDownArrow className="arrow" />
               </button>
-              <div class="dropdown-content" style={{right:0}}>
+              <div className="dropdown-content" style={{right:0}}>
                 <Link href="/login" className="nav-link">
                   Dashboard
                 </Link>

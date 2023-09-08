@@ -14815,6 +14815,10 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
   border-color: #2c2e33 #2c2e33 black;
 }
 
+.nav-link.active{
+  background-color: #E8E8E8;
+  color: #000000 !important;
+}
 .nav-tabs .dropdown-menu {
   margin-top: -1px;
   border-top-left-radius: 0;

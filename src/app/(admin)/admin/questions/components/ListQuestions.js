@@ -61,7 +61,7 @@ export default function ListQuestions() {
   };
 
   const saveOrder = async () => {
-    fetch(common.apiPath(`/admin/questions/save/sequence`), {
+    fetch(common.apiPath(`/admin/questions/create/sequence`), {
       method: "POST",
       body: JSON.stringify({ orders: recordOrder }),
     })
@@ -91,8 +91,9 @@ export default function ListQuestions() {
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this question?")) {
       setLoader(true);
-      fetch(common.apiPath(`/admin/questions/delete/${id}`), {
+      fetch(common.apiPath(`/admin/questions/delete`), {
         method: "DELETE",
+        body: JSON.stringify(id)
       })
         .then((response) => response.json())
         .then((response) => {

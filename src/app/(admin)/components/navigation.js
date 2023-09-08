@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
+import "../../styles/backend-theme.css";
 LoadingOverlay.propTypes = undefined;
 
 export default function Navigation() {
@@ -82,10 +83,11 @@ export default function Navigation() {
                   : "nav-item menu-items admin-panel-nav-item"
               }
             >
-              <Link href={common.basePath(module.url)} className="nav-link">
+              <Link href={common.basePath(module.url)} className={pathname == `/${module.url}` ? "nav-link active" : "nav-link" }>
                 <span className="menu-icon">
                   <i className={module.icon}></i>
                 </span>
+                
                 <span className="menu-title">{module.label}</span>
               </Link>
             </li>
