@@ -1,21 +1,18 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
-import { revalidatePath } from 'next/cache'
 
 export async function GET(request) {
-  const path = request.nextUrl.searchParams.get('path');
-  revalidatePath(path)
   const response = {};
+  const searchParams = request.nextUrl.searchParams;
   try {
-    const recordId = 1;
-    const contract = await prisma.contracts.findUnique({
+    const caseInvitaion = await prisma.case_invitations.findUnique({
       where: {
-        id: recordId,
+        id: parseInt(searchParams.get('invitation_id')),
       },
     });
     response.success = true;
-    response.message = "Contract Content";
-    response.record = contract;
+    response.message = "Case invitation details";
+    response.record = caseInvitaion;
   } catch (error) {
     response.error = true;
     response.message = error.message;

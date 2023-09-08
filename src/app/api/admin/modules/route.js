@@ -4,7 +4,7 @@ import prisma from "@/utils/prisma";
 
 export async function GET() {
   const session = await getSession();
-  let response = {};
+  const response = {};
   try {
     const user = await prisma.users.findUnique({
       where: { id: session.user.id },

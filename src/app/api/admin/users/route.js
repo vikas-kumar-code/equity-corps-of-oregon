@@ -4,7 +4,7 @@ import common from "@/utils/common";
 export async function GET(request) {
   let records = [];
   let totalRecords = 0;
-  let response = {};
+  const response = {};
   const searchParams = request.nextUrl.searchParams;
   try {
     const paginate = common.paginate(searchParams);

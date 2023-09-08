@@ -4,7 +4,7 @@ import prisma from "@/utils/prisma";
 import validateAsync from "@/utils/validateAsync";
 
 export async function POST(request) {
-  let response = {};
+  const response = {};
   try {
     const data = await request.json();
     const schema = Joi.object({

@@ -1,0 +1,65 @@
+import { NextResponse } from "next/server";
+import Joi from "joi";
+import prisma from "@/utils/prisma";
+import validateAsync from "@/utils/validateAsync";
+
+export async function PUT(request) {
+  const response = {};
+  const req = await request.json();
+  const questionId = Number(req.id) || null;
+
+  try {
+    if (questionId) {
+      let updateData = await request.json();
+      // Validation
+      const schema = Joi.object({
+        question: Joi.string().max(400).required(),
+        options: Joi.array()
+          .items(Joi.string().max(400).label("Option"))
+          .min(2)
+          .max(10)
+          .required(),
+        answer: Joi.number().min(1).required().messages({
+          "number.base": "Select a correct answer.",
+        }),
+      });
+
+      const validated = await validateAsync(schema, updateData, {
+        errorKey: true,
+      });
+      if (validated.errors) {
+        response.error = true;
+        response.message = validated.errors;
+      } else {
+        // Create a new question with options
+        await prisma.options.deleteMany({
+          where: {
+            question_id: questionId,
+          },
+        });
+        const question = await prisma.questions.update({
+          where: { id: questionId },
+          data: {
+            question: validated.question,
+            options: {
+              create: validated.options.map((opt, index) => {
+                return { option: opt, status: index + 1 === validated.answer };
+              }),
+            },
+          },
+        });
+        if (question) {
+          response.success = true;
+          response.message = "Question udpated successfully.";
+        }
+      }
+    } else {
+      response.error = true;
+      response.message = "Record not found.";
+    }
+  } catch (error) {
+    response.error = true;
+    response.message = error.message;
+  }
+  return NextResponse.json(response);
+}
