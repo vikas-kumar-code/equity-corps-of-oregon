@@ -1,11 +1,10 @@
 import { getSession } from "@/utils/serverHelpers";
-
 import { NextResponse } from "next/server";
-
 import prisma from "@/utils/prisma";
-export async function GET(request) {
+
+export async function GET() {
   const session = await getSession();
-  let response = {};
+  const response = {};
   try {
     const user = await prisma.users.findUnique({
       where: { id: session.user.id },
@@ -17,25 +16,32 @@ export async function GET(request) {
     });
     let routeIds = permissions.map((item) => item.route_id);
     let where = {
-      parent_id: {
-        lte: 0,
-      },
+      parent_id: 0,
       id: {
         in: routeIds,
       },
+      NOT: {
+        url: {
+          contains: "/api",
+        },
+      },
     };
+
+    // Exclude routes for Admin
     if (parseInt(session.user.role_id) === 1) {
+      let excludeRoutes = ["/admin/case-invitations"];
       where = {
         parent_id: {
           lte: 0,
         },
         NOT: {
-          id: {
-            in: [8], // Case invitations
+          url: {
+            in: excludeRoutes,
           },
         },
       };
     }
+
     const records = await prisma.routes.findMany({
       where,
     });

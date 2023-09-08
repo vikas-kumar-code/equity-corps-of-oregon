@@ -27,6 +27,19 @@ const moveFile = (sourceFilePath = "", destinationFilePath = "") => {
   }
 };
 
+const deleteFile = (filePath = "") => {
+  try {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+};
+
 // Get session
 const getSession = async () => {
   return await getServerSession(authOptions);
@@ -50,4 +63,5 @@ module.exports = {
   moveFile,
   getSession,
   redirectToDashboard,
+  deleteFile
 };

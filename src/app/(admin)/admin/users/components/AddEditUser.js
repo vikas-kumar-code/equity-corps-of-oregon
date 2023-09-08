@@ -52,10 +52,11 @@ export default function AddEditUser(props) {
     e.preventDefault();
     setErrors({});
     let validated;
+    let formfields = common.stripEmptyFields(fields);
     if (props.userId) {
-      validated = await validateAsync(updateUserSchema, fields);
+      validated = await validateAsync(updateUserSchema, formfields);
     } else {
-      validated = await validateAsync(addUserSchema, fields);
+      validated = await validateAsync(addUserSchema, formfields);
     }
     if (validated.errors) {
       handleErrors(validated.errors);
@@ -69,7 +70,7 @@ export default function AddEditUser(props) {
       }
       await fetch(REQUEST_URI, {
         method: REQUEST_METHOD,
-        body: JSON.stringify(fields),
+        body: JSON.stringify(formfields),
       })
         .then((response) => response.json())
         .then((response) => {

@@ -5,7 +5,7 @@ import prisma from "@/utils/prisma";
 
 export async function GET(request) {
   let records = [];  
-  let response = {};
+  const response = {};
   const searchParams = request.nextUrl.searchParams;
   
   try {

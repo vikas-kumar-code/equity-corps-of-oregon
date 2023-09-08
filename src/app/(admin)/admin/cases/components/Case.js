@@ -6,36 +6,30 @@ import { Button } from "react-bootstrap";
 import SendInvitation from "./SendInvitation";
 import AddEditCase from "./AddEditCase";
 
-export default function Case({ record, getRecords, deleteRecord, index, pageNumber, recordPerPage }) {
+export default function Case({
+  record,
+  getRecords,
+  deleteRecord,
+  sn,  
+}) {
   const [showModal, setShowModal] = useState(false);
   const [showSendInvitationModal, setShowSendInvitationModal] = useState(false);
 
   console.log(record);
   return (
     <>
-      <tr key={`cases-key-${index}`}>
-        <td>
-          {pageNumber * recordPerPage -
-            recordPerPage +
-            Number(index + 1)}
-          .
-        </td>
+      <tr key={`cases-key-${sn}`}>
+        <td>{sn}.</td>
         <td>{record.case_number}</td>
         <td>{record.title}</td>
         <td>
           {record.status ? (
-            <span className="badge badge-success rounded-pill">
-              Active
-            </span>
+            <span className="badge badge-success rounded-pill">Active</span>
           ) : (
-            <span className="badge badge-danger rounded-pill">
-              Inactive
-            </span>
+            <span className="badge badge-danger rounded-pill">Inactive</span>
           )}
         </td>
-        <td>
-          {moment(record.created_at).format("D MMM,  YYYY")}
-        </td>
+        <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
         <td>
           <Button
             className="me-2"
@@ -51,10 +45,7 @@ export default function Case({ record, getRecords, deleteRecord, index, pageNumb
           >
             Edit
           </Button>
-          <Button
-            variant="danger"
-            onClick={() => deleteRecord(record.id)}
-          >
+          <Button variant="danger" onClick={() => deleteRecord(record.id)}>
             Delete
           </Button>
         </td>
@@ -81,6 +72,5 @@ export default function Case({ record, getRecords, deleteRecord, index, pageNumb
         />
       )}
     </>
-
   );
 }

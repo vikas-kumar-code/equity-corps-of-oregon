@@ -3,36 +3,33 @@
 import React, { useState, useEffect } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { Card, Row, Col, Button } from "react-bootstrap";
-import Pagination from "react-js-pagination";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
 import Case from "./Case";
-LoadingOverlay.propTypes = undefined
-
+import { useSearchParams } from "next/navigation";
+import NextPagination from "@/app/components/NextPagination";
+LoadingOverlay.propTypes = undefined;
 
 export default function ListCaseInvitations() {
+  const searchParams = useSearchParams();
+  const [totalRecords, setTotalRecords] = useState(1);
+
   const [loader, setLoader] = useState(true);
   const [records, setRecords] = useState([]);
-  const recordPerPage = 10;
-  const [pageNumber, setPageNumber] = useState(1);
-  const [totalRecords, setTotalRecords] = useState(1);
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [fields, setFields] = useState(null);
 
   const searchFields = [
     { label: "Case Number", type: "text", name: "case_number" },
-    { label: "Case Title", type: "text", name: "case_title" }
+    { label: "Case Title", type: "text", name: "case_title" },
   ];
 
   const getRecords = async () => {
-    let REQUEST_URI = common.apiPath(`/admin/cases/invitations?page=${pageNumber}`);
-    if (fields !== null) {
-      fields["page"] = pageNumber;
-      const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/admin/cases/invitations?${queryString}`);
-    }
+    const REQUEST_URI = common.apiPath(
+      `/admin/cases/invitations?${searchParams.toString()}`
+    );
     fetch(REQUEST_URI)
       .then((response) => response.json())
       .then((response) => {
@@ -51,11 +48,7 @@ export default function ListCaseInvitations() {
 
   useEffect(() => {
     getRecords();
-  }, [pageNumber]);
-
-  useEffect(() => {
-    getRecords();
-  }, [fields]);
+  }, [searchParams]);
 
   return (
     <div>
@@ -110,30 +103,22 @@ export default function ListCaseInvitations() {
                           index={index}
                           key={`cases-key-${index}`}
                           getRecords={getRecords}
-                          pageNumber={pageNumber}
-                          recordPerPage={recordPerPage}
+                          sn={common.sn(searchParams, index)}
                         />
                       ))}
-                      {!loader && records.length === 0 && <tr>
-                        <td colSpan={6} className="text-center text-danger">No invitation found!</td>
-                      </tr>}
+                      {!loader && records.length === 0 && (
+                        <tr>
+                          <td colSpan={6} className="text-center text-danger">
+                            No invitation found!
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
-                {totalRecords > recordPerPage && (
-                  <Card.Footer className="text-end">
-                    <Pagination
-                      activePage={pageNumber}
-                      itemsCountPerPage={recordPerPage}
-                      totalItemsCount={totalRecords}
-                      pageRangeDisplayed={recordPerPage}
-                      onChange={(page) => setPageNumber(page)}
-                      itemClass="page-item"
-                      linkClass="page-link"
-                      innerClass="pagination float-end"
-                    />
-                  </Card.Footer>
-                )}
+                <Card.Footer className="text-end">
+                  <NextPagination totalItemsCount={totalRecords} />
+                </Card.Footer>
               </Card.Body>
             </Card>
           </LoadingOverlay>

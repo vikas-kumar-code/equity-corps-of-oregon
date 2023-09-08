@@ -9,7 +9,7 @@ const getRndInteger = (min, max) => {
 };
 
 export async function POST(request) {
-  let response = {};
+  const response = {};
   try {
     const data = await request.json();
     const validated = await validateAsync(resetPasswordSchema, data);

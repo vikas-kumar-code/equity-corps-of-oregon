@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { Card, Row, Col, Button } from "react-bootstrap";
-import Pagination from "react-js-pagination";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
@@ -11,18 +10,19 @@ import { toast } from "react-toastify";
 import Case from "./Case";
 import AddEditCase from "./AddEditCase";
 import UpdateContract from "./UpdateContract";
+import { useSearchParams } from "next/navigation";
+import NextPagination from "@/app/components/NextPagination";
 
 LoadingOverlay.propTypes = undefined;
 
 export default function ListCases() {
+  const searchParams = useSearchParams();
+  const [totalRecords, setTotalRecords] = useState(1);
+
   const [loader, setLoader] = useState(false);
   const [records, setRecords] = useState([]);
   const [ecoProviders, setEcoProviders] = useState([]);
-  const recordPerPage = 10;
-  const [pageNumber, setPageNumber] = useState(1);
-  const [totalRecords, setTotalRecords] = useState(1);
   const [showSearchBox, setShowSearchBox] = useState(false);
-  //const [fields, setFields] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [updateContractModal, setUpdateContractModal] = useState(false);
   const searchFields = [
@@ -36,14 +36,10 @@ export default function ListCases() {
     },
   ];
 
-  const getRecords = async (fields = null) => {
+  const getRecords = async () => {
     setLoader(true);
-    let REQUEST_URI = common.apiPath(`/admin/cases?page=${pageNumber}`);
-    if (fields !== null) {
-      fields["page"] = pageNumber;
-      const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/admin/cases?${queryString}`);
-    }
+    let REQUEST_URI = common.apiPath(`/admin/cases`);
+    REQUEST_URI = common.apiPath(`/admin/cases?${searchParams.toString()}`);
     fetch(REQUEST_URI)
       .then((response) => response.json())
       .then((response) => {
@@ -63,7 +59,10 @@ export default function ListCases() {
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this question?")) {
       setLoader(true);
-      fetch(common.apiPath(`/admin/cases/delete/${id}`), { method: "DELETE" })
+      fetch(common.apiPath(`/admin/cases/delete/${id}`), {
+        method: "DELETE",
+        body: JSON.stringify({id}),
+      })
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
@@ -105,11 +104,7 @@ export default function ListCases() {
 
   useEffect(() => {
     getRecords();
-  }, [pageNumber]);
-
-  /* useEffect(() => {
-    getRecords();
-  }, [fields]); */
+  }, [searchParams]);
 
   useEffect(() => {
     getEcoProviders();
@@ -153,9 +148,6 @@ export default function ListCases() {
         title={"Search Case"}
         searchFields={searchFields}
         col={4}
-        searchRecords={(fields) => {
-          getRecords(fields);
-        }}
       />
       <Row>
         <Col>
@@ -182,31 +174,18 @@ export default function ListCases() {
                       {records.map((record, index) => (
                         <Case
                           record={record}
-                          index={index}
                           key={`cases-key-${index}`}
                           getRecords={getRecords}
                           deleteRecord={deleteRecord}
-                          pageNumber={pageNumber}
-                          recordPerPage={recordPerPage}
+                          sn={common.sn(searchParams, index)}
                         />
                       ))}
                     </tbody>
                   </table>
                 </div>
-                {totalRecords > recordPerPage && (
-                  <Card.Footer className="text-end">
-                    <Pagination
-                      activePage={pageNumber}
-                      itemsCountPerPage={recordPerPage}
-                      totalItemsCount={totalRecords}
-                      pageRangeDisplayed={recordPerPage}
-                      onChange={(page) => setPageNumber(page)}
-                      itemClass="page-item"
-                      linkClass="page-link"
-                      innerClass="pagination float-end"
-                    />
-                  </Card.Footer>
-                )}
+                <Card.Footer className="text-end">
+                  <NextPagination totalItemsCount={totalRecords} />
+                </Card.Footer>
               </Card.Body>
             </Card>
           </LoadingOverlay>

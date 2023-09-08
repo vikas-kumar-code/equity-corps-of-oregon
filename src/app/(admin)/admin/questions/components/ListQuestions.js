@@ -3,24 +3,24 @@
 import React, { useState, useEffect, Component } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { Card, Row, Col, Button } from "react-bootstrap";
-import Pagination from "react-js-pagination";
 import AddEditQuestion from "./AddEditQuestion";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useSearchParams } from "next/navigation";
 
 LoadingOverlay.propTypes = undefined;
 
 export default function ListQuestions() {
+  const searchParams = useSearchParams();
   const [loader, setLoader] = useState(true);
   const [records, setRecords] = useState([]);
   const [recordOrder, setOrder] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [recordId, setRecordId] = useState(null);
   const [showSearchBox, setShowSearchBox] = useState(false);
-  const [fields, setFields] = useState(null);
   const searchFields = [{ label: "Question", type: "text", name: "question" }];
 
   const onDragEnd = (result) => {
@@ -47,12 +47,8 @@ export default function ListQuestions() {
     setRecordId(recordId);
     setShowModal(true);
   };
-  const getRecords = async () => {
-    let REQUEST_URI = common.apiPath(`/admin/questions`);
-    if (fields !== null) {
-      const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/admin/questions?${queryString}`);
-    }
+  const getRecords = async () => {    
+    let REQUEST_URI = common.apiPath(`/admin/questions?${searchParams.toString()}`);
     fetch(REQUEST_URI)
       .then((response) => response.json())
       .then((data) => {
@@ -90,7 +86,7 @@ export default function ListQuestions() {
 
   useEffect(() => {
     getRecords();
-  }, [fields]);
+  }, [searchParams]);
 
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this question?")) {
@@ -113,6 +109,10 @@ export default function ListQuestions() {
         .finally(() => setLoader(false));
     }
   };
+
+  useEffect(() => {
+    getRecords();
+  }, [searchParams]);
 
   return (
     <div>
@@ -138,9 +138,6 @@ export default function ListQuestions() {
         title={"Search Questions"}
         searchFields={searchFields}
         col={6}
-        searchRecords={(fields) => {
-          setFields(fields);
-        }}
       />
       <Row>
         <Col>
@@ -183,7 +180,7 @@ export default function ListQuestions() {
                                     <td>{Number(index + 1)}.</td>
                                     <td>{record.question}</td>
                                     <td className="px-1">
-                                      <Button                                        
+                                      <Button
                                         variant="primary"
                                         onClick={() => getRecord(record.id)}
                                       >
@@ -214,16 +211,17 @@ export default function ListQuestions() {
           </LoadingOverlay>
         </Col>
       </Row>
-      {showModal && <AddEditQuestion
-        showModal={showModal}
-        closeModal={() => {
-          setShowModal(false);
-          setRecordId(null);
-        }}
-        recordId={recordId}
-        reloadRecords={getRecords}
-      />}
-
+      {showModal && (
+        <AddEditQuestion
+          showModal={showModal}
+          closeModal={() => {
+            setShowModal(false);
+            setRecordId(null);
+          }}
+          recordId={recordId}
+          reloadRecords={getRecords}
+        />
+      )}
     </div>
   );
 }

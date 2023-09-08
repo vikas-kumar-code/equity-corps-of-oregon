@@ -3,35 +3,30 @@
 import React, { useState, useEffect } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { Card, Row, Col, Button } from "react-bootstrap";
-import Pagination from "react-js-pagination";
 import AddEditTemplate from "./AddEditTemplate";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
+import { useSearchParams } from "next/navigation";
+import NextPagination from "@/app/components/NextPagination";
 LoadingOverlay.propTypes = undefined;
 
 export default function ListTemplates() {
+  const searchParams = useSearchParams();
+  const [totalRecords, setTotalRecords] = useState(1);
+
   const [loader, setLoader] = useState(true);
   const [records, setRecords] = useState([]);
-  const recordPerPage = 10;
-  const [pageNumber, setPageNumber] = useState(1);
-  const [totalRecords, setTotalRecords] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [recordId, setRecordId] = useState(null);
   const [showSearchBox, setShowSearchBox] = useState(false);
-  const [fields, setFields] = useState(null);
   const searchFields = [{ label: "Subject", type: "text", name: "subject" }];
 
   const getRecords = async () => {
     let REQUEST_URI = common.apiPath(
-      `/admin/email-templates?page=${pageNumber}`
+      `/admin/email-templates?${searchParams.toString()}`
     );
-    if (fields !== null) {
-      fields["page"] = pageNumber;
-      const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/admin/email-templates?${queryString}`);
-    }
     fetch(REQUEST_URI)
       .then((response) => response.json())
       .then((data) => {
@@ -46,11 +41,7 @@ export default function ListTemplates() {
 
   useEffect(() => {
     getRecords();
-  }, [pageNumber]);
-
-  useEffect(() => {
-    getRecords();
-  }, [fields]);
+  }, [searchParams]);
 
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete?")) {
@@ -130,12 +121,7 @@ export default function ListTemplates() {
                     <tbody>
                       {records?.map((record, index) => (
                         <tr key={index}>
-                          <td>
-                            {pageNumber * recordPerPage -
-                              recordPerPage +
-                              Number(index + 1)}
-                            .
-                          </td>
+                          <td>{common.sn(searchParams, index)}.</td>
                           <td>{record.subject}</td>
                           <td>{record.from_email}</td>
                           <td>{record.from_label}</td>
@@ -157,26 +143,19 @@ export default function ListTemplates() {
                           </td>
                         </tr>
                       ))}
-                      {!loader && records.length === 0 && <tr>
-                        <td colSpan={6} className="text-center text-danger">Template not found!</td>
-                      </tr>}
+                      {!loader && records.length === 0 && (
+                        <tr>
+                          <td colSpan={6} className="text-center text-danger">
+                            Template not found!
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
-                {totalRecords > recordPerPage && (
-                  <Card.Footer className="text-end">
-                    <Pagination
-                      activePage={pageNumber}
-                      itemsCountPerPage={recordPerPage}
-                      totalItemsCount={totalRecords}
-                      pageRangeDisplayed={recordPerPage}
-                      onChange={(page) => setPageNumber(page)}
-                      itemClass="page-item"
-                      linkClass="page-link"
-                      innerClass="pagination float-end"
-                    />
-                  </Card.Footer>
-                )}
+                <Card.Footer className="text-end">
+                  <NextPagination totalItemsCount={totalRecords} />
+                </Card.Footer>
               </Card.Body>
             </Card>
           </LoadingOverlay>

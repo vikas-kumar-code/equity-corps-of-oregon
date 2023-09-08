@@ -29,6 +29,7 @@ LoadingOverlay.propTypes = undefined;
 export default function AddEditCase(props) {
   const [loader, setLoader] = useState(false);
   const initialValues = {
+    id: props.recordId,
     case_number: "",
     title: "",
     belongs_to: [],
@@ -90,18 +91,20 @@ export default function AddEditCase(props) {
           allowUnknown: true,
         });
 
-        let REQUEST_URI = common.apiPath(`/admin/cases/save`);
-        let REQUEST_METHOD = "POST";
-        if (props.recordId) {
-          REQUEST_URI = common.apiPath(`/admin/cases/save/${props.recordId}`);
-          REQUEST_METHOD = "PUT";
-        }
         // Set deleted docs
         let fieldsData =
           deletedDocuments.length > 0
             ? { ...fields, deleted_documents: deletedDocuments }
-            : fields;
-        await fetch(REQUEST_URI, {
+            : {...fields};
+
+        let REQUEST_URI = `/admin/cases/create`;
+        let REQUEST_METHOD = "POST";
+        if (props.recordId) {
+          REQUEST_URI = `/admin/cases/update`;
+          REQUEST_METHOD = "PUT";  
+        }
+        
+        await fetch(common.apiPath(REQUEST_URI), {
           method: REQUEST_METHOD,
           body: JSON.stringify(fieldsData),
           headers: {

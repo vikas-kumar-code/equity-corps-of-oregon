@@ -59,6 +59,7 @@ model users {
   cases                      cases[]
   case_invitations           case_invitations[]
   attorney_answers           attorney_answers[]
+  case_documents             case_documents[]
 }
 
 model roles {
@@ -72,7 +73,7 @@ model roles {
 
 model cases {
   id                    Int                     @id @default(autoincrement())
-  case_number           String                  @db.VarChar(50)
+  case_number           String                  @unique @db.VarChar(50)
   title                 String                  @db.VarChar(255)
   description           String                  @db.LongText
   added_by              Int
@@ -122,11 +123,13 @@ model case_milestones {
 
 model case_documents {
   id            Int      @id @default(autoincrement())
-  case_id       Int
+  case_id       Int?
+  uploaded_by   Int?
   document_name String   @db.VarChar(100)
   file_name     String   @db.VarChar(100)
-  uploaded_on   DateTime
-  case          cases    @relation(fields: [case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  uploaded_on   DateTime @default(now())
+  case          cases?   @relation(fields: [case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user          users?   @relation(fields: [uploaded_by], references: [id], onUpdate: NoAction, onDelete: SetNull)
 }
 
 model routes {
@@ -136,9 +139,8 @@ model routes {
   url         String?       @db.VarChar(200)
   icon        String?       @db.VarChar(50)
   permissions permissions[]
-
-  parent   routes?  @relation("ParentToRoutes", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  children routes[] @relation("ParentToRoutes")
+  parent      routes?       @relation("ParentToRoutes", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children    routes[]      @relation("ParentToRoutes")
 }
 
 model permissions {

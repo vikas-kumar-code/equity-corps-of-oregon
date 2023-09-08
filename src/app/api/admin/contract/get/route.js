@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache'
 export async function GET(request) {
   const path = request.nextUrl.searchParams.get('path');
   revalidatePath(path)
-  let response = {};
+  const response = {};
   try {
     const recordId = 1;
     const contract = await prisma.contracts.findUnique({

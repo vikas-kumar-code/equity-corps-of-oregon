@@ -6,7 +6,7 @@ import common from "@/utils/common";
 
 export async function POST(request) {
   const data = await request.formData();
-  let response = {};
+  const response = {};
 
   try {
     const file = data.get("document") || data.get("file");
