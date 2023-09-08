@@ -39,17 +39,18 @@ export default function AddEditRole(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validated = await validateAsync(rolesSchema, fields);
-    if(validated.errors){
-        handleErrors(validated.errors);
-    }else{
+    if (validated.errors) {
+      handleErrors(validated.errors);
+    } else {
       setSubmitted(true);
-      let REQUEST_URI = common.apiPath(`/admin/roles/save/`);
+      let REQUEST_URI = `/admin/roles/create`;
       let REQUEST_METHOD = "POST";
       if (props.recordId) {
-        REQUEST_URI = common.apiPath(`/admin/roles/save/${props.recordId}`);
+        REQUEST_URI = `/admin/roles/update`;
         REQUEST_METHOD = "PUT";
+        fields.id = props.recordId;
       }
-      await fetch(REQUEST_URI, {
+      await fetch(common.apiPath(REQUEST_URI), {
         method: REQUEST_METHOD,
         body: JSON.stringify(fields),
       })
@@ -72,13 +73,15 @@ export default function AddEditRole(props) {
 
   const getRole = async () => {
     setLoader(true);
-    await fetch(common.apiPath(`/admin/roles/save/${props.recordId}`))
+    await fetch(common.apiPath(`/admin/roles/get`), {
+      body: JSON.stringify(props.recordId),
+    })
       .then((response) => response.json())
       .then((response) => {
-        if(response.success){
-            setFields(response.record);
-        }else if(response.error){
-            toast.error(response.message);
+        if (response.success) {
+          setFields(response.record);
+        } else if (response.error) {
+          toast.error(response.message);
         }
       })
       .catch((error) => {

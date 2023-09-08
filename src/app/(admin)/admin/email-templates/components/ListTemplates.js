@@ -46,8 +46,9 @@ export default function ListTemplates() {
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete?")) {
       setLoader(true);
-      fetch(common.apiPath(`/admin/email-templates/delete/${id}`), {
+      fetch(common.apiPath(`/admin/email-templates/delete`), {
         method: "DELETE",
+        body: JSON.stringify(id)
       })
         .then((response) => response.json())
         .then((response) => {

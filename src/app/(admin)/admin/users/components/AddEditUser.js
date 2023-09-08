@@ -51,6 +51,13 @@ export default function AddEditUser(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+    let REQUEST_URI = `/admin/users/create`;
+      let REQUEST_METHOD = "POST";
+      if (props.userId) {
+        REQUEST_URI = `/admin/users/update`;
+        REQUEST_METHOD = "PUT";
+        fields.id = props.userId
+      }
     let validated;
     let formfields = common.stripEmptyFields(fields);
     if (props.userId) {
@@ -62,13 +69,7 @@ export default function AddEditUser(props) {
       handleErrors(validated.errors);
     } else {
       setSubmitted(true);
-      let REQUEST_URI = common.apiPath(`/admin/users/save/`);
-      let REQUEST_METHOD = "POST";
-      if (props.userId) {
-        REQUEST_URI = common.apiPath(`/admin/users/save/${props.userId}`);
-        REQUEST_METHOD = "PUT";
-      }
-      await fetch(REQUEST_URI, {
+      await fetch(common.apiPath(REQUEST_URI), {
         method: REQUEST_METHOD,
         body: JSON.stringify(formfields),
       })
@@ -89,9 +90,9 @@ export default function AddEditUser(props) {
     }
   };
 
-  const getUser = async (userId) => {
+  const getUser = async () => {
     setLoader(true);
-    await fetch(common.apiPath(`/admin/users/save/${props.userId}`))
+    await fetch(common.apiPath(`/admin/users/get`), {body: JSON.stringify(props.userId)})
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {

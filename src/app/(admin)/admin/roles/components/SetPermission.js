@@ -39,15 +39,16 @@ export default function SetPermission(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validated = await validateAsync(rolesSchema, fields);
-    if(validated.error){
-        handleErrors(validated.errors);
-    }else {
+    if (validated.error) {
+      handleErrors(validated.errors);
+    } else {
       setSubmitted(true);
-      let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save`;
+      let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/create`;
       let REQUEST_METHOD = "POST";
       if (props.recordId) {
-        REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save/${props.recordId}`;
+        REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/update`;
         REQUEST_METHOD = "PUT";
+        fields.id = props.recordId;
       }
       await fetch(REQUEST_URI, {
         method: REQUEST_METHOD,
@@ -74,15 +75,16 @@ export default function SetPermission(props) {
 
   const getRole = async () => {
     setLoader(true);
-    await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save/${props.recordId}`)
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/roles/get`, {
+      body: JSON.stringify(props.recordId),
+    })
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
           setFields(response.record);
-        }else if (response.error) {
-            toast.error(response.message);
-          }
+        } else if (response.error) {
+          toast.error(response.message);
+        }
       })
       .catch((error) => {
         toast.error(error.message);

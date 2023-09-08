@@ -155,7 +155,7 @@ export default function AddEditCase(props) {
 
   const getRecord = async (id) => {
     setLoader(true);
-    fetch(common.apiPath(`/admin/cases/get/${props.recordId}`))
+    fetch(common.apiPath(`/admin/cases/get`), {body: JSON.stringify(props.recordId)})
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {

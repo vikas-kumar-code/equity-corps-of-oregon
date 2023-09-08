@@ -18,6 +18,7 @@ LoadingOverlay.propTypes = undefined
 export default function AddEditQuestion(props) {
   const [loader, setLoader] = useState(false);
   const initialValues = {
+    id: props.recordId,
     question: "",
     options: ["", ""],
     answer: null,
@@ -31,10 +32,10 @@ export default function AddEditQuestion(props) {
     e.preventDefault();
     setSubmitted(true);
     setErrors({});
-    let REQUEST_URI = common.apiPath("/admin/questions/save");
+    let REQUEST_URI = common.apiPath("/admin/questions/create");
     let REQUEST_METHOD = "POST";
     if (props.recordId) {
-      REQUEST_URI = common.apiPath(`/admin/questions/save/${props.recordId}`);
+      REQUEST_URI = common.apiPath(`/admin/questions/update`);
       REQUEST_METHOD = "PUT";
     }
     fetch(REQUEST_URI, { method: REQUEST_METHOD, body: JSON.stringify(fields) })
@@ -72,7 +73,7 @@ export default function AddEditQuestion(props) {
 
   const getQuestion = async (id) => {
     setLoader(true);
-    fetch(common.apiPath(`/admin/questions/get/${props.recordId}`))
+    fetch(common.apiPath(`/admin/questions/get`),{body: JSON.stringify(props.recordId)})
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {

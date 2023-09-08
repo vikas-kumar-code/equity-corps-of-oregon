@@ -57,15 +57,15 @@ export default function AddEditTemplate(props) {
     } else {
       setSubmitted(true);
       fields.content = content;
-      let REQUEST_URI = common.apiPath("admin/email-templates/save");
+      let REQUEST_URI = "admin/email-templates/create";
       let REQUEST_METHOD = "POST";
       if (props.recordId) {
-        REQUEST_URI = common.apiPath(
-          `admin/email-templates/save/${props.recordId}`
-        );
+        REQUEST_URI = 
+          `admin/email-templates/update`;
         REQUEST_METHOD = "PUT";
+        fields.id = props.recordId
       }
-      fetch(REQUEST_URI, {
+      fetch(common.apiPath(REQUEST_URI), {
         method: REQUEST_METHOD,
         body: JSON.stringify(fields),
       })
@@ -88,7 +88,7 @@ export default function AddEditTemplate(props) {
 
   const getRecord = async (id) => {
     setLoader(true);
-    await fetch(common.apiPath(`/admin/email-templates/get/${props.recordId}`))
+    await fetch(common.apiPath(`/admin/email-templates/get`), {body: JSON.stringify(props.recordId)})
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {

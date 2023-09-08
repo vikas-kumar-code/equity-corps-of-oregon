@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {  Modal, Tabs, Tab } from "react-bootstrap";
+import { Modal, Tabs, Tab } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
@@ -13,7 +13,9 @@ export default function ViewDetails(props) {
 
   const getRecord = async () => {
     setLoader(true);
-    fetch(common.apiPath(`/admin/users/save/${props.userId}`))
+    fetch(common.apiPath(`/admin/users/get`), {
+      body: JSON.stringify(props.userId),
+    })
       .then((response) => response.json())
       .then((response) => {
         setRecord(response.user);
@@ -41,11 +43,7 @@ export default function ViewDetails(props) {
       </Modal.Header>
       <Modal.Body>
         <LoadingOverlay active={loader} spinner text="Loading...">
-          <Tabs
-            defaultActiveKey={1}
-            id="user-details-tabs"
-            justify            
-          >
+          <Tabs defaultActiveKey={1} id="user-details-tabs" justify>
             <Tab eventKey={1} title="Basic Details">
               <table className="table table-borderless table-striped">
                 <tbody>
@@ -99,8 +97,8 @@ export default function ViewDetails(props) {
                     return (
                       <tr>
                         <td>
-                        <strong>Q.) </strong> {item?.question?.question}
-                          <br/>
+                          <strong>Q.) </strong> {item?.question?.question}
+                          <br />
                           <strong>Answer - {item?.answer?.option}</strong>
                         </td>
                       </tr>

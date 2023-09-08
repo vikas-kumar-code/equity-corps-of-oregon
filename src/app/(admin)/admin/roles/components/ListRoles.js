@@ -35,8 +35,9 @@ export default function ListRoles() {
 
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this role?")) {
-      await fetch(common.apiPath(`/admin/roles/delete/${id}`), {
+      await fetch(common.apiPath(`/admin/roles/delete`), {
         method: "DELETE",
+        body: JSON.stringify(id)
       })
         .then((response) => response.json())
         .then((response) => {
