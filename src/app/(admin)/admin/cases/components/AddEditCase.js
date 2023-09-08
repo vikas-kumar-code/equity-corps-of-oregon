@@ -171,7 +171,7 @@ export default function AddEditCase(props) {
     if (fields?.documents && Array.isArray(fields.documents)) {
       const hasNewDoc = fields.documents.filter((item) => !item.id);
       if (hasNewDoc.length > 0) {
-        if (confirm("Are you sure to close? \n\nYou have uploaded new documents but not saved.")) {
+        if (confirm("It seems you have uploaded new documents. Please click the save button to save these documents otherwise these files will not be saved.")) {
           props.closeModal();
         }
       } else {
