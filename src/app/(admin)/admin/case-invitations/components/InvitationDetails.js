@@ -138,27 +138,18 @@ const InvitationDetails = ({
           </Tab>
           <Tab eventKey={4} title="Case Activities">
             <div style={{ maxHeight: "250px", overflowY: "auto" }}>
-              <table>
-                <tbody>
-                  <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                  <ol className="activity-feed">
-                    {record.case.logs.map((log, i) => {
-                      return (
-                        <li class="feed-item">
-                          <time class="date">
-                            {moment(log.created_at).format("LLLL")}
-                          </time>
-                          <span class="text">{log.content}</span>
-                        </li>
-                      );
-                    })}
-                  </ol>
-                </tbody>
-              </table>
+              <ol className="activity-feed">
+                {record.case.logs.map((log, i) => {
+                  return (
+                    <li class="feed-item">
+                      <time class="date">
+                        {moment(log.created_at).format("LLLL")}
+                      </time>
+                      <span class="text">{log.content}</span>
+                    </li>
+                  );
+                })}
+              </ol>
             </div>
           </Tab>
         </Tabs>

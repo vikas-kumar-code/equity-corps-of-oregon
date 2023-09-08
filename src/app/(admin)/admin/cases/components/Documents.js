@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Row,
   Col,
@@ -76,6 +76,7 @@ export default function Documents(props) {
       setSubmitted(false);
     }
   };
+
   const handleValidation = () => {
     let error = null;
     let formIsValid = true;
@@ -90,6 +91,7 @@ export default function Documents(props) {
     setErrors(error);
     return formIsValid;
   };
+
   const deleteRecord = async (index) => {
     if (window.confirm("Are you sure to delete?")) {
       if (props?.documents[index] || false) {
@@ -118,11 +120,6 @@ export default function Documents(props) {
       }
     }
   };
-  useEffect(() => {
-    console.log(props?.documents);
-  
-    
-  }, [props?.documents])
   
   return (
     <>

@@ -167,6 +167,19 @@ export default function AddEditCase(props) {
       .finally(() => setLoader(false));
   };
 
+  const closeModal = () => {
+    if (fields?.documents && Array.isArray(fields.documents)) {
+      const hasNewDoc = fields.documents.filter((item) => !item.id);
+      if (hasNewDoc.length > 0) {
+        if (confirm("Are you sure to close? \n\nYou have uploaded new documents but not saved.")) {
+          props.closeModal();
+        }
+      } else {
+        props.closeModal();
+      }
+    }
+  };
+
   useEffect(() => {
     if (props.recordId && props.showModal) {
       getRecord(props.recordId);
@@ -179,6 +192,10 @@ export default function AddEditCase(props) {
     }
   }, [activeTab]);
 
+  useEffect(() => {
+    console.log(fields);
+  }, [fields]);
+
   const renderButtons = (step) => {
     return (
       <React.Fragment>
@@ -186,9 +203,7 @@ export default function AddEditCase(props) {
           <Button
             size="lg"
             variant="secondary"
-            onClick={() => {
-              setActiveTab(activeTab - 1);
-            }}
+            onClick={() => setActiveTab(activeTab - 1)}
             className="me-1"
             style={{ width: "auto" }}
           >
@@ -212,7 +227,7 @@ export default function AddEditCase(props) {
   return (
     <Modal
       show={props.showModal}
-      onHide={props.closeModal}
+      onHide={closeModal}
       backdrop="static"
       keyboard={false}
       centered
