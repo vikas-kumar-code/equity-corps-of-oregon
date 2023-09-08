@@ -13,6 +13,7 @@ import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import common from "@/utils/common";
 import DownloadButton from "../../cases/components/DownloadButton";
+import { useSession } from "next-auth/react";
 
 export default function Documents(props) {
   const [documentName, setDocumentName] = useState("");
@@ -20,6 +21,9 @@ export default function Documents(props) {
   const [errors, setErrors] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [loader, setLoader] = useState(false);
+  const session = useSession();
+  const user = session.data.user || {};
+
   const allowedExtensions = [
     "docx",
     "doc",
@@ -49,28 +53,34 @@ export default function Documents(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (handleValidation()) {
-      setSubmitted(true);
-      const data = new FormData();
-      data.append("document", selectedDocument);
-      data.append("document_name", documentName);
-      data.append("case_id", props?.caseId);
-      const res = await fetch(
-        common.apiPath("/api/admin/cases/invitations/document/upload"),
-        {
-          method: "POST",
-          body: data,
+    try {
+      if (handleValidation()) {
+        setSubmitted(true);
+        const data = new FormData();
+        data.append("document", selectedDocument);
+        data.append("document_name", documentName);
+        data.append("case_id", props?.caseId);
+        const res = await fetch(
+          common.apiPath("admin/cases/invitations/document/upload"),
+          {
+            method: "POST",
+            body: data,
+          }
+        );
+        const response = await res.json();
+        if (response.success) {
+          props.reloadRecords();
+          setDocumentName("");
+          setSelectedDocument(null);
+          window.document.getElementById("document").value = "";
+          toast.success(response.message);
+        } else {
+          toast.error(response.message);
         }
-      );
-      const response = await res.json();
-      if (response.success) {
-        props.reloadRecords();
-        setDocumentName("");
-        setSelectedDocument(null);
-        window.document.getElementById("document").value = "";
-      } else {
-        toast.error(response.message);
       }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
       setSubmitted(false);
     }
   };
@@ -194,7 +204,7 @@ export default function Documents(props) {
         <Col md={8}>
           <LoadingOverlay active={loader} spinner text="Loading...">
             <Card>
-              <Card.Body>
+              <Card.Body style={{ maxHeight: "326px", overflowY: "auto" }}>
                 <Card.Title>Documents</Card.Title>
                 <table className="table">
                   <thead>
@@ -217,14 +227,16 @@ export default function Documents(props) {
                         </td>
                         <td>
                           <div className="d-flex">
-                            <Button
-                              variant="danger"
-                              onClick={() => deleteRecord(record.id)}
-                              size="sm"
-                              className="me-2"
-                            >
-                              Delete
-                            </Button>
+                            {user && user.id === record.uploaded_by && (
+                              <Button
+                                variant="danger"
+                                onClick={() => deleteRecord(record.id)}
+                                size="sm"
+                                className="me-2"
+                              >
+                                Delete
+                              </Button>
+                            )}
                             <DownloadButton
                               fileName={record.document_name}
                               path={common.downloadLink(

@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import { Modal, Badge, Tabs, Tab, Button, Row, Col } from "react-bootstrap";
 import Documents from "./Documents";
 
-const InvitationDetails = ({ showModal, closeModal, record, reloadRecords }) => {
+const InvitationDetails = ({
+  showModal,
+  closeModal,
+  record,
+  reloadRecords,
+}) => {
   const [activeTab, setActiveTab] = useState(1);
-  const [fields, setFields] = useState({
-    documents: record.case.case_documents,
-  });
   const [errors, setErrors] = useState({});
   const [deletedDocuments, setDeletedDocuments] = useState([]);
 
@@ -98,37 +100,57 @@ const InvitationDetails = ({ showModal, closeModal, record, reloadRecords }) => 
             </table>
           </Tab>
           <Tab eventKey={3} title="Documents">
-            <Documents
-              reloadRecords={reloadRecords}
-              setDeletedDocument={(doc) => {
-                setDeletedDocuments([...deletedDocuments, doc]);
-              }}
-              documents={fields.documents}
-              errors={errors}
-              setErrors={setErrors}
-              caseId={record.case.id}
-            />
+            {record.status === 1 ? (
+              <Documents
+                reloadRecords={reloadRecords}
+                setDeletedDocument={(doc) => {
+                  setDeletedDocuments([...deletedDocuments, doc]);
+                }}
+                documents={record.case.case_documents}
+                errors={errors}
+                setErrors={setErrors}
+                caseId={record.case.id}
+              />
+            ) : (
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Document Name </th>
+                    <th>Uploaded On</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {record.case.case_documents?.map((record, index) => (
+                    <tr key={`documents-key-${index}`}>
+                      <td>{Number(index + 1)}.</td>
+                      <td>{record.document_name}</td>
+                      <td>
+                        {moment(record?.uploaded_on || new Date()).format(
+                          "MMMM DD, YYYY"
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </Tab>
           <Tab eventKey={4} title="Case Activities">
-            <tbody>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
+            <div style={{ maxHeight: "250px", overflowY: "auto" }}>
               <ol className="activity-feed">
                 {record.case.logs.map((log, i) => {
                   return (
                     <li class="feed-item">
                       <time class="date">
-                        {moment(log.created_at).format("DD MMMM YYYY")}
+                        {moment(log.created_at).format("LLLL")}
                       </time>
                       <span class="text">{log.content}</span>
                     </li>
                   );
                 })}
               </ol>
-            </tbody>
+            </div>
           </Tab>
         </Tabs>
       </Modal.Body>

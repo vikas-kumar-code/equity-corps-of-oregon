@@ -3,48 +3,43 @@ import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
 
 export async function GET() {
-  const session = await getSession();
   const response = {};
   try {
-    const user = await prisma.users.findUnique({
-      where: { id: session.user.id },
-    });
-    const permissions = await prisma.permissions.findMany({
-      where: {
-        role_id: user.role_id,
-      },
-    });
-    let routeIds = permissions.map((item) => item.route_id);
-    let where = {
-      parent_id: 0,
-      id: {
-        in: routeIds,
-      },
-      NOT: {
-        url: {
-          contains: "/api",
-        },
-      },
-    };
+    const session = await getSession();
+    let modules = null;
+    let records = [];
+
+    const adminModules = [
+      "/admin/dashboard",
+      "/admin/cases",
+      "/admin/questions",
+      "/admin/users",
+      "/admin/email-templates",
+      "/admin/roles",
+      "/admin/settings",
+    ];
+
+    const ecoProviderModules = [
+      "/admin/dashboard",
+      "/admin/case-invitations",
+      "/admin/settings",
+    ];
 
     // Exclude routes for Admin
     if (parseInt(session.user.role_id) === 1) {
-      let excludeRoutes = ["/admin/case-invitations"];
-      where = {
-        parent_id: {
-          lte: 0,
-        },
-        NOT: {
-          url: {
-            in: excludeRoutes,
-          },
-        },
-      };
+      modules = adminModules;
+    } else if (parseInt(session.user.role_id) === 3) {
+      modules = ecoProviderModules;
     }
 
-    const records = await prisma.routes.findMany({
-      where,
-    });
+    if (modules) {
+      records = await prisma.routes.findMany({
+        where: {
+          url: { in: modules },
+        },
+      });
+    }
+
     // output response
     response.success = true;
     response.message = "Modules";
@@ -55,3 +50,5 @@ export async function GET() {
   }
   return NextResponse.json(response);
 }
+
+export const dynamic = 'force-dynamic'

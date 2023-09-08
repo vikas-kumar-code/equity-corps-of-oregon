@@ -1,6 +1,5 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import common from "@/utils/common";
-
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -50,7 +49,9 @@ export async function GET(request) {
           include: {
             case_milestones: true,
             case_documents: true,
-            logs: true,
+            logs: {
+              orderBy: { id: "desc" },
+            },
           },
         },
       },

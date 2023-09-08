@@ -13,7 +13,9 @@ export async function GET(request) {
         case_associated_names: true,
         case_milestones: true,
         case_documents: true,
-        logs: true,
+        logs: {
+          orderBy: { id: "desc" },
+        },
       },
     });
     response.success = true;
@@ -35,6 +37,7 @@ export async function GET(request) {
       documents:
         record?.case_documents?.map((doc) => {
           return {
+            id: doc.id,
             document_name: doc.document_name,
             file_name: doc.file_name,
             uploaded_on: doc.uploaded_on,

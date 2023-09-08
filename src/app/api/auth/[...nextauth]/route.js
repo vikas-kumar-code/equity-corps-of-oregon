@@ -13,7 +13,7 @@ export const authOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "jsmith" },
+        email: { label: "Email", type: "text", placeholder: "Email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
@@ -97,6 +97,7 @@ export const authOptions = {
       if (user) {
         token.id = user.id;
         token.role_id = user.role_id;
+        token.name = user.name;
         token.routes = user.routes;
       }
       return token;
