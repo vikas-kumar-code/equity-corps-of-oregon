@@ -1,0 +1,10 @@
+.ck.ck-editor {
+  height: 100% !important;
+}
+.ck-editor__main {
+  height: 100% !important;
+}
+
+.ck-editor__editable {
+  height: 90.5% !important;
+}
