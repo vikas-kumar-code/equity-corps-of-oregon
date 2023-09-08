@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
-import { deleteFile, getSession } from "@/utils/serverHelpers";
-import path from "path";
+import { getSession } from "@/utils/serverHelpers";
 
 export async function DELETE(request) {
   const response = {};
@@ -10,42 +9,28 @@ export async function DELETE(request) {
     const data = await request.json();
     const id = parseInt(data.id);
     if (id) {
-      const caseDocument = await prisma.case_documents.findUnique({
-        where: { id, uploaded_by: session.user.id },
+      const caseDocumentModel = await prisma.case_documents.delete({
+        where: {
+          id: id,
+          uploaded_by: session.user.id,
+        },
       });
-      if (caseDocument) {
-
-        const caseDocumentModel = await prisma.case_documents.delete({
-          where: { id, uploaded_by: session.user.id },
-        });
-
-        if (caseDocumentModel) {
-          // delete file from server
-          if (caseDocumentModel.file_name) {
-            deleteFile(
-              path.join(
-                process.cwd(),
-                "public",
-                "uploads",
-                "case_documents",
-                caseDocumentModel.file_name
-              )
-            );
+      if (caseDocumentModel) {
+        // delete file from server
+        if (caseDocumentModel.file_name) {
+          const filePath = path.join(
+            process.cwd(),
+            "public",
+            "uploads",
+            "case_documents",
+            caseDocumentModel.file_name
+          );
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
           }
-
-          await prisma.logs.create({
-            data: {
-              case_id: caseDocumentModel.case_id,
-              content: `Document (${caseDocumentModel.document_name}) deleted by ` + session.user.name + ".",
-            },
-          });
-
-          response.success = true;
-          response.message = "Document deleted successfully.";
-        } else {
-          response.error = true;
-          response.message = "Record not found.";
         }
+        response.success = true;
+        response.message = "Document deleted successfully.";
       } else {
         response.error = true;
         response.message = "Record not found.";

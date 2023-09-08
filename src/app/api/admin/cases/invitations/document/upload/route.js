@@ -42,15 +42,7 @@ export async function POST(request) {
               },
             });
 
-            await prisma.logs.create({
-              data: {
-                case_id: caseDocumentModel.case_id,
-                content: `Document (${caseDocumentModel.document_name}) uploaded by ` + session.user.name + ".",
-              },
-            });
-
             if (caseDocumentModel) {
-
               response.success = true;
               response.message = "File uploaded successfully.";
             } else {
