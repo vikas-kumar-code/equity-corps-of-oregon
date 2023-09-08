@@ -8,14 +8,15 @@ import { getSession } from "@/utils/serverHelpers";
 
 export async function POST(request) {
   const response = {};
-  const data = await request.formData();
-  const session = await getSession();
   try {
+    const data = await request.formData();
+    const session = await getSession();
+
     if (data.get("document")) {
       if (data.get("document_name")) {
         if (data.get("case_id")) {
           const caseModel = await prisma.cases.findUnique({
-            where: { id: data.get("case_id") },
+            where: { id: parseInt(data.get("case_id")) },
           });
           if (caseModel) {
             const file = data.get("document");
@@ -26,7 +27,7 @@ export async function POST(request) {
             const destPath = common.basePath("public/uploads/case_documents");
             const saveFilePath = common.basePath(
               "public/uploads/case_documents/" + fileName
-            );            
+            );
             if (!existsSync(destPath)) {
               mkdirSync(destPath, { recursive: true, mode: "777" });
             }

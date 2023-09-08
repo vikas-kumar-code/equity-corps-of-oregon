@@ -5,9 +5,9 @@ import Joi from "joi";
 import validateAsync from "@/utils/validateAsync";
 
 export async function POST(request) {
-  const session = await getSession();
   const response = {};
   try {
+    const session = await getSession();
     const data = await request.json();
     let caseInvitation = null;
 

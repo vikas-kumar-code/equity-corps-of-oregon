@@ -59,7 +59,7 @@ export default function ListCases() {
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this question?")) {
       setLoader(true);
-      fetch(common.apiPath(`/admin/cases/delete/${id}`), {
+      fetch(common.apiPath(`/admin/cases/delete`), {
         method: "DELETE",
         body: JSON.stringify({id}),
       })

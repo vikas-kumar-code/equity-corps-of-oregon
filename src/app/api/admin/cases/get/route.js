@@ -4,12 +4,11 @@ import prisma from "@/utils/prisma";
 
 export async function GET(request) {
   const response = {};
-  const req = await request.json();
   try {
+    const data = await request.json();
+    const id = parseInt(data.id);
     const record = await prisma.cases.findUnique({
-      where: {
-        id: Number(req.id),
-      },
+      where: { id },
       include: {
         case_associated_names: true,
         case_milestones: true,

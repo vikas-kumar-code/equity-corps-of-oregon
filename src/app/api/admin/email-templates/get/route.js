@@ -4,12 +4,11 @@ import prisma from "@/utils/prisma";
 
 export async function GET(request) {
   const response = {};
-  const req = await request.json();
+  const data = await request.json();
+  const id = parseInt(data.id);
   try {
     const record = await prisma.email_templates.findUnique({
-      where: {
-        id: Number(req.id),
-      },
+      where: { id },
     });
     if (record) {
       response.success = true;

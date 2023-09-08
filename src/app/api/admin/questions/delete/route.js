@@ -4,14 +4,12 @@ import prisma from "@/utils/prisma";
 
 export async function DELETE(request) {
   const response = {};
-  const req = await request.json();
-  let deletedId = Number(req.id);
+  const data = await request.json();
+  let id = parseInt(data.id);
   try {
-    if (deletedId) {
+    if (id) {
       const deleted = await prisma.questions.delete({
-        where: {
-          id: deletedId,
-        },
+        where: { id },
       });
       if (deleted) {
         response.success = true;

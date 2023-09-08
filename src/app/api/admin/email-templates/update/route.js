@@ -5,10 +5,10 @@ import emailTemplateSchema from "@/joi/emailTemplateSchema";
 
 export async function PUT(request) {
   const response = {};
-  const req = await request.json();
-  const recordId = Number(req.id) || null;
+  const data = await request.json();
+  const id = parseInt(data.id);
   try {
-    if (recordId) {
+    if (id) {
       const formData = await request.json();
       const validated = await validateAsync(emailTemplateSchema, formData);
       if (validated.errors) {
@@ -16,7 +16,7 @@ export async function PUT(request) {
         response.message = validated.errors;
       } else {
         const result = await prisma.email_templates.update({
-          where: { id: recordId },
+          where: { id },
           data: {
             subject: validated.subject,
             from_email: validated.from_email,

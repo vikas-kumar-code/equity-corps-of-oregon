@@ -7,7 +7,7 @@ export async function GET(request) {
   try {
     const caseInvitaion = await prisma.case_invitations.findUnique({
       where: {
-        id: parseInt(searchParams.get('invitation_id')),
+        id: parseInt(searchParams.get('id')),
       },
     });
     response.success = true;

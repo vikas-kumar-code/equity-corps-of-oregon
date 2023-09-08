@@ -5,11 +5,11 @@ import validateAsync from "@/utils/validateAsync";
 
 export async function PUT(request) {
   const response = {};
-  const req = await request.json();
-  const questionId = Number(req.id) || null;
-
   try {
-    if (questionId) {
+  const data = await request.json();
+  const id = parseInt(data.id);
+
+    if (id) {
       let updateData = await request.json();
       // Validation
       const schema = Joi.object({
@@ -34,11 +34,11 @@ export async function PUT(request) {
         // Create a new question with options
         await prisma.options.deleteMany({
           where: {
-            question_id: questionId,
+            question_id: id,
           },
         });
         const question = await prisma.questions.update({
-          where: { id: questionId },
+          where: { id },
           data: {
             question: validated.question,
             options: {

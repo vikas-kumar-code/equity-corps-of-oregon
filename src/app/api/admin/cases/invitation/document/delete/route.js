@@ -4,13 +4,14 @@ import { getSession } from "@/utils/serverHelpers";
 
 export async function DELETE(request) {
   const response = {};
-  const session = await getSession();
   try {
+    const session = await getSession();
     const data = await request.json();
-    if (data?.id) {
+    const id = parseInt(data.id);
+    if (id) {
       const caseDocumentModel = await prisma.case_documents.delete({
         where: {
-          id: parseInt(data?.id),
+          id: id,
           uploaded_by: session.user.id,
         },
       });

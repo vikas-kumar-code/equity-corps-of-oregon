@@ -9,8 +9,8 @@ import validateAsync from "@/utils/validateAsync";
 
 export async function POST(request) {
   const response = {};
-  const req = await request.json();
-  const caseId = parseInt(req.id);
+  const data = await request.json();
+  const caseId = parseInt(data.id);
   const session = await getSession();
   const authUser = await prisma.users.findUnique({
     where: { id: session.user.id },

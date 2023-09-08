@@ -1,21 +1,18 @@
 import { NextResponse } from "next/server";
-
-
 import prisma from "@/utils/prisma";
 
 export async function GET(request) {
   const response = {};
-  const req = await request.json();
   try {
+    const data = await request.json();
+    const id = parseInt(data.id);
     const record = await prisma.questions.findUnique({
-      where: {
-        id: Number(req.id),
-      },
+      where: { id },
       include: {
         options: true,
       },
     });
-    let answer = '';
+    let answer = "";
     record.options.forEach((opt, index) => {
       if (opt.status) {
         answer = index + 1;

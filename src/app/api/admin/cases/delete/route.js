@@ -4,26 +4,22 @@ import fs from "fs";
 import path from "path";
 
 export async function DELETE(request) {
-  const response = {};  
-  const req = await request.json();
-  const deletedId = Number(req.id); 
+  const response = {};
+  const data = await request.json();
+  const id = parseInt(data.id);
   try {
-    if (deletedId) {
+    if (id) {
       const docs = await prisma.cases.findUnique({
-        where: {
-          id: deletedId,
-        },
+        where: { id },
         include: {
           case_documents: true,
         },
       });
 
       const deleted = await prisma.cases.delete({
-        where: {
-          id: deletedId,
-        },
+        where: { id },
       });
-      
+
       if (deleted) {
         if (Array.isArray(docs.case_documents)) {
           docs.case_documents.forEach((doc) => {
