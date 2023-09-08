@@ -95,15 +95,15 @@ export default function AddEditCase(props) {
         let fieldsData =
           deletedDocuments.length > 0
             ? { ...fields, deleted_documents: deletedDocuments }
-            : {...fields};
+            : { ...fields };
 
         let REQUEST_URI = `/admin/cases/create`;
         let REQUEST_METHOD = "POST";
         if (props.recordId) {
           REQUEST_URI = `/admin/cases/update`;
-          REQUEST_METHOD = "PUT";  
+          REQUEST_METHOD = "PUT";
         }
-        
+
         await fetch(common.apiPath(REQUEST_URI), {
           method: REQUEST_METHOD,
           body: JSON.stringify(fieldsData),
@@ -174,7 +174,11 @@ export default function AddEditCase(props) {
     if (fields?.documents && Array.isArray(fields.documents)) {
       const hasNewDoc = fields.documents.filter((item) => !item.id);
       if (hasNewDoc.length > 0) {
-        if (confirm("Are you sure to close? \n\nYou have uploaded new documents but not saved.")) {
+        if (
+          confirm(
+            "It seems you have uploaded new documents. Please click the save button to save these documents otherwise these files will not be saved."
+          )
+        ) {
           props.closeModal();
         }
       } else {
