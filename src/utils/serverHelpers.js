@@ -27,7 +27,6 @@ const moveFile = (sourceFilePath = "", destinationFilePath = "") => {
   }
 };
 
-// delete file
 const deleteFile = (filePath = "") => {
   try {
     if (fs.existsSync(filePath)) {
@@ -64,5 +63,5 @@ module.exports = {
   moveFile,
   getSession,
   redirectToDashboard,
-  deleteFile,
+  deleteFile
 };

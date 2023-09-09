@@ -14,21 +14,26 @@ const params = {
 const common = {
   params: params,
   pathJoin: pathJoin,
+
   //return API full path
   apiPath: (path = "") => {
     return process.env.NEXT_PUBLIC_API_URL + "/" + pathJoin("api", path);
   },
+
   //return app path
   basePath: (path = "") => {
     return pathJoin(process.cwd(), path);
   },
+
   //return public path
   publicPath: (path = "") => {
     return pathJoin(process.cwd(), "public", path);
   },
-  downloadLink: (path) => {
+
+  downloadLink: (path) => {    
     return pathJoin(process.cwd(), "api", "admin", "download", path);
   },
+
   // create JOI errors in custom format.
   getErrors: (errors, options = { arrayKey: false }) => {
     let outputErrors = {};
@@ -89,6 +94,20 @@ const common = {
       parseInt(params.recordPerPage) +
       Number(index + 1)
     );
+  },
+
+  // This function is used to remove all empty or null fields from an object.;
+  stripEmptyFields: (ob) => {
+    let newObject = {};
+    if (ob) {
+      Object.entries(ob).forEach((item) => {
+        item[1] = typeof item[1] === "string" ? item[1].trim() : item[1];
+        if (item[1]) {
+          newObject = { ...newObject, [item[0]]: item[1] };
+        }
+      });
+    }
+    return newObject;
   },
 };
 
