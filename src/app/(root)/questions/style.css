@@ -1,0 +1,128 @@
+:root {
+  --theme-color: #0a2640;
+}
+
+.slide-container {
+  background-color: white;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  outline: 0;
+}
+.slide-container .btn-success {
+  background-color: #31c77a;
+  line-height: 1.5;
+}
+
+.slide-container .btn-secondary {
+  background-color: #7b889a;
+  border-color: #7b889a;
+  line-height: 1.5;
+}
+
+.slide-buttons {
+  position: fixed;
+  bottom: 1rem;
+  right: 0;
+  z-index: 2;
+  width: 70px;
+}
+
+.slide-buttons button:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
+.slide-buttons button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 37px;
+  width: 37px;
+  border-radius: 50%;
+  border: 0;
+  margin: 10px 0px;
+  background-color: var(--theme-color);
+}
+
+.slide-div {
+  height: 100%;
+  width: 100%;
+  transition: all 0.5s;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.slide-sn {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.slide-container .form-check-input {
+  width: 1.2em;
+  height: 1.2em;
+  margin-top: 0.12em;
+  margin-right: 6px;
+}
+
+.qs-container {
+  max-width: 700px;
+  width: 100%;
+}
+.qs-label {
+  font-size: 18px;
+  line-height: 32px;
+  color: var(--theme-color);
+}
+
+.slide-container .form-check-input:checked {
+  background-color: var(--theme-color);
+  border-color: var(--theme-color);
+}
+.slide-container .error-text {
+  background-color: #ff000013;
+  padding: 1px 5px 3px 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.form-control {
+  border: 0;
+  border-bottom: 1px solid #9f9f9f;
+  border-radius: 0;
+  padding: 12px 5px;
+  color: var(--theme-color) !important;
+}
+.form-control:focus {
+  opacity: 0.9;
+  border-bottom: 2px solid var(--theme-color);
+}
+
+.prev_slide {
+  transition: transform 600ms ease 0s, opacity 300ms ease 0s;
+  opacity: 0;
+  transform: translateY(-100vh);
+  z-index: -1;
+}
+
+.active_slide {
+  transition: transform 600ms ease 0s, opacity 300ms ease 0s;
+}
+
+.next_slide {
+  transition: transform 600ms ease 0s, opacity 300ms ease 0s;
+  opacity: 0;
+  transform: translateY(100vh);
+  z-index: -1;
+}
+.default_qs_layout{
+  width: 40vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 2rem;
+}

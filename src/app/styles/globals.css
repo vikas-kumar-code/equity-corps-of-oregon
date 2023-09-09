@@ -1,0 +1,108 @@
+.table-padding-1 th,
+.table-padding-1 td {
+  padding: 0.4375rem;
+}
+
+.ck-content {
+  color: initial;
+}
+
+.ck-editor__editable {
+  min-height: 300px !important;
+}
+
+.rti--container {
+  border-radius: 2px !important;
+  background-color: #2a3038 !important;
+}
+
+.rti--tag {
+  color: blue !important;
+}
+
+.rti--input {
+  background-color: #2a3038 !important;
+  color: #ffffff !important;
+}
+
+.rti--container:focus-within {
+  border: 1px solid rgba(71, 164, 71, 0.5) !important;
+}
+
+.react-datepicker-wrapper {
+  width: 100% !important;
+}
+
+/* Input Focus */
+.form-control:focus {
+  color: #fff !important;
+}
+
+/* Input Focus */
+
+.q-opt-remove {
+  border-radius: 50%;
+  position: absolute;
+  background-color: #5d5d5d !important;
+  top: 40px;
+  right: 10px;
+}
+
+.form-check {
+  margin-top: 0px;
+}
+
+.line-height-15 {
+  line-height: 1.5;
+}
+
+.form-check .form-check-label {
+  line-height: 1.7;
+}
+
+.textdarea-height-1 {
+  min-height: 80px !important;
+}
+
+.textdarea-height-2 {
+  min-height: 120px !important;
+}
+
+.invalid-feedback::first-letter,
+.uc-first::first-letter {
+  text-transform: uppercase;
+}
+
+.show-error .invalid-feedback {
+  display: block !important;
+}
+
+.question-td {
+  max-width: 50%;
+}
+
+.pagination {
+  margin-bottom: 5px;
+}
+
+.table-div {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-row-div {
+  display: table-row;
+
+}
+
+.table-cell-div {
+  display: table-cell;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.table-header-div {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}
