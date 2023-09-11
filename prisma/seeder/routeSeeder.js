@@ -3,22 +3,25 @@ const prisma = new PrismaClient();
 
 const routeSeeder = async () => {
   const records = [
-    {
+    {      
       label: "Dashboard",
       icon: "mdi mdi-view-dashboard",
-      url: "/admin/dashboard",
+      url: "/admin/dashboard", 
+      method: "get",     
     },
     {
       label: "Cases",
       icon: "mdi mdi-alpha-c-circle",
       url: "/admin/cases",
+      method: "get",
       children: {
         create: [
-          { label: "Api", url: "/api/admin/cases" },
-          { label: "Api", url: "/api/admin/cases/get" },
-          { label: "Api", url: "/api/admin/cases/save" },
-          { label: "Api", url: "/api/admin/cases/delete" },
-          { label: "Api", url: "/api/admin/cases/invitation/send" },
+          { label: "Api", url: "/api/admin/cases", method: "get"},
+          { label: "Api", url: "/api/admin/cases/get/:id", method: "get"},
+          { label: "Api", url: "/api/admin/cases/save", method: "post" },          
+          { label: "Api", url: "/api/admin/cases/save/:id", method: 'put'},
+          { label: "Api", url: "/api/admin/cases/delete/:id", method: 'delete' },
+          { label: "Api", url: "/api/admin/cases/invitation/send", method: 'post' },
         ],
       },
     },
@@ -26,11 +29,12 @@ const routeSeeder = async () => {
       label: "Case Invitations",
       icon: "mdi mdi-calendar",
       url: "/admin/case-invitations",
+      method: "get",
       children: {
         create: [
-          { label: "Api", url: "/api/admin/cases/invitation" },
-          { label: "Api", url: "/api/admin/cases/invitation/accept" },
-          { label: "Api", url: "/api/admin/cases/invitation/get" },
+          { label: "Api", url: "/api/admin/cases/invitation", method: "get" },
+          { label: "Api", url: "/api/admin/cases/invitation/accept", method: "post" },
+          { label: "Api", url: "/api/admin/cases/invitation/get/:id", method: "get" },
         ],
       },
     },
@@ -38,12 +42,14 @@ const routeSeeder = async () => {
       label: "Questions",
       icon: "mdi mdi-help-circle",
       url: "/admin/questions",
+      method: "get",
       children: {
         create: [
-          { label: "Api", url: "/api/admin/questions" },
-          { label: "Api", url: "/api/admin/questions/delete" },
-          { label: "Api", url: "/api/admin/questions/get" },
-          { label: "Api", url: "/api/admin/questions/save" },
+          { label: "Api", url: "/api/admin/questions", method: "get" },
+          { label: "Api", url: "/api/admin/questions/delete/:id", method: "delete" },
+          { label: "Api", url: "/api/admin/questions/get/:id", method: "get" },
+          { label: "Api", url: "/api/admin/questions/save",  method: "post"},
+          { label: "Api", url: "/api/admin/questions/save/:id", method: "put" },
         ],
       },
     },
@@ -51,12 +57,14 @@ const routeSeeder = async () => {
       label: "Users",
       icon: "mdi mdi-account",
       url: "/admin/users",
+      method: "get",
       children: {
         create: [
-          { label: "Api", url: "/api/admin/users" },
-          { label: "Api", url: "/api/admin/users/delete" },
-          { label: "Api", url: "/api/admin/users/save" },
-          { label: "Api", url: "/api/admin/users/search" },
+          { label: "Api", url: "/api/admin/users", method: "get" },
+          { label: "Api", url: "/api/admin/users/delete/:id", method: "delete" },
+          { label: "Api", url: "/api/admin/users/save",  method: "post"},
+          { label: "Api", url: "/api/admin/users/save/:id", method: "put" },
+          { label: "Api", url: "/api/admin/users/search", method: "get" },
         ],
       },
     },
@@ -64,12 +72,14 @@ const routeSeeder = async () => {
       label: "Email templates",
       icon: "mdi mdi-email-multiple-outline",
       url: "/admin/email-templates",
+      method: "get",
       children: {
         create: [
-          { label: "Api", url: "/api/admin/email-templates" },
-          { label: "Api", url: "/api/admin/email-templates/delete" },
-          { label: "Api", url: "/api/admin/email-templates/get" },
-          { label: "Api", url: "/api/admin/email-templates/save" },
+          { label: "Api", url: "/api/admin/email-templates", method: "get" },
+          { label: "Api", url: "/api/admin/email-templates/delete/:id", method: "delete" },
+          { label: "Api", url: "/api/admin/email-templates/get/:id", method: "get" },
+          { label: "Api", url: "/api/admin/email-templates/save",  method: "post"},
+          { label: "Api", url: "/api/admin/email-templates/save/:id", method: "put" },
         ],
       },
     },
@@ -77,11 +87,13 @@ const routeSeeder = async () => {
       label: "Roles",
       icon: "mdi mdi-account-group",
       url: "/admin/roles",
+      method: "get",
       children: {
         create: [
-          { label: "Api", url: "/api/admin/roles" },
-          { label: "Api", url: "/api/admin/roles/delete" },
-          { label: "Api", url: "/api/admin/roles/save" },
+          { label: "Api", url: "/api/admin/roles", method: "get" },
+          { label: "Api", url: "/api/admin/roles/delete/:id", method: "delete" },
+          { label: "Api", url: "/api/admin/roles/save",  method: "post"},
+          { label: "Api", url: "/api/admin/roles/save/:id", method: "put" },
         ],
       },
     },
@@ -89,19 +101,27 @@ const routeSeeder = async () => {
       label: "Settings",
       icon: "mdi mdi-tune-vertical",
       url: "/admin/settings",
+      method: "get",
       children: {
         create: [
-          { label: "Api", url: "/api/admin/settings" },
-          { label: "Api", url: "/api/admin/settings/delete" },
-          { label: "Api", url: "/api/admin/settings/save" },
-          { label: "Api", url: "/api/admin/settings/update-profile" },
-          { label: "Api", url: "/api/admin/settings/change-password" },
+          { label: "Api", url: "/api/admin/settings", method: "get" },
+          { label: "Api", url: "/api/admin/settings/delete/:id", method: "delete" },
+          { label: "Api", url: "/api/admin/settings/save",  method: "post"},
+          { label: "Api", url: "/api/admin/settings/save/:id", method: "put" },
+          { label: "Api", url: "/api/admin/settings/update-profile", method: "get|put" },
+          { label: "Api", url: "/api/admin/settings/change-password", method: "put" },
         ],
       },
     },
     {
       label: "Api",
-      url: "/api/admin/download",
+      url: "/api/admin/download/@path",
+      method: "get",
+    },
+    {
+      label: "Api",
+      url: "/api/admin/modules",
+      method: "get",
     },
   ];
 

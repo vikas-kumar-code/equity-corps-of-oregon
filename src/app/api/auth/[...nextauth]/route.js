@@ -17,7 +17,7 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const  user = await prisma.users.findUnique({
+        const user = await prisma.users.findUnique({
           where: {
             email: credentials.email,
           },
@@ -37,7 +37,7 @@ export const authOptions = {
           );
           if (isPasswordValid) {
             if (user.status === 1) {
-              if (user.verified === 1) {                
+              if (user.verified === 1) {
                 if (user.on_board_status === 1) {
                   // update on board status
                   await prisma.users.update({
@@ -64,7 +64,9 @@ export const authOptions = {
                       },
                     },
                   });
-                  user.routes = authorizedRoutes.map((route) => route.url);
+                  user.routes = authorizedRoutes.map((route) => {
+                    return { url: route.url, method: route.method };
+                  });
                 }
 
                 return user;

@@ -2,7 +2,6 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const permissionSeeder = async () => {
-
   await prisma.$executeRawUnsafe(`TRUNCATE TABLE permissions`);
   let data = [];
 
@@ -24,14 +23,16 @@ const permissionSeeder = async () => {
     "/admin/case-invitations",
     "/api/admin/cases/invitation",
     "/api/admin/cases/invitation/accept",
-    "/api/admin/cases/invitation/get",
+    "/api/admin/cases/invitation/get/:id",
     "/admin/settings",
     "/api/admin/settings",
-    "/api/admin/settings/delete",
+    "/api/admin/settings/delete/:id",
     "/api/admin/settings/save",
+    "/api/admin/settings/save/:id",
     "/api/admin/settings/update-profile",
     "/api/admin/settings/change-password",
-    "/api/admin/download"
+    "/api/admin/download/@path",
+    "/api/admin/modules",
   ];
   const ecoRoutes = await prisma.routes.findMany({
     where: {
