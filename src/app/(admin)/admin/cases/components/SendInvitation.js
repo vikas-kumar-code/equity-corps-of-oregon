@@ -14,7 +14,6 @@ import common from "@/utils/common";
 import { toast } from "react-toastify";
 import AsyncSelect from "react-select/async";
 import "../../../../styles/async-select.css";
-import { sendInvitationSchema } from "@/joi/casesSchema";
 import moment from "moment";
 import LoadingOverlay from "react-loading-overlay";
 
@@ -87,7 +86,7 @@ const SendInvitation = (props) => {
       setErrors(null);
       setSubmitted(true);
       try {
-        await fetch(common.apiPath(`/admin/cases/invitations/send`), {
+        await fetch(common.apiPath(`/admin/cases/invitation/send`), {
           method: "POST",
           body: JSON.stringify({
             case_id: props?.recordId,
@@ -119,7 +118,7 @@ const SendInvitation = (props) => {
     if (confirm("Are you sure to proceed.")) {
       setLoader(true);
       try {
-        await fetch(common.apiPath(`/admin/cases/invitations/cancel`), {
+        await fetch(common.apiPath(`/admin/cases/invitation/cancel`), {
           method: "POST",
           body: JSON.stringify({ id: id }),
         })

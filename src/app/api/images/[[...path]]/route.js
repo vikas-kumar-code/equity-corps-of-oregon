@@ -18,8 +18,6 @@ export async function GET(request, data) {
       );
     }
 
-    console.log(filePath);
-
     // Detect the Content-Type using the mime package
     const contentType = mime.getType(filePath);
     if (!contentType) {

@@ -77,15 +77,16 @@ const casesSchemaForm3 = Joi.object({
     .required(),
 });
 
-const sendInvitationSchema = Joi.object({
-  case_id: Joi.number().integer().required(),
-});
+const invoiceSchema = Joi.array()
+  .items(
+    Joi.object({
+      description: Joi.string().required(),
+      amount: Joi.number().min(0).required().label("Amount"),
+    })
+  )
+  .min(1)
+  .required();
 
 export default casesSchema;
 
-export {
-  casesSchemaForm1,
-  casesSchemaForm2,
-  casesSchemaForm3,
-  sendInvitationSchema,
-};
+export { casesSchemaForm1, casesSchemaForm2, casesSchemaForm3, invoiceSchema };

@@ -27,11 +27,11 @@ export default function ListCaseInvitations() {
   ];
 
   const getRecords = async () => {
-    let REQUEST_URI = common.apiPath(`/admin/cases/invitations?page=${pageNumber}`);
+    let REQUEST_URI = common.apiPath(`/admin/cases/invitation?page=${pageNumber}`);
     if (fields !== null) {
       fields["page"] = pageNumber;
       const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/admin/cases/invitations?${queryString}`);
+      REQUEST_URI = common.apiPath(`/admin/cases/invitation?${queryString}`);
     }
     fetch(REQUEST_URI)
       .then((response) => response.json())

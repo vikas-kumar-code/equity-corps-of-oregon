@@ -61,7 +61,7 @@ export default function Documents(props) {
         data.append("document_name", documentName);
         data.append("case_id", props?.caseId);
         const res = await fetch(
-          common.apiPath("admin/cases/invitations/document/upload"),
+          common.apiPath("admin/cases/invitation/document/upload"),
           {
             method: "POST",
             body: data,
@@ -105,7 +105,7 @@ export default function Documents(props) {
       try {
         setLoader(true);
         await fetch(
-          common.apiPath("/admin/cases/invitations/document/delete"),
+          common.apiPath("/admin/cases/invitation/document/delete"),
           {
             method: "DELETE",
             body: JSON.stringify({ id: document_id }),

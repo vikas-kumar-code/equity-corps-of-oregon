@@ -26,7 +26,7 @@ export async function GET(request) {
       ...paginate,
       orderBy: [{ id: "desc" }],
     });
-    totalRecords = await prisma.email_templates.count({ where: where });
+    totalRecords = await prisma.email_templates.count({ where });
     // output response
     response.success = true;
     response.message = "Email Template list";

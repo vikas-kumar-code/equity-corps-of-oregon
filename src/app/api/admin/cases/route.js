@@ -65,7 +65,7 @@ export async function GET(request) {
         },
       },
     });
-    totalRecords = await prisma.cases.count({ where: where });
+    totalRecords = await prisma.cases.count({ where });
     // output response
     response.success = true;
     response.message = "Cases list";

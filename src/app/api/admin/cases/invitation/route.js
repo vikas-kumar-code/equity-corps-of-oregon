@@ -51,7 +51,7 @@ export async function GET(request) {
         },
       },
     });
-    totalRecords = await prisma.case_invitations.count({ where: where });
+    totalRecords = await prisma.case_invitations.count({ where });
     // output response
     response.success = true;
     response.message = "Case invitations list";

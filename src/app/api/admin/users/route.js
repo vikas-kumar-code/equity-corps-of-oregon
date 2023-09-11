@@ -40,7 +40,7 @@ export async function GET(request) {
       },
       orderBy: [{ id: "desc" }],
     });
-    totalRecords = await prisma.users.count({ where: where });
+    totalRecords = await prisma.users.count({ where });
     // output response
     response.success = true;
     response.message = "Users List";

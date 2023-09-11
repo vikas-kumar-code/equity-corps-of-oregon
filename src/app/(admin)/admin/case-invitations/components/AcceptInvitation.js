@@ -53,7 +53,7 @@ export default function AcceptInvitation({
         handleErrors(validated.errors);
       } else {
         setSubmitted(true);
-        await fetch(common.apiPath(`/admin/cases/invitations/accept`), {
+        await fetch(common.apiPath(`/admin/cases/invitation/accept`), {
           method: "POST",
           body: JSON.stringify(fields),
         })

@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import moment from "moment";
 import { Badge, Button, Spinner } from "react-bootstrap";
 import InvitationDetails from "./InvitationDetails";
-import { toast } from "react-toastify";
-import common from "@/utils/common";
 import AcceptInvitation from "./AcceptInvitation";
+import AddEditInvoice from "./AddEditInvoice";
 
 export default function Case({
   record,
@@ -17,6 +16,7 @@ export default function Case({
 }) {
   const [showModal, setShowModal] = useState(false);
   const [showConfirmation, setConfirmation] = useState(false);
+  const [invoiceModal, setInvoiceModal] = useState(false);
 
   const btnStatus = {
     0: {
@@ -42,32 +42,34 @@ export default function Case({
         <td>{record.case.case_number}</td>
         <td>{record.case.title}</td>
         <td>
-          <Badge
-            pill
-            bg={btnStatus[record.status].bg || "info"}
-          >
+          <Badge pill bg={btnStatus[record.status].bg || "info"}>
             {btnStatus[record.status].label || "N/A"}
           </Badge>
         </td>
-        <td>
-          {moment(record.sent_on).format("D MMM,  YYYY")}
-        </td>
+        <td>{moment(record.sent_on).format("D MMM,  YYYY")}</td>
         <td>
           {record?.status === 0 && (
-              <Button
-                className="me-2"
-                variant="success"
-                onClick={() => setConfirmation(true)}
-              >
-                Accept
-              </Button>
-            )}
+            <Button
+              className="me-2"
+              variant="success"
+              onClick={() => setConfirmation(true)}
+            >
+              Accept
+            </Button>
+          )}
           <Button
             className="me-2"
             variant="primary"
             onClick={() => setShowModal(true)}
           >
             View
+          </Button>
+          <Button
+            className="me-2"
+            variant="success"
+            onClick={() => setInvoiceModal(true)}
+          >
+            Invoice
           </Button>
         </td>
       </tr>
@@ -91,6 +93,16 @@ export default function Case({
           }}
           record={record}
           reloadRecords={getRecords}
+        />
+      )}
+
+      {invoiceModal && (
+        <AddEditInvoice
+          showModal={invoiceModal}
+          closeModal={() => {
+            setInvoiceModal(false);
+          }}
+          caseId={record.case.id}
         />
       )}
     </>
