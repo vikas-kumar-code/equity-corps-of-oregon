@@ -65,6 +65,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
           if (response.success) {
             toast.success(response.message);
             setFields(initialValues);
+            getRecords()
           } else if (response.error) {
             handleErrors(response.message);
           }
