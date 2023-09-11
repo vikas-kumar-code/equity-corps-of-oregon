@@ -76,7 +76,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
   const getRecord = async (id) => {
     setLoader(true);
     try {
-      fetch(common.apiPath(`/admin/cases/invoice/get/${caseId}`))
+      fetch(common.apiPath(`/admin/cases/invoice/get/${id}`))
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
@@ -87,7 +87,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
           }
         });
     } catch (e) {
-      toast.error(error.message);
+      toast.error(e.message);
     } finally {
       setLoader(false);
     }
@@ -101,10 +101,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
     setFields(fields.filter((value, i) => i !== index));
   };
 
-  useEffect(() => {
-    console.log(fields);
-  }, [fields]);
-
+  console.log(caseId);
   return (
     <Modal
       show={showModal}
@@ -118,7 +115,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
         <h3>Invoice</h3>
       </Modal.Header>
       <Modal.Body>
-        <Button variant="info" onClick={() => getRecord(1)}>
+        <Button variant="info" onClick={() => getRecord(caseId)}>
           Get record{" "}
         </Button>
         <LoadingOverlay active={loader} spinner text="Loading...">
@@ -192,7 +189,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
               </Button>
             </div>
           </Form>
-          <ListInvoice />
+          <ListInvoice caseId={caseId}/>
         </LoadingOverlay>
       </Modal.Body>
     </Modal>
