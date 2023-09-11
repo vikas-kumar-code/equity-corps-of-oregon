@@ -2,16 +2,11 @@
 
 import React, { useState } from "react";
 import moment from "moment";
-import { Button } from "react-bootstrap";
+import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import SendInvitation from "./SendInvitation";
 import AddEditCase from "./AddEditCase";
 
-export default function Case({
-  record,
-  getRecords,
-  deleteRecord,
-  sn,  
-}) {
+export default function Case({ record, getRecords, deleteRecord, sn }) {
   const [showModal, setShowModal] = useState(false);
   const [showSendInvitationModal, setShowSendInvitationModal] = useState(false);
 
@@ -31,23 +26,26 @@ export default function Case({
         </td>
         <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
         <td>
-          <Button
-            className="me-2"
-            variant="info"
-            onClick={() => setShowSendInvitationModal(true)}
-          >
-            Send Invitation
-          </Button>
-          <Button
-            className="me-2"
+          <DropdownButton
+            as={ButtonGroup}
+            key="action-1"
+            id={`action-btn-1`}
             variant="primary"
-            onClick={() => setShowModal(true)}
+            title="Action"
           >
-            Edit
-          </Button>
-          <Button variant="danger" onClick={() => deleteRecord(record.id)}>
-            Delete
-          </Button>
+            <Dropdown.Item
+              eventKey="1"
+              onClick={() => setShowSendInvitationModal(true)}
+            >
+              Send Invitation
+            </Dropdown.Item>
+            <Dropdown.Item eventKey="2" onClick={() => setShowModal(true)}>
+              Edit
+            </Dropdown.Item>
+            <Dropdown.Item eventKey="3" onClick={() => deleteRecord(record.id)}>
+              Delete
+            </Dropdown.Item>
+          </DropdownButton>
         </td>
       </tr>
       {showModal && (

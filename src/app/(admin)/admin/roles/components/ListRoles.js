@@ -3,7 +3,15 @@
 import React, { useState, useEffect } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import moment from "moment";
-import { Card, Row, Col, Button } from "react-bootstrap";
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  DropdownButton,
+  ButtonGroup,
+  Dropdown,
+} from "react-bootstrap";
 import AddEditRole from "./AddEditRole";
 import { toast } from "react-toastify";
 import common from "@/utils/common";
@@ -20,7 +28,9 @@ export default function ListRoles() {
 
   const getRecords = async () => {
     setLoader(true);
-    await fetch(common.apiPath(`/admin/roles?page=${pageNumber}`),{cache:"no-cache"})
+    await fetch(common.apiPath(`/admin/roles?page=${pageNumber}`), {
+      cache: "no-cache",
+    })
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
@@ -115,21 +125,27 @@ export default function ListRoles() {
                       )}
                     </td>
                     <td>{moment(record.added_on).format("D MMM,  YYYY")}</td>
-                    <td className="px-1 text-end">
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => getRecord(record.id)}
+                    <td>
+                      <DropdownButton
+                        as={ButtonGroup}
+                        key="action-1"
+                        id={`action-btn-1`}
+                        variant="primary"
+                        title="Action"
                       >
-                        Edit
-                      </button>
-                    </td>
-                    <td className="px-1 text-start">
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => deleteRecord(record.id)}
-                      >
-                        Delete
-                      </button>
+                        <Dropdown.Item
+                          eventKey="1"
+                          onClick={() => getRecord(record.id)}
+                        >
+                          Edit
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          eventKey="2"
+                          onClick={() => deleteRecord(record.id)}
+                        >
+                          Delete
+                        </Dropdown.Item>
+                      </DropdownButton>
                     </td>
                   </tr>
                 ))}

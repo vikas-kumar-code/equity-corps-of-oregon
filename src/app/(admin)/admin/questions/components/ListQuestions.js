@@ -2,7 +2,15 @@
 
 import React, { useState, useEffect, Component } from "react";
 import LoadingOverlay from "react-loading-overlay";
-import { Card, Row, Col, Button } from "react-bootstrap";
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  DropdownButton,
+  ButtonGroup,
+  Dropdown,
+} from "react-bootstrap";
 import AddEditQuestion from "./AddEditQuestion";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
@@ -47,8 +55,10 @@ export default function ListQuestions() {
     setRecordId(recordId);
     setShowModal(true);
   };
-  const getRecords = async () => {    
-    let REQUEST_URI = common.apiPath(`/admin/questions?${searchParams.toString()}`);
+  const getRecords = async () => {
+    let REQUEST_URI = common.apiPath(
+      `/admin/questions?${searchParams.toString()}`
+    );
     fetch(REQUEST_URI)
       .then((response) => response.json())
       .then((data) => {
@@ -180,20 +190,26 @@ export default function ListQuestions() {
                                     <td>{Number(index + 1)}.</td>
                                     <td>{record.question}</td>
                                     <td className="px-1">
-                                      <Button
+                                      <DropdownButton
+                                        as={ButtonGroup}
+                                        key="action-1"
+                                        id={`action-btn-1`}
                                         variant="primary"
-                                        onClick={() => getRecord(record.id)}
+                                        title="Action"
                                       >
-                                        Edit
-                                      </Button>
-                                    </td>
-                                    <td className="px-1">
-                                      <Button
-                                        variant="danger"
-                                        onClick={() => deleteRecord(record.id)}
-                                      >
-                                        Delete
-                                      </Button>
+                                        <Dropdown.Item
+                                          eventKey="1"
+                                          onClick={() => getRecord(record.id)}
+                                        >
+                                          Edit
+                                        </Dropdown.Item>
+                                        <Dropdown.Item
+                                          eventKey="2"
+                                          onClick={() => deleteRecord(record.id)}
+                                        >
+                                          Delete
+                                        </Dropdown.Item>
+                                      </DropdownButton>
                                     </td>
                                   </tr>
                                 )}

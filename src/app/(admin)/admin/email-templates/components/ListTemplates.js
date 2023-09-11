@@ -2,7 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import LoadingOverlay from "react-loading-overlay";
-import { Card, Row, Col, Button } from "react-bootstrap";
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  DropdownButton,
+  ButtonGroup,
+  Dropdown,
+} from "react-bootstrap";
 import AddEditTemplate from "./AddEditTemplate";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
@@ -15,7 +23,7 @@ LoadingOverlay.propTypes = undefined;
 export default function ListTemplates() {
   const searchParams = useSearchParams();
   const [totalRecords, setTotalRecords] = useState(1);
-
+  const [fields, setFields] = useState({})
   const [loader, setLoader] = useState(true);
   const [records, setRecords] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -125,21 +133,27 @@ export default function ListTemplates() {
                           <td>{record.subject}</td>
                           <td>{record.from_email}</td>
                           <td>{record.from_label}</td>
-                          <td className="px-1 text-end">
-                            <Button
+                          <td>
+                            <DropdownButton
+                              as={ButtonGroup}
+                              key="action-1"
+                              id={`action-btn-1`}
                               variant="primary"
-                              onClick={() => getRecord(record.id)}
+                              title="Action"
                             >
-                              Edit
-                            </Button>
-                          </td>
-                          <td className="px-1 text-start">
-                            <Button
-                              variant="danger"
-                              onClick={() => deleteRecord(record.id)}
-                            >
-                              Delete
-                            </Button>
+                              <Dropdown.Item
+                                eventKey="1"
+                                onClick={() => getRecord(record.id)}
+                              >
+                                Edit
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                eventKey="2"
+                                onClick={() => deleteRecord(record.id)}
+                              >
+                                Delete
+                              </Dropdown.Item>
+                            </DropdownButton>
                           </td>
                         </tr>
                       ))}
