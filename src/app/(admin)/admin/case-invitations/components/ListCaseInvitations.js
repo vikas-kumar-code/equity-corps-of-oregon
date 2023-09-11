@@ -51,9 +51,10 @@ export default function ListCaseInvitations() {
       .finally(() => setLoader(false));
   };
 
+  console.log(searchParams);
   useEffect(() => {
     getRecords();
-  }, [pageNumber]);
+  }, [searchParams]);
 
   return (
     <div>
