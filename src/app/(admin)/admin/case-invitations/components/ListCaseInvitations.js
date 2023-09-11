@@ -9,17 +9,19 @@ import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
 import Case from "./Case";
+import { useSearchParams } from "next/navigation";
 LoadingOverlay.propTypes = undefined
 
 
 export default function ListCaseInvitations() {
+  const searchParams = useSearchParams();
   const [loader, setLoader] = useState(true);
   const [records, setRecords] = useState([]);
   const recordPerPage = 10;
   const [pageNumber, setPageNumber] = useState(1);
   const [totalRecords, setTotalRecords] = useState(1);
   const [showSearchBox, setShowSearchBox] = useState(false);
-  const [fields, setFields] = useState(null);
+  // const [fields, setFields] = useState(null);
 
   const searchFields = [
     { label: "Case Number", type: "text", name: "case_number" },
@@ -27,12 +29,12 @@ export default function ListCaseInvitations() {
   ];
 
   const getRecords = async () => {
-    let REQUEST_URI = common.apiPath(`/admin/cases/invitation?page=${pageNumber}`);
-    if (fields !== null) {
-      fields["page"] = pageNumber;
-      const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/admin/cases/invitation?${queryString}`);
-    }
+    // let REQUEST_URI = common.apiPath(`/admin/cases/invitation?page=${pageNumber}`);
+    // if (fields !== null) {
+    //   fields["page"] = pageNumber;
+    //   const queryString = new URLSearchParams(fields).toString();
+      let REQUEST_URI = common.apiPath(`/admin/cases/invitation?${searchParams.toString()}`);
+    // }
     fetch(REQUEST_URI)
       .then((response) => response.json())
       .then((response) => {
@@ -52,10 +54,6 @@ export default function ListCaseInvitations() {
   useEffect(() => {
     getRecords();
   }, [pageNumber]);
-
-  useEffect(() => {
-    getRecords();
-  }, [fields]);
 
   return (
     <div>
@@ -78,9 +76,9 @@ export default function ListCaseInvitations() {
         title={"Search Case"}
         searchFields={searchFields}
         col={6}
-        searchRecords={(fields) => {
-          setFields(fields);
-        }}
+        // searchRecords={(fields) => {
+        //   setFields(fields);
+        // }}
       />
       <Row>
         <Col>

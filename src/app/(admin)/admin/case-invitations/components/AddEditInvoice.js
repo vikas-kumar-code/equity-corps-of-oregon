@@ -92,6 +92,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
           }
         });
     } catch (e) {
+      
       toast.error(e.message);
     } finally {
       setLoader(false);
@@ -119,12 +120,11 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     }
   };
 
+  
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this invoice?")) {
       setLoader(true);
-      fetch(common.apiPath(`/admin/cases/invoice/delete/${id}`), {
-        method: "DELETE",
-      })
+      fetch(common.apiPath(`/admin/cases/invoice/delete/${id}`), { method: "DELETE" })
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
@@ -265,7 +265,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
             </Form>
           </div>
           <ListInvoice
-            loader={loader}
             records={records}
             getRecord={getRecord}
             deleteRecord={deleteRecord}
