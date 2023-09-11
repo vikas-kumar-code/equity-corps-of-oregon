@@ -7,7 +7,7 @@ const routeSeeder = async () => {
       label: "Dashboard",
       icon: "mdi mdi-view-dashboard",
       url: "/admin/dashboard",
-    },    
+    },
     {
       label: "Cases",
       icon: "mdi mdi-alpha-c-circle",
