@@ -1,21 +1,22 @@
+import common from "@/utils/common";
+import { useState } from "react";
+import { toast } from "react-toastify";
+
 const { Table } = require("react-bootstrap");
 
-export default function ListInvoice(){
+export default function ListInvoice({caseId}) {
+  const [records, setRecords] = useState([]);
+
   const getRecords = async () => {
     let REQUEST_URI = common.apiPath(
-      `/admin/cases/invitation?page=${pageNumber}`
-    );
-    if (fields !== null) {
-      fields["page"] = pageNumber;
-      const queryString = new URLSearchParams(fields).toString();
-      REQUEST_URI = common.apiPath(`/admin/cases/invitation?${queryString}`);
-    }
+      `/admin/cases/invitation/list/${caseId}`
+    )
     fetch(REQUEST_URI)
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
           setRecords(response.records);
-          setTotalRecords(response.totalRecords);
+          // setTotalRecords(response.totalRecords);
         } else {
           toast.error(response.message);
         }
@@ -25,6 +26,13 @@ export default function ListInvoice(){
       })
       .finally(() => setLoader(false));
   };
+
+  useEffect(() => {
+    getRecords();
+  }, []);
+
+  console.log(records);
+
   return (
     <Table responsive>
       <thead>
@@ -56,4 +64,4 @@ export default function ListInvoice(){
       </tbody>
     </Table>
   );
-};
+}

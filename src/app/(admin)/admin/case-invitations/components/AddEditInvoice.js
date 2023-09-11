@@ -165,7 +165,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
               </Button>
             </div>
           </Form>
-          <ListInvoice />
+          <ListInvoice caseId={caseId}/>
         </LoadingOverlay>
       </Modal.Body>
     </Modal>
