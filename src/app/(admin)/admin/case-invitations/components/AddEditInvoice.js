@@ -90,7 +90,8 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
           }
         });
     } catch (e) {
-      toast.error(error.message);
+      
+      toast.error(e.message);
     } finally {
       setLoader(false);
     }
@@ -115,6 +116,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
     }
   };
 
+  
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this invoice?")) {
       setLoader(true);
