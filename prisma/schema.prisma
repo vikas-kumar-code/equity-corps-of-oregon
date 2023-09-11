@@ -152,6 +152,7 @@ model routes {
   label       String?       @db.VarChar(50)
   url         String?       @db.VarChar(200)
   icon        String?       @db.VarChar(50)
+  method      String        @default("get") @db.VarChar(100)
   permissions permissions[]
   parent      routes?       @relation("ParentToRoutes", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   children    routes[]      @relation("ParentToRoutes")
