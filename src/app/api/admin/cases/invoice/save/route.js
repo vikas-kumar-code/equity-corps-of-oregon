@@ -22,24 +22,44 @@ export async function POST(request) {
       validated.forEach((item) => {
         total_amount += parseFloat(item.amount);
       });
-      total_amount = parseFloat(total_amount.toFixed(2));      
+      total_amount = parseFloat(total_amount.toFixed(2));
       let particulars = JSON.stringify(validated);
 
-      const caseInvoiceModel = await prisma.case_invoices.create({
-        data: {
-          case_id,
-          user_id,
-          particulars,
-          total_amount,
-        },
+      await prisma.$transaction(async (tx) => {
+        const caseModel = await tx.cases.findUnique({
+          where: { id: case_id },
+        });
+        if (caseModel) {
+          const caseInvoiceModel = await tx.case_invoices.create({
+            data: {
+              case_id,
+              user_id,
+              particulars,
+              total_amount,
+            },
+          });
+          if (caseInvoiceModel) {
+            const invoice = await tx.case_invoices.update({
+              where: { id: caseInvoiceModel.id },
+              data: {
+                name:
+                  "Invoice-" +
+                  caseModel.case_number +
+                  "-" +
+                  caseInvoiceModel.id,
+              },
+            });
+            await tx.logs.create({
+              data: {
+                case_id,
+                content: invoice.name + " added by " + session.user.name + ".",
+              },
+            });
+            response.success = true;
+            response.message = "Invoice added successfully.";
+          }
+        }
       });
-      if (caseInvoiceModel) {
-        response.success = true;
-        response.message = "Invoice added successfully.";
-      } else {
-        response.error = true;
-        response.message = "Something went wrong. please try again.";
-      }
     }
   } catch (error) {
     response.error = true;

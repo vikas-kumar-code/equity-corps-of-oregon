@@ -103,6 +103,7 @@ export default function Case({
             setInvoiceModal(false);
           }}
           caseId={record.case.id}
+          reloadRecords={getRecords}
         />
       )}
     </>

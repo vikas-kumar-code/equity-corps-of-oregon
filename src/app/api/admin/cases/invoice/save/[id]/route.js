@@ -4,13 +4,13 @@ import validateAsync from "@/utils/validateAsync";
 import { invoiceSchema } from "@/joi/casesSchema";
 import { getSession } from "@/utils/serverHelpers";
 
-export async function PUT(request) {
+export async function PUT(request, data) {
   let response = {};
   try {
     const session = await getSession();
-    let data = await request.json();
+    let req = await request.json();
     const id = parseInt(data.params.id);
-    const validated = await validateAsync(invoiceSchema, data, {
+    const validated = await validateAsync(invoiceSchema, req?.particulars, {
       errorKey: true,
     });
     if (validated.errors) {
@@ -22,10 +22,11 @@ export async function PUT(request) {
       });
       if (caseInvoice) {
         let total_amount = 0;
-        validated.particulars.forEach((item) => {
-          total_amount += Number(item.amount).toFixed(2);
+        validated.forEach((item) => {
+          total_amount += parseFloat(item.amount);
         });
-        let particulars = JSON.stringify(validated.particulars);
+        total_amount = parseFloat(total_amount.toFixed(2));
+        let particulars = JSON.stringify(validated);
         const caseInvoiceModel = await prisma.case_invoices.update({
           where: { id, user_id: session.user.id },
           data: {
@@ -34,6 +35,16 @@ export async function PUT(request) {
           },
         });
         if (caseInvoiceModel) {
+          await prisma.logs.create({
+            data: {
+              case_id: caseInvoiceModel.case_id,
+              content:
+                caseInvoiceModel.name +
+                " updated by " +
+                session.user.name +
+                ".",
+            },
+          });
           response.success = true;
           response.message = "Invoice updated successfully.";
         } else {

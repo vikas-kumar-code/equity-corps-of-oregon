@@ -23,7 +23,8 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
   let fieldsData = [...fields];
   const [loader, setLoader] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [invoiceData, setInvoiceData] = useState({});
+  const [invoiceRecord, setInvoiceRecord] = useState({});
+  const [records, setRecords] = useState([]);
 
   const handleErrors = (errors) => {
     if (typeof errors === "object") {
@@ -49,8 +50,10 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
       setSubmitted(true);
       let REQUEST_URI = common.apiPath("/admin/cases/invoice/save");
       let REQUEST_METHOD = "POST";
-      if (invoiceId) {
-        REQUEST_URI = common.apiPath(`/admin/cases/invoice/save/${invoiceId}`);
+      if (invoiceRecord.id) {
+        REQUEST_URI = common.apiPath(
+          `/admin/cases/invoice/save/${invoiceRecord.id}`
+        );
         REQUEST_METHOD = "PUT";
       }
       fetch(REQUEST_URI, {
@@ -76,12 +79,12 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
   const getRecord = async (id) => {
     setLoader(true);
     try {
-      fetch(common.apiPath(`/admin/cases/invoice/get/${caseId}`))
+      fetch(common.apiPath(`/admin/cases/invoice/get/${id}`))
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
-            setFields(JSON.parse(response.particulars));
-            setInvoiceData(response.record);
+            setFields(JSON.parse(response.record.particulars));
+            setInvoiceRecord(response.record);
           } else if (response.error) {
             toast.error(response.message);
           }
@@ -90,6 +93,45 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
       toast.error(error.message);
     } finally {
       setLoader(false);
+    }
+  };
+
+  const getRecords = async () => {
+    try {
+      let REQUEST_URI = common.apiPath(`/admin/cases/invoice/list/${caseId}`);
+      fetch(REQUEST_URI)
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            setRecords(response.records);
+          } else {
+            toast.error(response.message);
+          }
+        });
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const deleteRecord = async (id) => {
+    if (window.confirm("Are you sure to delete this invoice?")) {
+      setLoader(true);
+      fetch(common.apiPath(`/admin/cases/invoice/delete/${id}`), { method: "DELETE" })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            toast.success(response.message);
+            getRecords();
+          } else if (response.error) {
+            toast.error(response.message);
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        })
+        .finally(() => setLoader(false));
     }
   };
 
@@ -102,8 +144,8 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
   };
 
   useEffect(() => {
-    console.log(fields);
-  }, [fields]);
+    getRecords();
+  }, []);
 
   return (
     <Modal
@@ -118,11 +160,8 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
         <h3>Invoice</h3>
       </Modal.Header>
       <Modal.Body>
-        <Button variant="info" onClick={() => getRecord(1)}>
-          Get record{" "}
-        </Button>
         <LoadingOverlay active={loader} spinner text="Loading...">
-          <h5 className="text-gray">Add Invoice</h5>
+          {invoiceRecord.id ? <h5>Update Invoice</h5> : <h5>Add Invoice</h5>}
           <Form onSubmit={handleSubmit}>
             {fields?.map((item, index) => {
               return (
@@ -149,7 +188,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
                   <Col md={4} className="position-relative">
                     <FloatingLabel label="Amount" className="mb-3">
                       <Form.Control
-                        row={1}
+                        autoComplete="off"
                         name="amount"
                         placeholder="Amount"
                         isInvalid={!!errors[index + "amount"]}
@@ -181,10 +220,32 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
               );
             })}
             <div className="text-end">
-              <Button variant="primary" onClick={() => addFieldSet()}>
+              <Button
+                variant="primary"
+                onClick={() => addFieldSet()}
+                disabled={submitted}
+              >
                 Add More
               </Button>
-              <Button variant="success" type="submit" className="ms-2">
+              {invoiceRecord.id && (
+                <Button
+                  variant="danger"
+                  className="ms-2"
+                  onClick={() => {
+                    setInvoiceRecord({});
+                    setFields(initialValues);
+                  }}
+                  disabled={submitted}
+                >
+                  Cancel
+                </Button>
+              )}
+              <Button
+                variant="success"
+                type="submit"
+                className="ms-2"
+                disabled={submitted}
+              >
                 {submitted && (
                   <Spinner className="me-1" color="light" size="sm" />
                 )}
@@ -192,7 +253,11 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
               </Button>
             </div>
           </Form>
-          <ListInvoice />
+          <ListInvoice
+            records={records}
+            getRecord={getRecord}
+            deleteRecord={deleteRecord}
+          />
         </LoadingOverlay>
       </Modal.Body>
     </Modal>

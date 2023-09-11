@@ -4,11 +4,11 @@ import prisma from "@/utils/prisma";
 export async function GET(request, data) {
   let response = {};
   try {    
-    const record = await prisma.case_documents.findUnique({
+    const record = await prisma.case_invoices.findUnique({
       where: {
         id: parseInt(data.params.id),
       },      
-    });    
+    }); 
     if (record) {
       response.success = true;
       response.record = record;
