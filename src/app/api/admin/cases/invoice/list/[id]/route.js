@@ -9,7 +9,7 @@ export async function GET(request, data) {
     const session = await getSession();
     records = await prisma.case_invoices.findMany({
       where: {
-        case_id: parseInt(data.params.case_id),
+        case_id: parseInt(data.params.id),
         user_id: session.user.id,
       },
       orderBy: [{ id: "desc" }],
