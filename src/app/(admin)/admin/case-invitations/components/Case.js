@@ -59,18 +59,20 @@ export default function Case({
             id={`action-btn-1`}
             variant="primary"
             title="Action"
-          >            
-            <Dropdown.Item eventKey="2" onClick={() => setShowModal(true)}>
+          >
+            <Dropdown.Item eventKey="1" onClick={() => setShowModal(true)}>
               View
             </Dropdown.Item>
             {record?.status === 0 && (
-              <Dropdown.Item eventKey="1" onClick={() => setConfirmation(true)}>
+              <Dropdown.Item eventKey="2" onClick={() => setConfirmation(true)}>
                 Accept
               </Dropdown.Item>
             )}
-            <Dropdown.Item eventKey="3" onClick={() => setInvoiceModal(true)}>
-              Invoice
-            </Dropdown.Item>
+            {record?.status > 0 && (
+              <Dropdown.Item eventKey="3" onClick={() => setInvoiceModal(true)}>
+                Invoice
+              </Dropdown.Item>
+            )}
           </DropdownButton>
         </td>
       </tr>
@@ -103,7 +105,7 @@ export default function Case({
           closeModal={() => {
             setInvoiceModal(false);
           }}
-          caseId={record.case.id}
+          record={record.case}
           reloadRecords={getRecords}
         />
       )}
