@@ -25,6 +25,7 @@ export default function ListInvoice(){
       })
       .finally(() => setLoader(false));
   };
+  
   return (
     <Table responsive>
       <thead>
