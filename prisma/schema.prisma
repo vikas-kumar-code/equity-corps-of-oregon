@@ -93,6 +93,7 @@ model case_invoices {
   id           Int      @id @default(autoincrement())
   case_id      Int
   user_id      Int
+  name         String?
   particulars  String   @db.LongText
   total_amount Float
   added_on     DateTime @default(now())

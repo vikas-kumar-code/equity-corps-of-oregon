@@ -14,6 +14,7 @@ import {
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
+import ListInvoice from "./ListInvoice";
 
 const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
   const initialValues = [{ description: "", amount: "" }];
@@ -110,7 +111,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
                         row={1}
                         name="description"
                         placeholder="Description"
-                        isInvalid={!!errors[index+"description"]}
+                        isInvalid={!!errors[index + "description"]}
                         value={item.description}
                         onChange={(event) => {
                           fieldsData[index].description = event.target.value;
@@ -118,7 +119,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
                         }}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors[index+"description"] || ""}
+                        {errors[index + "description"] || ""}
                       </Form.Control.Feedback>
                     </FloatingLabel>
                   </Col>
@@ -128,7 +129,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
                         row={1}
                         name="amount"
                         placeholder="Amount"
-                        isInvalid={!!errors[index+"description"]}
+                        isInvalid={!!errors[index + "description"]}
                         value={item.amount || ""}
                         onChange={(event) => {
                           fieldsData[index].amount = event.target.value.replace(
@@ -139,7 +140,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
                         }}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors[index+"amount"] || ""}
+                        {errors[index + "amount"] || ""}
                       </Form.Control.Feedback>
                     </FloatingLabel>
                     {index >= 1 && (
@@ -165,6 +166,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
               </Button>
             </div>
           </Form>
+          <ListInvoice />
         </LoadingOverlay>
       </Modal.Body>
     </Modal>
