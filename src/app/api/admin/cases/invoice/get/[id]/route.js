@@ -3,8 +3,8 @@ import prisma from "@/utils/prisma";
 
 export async function GET(request, data) {
   let response = {};
-  try {
-    const record = await prisma.questions.findUnique({
+  try {    
+    const record = await prisma.case_documents.findUnique({
       where: {
         id: parseInt(data.params.id),
       },      

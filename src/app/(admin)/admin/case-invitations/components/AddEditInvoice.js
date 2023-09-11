@@ -10,6 +10,7 @@ import {
   Col,
   Form,
   FloatingLabel,
+  Spinner,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
@@ -22,7 +23,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
   let fieldsData = [...fields];
   const [loader, setLoader] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [udpateId, setUpdateId] = useState(null);
+  const [invoiceData, setInvoiceData] = useState({});
 
   const handleErrors = (errors) => {
     if (typeof errors === "object") {
@@ -48,8 +49,8 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
       setSubmitted(true);
       let REQUEST_URI = common.apiPath("/admin/cases/invoice/save");
       let REQUEST_METHOD = "POST";
-      if (udpateId) {
-        REQUEST_URI = common.apiPath(`/admin/cases/invoice/save/${udpateId}`);
+      if (invoiceId) {
+        REQUEST_URI = common.apiPath(`/admin/cases/invoice/save/${invoiceId}`);
         REQUEST_METHOD = "PUT";
       }
       fetch(REQUEST_URI, {
@@ -60,7 +61,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
         .then((response) => {
           if (response.success) {
             toast.success(response.message);
-            closeModal();
+            setFields(initialValues);
           } else if (response.error) {
             handleErrors(response.message);
           }
@@ -72,6 +73,26 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
     }
   };
 
+  const getRecord = async (id) => {
+    setLoader(true);
+    try {
+      fetch(common.apiPath(`/admin/cases/invoice/get/${id}`))
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            setFields(JSON.parse(response.particulars));
+            setInvoiceData(response.record);
+          } else if (response.error) {
+            toast.error(response.message);
+          }
+        });
+    } catch (e) {
+      toast.error(e.message);
+    } finally {
+      setLoader(false);
+    }
+  };
+
   const addFieldSet = () => {
     setFields([...fields, initialValues[0]]);
   };
@@ -80,10 +101,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
     setFields(fields.filter((value, i) => i !== index));
   };
 
-  useEffect(() => {
-    console.log(fields);
-  }, [fields]);
-
+  console.log(caseId);
   return (
     <Modal
       show={showModal}
@@ -97,6 +115,9 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
         <h3>Invoice</h3>
       </Modal.Header>
       <Modal.Body>
+        <Button variant="info" onClick={() => getRecord(caseId)}>
+          Get record{" "}
+        </Button>
         <LoadingOverlay active={loader} spinner text="Loading...">
           <h5 className="text-gray">Add Invoice</h5>
           <Form onSubmit={handleSubmit}>
@@ -128,7 +149,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
                         row={1}
                         name="amount"
                         placeholder="Amount"
-                        isInvalid={!!errors[index + "description"]}
+                        isInvalid={!!errors[index + "amount"]}
                         value={item.amount || ""}
                         onChange={(event) => {
                           fieldsData[index].amount = event.target.value.replace(
@@ -161,6 +182,9 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
                 Add More
               </Button>
               <Button variant="success" type="submit" className="ms-2">
+                {submitted && (
+                  <Spinner className="me-1" color="light" size="sm" />
+                )}
                 Submit
               </Button>
             </div>
