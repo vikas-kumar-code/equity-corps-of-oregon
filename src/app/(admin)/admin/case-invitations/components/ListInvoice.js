@@ -10,7 +10,8 @@ export default function ListInvoice({ records, getRecord, deleteRecord }) {
   return (
     <Card>
       <Card.Body>
-        <div className="table-responsive" style={{minHeight: "250px"}}>
+        <div className="table-responsive">
+        <h5 className="">Invoices</h5>
           <table className="table">
             <thead>
               <tr>
@@ -53,6 +54,9 @@ export default function ListInvoice({ records, getRecord, deleteRecord }) {
                   </td>
                 </tr>
               ))}
+              {records.length <= 0 && <tr><td colSpan={5}>
+                <h6 className="text-gray">No records available</h6>
+                </td></tr>}
             </tbody>
           </table>
         </div>

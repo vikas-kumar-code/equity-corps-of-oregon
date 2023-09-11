@@ -16,7 +16,7 @@ import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import ListInvoice from "./ListInvoice";
 
-const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
+const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const initialValues = [{ description: "", amount: "" }];
   const [errors, setErrors] = useState({});
   const [fields, setFields] = useState(initialValues);
@@ -58,13 +58,15 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
       }
       fetch(REQUEST_URI, {
         method: REQUEST_METHOD,
-        body: JSON.stringify({ case_id: caseId, particulars: fields }),
+        body: JSON.stringify({ case_id: record.id, particulars: fields }),
       })
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
             toast.success(response.message);
             setFields(initialValues);
+            getRecords();
+            reloadRecords();
           } else if (response.error) {
             handleErrors(response.message);
           }
@@ -98,7 +100,9 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
 
   const getRecords = async () => {
     try {
-      let REQUEST_URI = common.apiPath(`/admin/cases/invoice/list/${caseId}`);
+      let REQUEST_URI = common.apiPath(
+        `/admin/cases/invoice/list/${record.id}`
+      );
       fetch(REQUEST_URI)
         .then((response) => response.json())
         .then((response) => {
@@ -126,6 +130,7 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
           if (response.success) {
             toast.success(response.message);
             getRecords();
+            reloadRecords();
           } else if (response.error) {
             toast.error(response.message);
           }
@@ -159,102 +164,106 @@ const AddEditInvoice = ({ showModal, closeModal, caseId }) => {
       size="lg"
     >
       <Modal.Header closeButton className="border-bottom-0">
-        <h3>Invoice</h3>
+        <h3>Manage invoices for {record.case_number}</h3>
       </Modal.Header>
       <Modal.Body>
         <LoadingOverlay active={loader} spinner text="Loading...">
-          {invoiceRecord.id ? <h5>Update Invoice</h5> : <h5>Add Invoice</h5>}
-          <Form onSubmit={handleSubmit}>
-            {fields?.map((item, index) => {
-              return (
-                <Row>
-                  <Col md={8}>
-                    <FloatingLabel label="Description" className="mb-3">
-                      <Form.Control
-                        as="textarea"
-                        row={1}
-                        name="description"
-                        placeholder="Description"
-                        isInvalid={!!errors[index + "description"]}
-                        value={item.description}
-                        onChange={(event) => {
-                          fieldsData[index].description = event.target.value;
-                          setFields(fieldsData);
-                        }}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors[index + "description"] || ""}
-                      </Form.Control.Feedback>
-                    </FloatingLabel>
-                  </Col>
-                  <Col md={4} className="position-relative">
-                    <FloatingLabel label="Amount" className="mb-3">
-                      <Form.Control
-                        autoComplete="off"
-                        name="amount"
-                        placeholder="Amount"
-                        isInvalid={!!errors[index + "amount"]}
-                        value={item.amount || ""}
-                        onChange={(event) => {
-                          fieldsData[index].amount = event.target.value.replace(
-                            /[^0-9.]/g,
-                            ""
-                          );
-                          setFields(fieldsData);
-                        }}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors[index + "amount"] || ""}
-                      </Form.Control.Feedback>
-                    </FloatingLabel>
-                    {index >= 1 && (
-                      <Button
-                        key={index}
-                        variant="secondary"
-                        size="sm"
-                        className="q-opt-remove btn-close"
-                        onClick={() => removeFieldSet(index)}
-                        style={{ right: 22 }}
-                      />
-                    )}
-                  </Col>
-                </Row>
-              );
-            })}
-            <div className="text-end mb-2">
-              <Button
-                variant="primary"
-                onClick={() => addFieldSet()}
-                disabled={submitted}
-              >
-                Add More
-              </Button>
-              {invoiceRecord.id && (
+          <div className="invoice-container">
+            {invoiceRecord.id ? (
+              <h5 className="mb-2">Update Invoice</h5>
+            ) : (
+              <h5 className="mb-2">Create Invoice</h5>
+            )}
+            <Form onSubmit={handleSubmit}>
+              {fields?.map((item, index) => {
+                return (
+                  <Row className="invoice-fieldset">
+                    <Col md={8} className="p-0">
+                      <FloatingLabel label="Particular">
+                        <Form.Control
+                          as="textarea"
+                          row={1}
+                          name="description"
+                          placeholder="Particular"
+                          isInvalid={!!errors[index + "description"]}
+                          value={item.description}
+                          onChange={(event) => {
+                            fieldsData[index].description = event.target.value;
+                            setFields(fieldsData);
+                          }}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors[index + "description"] || ""}
+                        </Form.Control.Feedback>
+                      </FloatingLabel>
+                    </Col>
+                    <Col md={4} className="position-relative pe-0">
+                      <FloatingLabel label="Amount">
+                        <Form.Control
+                          autoComplete="off"
+                          name="amount"
+                          placeholder="Amount"
+                          isInvalid={!!errors[index + "amount"]}
+                          value={item.amount || ""}
+                          onChange={(event) => {
+                            fieldsData[index].amount =
+                              event.target.value.replace(/[^0-9.]/g, "");
+                            setFields(fieldsData);
+                          }}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors[index + "amount"] || ""}
+                        </Form.Control.Feedback>
+                      </FloatingLabel>
+                      {index >= 1 && (
+                        <Button
+                          key={index}
+                          variant="secondary"
+                          size="sm"
+                          className="q-opt-remove btn-close"
+                          onClick={() => removeFieldSet(index)}
+                          style={{ right: 9 }}
+                        />
+                      )}
+                    </Col>
+                  </Row>
+                );
+              })}
+              <div className="text-end">
                 <Button
-                  variant="danger"
-                  className="ms-2"
-                  onClick={() => {
-                    setInvoiceRecord({});
-                    setFields(initialValues);
-                  }}
+                  variant="primary"
+                  onClick={() => addFieldSet()}
                   disabled={submitted}
                 >
-                  Cancel
+                  Add More
                 </Button>
-              )}
-              <Button
-                variant="success"
-                type="submit"
-                className="ms-2"
-                disabled={submitted}
-              >
-                {submitted && (
-                  <Spinner className="me-1" color="light" size="sm" />
+                {invoiceRecord.id && (
+                  <Button
+                    variant="danger"
+                    className="ms-2"
+                    onClick={() => {
+                      setInvoiceRecord({});
+                      setFields(initialValues);
+                    }}
+                    disabled={submitted}
+                  >
+                    Cancel
+                  </Button>
                 )}
-                Submit
-              </Button>
-            </div>
-          </Form>
+                <Button
+                  variant="success"
+                  type="submit"
+                  className="ms-2"
+                  disabled={submitted}
+                >
+                  {submitted && (
+                    <Spinner className="me-1" color="light" size="sm" />
+                  )}
+                  Submit
+                </Button>
+              </div>
+            </Form>
+          </div>
           <ListInvoice
             loader={loader}
             records={records}
