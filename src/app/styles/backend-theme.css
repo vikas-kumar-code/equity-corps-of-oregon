@@ -11523,6 +11523,7 @@ progress {
 .table-responsive {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  min-height: 300px;
 }
 
 @media (max-width: 575.98px) {

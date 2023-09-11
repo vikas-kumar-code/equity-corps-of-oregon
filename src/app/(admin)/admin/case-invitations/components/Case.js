@@ -2,7 +2,14 @@
 
 import React, { useState } from "react";
 import moment from "moment";
-import { Badge, Button, Spinner } from "react-bootstrap";
+import {
+  Badge,
+  Button,
+  ButtonGroup,
+  Dropdown,
+  DropdownButton,
+  Spinner,
+} from "react-bootstrap";
 import InvitationDetails from "./InvitationDetails";
 import AcceptInvitation from "./AcceptInvitation";
 import AddEditInvoice from "./AddEditInvoice";
@@ -48,29 +55,25 @@ export default function Case({
         </td>
         <td>{moment(record.sent_on).format("D MMM,  YYYY")}</td>
         <td>
-          {record?.status === 0 && (
-            <Button
-              className="me-2"
-              variant="success"
-              onClick={() => setConfirmation(true)}
-            >
-              Accept
-            </Button>
-          )}
-          <Button
-            className="me-2"
+          <DropdownButton
+            as={ButtonGroup}
+            key="action-1"
+            id={`action-btn-1`}
             variant="primary"
-            onClick={() => setShowModal(true)}
-          >
-            View
-          </Button>
-          <Button
-            className="me-2"
-            variant="success"
-            onClick={() => setInvoiceModal(true)}
-          >
-            Invoice
-          </Button>
+            title="Action"
+          >            
+            <Dropdown.Item eventKey="2" onClick={() => setShowModal(true)}>
+              View
+            </Dropdown.Item>
+            {record?.status === 0 && (
+              <Dropdown.Item eventKey="1" onClick={() => setConfirmation(true)}>
+                Accept
+              </Dropdown.Item>
+            )}
+            <Dropdown.Item eventKey="3" onClick={() => setInvoiceModal(true)}>
+              Invoice
+            </Dropdown.Item>
+          </DropdownButton>
         </td>
       </tr>
 
