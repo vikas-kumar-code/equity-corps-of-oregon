@@ -1,6 +1,4 @@
 import '../styles/backend-theme.css'
-//import 'bootstrap/dist/css/bootstrap.min.css';
-
 import '../styles/globals.css'
 import '../styles/whitetheme.css'
 import '../styles/materialdesignicons.min.css'

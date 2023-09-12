@@ -61,6 +61,7 @@ export default function Case({
             title="Action"
           >
             <Dropdown.Item eventKey="1" onClick={() => setShowModal(true)}>
+              <span className="mdi mdi-eye"></span>
               View
             </Dropdown.Item>
             {record?.status === 0 && (
@@ -70,6 +71,7 @@ export default function Case({
             )}
             {record?.status > 0 && (
               <Dropdown.Item eventKey="3" onClick={() => setInvoiceModal(true)}>
+                <span class="mdi mdi-file-document"></span>
                 Invoice
               </Dropdown.Item>
             )}

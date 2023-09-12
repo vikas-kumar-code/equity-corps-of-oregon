@@ -25268,7 +25268,7 @@ code {
 
 .dropdown .dropdown-menu .dropdown-item {
   font-size: 1rem;
-  padding: 0.25rem 1.5rem;
+  padding: 0.35rem 1.5rem;
 }
 
 .dropdown .dropdown-menu .dropdown-item:active {
@@ -30743,4 +30743,18 @@ div.tagsinput span.tag a {
 .invalid-feedback::first-letter,
 .uc-first::first-letter {
   text-transform: uppercase;
+}
+
+.dropdown-item span.mdi {
+  font-size: 1rem;
+  float: left;
+  margin-right: 7px;
+  background-color: #eee;
+  color: #373737;
+  height: 1.5rem;
+  width: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
 }
