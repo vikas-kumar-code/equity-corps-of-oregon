@@ -13,6 +13,16 @@ export async function GET(request, data) {
         user_id: session.user.id,
       },
       orderBy: [{ id: "desc" }],
+      include: {
+        case: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+            address: true,
+          },
+        },
+      },
     });
     // output response
     response.success = true;

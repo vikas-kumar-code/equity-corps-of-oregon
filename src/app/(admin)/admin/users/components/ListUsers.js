@@ -205,6 +205,7 @@ export default function ListUsers() {
                               id={`action-btn-1`}
                               variant="primary"
                               title="Action"
+                              align="end"
                             >
                               <Dropdown.Item
                                 onClick={() => getUser(record.id, "view")}

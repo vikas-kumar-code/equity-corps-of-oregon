@@ -54,6 +54,7 @@ export default function Case({
             id={`action-btn-1`}
             variant="primary"
             title="Action"
+            align="end"
           >
             <Dropdown.Item eventKey="1" onClick={() => setShowModal(true)}>
               <span className="mdi mdi-eye"></span>

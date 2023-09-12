@@ -1,4 +1,6 @@
 import moment from "moment";
+import InvoiceDetails from "./InvoiceDetails";
+import { useState } from "react";
 const {
   DropdownButton,
   Dropdown,
@@ -7,11 +9,12 @@ const {
 } = require("react-bootstrap");
 
 export default function ListInvoice({ records, getRecord, deleteRecord }) {
+  const [invoiceDetails, setInvoiceDetails] = useState(null);
   return (
     <Card>
       <Card.Body>
         <div className="table-responsive">
-        <h5 className="">Invoices</h5>
+          <h5 className="">Invoices</h5>
           <table className="table">
             <thead>
               <tr>
@@ -36,8 +39,14 @@ export default function ListInvoice({ records, getRecord, deleteRecord }) {
                       id={`action-btn-1`}
                       variant="primary"
                       title="Action"
+                      align="end"
                     >
-                      <Dropdown.Item eventKey="1">View</Dropdown.Item>
+                      <Dropdown.Item
+                        eventKey="1"
+                        onClick={() => setInvoiceDetails(item)}
+                      >
+                        View
+                      </Dropdown.Item>
                       <Dropdown.Item
                         eventKey="2"
                         onClick={() => getRecord(item.id)}
@@ -54,12 +63,23 @@ export default function ListInvoice({ records, getRecord, deleteRecord }) {
                   </td>
                 </tr>
               ))}
-              {records.length <= 0 && <tr><td colSpan={5}>
-                <h6 className="text-gray">No records available</h6>
-                </td></tr>}
+              {records.length <= 0 && (
+                <tr>
+                  <td colSpan={5}>
+                    <h6 className="text-gray">No records available</h6>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
+        {invoiceDetails && (
+          <InvoiceDetails
+            showModal={invoiceDetails ? true : false}
+            closeModal={() => setInvoiceDetails(null)}
+            record={invoiceDetails}
+          />
+        )}
       </Card.Body>
     </Card>
   );

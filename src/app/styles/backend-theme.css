@@ -29412,6 +29412,17 @@ div.tagsinput span.tag a {
   }
 }
 
+.brand-logo{
+  color: #38425e;
+  font-size: 2.8rem;
+  line-height: 48px;
+  margin-right: 0;
+  padding: 0rem 0rem 0rem 1.3rem;
+  width: 100%;
+  text-decoration: none;
+  font-weight: 600;
+}
+
 .auth .brand-logo {
   margin-bottom: 2rem;
 }
@@ -30772,4 +30783,21 @@ div.tagsinput span.tag a {
   justify-content: center;
   align-items: center;
   border-radius: 50%;
+}
+
+.print-content{
+  opacity: 1;
+}
+
+@media print {
+ .print-content {
+    position: fixed;
+    z-index: 999999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    display: block;
+  }
 }

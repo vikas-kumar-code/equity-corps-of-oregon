@@ -140,6 +140,7 @@ export default function ListTemplates() {
                               id={`action-btn-1`}
                               variant="primary"
                               title="Action"
+                              align="end"
                             >
                               <Dropdown.Item
                                 eventKey="1"
