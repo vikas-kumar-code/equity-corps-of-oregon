@@ -317,7 +317,7 @@ export default async function Dashboard() {
           <div className="card">
             <div className="card-body">
               <h4 className="card-title">Order Status</h4>
-              <div className="table-responsive">
+              <div className="table-responsive min-list-height">
                 <table className="table">
                   <thead>
                     <tr>
@@ -694,7 +694,7 @@ export default async function Dashboard() {
               <h4 className="card-title">Visitors by Countries</h4>
               <div className="row">
                 <div className="col-md-5">
-                  <div className="table-responsive">
+                  <div className="table-responsive min-list-height">
                     <table className="table">
                       <tbody>
                         <tr>

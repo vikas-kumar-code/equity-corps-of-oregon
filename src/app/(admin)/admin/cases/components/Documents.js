@@ -120,7 +120,7 @@ export default function Documents(props) {
       }
     }
   };
-  
+
   return (
     <>
       {props?.errors?.documents && (
@@ -199,47 +199,51 @@ export default function Documents(props) {
             <Card>
               <Card.Body>
                 <Card.Title>Documents</Card.Title>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Document Name </th>
-                      <th>Uploaded On</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {props?.documents?.map((record, index) => (
-                      <tr key={`documents-key-${index}`}>
-                        <td>{Number(index + 1)}.</td>
-                        <td>{record.document_name}</td>
-                        <td>
-                          {moment(record?.uploaded_on || new Date()).format(
-                            "MMMM DD, YYYY"
-                          )}
-                        </td>
-                        <td>
-                          <div className="d-flex">
-                            <Button                            
-                              variant="danger"
-                              onClick={() => deleteRecord(index)}
-                              size="sm"
-                              className="me-2"
-                            >
-                              Delete
-                            </Button>
-                            <DownloadButton
-                              fileName={record.document_name}
-                              path={common.downloadLink(
-                                "uploads/case_documents/" + record.file_name+'?temp=true'
-                              )}
-                            />
-                          </div>
-                        </td>
+                <div className="table-responsive min-list-height">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Document Name </th>
+                        <th>Uploaded On</th>
+                        <th>Action</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {props?.documents?.map((record, index) => (
+                        <tr key={`documents-key-${index}`}>
+                          <td>{Number(index + 1)}.</td>
+                          <td>{record.document_name}</td>
+                          <td>
+                            {moment(record?.uploaded_on || new Date()).format(
+                              "MMMM DD, YYYY"
+                            )}
+                          </td>
+                          <td>
+                            <div className="d-flex">
+                              <Button
+                                variant="danger"
+                                onClick={() => deleteRecord(index)}
+                                size="sm"
+                                className="me-2"
+                              >
+                                Delete
+                              </Button>
+                              <DownloadButton
+                                fileName={record.document_name}
+                                path={common.downloadLink(
+                                  "uploads/case_documents/" +
+                                    record.file_name +
+                                    "?temp=true"
+                                )}
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </Card.Body>
             </Card>
           </LoadingOverlay>

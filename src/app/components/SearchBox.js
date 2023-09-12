@@ -84,7 +84,7 @@ export default function SearchBox(props) {
                 </Form.Group>
               ))}
             </Row>
-            <div className="text-end">
+            <div className="text-end btn-icon">
               <Button
                 variant="danger"
                 className="me-2"
@@ -93,10 +93,10 @@ export default function SearchBox(props) {
                   setFields({});
                   router.push(pathname, { scroll: false });
                 }}
-              >
+              >                
                 Clear
               </Button>
-              <Button variant="success" size="lg" type="submit">
+              <Button variant="success" size="lg" type="submit">                
                 Search
               </Button>
             </div>

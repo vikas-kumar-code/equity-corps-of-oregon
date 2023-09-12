@@ -104,13 +104,10 @@ export default function Documents(props) {
     if (window.confirm("Are you sure to delete?")) {
       try {
         setLoader(true);
-        await fetch(
-          common.apiPath("/admin/cases/invitation/document/delete"),
-          {
-            method: "DELETE",
-            body: JSON.stringify({ id: document_id }),
-          }
-        )
+        await fetch(common.apiPath("/admin/cases/invitation/document/delete"), {
+          method: "DELETE",
+          body: JSON.stringify({ id: document_id }),
+        })
           .then((response) => response.json())
           .then((response) => {
             if (response.success) {
@@ -206,49 +203,51 @@ export default function Documents(props) {
             <Card>
               <Card.Body style={{ maxHeight: "326px", overflowY: "auto" }}>
                 <Card.Title>Documents</Card.Title>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Document Name </th>
-                      <th>Uploaded On</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {props?.documents?.map((record, index) => (
-                      <tr key={`documents-key-${index}`}>
-                        <td>{Number(index + 1)}.</td>
-                        <td>{record.document_name}</td>
-                        <td>
-                          {moment(record?.uploaded_on || new Date()).format(
-                            "MMMM DD, YYYY"
-                          )}
-                        </td>
-                        <td>
-                          <div className="d-flex">
-                            {user && user.id === record.uploaded_by && (
-                              <Button
-                                variant="danger"
-                                onClick={() => deleteRecord(record.id)}
-                                size="sm"
-                                className="me-2"
-                              >
-                                Delete
-                              </Button>
-                            )}
-                            <DownloadButton
-                              fileName={record.document_name}
-                              path={common.downloadLink(
-                                "uploads/case_documents/" + record.file_name
-                              )}
-                            />
-                          </div>
-                        </td>
+                <div className="table-responsive min-list-height">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Document Name </th>
+                        <th>Uploaded On</th>
+                        <th>Action</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {props?.documents?.map((record, index) => (
+                        <tr key={`documents-key-${index}`}>
+                          <td>{Number(index + 1)}.</td>
+                          <td>{record.document_name}</td>
+                          <td>
+                            {moment(record?.uploaded_on || new Date()).format(
+                              "MMMM DD, YYYY"
+                            )}
+                          </td>
+                          <td>
+                            <div className="d-flex">
+                              {user && user.id === record.uploaded_by && (
+                                <Button
+                                  variant="danger"
+                                  onClick={() => deleteRecord(record.id)}
+                                  size="sm"
+                                  className="me-2"
+                                >
+                                  Delete
+                                </Button>
+                              )}
+                              <DownloadButton
+                                fileName={record.document_name}
+                                path={common.downloadLink(
+                                  "uploads/case_documents/" + record.file_name
+                                )}
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </Card.Body>
             </Card>
           </LoadingOverlay>

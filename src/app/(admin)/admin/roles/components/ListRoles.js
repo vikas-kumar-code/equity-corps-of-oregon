@@ -92,7 +92,7 @@ export default function ListRoles() {
               </Col>
             </Row>
           </Card.Title>
-          <div className="table-responsive">
+          <div className="table-responsive mini-list-height">
             <table className="table">
               <thead>
                 <tr>

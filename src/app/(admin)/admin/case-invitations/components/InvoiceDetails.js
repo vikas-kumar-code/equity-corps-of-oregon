@@ -59,43 +59,45 @@ const InvoiceDetails = ({ showModal, closeModal, record }) => {
                       <div class="date">Due Date: 30/10/2018</div>
                     </div>
                   </div>
-                  <table border="0" cellspacing="0" cellpadding="0">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th class="text-left">PARTICULAR</th>
-                        <th class="text-right">AMOUNT</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {record.particulars &&
-                        JSON.parse(record.particulars).map((item, index) => {
-                          return (
-                            <tr>
-                              <td class="no">
-                                {String(index + 1).padStart(2, 0)}
-                              </td>
-                              <td class="text-left">{item.description}</td>
-                              <td class="total">
-                                ${item.amount ? item.amount.toFixed(2) : ""}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <td></td>
-                        <td>GRAND TOTAL</td>
-                        <td>
-                          $
-                          {record.total_amount
-                            ? record.total_amount.toFixed(2)
-                            : ""}
-                        </td>
-                      </tr>
-                    </tfoot>
-                  </table>
+                  <div className="table-responsive min-list-height">
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>PARTICULAR</th>
+                          <th class="text-end">AMOUNT</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {record.particulars &&
+                          JSON.parse(record.particulars).map((item, index) => {
+                            return (
+                              <tr>
+                                <td class="no">
+                                  {String(index + 1).padStart(2, 0)}
+                                </td>
+                                <td class="text-left">{item.description}</td>
+                                <td class="total">
+                                  ${item.amount ? item.amount.toFixed(2) : ""}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td></td>
+                          <td>GRAND TOTAL</td>
+                          <td>
+                            $
+                            {record.total_amount
+                              ? record.total_amount.toFixed(2)
+                              : ""}
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
                 </main>
                 <footer>
                   Invoice was created on a computer and is valid without the

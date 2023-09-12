@@ -169,7 +169,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         className={invoiceDetails ? 'opacity-0':''}
       >
         <Modal.Header closeButton className="border-bottom-0">
-          <h3>Manage invoices for {record.case_number}</h3>
+          <h3>Manage invoices for case {record.case_number}</h3>
         </Modal.Header>
         <Modal.Body className="pt-0">
           <LoadingOverlay active={loader} spinner text="Loading...">

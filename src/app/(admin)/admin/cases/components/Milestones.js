@@ -21,7 +21,7 @@ function Milestones(props) {
         </Button>
       </Col>
       <Col md={12} sm={12}>
-        <div className="table-responsive show-error">
+        <div className="table-responsive show-error min-list-height">
           <table className="table">
             <thead>
               <tr>

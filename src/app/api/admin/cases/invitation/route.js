@@ -23,7 +23,7 @@ export async function GET(request) {
       : {};
     is = searchParams.get("case_title")
       ? { ...is, title: { contains: searchParams.get("case_title") } }
-      : {};
+      : is;
 
     let where = {
       user_id: session.user.id,

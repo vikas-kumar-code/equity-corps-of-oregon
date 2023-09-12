@@ -29494,7 +29494,7 @@ div.tagsinput span.tag a {
 .navbar {
   font-weight: normal;
   background: #191c24;
-  left: 244px;
+  left: 215px;
   transition: left 0.25s ease;
   -webkit-transition: left 0.25s ease;
   -moz-transition: left 0.25s ease;
@@ -30785,6 +30785,18 @@ div.tagsinput span.tag a {
   border-radius: 50%;
 }
 
+.btn-icon span.mdi {
+  font-size: 1.1rem;
+  float: left;
+  margin-right: 3px;
+  margin-top: -2px;
+  color: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
 .print-content{
   opacity: 1;
 }
@@ -30800,4 +30812,8 @@ div.tagsinput span.tag a {
     background-color: white;
     display: block;
   }
+}
+
+.min-list-height{
+  min-height: 400px;
 }

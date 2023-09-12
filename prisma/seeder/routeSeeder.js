@@ -25,7 +25,7 @@ const routeSeeder = async () => {
           { label: "Api", url: "/api/admin/cases/invitation/send", method: 'post' }, 
           { label: "Api", url: "/api/admin/cases/invitation/accept", method: "post" },
           { label: "Api", url: "/api/admin/cases/invitation/get/:id", method: "get" },
-          { label: "Api", url: "/api/admin/cases/invoice", method: 'post' },
+          { label: "Api", url: "/api/admin/cases/invoice", method: 'get' },
           { label: "Api", url: "/api/admin/cases/invoice/save", method: 'post' },
           { label: "Api", url: "/api/admin/cases/invoice/save/:id", method: 'put' },
           { label: "Api", url: "/api/admin/cases/invoice/list/:id", method: 'get' },

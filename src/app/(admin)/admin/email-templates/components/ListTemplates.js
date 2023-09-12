@@ -115,7 +115,7 @@ export default function ListTemplates() {
           >
             <Card>
               <Card.Body>
-                <div className="table-responsive">
+                <div className="table-responsive min-list-height">
                   <table className="table">
                     <thead>
                       <tr>

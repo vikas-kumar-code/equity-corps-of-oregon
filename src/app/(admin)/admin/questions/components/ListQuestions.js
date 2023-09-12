@@ -159,7 +159,7 @@ export default function ListQuestions() {
           >
             <Card>
               <Card.Body>
-                <div className="table-responsive">
+                <div className="table-responsive min-list-height">
                   <table className="table">
                     <thead>
                       <tr>

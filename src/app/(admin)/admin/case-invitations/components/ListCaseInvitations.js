@@ -90,7 +90,7 @@ export default function ListCaseInvitations() {
           >
             <Card>
               <Card.Body>
-                <div className="table-responsive" style={{height: "300px"}}>
+                <div className="table-responsive min-list-height">
                   <table className="table">
                     <thead>
                       <tr>
