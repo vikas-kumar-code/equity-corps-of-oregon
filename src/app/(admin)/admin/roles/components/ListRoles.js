@@ -15,6 +15,7 @@ import {
 import AddEditRole from "./AddEditRole";
 import { toast } from "react-toastify";
 import common from "@/utils/common";
+import SetPermission from "./SetPermission";
 LoadingOverlay.propTypes = undefined;
 
 export default function ListRoles() {
@@ -23,6 +24,7 @@ export default function ListRoles() {
   const recordPerPage = 10;
   const [pageNumber, setPageNumber] = useState(1);
   const [showAddEditModal, setShowAddEditModal] = useState(false);
+  const [showModal, setShowModal] = useState(false)
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [recordId, setRecordId] = useState(null);
 
@@ -147,6 +149,16 @@ export default function ListRoles() {
                         <span class="mdi mdi-delete"></span>
                           Delete
                         </Dropdown.Item>
+                        <Dropdown.Item
+                          eventKey="1"
+                          onClick={() => {
+                            setShowModal(true)
+                            setRecordId(record.id)
+                          }}
+                        >
+                        <span class="mdi mdi-pencil"></span>
+                          Permissions
+                        </Dropdown.Item>
                       </DropdownButton>
                     </td>
                   </tr>
@@ -161,6 +173,17 @@ export default function ListRoles() {
           showModal={showAddEditModal}
           closeModal={() => {
             setShowAddEditModal(false);
+            setRecordId(null);
+          }}
+          recordId={recordId}
+          reloadeRecords={getRecords}
+        />
+      )}
+      {showModal && (
+        <SetPermission
+          showModal={showModal}
+          closeModal={() => {
+            setShowModal(false);
             setRecordId(null);
           }}
           recordId={recordId}

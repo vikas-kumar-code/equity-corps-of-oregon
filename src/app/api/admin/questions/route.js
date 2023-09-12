@@ -1,5 +1,3 @@
-import common from "@/utils/common";
-
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
 

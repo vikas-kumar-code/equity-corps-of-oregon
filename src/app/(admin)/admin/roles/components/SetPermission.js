@@ -1,16 +1,17 @@
 "use client";
 
 import rolesSchema from "@/joi/rolesSchema";
+import common from "@/utils/common";
 import validateAsync from "@/utils/validateAsync";
 import React, { useState, useEffect } from "react";
 import {
   Button,
   Modal,
   Spinner,
-  FloatingLabel,
   Form,
   Row,
   Col,
+  Card,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
@@ -18,12 +19,13 @@ LoadingOverlay.propTypes = undefined;
 
 export default function SetPermission(props) {
   const [loader, setLoader] = useState(false);
-  const [fields, setFields] = useState({ status: 1 });
+  const [routes, setRoutes] = useState([]);
   const [errors, setErrors] = useState({});
+  const [fields, setFields] = useState({roleId: null, routes:[]});
   const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (e, field) => {
-    setFields({ ...fields, [field]: e.target.value });
+  const handleSelect = (roleId, route) => {
+    setFields({...fields, roleId, routes: [...fields.routes, route]})
   };
 
   const handleErrors = (errors) => {
@@ -39,9 +41,9 @@ export default function SetPermission(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validated = await validateAsync(rolesSchema, fields);
-    if(validated.error){
-        handleErrors(validated.errors);
-    }else {
+    if (validated.error) {
+      handleErrors(validated.errors);
+    } else {
       setSubmitted(true);
       let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save`;
       let REQUEST_METHOD = "POST";
@@ -72,27 +74,25 @@ export default function SetPermission(props) {
     }
   };
 
-  const getRole = async () => {
+  const getRoutes = async () => {
     setLoader(true);
-    await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save/${props.recordId}`)
+    await fetch(common.apiPath("admin/permissions"))
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
-          setFields(response.record);
-        }else if (response.error) {
-            toast.error(response.message);
-          }
+          setRoutes(response.records);
+        } else if (response.error) {
+          toast.error(response.message);
+        }
       })
       .catch((error) => {
         toast.error(error.message);
       })
       .finally(() => setLoader(false));
   };
+
   useEffect(() => {
-    if (props.recordId) {
-      getRole();
-    }
+    getRoutes();
   }, []);
   return (
     <Modal
@@ -101,64 +101,57 @@ export default function SetPermission(props) {
       backdrop="static"
       keyboard={false}
       centered
-      size="md"
+      size="lg"
     >
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
-          <h3>{props.recordId ? "Update" : "Add"} Role</h3>
+          <h3>{props.recordId ? "Update" : "Assign"} Permission</h3>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body ModalBody className="pl-4 pr-4" style={{ minHeight: 250 }}>
           <LoadingOverlay active={loader} spinner text="Loading...">
-            <FloatingLabel
-              controlId="floatingInput"
-              label="Name"
-              className="mb-3"
-            >
-              <Form.Control
-                type="text"
-                name="name"
-                placeholder="name"
-                onChange={(event) => handleChange(event, "name")}
-                isInvalid={!!errors.name}
-                value={fields.name ? fields.name : ""}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.name}
-              </Form.Control.Feedback>
-            </FloatingLabel>
-            <Form.Label>Status</Form.Label>
-            <div className="ps-2">
-              <Row>
-                <Col md={3}>
-                  <Form.Check id="active" className="float-left">
-                    <Form.Check.Input
-                      type="radio"
-                      name="status"
-                      value="1"
-                      checked={parseInt(fields.status) === 1}
-                      onChange={(event) => handleChange(event, "status")}
-                    />
-                    <Form.Check.Label className="ps-0 mt-1">
-                      Active
-                    </Form.Check.Label>
-                  </Form.Check>
-                </Col>
-                <Col md={3}>
-                  <Form.Check id="inactive" className="float-left">
-                    <Form.Check.Input
-                      type="radio"
-                      name="status"
-                      value="0"
-                      checked={parseInt(fields.status) === 0}
-                      onChange={(event) => handleChange(event, "status")}
-                    />
-                    <Form.Check.Label className="ps-0">
-                      In Active
-                    </Form.Check.Label>
-                  </Form.Check>
-                </Col>
-              </Row>
-            </div>
+            {routes.map((route, i) => {
+              const { label, id, children } = route;
+              return (
+                <Card key={i}>
+                  <Card.Header>
+                    <Form.Check
+                      key={`route-${i}`}
+                      type="checkbox"
+                      id={`route-${i}-${id}`}
+                    >
+                      <Form.Check.Input type="checkbox" />
+                      <Form.Check.Label>{label}</Form.Check.Label>
+                    </Form.Check>
+                  </Card.Header>
+                  {children.length > 0 ? (
+                    <Card.Body>
+                      <Row>
+                        {children.map((child, index) => {
+                          const { label, url } = child;
+                          return (
+                            <Col md={3}>
+                              <Form.Check
+                                key={`route-${index}-${i}`}
+                                type="checkbox"
+                                id={`route-${index}-${i}-${id}`}
+                              >
+                                <Form.Check.Input
+                                  type="checkbox"
+                                  onChange={(e) => handleSelect(props.recordId, url)}
+                                />
+                                <Form.Check.Label>{label}</Form.Check.Label>
+                              </Form.Check>
+                            </Col>
+                          );
+                        })}
+                      </Row>
+                    </Card.Body>
+                  ) : (
+                    ""
+                  )}
+                </Card>
+              );
+            })}
           </LoadingOverlay>
         </Modal.Body>
         <Modal.Footer>
