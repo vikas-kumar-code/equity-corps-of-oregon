@@ -15,6 +15,7 @@ import {
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import ListInvoice from "./ListInvoice";
+import InvoiceDetails from "./InvoiceDetails";
 
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const initialValues = [{ description: "", amount: "" }];
@@ -25,6 +26,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const [submitted, setSubmitted] = useState(false);
   const [invoiceRecord, setInvoiceRecord] = useState({});
   const [records, setRecords] = useState([]);
+  const [invoiceDetails, setInvoiceDetails] = useState(null);
 
   const handleErrors = (errors) => {
     if (typeof errors === "object") {
@@ -81,7 +83,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const getRecord = async (id) => {
     setLoader(true);
     try {
-      fetch(common.apiPath(`/admin/cases/invoice/get/${id}`))
+      await fetch(common.apiPath(`/admin/cases/invoice/get/${id}`))
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
@@ -92,7 +94,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
           }
         });
     } catch (e) {
-      
       toast.error(e.message);
     } finally {
       setLoader(false);
@@ -100,11 +101,12 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   };
 
   const getRecords = async () => {
+    setLoader(true);
     try {
       let REQUEST_URI = common.apiPath(
         `/admin/cases/invoice/list/${record.id}`
       );
-      fetch(REQUEST_URI)
+      await fetch(REQUEST_URI)
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
@@ -120,11 +122,12 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     }
   };
 
-  
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this invoice?")) {
       setLoader(true);
-      fetch(common.apiPath(`/admin/cases/invoice/delete/${id}`), { method: "DELETE" })
+      fetch(common.apiPath(`/admin/cases/invoice/delete/${id}`), {
+        method: "DELETE",
+      })
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
@@ -155,122 +158,135 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   }, []);
 
   return (
-    <Modal
-      show={showModal}
-      onHide={closeModal}
-      backdrop="static"
-      keyboard={false}
-      centered
-      size="lg"
-    >
-      <Modal.Header closeButton className="border-bottom-0">
-        <h3>Manage invoices for {record.case_number}</h3>
-      </Modal.Header>
-      <Modal.Body className="pt-0">
-        <LoadingOverlay active={loader} spinner text="Loading...">
-          <div className="invoice-container">
-            {invoiceRecord.id ? (
-              <h5 className="mb-2">Update Invoice</h5>
-            ) : (
-              <h5 className="mb-2">Create Invoice</h5>
-            )}
-            <Form onSubmit={handleSubmit}>
-              {fields?.map((item, index) => {
-                return (
-                  <Row className="invoice-fieldset">
-                    <Col md={8} className="p-0">
-                      <FloatingLabel label="Particular">
-                        <Form.Control
-                          row={1}
-                          name="description"
-                          placeholder="Particular"
-                          isInvalid={!!errors[index + "description"]}
-                          value={item.description}
-                          onChange={(event) => {
-                            fieldsData[index].description = event.target.value;
-                            setFields(fieldsData);
-                          }}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {errors[index + "description"] || ""}
-                        </Form.Control.Feedback>
-                      </FloatingLabel>
-                    </Col>
-                    <Col md={4} className="position-relative pe-0">
-                      <FloatingLabel label="Amount">
-                        <Form.Control
-                          autoComplete="off"
-                          name="amount"
-                          placeholder="Amount"
-                          isInvalid={!!errors[index + "amount"]}
-                          value={item.amount || ""}
-                          onChange={(event) => {
-                            fieldsData[index].amount =
-                              event.target.value.replace(/[^0-9.]/g, "");
-                            setFields(fieldsData);
-                          }}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {errors[index + "amount"] || ""}
-                        </Form.Control.Feedback>
-                      </FloatingLabel>
-                      {index >= 1 && (
-                        <Button
-                          key={index}
-                          variant="secondary"
-                          size="sm"
-                          className="q-opt-remove btn-close"
-                          onClick={() => removeFieldSet(index)}
-                          style={{ right: 9 }}
-                        />
-                      )}
-                    </Col>
-                  </Row>
-                );
-              })}
-              <div className="text-end">
-                <Button
-                  variant="primary"
-                  onClick={() => addFieldSet()}
-                  disabled={submitted}
-                >
-                  Add More
-                </Button>
-                {invoiceRecord.id && (
+    <>
+      <Modal
+        show={showModal}
+        onHide={closeModal}
+        backdrop="static"
+        keyboard={false}
+        centered
+        size="lg"
+        className={invoiceDetails ? 'opacity-0':''}
+      >
+        <Modal.Header closeButton className="border-bottom-0">
+          <h3>Manage invoices for {record.case_number}</h3>
+        </Modal.Header>
+        <Modal.Body className="pt-0">
+          <LoadingOverlay active={loader} spinner text="Loading...">
+            <div className="invoice-container">
+              {invoiceRecord.id ? (
+                <h5 className="mb-2">Update Invoice ({invoiceRecord.name})</h5>
+              ) : (
+                <h5 className="mb-2">Create Invoice</h5>
+              )}
+              <Form onSubmit={handleSubmit}>
+                {fields?.map((item, index) => {
+                  return (
+                    <Row className="invoice-fieldset">
+                      <Col md={8} className="p-0">
+                        <FloatingLabel label="Particular">
+                          <Form.Control
+                            row={1}
+                            name="description"
+                            placeholder="Particular"
+                            isInvalid={!!errors[index + "description"]}
+                            value={item.description}
+                            onChange={(event) => {
+                              fieldsData[index].description =
+                                event.target.value;
+                              setFields(fieldsData);
+                            }}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors[index + "description"] || ""}
+                          </Form.Control.Feedback>
+                        </FloatingLabel>
+                      </Col>
+                      <Col md={4} className="position-relative pe-0">
+                        <FloatingLabel label="Amount">
+                          <Form.Control
+                            autoComplete="off"
+                            name="amount"
+                            placeholder="Amount"
+                            isInvalid={!!errors[index + "amount"]}
+                            value={item.amount || ""}
+                            onChange={(event) => {
+                              fieldsData[index].amount =
+                                event.target.value.replace(/[^0-9.]/g, "");
+                              setFields(fieldsData);
+                            }}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors[index + "amount"] || ""}
+                          </Form.Control.Feedback>
+                        </FloatingLabel>
+                        {index >= 1 && (
+                          <Button
+                            key={index}
+                            variant="secondary"
+                            size="sm"
+                            className="q-opt-remove btn-close"
+                            onClick={() => removeFieldSet(index)}
+                            style={{ right: 9 }}
+                          />
+                        )}
+                      </Col>
+                    </Row>
+                  );
+                })}
+                <div className="text-end">
                   <Button
-                    variant="danger"
-                    className="ms-2"
-                    onClick={() => {
-                      setInvoiceRecord({});
-                      setFields(initialValues);
-                    }}
+                    variant="primary"
+                    onClick={() => addFieldSet()}
                     disabled={submitted}
                   >
-                    Cancel
+                    Add More
                   </Button>
-                )}
-                <Button
-                  variant="success"
-                  type="submit"
-                  className="ms-2"
-                  disabled={submitted}
-                >
-                  {submitted && (
-                    <Spinner className="me-1" color="light" size="sm" />
+                  {invoiceRecord.id && (
+                    <Button
+                      variant="danger"
+                      className="ms-2"
+                      onClick={() => {
+                        setInvoiceRecord({});
+                        setFields(initialValues);
+                      }}
+                      disabled={submitted}
+                    >
+                      Cancel
+                    </Button>
                   )}
-                  Submit
-                </Button>
-              </div>
-            </Form>
-          </div>
-          <ListInvoice
-            records={records}
-            getRecord={getRecord}
-            deleteRecord={deleteRecord}
-          />
-        </LoadingOverlay>
-      </Modal.Body>
-    </Modal>
+                  <Button
+                    variant="success"
+                    type="submit"
+                    className="ms-2"
+                    disabled={submitted}
+                  >
+                    {submitted && (
+                      <Spinner className="me-1" color="light" size="sm" />
+                    )}
+                    Submit
+                  </Button>
+                </div>
+              </Form>
+            </div>
+            <ListInvoice
+              records={records}
+              getRecord={getRecord}
+              deleteRecord={deleteRecord}
+              showInvoiceDetails={setInvoiceDetails}
+            />
+          </LoadingOverlay>
+        </Modal.Body>
+      </Modal>
+
+      {invoiceDetails && (
+        <InvoiceDetails
+          showModal={invoiceDetails ? true : false}
+          closeModal={() => setInvoiceDetails(null)}
+          record={invoiceDetails}
+        />
+      )}
+    </>
   );
 };
 

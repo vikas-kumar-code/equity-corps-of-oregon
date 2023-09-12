@@ -1,5 +1,4 @@
 import moment from "moment";
-import InvoiceDetails from "./InvoiceDetails";
 import { useState } from "react";
 const {
   DropdownButton,
@@ -8,8 +7,12 @@ const {
   Card,
 } = require("react-bootstrap");
 
-export default function ListInvoice({ records, getRecord, deleteRecord }) {
-  const [invoiceDetails, setInvoiceDetails] = useState(null);
+export default function ListInvoice({
+  records,
+  getRecord,
+  deleteRecord,
+  showInvoiceDetails,
+}) {
   return (
     <Card>
       <Card.Body>
@@ -43,20 +46,23 @@ export default function ListInvoice({ records, getRecord, deleteRecord }) {
                     >
                       <Dropdown.Item
                         eventKey="1"
-                        onClick={() => setInvoiceDetails(item)}
+                        onClick={() => showInvoiceDetails(item)}
                       >
+                        <span className="mdi mdi-eye"></span>
                         View
                       </Dropdown.Item>
                       <Dropdown.Item
                         eventKey="2"
                         onClick={() => getRecord(item.id)}
                       >
+                        <span class="mdi mdi-pencil"></span>
                         Edit
                       </Dropdown.Item>
                       <Dropdown.Item
                         eventKey="3"
                         onClick={() => deleteRecord(item.id)}
                       >
+                        <span class="mdi mdi-delete"></span>
                         Delete
                       </Dropdown.Item>
                     </DropdownButton>
@@ -73,13 +79,6 @@ export default function ListInvoice({ records, getRecord, deleteRecord }) {
             </tbody>
           </table>
         </div>
-        {invoiceDetails && (
-          <InvoiceDetails
-            showModal={invoiceDetails ? true : false}
-            closeModal={() => setInvoiceDetails(null)}
-            record={invoiceDetails}
-          />
-        )}
       </Card.Body>
     </Card>
   );

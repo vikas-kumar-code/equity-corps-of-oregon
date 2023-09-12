@@ -107,7 +107,7 @@
 .invoice table tfoot tr:first-child td {
   border-top: none;
 }
-.invoice table tfoot tr:last-child td {
+.invoice table tfoot {
   color: #3989c6;
   font-size: 1.4em;
   border-top: 1px solid #3989c6;
