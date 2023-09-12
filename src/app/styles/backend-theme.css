@@ -14094,8 +14094,7 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
   position: absolute;
   z-index: 1000;
   display: none;
-  min-width: 10rem;
-  padding: 0.5rem 0;
+  min-width: 10rem;  
   margin: 0;
   font-size: 1rem;
   color: #ffffff;
@@ -14360,6 +14359,19 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
 
 .dropdown-menu.show {
   display: block;
+  opacity: 0;
+  animation: DropdownMenuAnimation 0.6s ease forwards;
+}
+
+@keyframes DropdownMenuAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(30%);
+  }
+  to {
+    transform: translateY(18%);
+    opacity: 1;
+  }
 }
 
 .dropdown-header {
@@ -25268,7 +25280,10 @@ code {
 
 .dropdown .dropdown-menu .dropdown-item {
   font-size: 1rem;
-  padding: 0.35rem 1.5rem;
+  padding: 0.35rem .5rem;
+  margin: 10px;
+  width: auto;
+  border-radius: 4px;
 }
 
 .dropdown .dropdown-menu .dropdown-item:active {

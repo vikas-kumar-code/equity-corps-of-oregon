@@ -2,12 +2,7 @@
 
 import React, { useState } from "react";
 import moment from "moment";
-import {
-  Badge,
-  ButtonGroup,
-  Dropdown,
-  DropdownButton,
-} from "react-bootstrap";
+import { Badge, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import InvitationDetails from "./InvitationDetails";
 import AcceptInvitation from "./AcceptInvitation";
 import AddEditInvoice from "./AddEditInvoice";
@@ -64,8 +59,9 @@ export default function Case({
               <span className="mdi mdi-eye"></span>
               View
             </Dropdown.Item>
-            {record?.status === 0 && (
+            {record?.status !== 0 && (
               <Dropdown.Item eventKey="2" onClick={() => setConfirmation(true)}>
+                <span class="mdi mdi-file-check"></span>
                 Accept
               </Dropdown.Item>
             )}

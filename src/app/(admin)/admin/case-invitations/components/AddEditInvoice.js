@@ -181,7 +181,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                     <Col md={8} className="p-0">
                       <FloatingLabel label="Particular">
                         <Form.Control
-                          as="textarea"
                           row={1}
                           name="description"
                           placeholder="Particular"
