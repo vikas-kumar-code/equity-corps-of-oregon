@@ -137,12 +137,14 @@ export default function ListRoles() {
                           eventKey="1"
                           onClick={() => getRecord(record.id)}
                         >
+                        <span class="mdi mdi-pencil"></span>
                           Edit
                         </Dropdown.Item>
                         <Dropdown.Item
                           eventKey="2"
                           onClick={() => deleteRecord(record.id)}
                         >
+                        <span class="mdi mdi-delete"></span>
                           Delete
                         </Dropdown.Item>
                       </DropdownButton>

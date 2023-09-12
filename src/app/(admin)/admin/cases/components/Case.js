@@ -37,12 +37,15 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
               eventKey="1"
               onClick={() => setShowSendInvitationModal(true)}
             >
+            <span class="mdi mdi-send"></span>
               Send Invitation
             </Dropdown.Item>
             <Dropdown.Item eventKey="2" onClick={() => setShowModal(true)}>
+            <span class="mdi mdi-pencil"></span>
               Edit
             </Dropdown.Item>
             <Dropdown.Item eventKey="3" onClick={() => deleteRecord(record.id)}>
+            <span class="mdi mdi-delete"></span>
               Delete
             </Dropdown.Item>
           </DropdownButton>

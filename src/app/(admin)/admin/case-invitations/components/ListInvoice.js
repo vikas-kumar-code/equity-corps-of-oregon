@@ -37,17 +37,22 @@ export default function ListInvoice({ records, getRecord, deleteRecord }) {
                       variant="primary"
                       title="Action"
                     >
-                      <Dropdown.Item eventKey="1">View</Dropdown.Item>
+                      <Dropdown.Item eventKey="1">
+                      <span className="mdi mdi-eye"></span>
+                      View
+                      </Dropdown.Item>
                       <Dropdown.Item
                         eventKey="2"
                         onClick={() => getRecord(item.id)}
                       >
+                      <span class="mdi mdi-pencil"></span>
                         Edit
                       </Dropdown.Item>
                       <Dropdown.Item
                         eventKey="3"
                         onClick={() => deleteRecord(item.id)}
                       >
+                      <span class="mdi mdi-delete"></span>
                         Delete
                       </Dropdown.Item>
                     </DropdownButton>
