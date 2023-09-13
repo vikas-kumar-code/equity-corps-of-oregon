@@ -78,3 +78,7 @@
   border-radius: 6px;
   margin-bottom: 10px;
 }
+
+.table-border td, .table-border th {
+  border-width: 1px !important;
+}

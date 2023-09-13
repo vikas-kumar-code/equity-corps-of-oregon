@@ -152,7 +152,7 @@ export default function ListUsers() {
           >
             <Card>
               <Card.Body>
-                <div className="table-responsive">
+                <div className="table-responsive min-list-height">
                   <table className="table">
                     <thead>
                       <tr>
@@ -205,6 +205,7 @@ export default function ListUsers() {
                               id={`action-btn-1`}
                               variant="primary"
                               title="Action"
+                              align="end"
                             >
                               <Dropdown.Item
                                 onClick={() => getUser(record.id, "view")}

@@ -48,56 +48,60 @@ const InvitationDetails = ({
           onSelect={(k) => setActiveTab(parseInt(k))}
         >
           <Tab eventKey={1} title="Basic Details">
-            <table className="table table-borderless table-striped">
-              <tbody>
-                <tr>
-                  <th>Case Number</th>
-                  <td>{record.case.case_number}</td>
-                </tr>
-                <tr>
-                  <th>Title</th>
-                  <td>{record.case.title}</td>
-                </tr>
-                <tr>
-                  <th>Description</th>
-                  <td>{record.case.description}</td>
-                </tr>
-                <tr>
-                  <th>Status</th>
-                  <td>
-                    <Badge pill bg={iStatus[record.status].bg || "info"}>
-                      {iStatus[record.status].label || "N/A"}
-                    </Badge>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Added On</th>
-                  <td>{moment(record.sent_on).format("D MMM, YYYY")}</td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="table-responsive min-list-height">
+              <table className="table table-borderless table-striped">
+                <tbody>
+                  <tr>
+                    <th>Case Number</th>
+                    <td>{record.case.case_number}</td>
+                  </tr>
+                  <tr>
+                    <th>Title</th>
+                    <td>{record.case.title}</td>
+                  </tr>
+                  <tr>
+                    <th>Description</th>
+                    <td>{record.case.description}</td>
+                  </tr>
+                  <tr>
+                    <th>Status</th>
+                    <td>
+                      <Badge pill bg={iStatus[record.status].bg || "info"}>
+                        {iStatus[record.status].label || "N/A"}
+                      </Badge>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Added On</th>
+                    <td>{moment(record.sent_on).format("D MMM, YYYY")}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </Tab>
           <Tab eventKey={2} title="Milestones">
-            <table className="table table-borderless table-striped">
-              <tbody>
-                <tr className="mx-5">
-                  <th colSpan={4}>#</th>
-                  <th colSpan={4}>Comment</th>
-                  <th colSpan={4}>Updated On</th>
-                </tr>
-                {record.case.case_milestones.map((mile, i) => {
-                  return (
-                    <tr key={i}>
-                      <td colSpan={4}>{mile.id}</td>
-                      <td colSpan={4}>{mile.comment}</td>
-                      <td colSpan={4}>
-                        {moment(mile.milestone_date).format("D MMM,  YYYY")}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <div className="table-responsive min-list-height">
+              <table className="table table-borderless table-striped">
+                <tbody>
+                  <tr className="mx-5">
+                    <th colSpan={4}>#</th>
+                    <th colSpan={4}>Comment</th>
+                    <th colSpan={4}>Updated On</th>
+                  </tr>
+                  {record.case.case_milestones.map((mile, i) => {
+                    return (
+                      <tr key={i}>
+                        <td colSpan={4}>{mile.id}</td>
+                        <td colSpan={4}>{mile.comment}</td>
+                        <td colSpan={4}>
+                          {moment(mile.milestone_date).format("D MMM,  YYYY")}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </Tab>
           <Tab eventKey={3} title="Documents">
             {record.status === 1 ? (
@@ -112,28 +116,30 @@ const InvitationDetails = ({
                 caseId={record.case.id}
               />
             ) : (
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Document Name </th>
-                    <th>Uploaded On</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {record.case.case_documents?.map((record, index) => (
-                    <tr key={`documents-key-${index}`}>
-                      <td>{Number(index + 1)}.</td>
-                      <td>{record.document_name}</td>
-                      <td>
-                        {moment(record?.uploaded_on || new Date()).format(
-                          "MMMM DD, YYYY"
-                        )}
-                      </td>
+              <div className="table-responsive min-list-height">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Document Name </th>
+                      <th>Uploaded On</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {record.case.case_documents?.map((record, index) => (
+                      <tr key={`documents-key-${index}`}>
+                        <td>{Number(index + 1)}.</td>
+                        <td>{record.document_name}</td>
+                        <td>
+                          {moment(record?.uploaded_on || new Date()).format(
+                            "MMMM DD, YYYY"
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </Tab>
           <Tab eventKey={4} title="Case Activities">

@@ -159,7 +159,7 @@ export default function ListQuestions() {
           >
             <Card>
               <Card.Body>
-                <div className="table-responsive">
+                <div className="table-responsive min-list-height">
                   <table className="table">
                     <thead>
                       <tr>
@@ -197,6 +197,7 @@ export default function ListQuestions() {
                                         id={`action-btn-1`}
                                         variant="primary"
                                         title="Action"
+                                        align="end"
                                       >
                                         <Dropdown.Item
                                           eventKey="1"

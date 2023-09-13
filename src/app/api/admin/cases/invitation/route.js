@@ -10,31 +10,28 @@ export async function GET(request) {
   let records = [];
   let totalRecords = 0;
   let response = {};
-  request = request.nextUrl.searchParams;
+  const searchParams = request.nextUrl.searchParams;
   try {
     const paginate = common.paginate(request);
     // Filters
+    let is = searchParams.get("case_number")
+      ? {
+          case_number: {
+            contains: searchParams.get("case_number"),
+          },
+        }
+      : {};
+    is = searchParams.get("case_title")
+      ? { ...is, title: { contains: searchParams.get("case_title") } }
+      : is;
+
     let where = {
       user_id: session.user.id,
+      case: {
+        is,
+      },
     };
-    if (request.get("case_number")) {
-      where = {
-        case: {
-          is: {
-            case_number: request.get("case_number"),
-          },
-        },
-      };
-    }
-    if (request.get("case_title")) {
-      where = {
-        case: {
-          is: {
-            title: request.get("case_title"),
-          },
-        },
-      };
-    }
+
     records = await prisma.case_invitations.findMany({
       where,
       ...paginate,
