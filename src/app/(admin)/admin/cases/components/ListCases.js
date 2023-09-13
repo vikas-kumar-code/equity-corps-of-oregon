@@ -109,7 +109,7 @@ export default function ListCases() {
 
   return (
     <div>
-      <Row className="pb-2">
+      {/* <Row className="pb-2">
         <Col md={6} sm={12}>
           <h3>Cases</h3>
         </Col>
@@ -139,7 +139,39 @@ export default function ListCases() {
             Add New Case
           </Button>
         </Col>
+      </Row> */}
+      <Row className="pb-2">
+        <Col md={6} sm={12}>
+          <h3>Questions</h3>
+        </Col>
+        <Col md={6} sm={12} className="text-end">
+          <Button
+            variant="warning"
+            className="me-2"
+            onClick={() => setShowSearchBox(!showSearchBox)}
+          >
+            {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
+          </Button>
+          <Button
+            variant="dark"
+            className="me-2"
+            type="button"
+            onClick={() => setUpdateContractModal(true)}
+          >
+            Update Contract
+          </Button>
+          <Button variant="success" type="button" onClick={() => setShowModal(true)}>
+            Add New Case
+          </Button>
+        </Col>
       </Row>
+      <SearchBox
+        open={showSearchBox}
+        title={"Search Questions"}
+        searchFields={searchFields}
+        col={6}
+      />
+      <Row></Row>
       <SearchBox
         open={showSearchBox}
         title={"Search Case"}

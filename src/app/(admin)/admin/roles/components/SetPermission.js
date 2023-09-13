@@ -1,18 +1,11 @@
 "use client";
 
+import permissionSchema from "@/joi/permissionSchema";
 import rolesSchema from "@/joi/rolesSchema";
 import common from "@/utils/common";
 import validateAsync from "@/utils/validateAsync";
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Modal,
-  Spinner,
-  Form,
-  Row,
-  Col,
-  Card,
-} from "react-bootstrap";
+import { Button, Modal, Spinner, Form, Row, Col, Card } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 LoadingOverlay.propTypes = undefined;
@@ -21,11 +14,11 @@ export default function SetPermission(props) {
   const [loader, setLoader] = useState(false);
   const [routes, setRoutes] = useState([]);
   const [errors, setErrors] = useState({});
-  const [fields, setFields] = useState({roleId: null, routes:[]});
+  const [fields, setFields] = useState({ roleId: null, routesId: [] });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSelect = (roleId, route) => {
-    setFields({...fields, roleId, routes: [...fields.routes, route]})
+  const handleSelect = (roleId, routeId) => {
+    setFields({ ...fields, roleId, routesId: [...fields.routesId, routeId] });
   };
 
   const handleErrors = (errors) => {
@@ -37,40 +30,14 @@ export default function SetPermission(props) {
       toast.error("Something went wrong...! please try again.");
     }
   };
-
+  console.log(errors.routesId);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validated = await validateAsync(rolesSchema, fields);
-    if (validated.error) {
-      handleErrors(validated.errors);
+    const validate = await validateAsync(permissionSchema, fields);
+    if (validate.errors) {
+      handleErrors(validate.errors);
     } else {
-      setSubmitted(true);
-      let REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save`;
-      let REQUEST_METHOD = "POST";
-      if (props.recordId) {
-        REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/api/roles/save/${props.recordId}`;
-        REQUEST_METHOD = "PUT";
-      }
-      await fetch(REQUEST_URI, {
-        method: REQUEST_METHOD,
-        body: JSON.stringify(fields),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            props.closeModal();
-            props.reloadeRecords();
-            toast.success(response.message, {
-              position: toast.POSITION.TOP_RIGHT,
-            });
-          } else if (response.error) {
-            handleErrors(response.message);
-          }
-        })
-        .catch((error) => {
-          toast.error(error.message);
-        })
-        .finally(() => setLoader(false));
+      console.log(fields);
     }
   };
 
@@ -127,7 +94,7 @@ export default function SetPermission(props) {
                     <Card.Body>
                       <Row>
                         {children.map((child, index) => {
-                          const { label, url } = child;
+                          const { label, url, id } = child;
                           return (
                             <Col md={3}>
                               <Form.Check
@@ -137,7 +104,9 @@ export default function SetPermission(props) {
                               >
                                 <Form.Check.Input
                                   type="checkbox"
-                                  onChange={(e) => handleSelect(props.recordId, url)}
+                                  onChange={(e) =>
+                                    handleSelect(props.recordId, id)
+                                  }
                                 />
                                 <Form.Check.Label>{label}</Form.Check.Label>
                               </Form.Check>
@@ -152,8 +121,11 @@ export default function SetPermission(props) {
                 </Card>
               );
             })}
+           
           </LoadingOverlay>
+          <span className="text-danger m-2">{errors.routesId}</span>
         </Modal.Body>
+
         <Modal.Footer>
           <Button
             variant="danger"

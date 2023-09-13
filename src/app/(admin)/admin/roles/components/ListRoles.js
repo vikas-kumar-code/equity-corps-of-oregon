@@ -24,7 +24,7 @@ export default function ListRoles() {
   const recordPerPage = 10;
   const [pageNumber, setPageNumber] = useState(1);
   const [showAddEditModal, setShowAddEditModal] = useState(false);
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [recordId, setRecordId] = useState(null);
 
@@ -76,24 +76,19 @@ export default function ListRoles() {
 
   return (
     <LoadingOverlay active={loader} spinner text="Loading your content...">
+      <Row>
+        <Col md={6} sm={12}>
+          <h3>Roles</h3>
+        </Col>
+        <Col md={6} sm={12} className="text-end">
+          <Button variant="success" type="button" onClick={() => getRecord()}>
+            Add New Role
+          </Button>
+        </Col>
+      </Row>
       <Card>
         <Card.Body>
-          <Card.Title>
-            <Row>
-              <Col md={6} sm={12}>
-                <h3>Roles</h3>
-              </Col>
-              <Col md={6} sm={12} className="text-end">
-                <Button
-                  variant="primary"
-                  type="button"
-                  onClick={() => getRecord()}
-                >
-                  Add New Role
-                </Button>
-              </Col>
-            </Row>
-          </Card.Title>
+          <Card.Title></Card.Title>
           <div className="table-responsive">
             <table className="table">
               <thead>
@@ -139,24 +134,24 @@ export default function ListRoles() {
                           eventKey="1"
                           onClick={() => getRecord(record.id)}
                         >
-                        <span class="mdi mdi-pencil"></span>
+                          <span class="mdi mdi-pencil"></span>
                           Edit
                         </Dropdown.Item>
                         <Dropdown.Item
                           eventKey="2"
                           onClick={() => deleteRecord(record.id)}
                         >
-                        <span class="mdi mdi-delete"></span>
+                          <span class="mdi mdi-delete"></span>
                           Delete
                         </Dropdown.Item>
                         <Dropdown.Item
                           eventKey="1"
                           onClick={() => {
-                            setShowModal(true)
-                            setRecordId(record.id)
+                            setShowModal(true);
+                            setRecordId(record.id);
                           }}
                         >
-                        <span class="mdi mdi-pencil"></span>
+                          <span class="mdi mdi-pencil"></span>
                           Permissions
                         </Dropdown.Item>
                       </DropdownButton>

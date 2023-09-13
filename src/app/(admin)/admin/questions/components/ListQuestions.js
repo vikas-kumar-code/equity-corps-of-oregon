@@ -139,7 +139,7 @@ export default function ListQuestions() {
           >
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
           </Button>
-          <Button variant="primary" type="button" onClick={() => getRecord()}>
+          <Button variant="success" type="button" onClick={() => getRecord()}>
             Add New Question
           </Button>
         </Col>
