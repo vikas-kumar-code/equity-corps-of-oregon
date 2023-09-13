@@ -92,7 +92,7 @@ export default function ListTemplates() {
           >
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
           </Button>
-          <Button variant="primary" type="button" onClick={() => getRecord()}>
+          <Button variant="success" type="button" onClick={() => getRecord()}>
             Add New Email Template
           </Button>
         </Col>

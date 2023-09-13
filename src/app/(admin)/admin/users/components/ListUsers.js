@@ -129,7 +129,7 @@ export default function ListUsers() {
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
           </Button>
           <Button
-            variant="primary"
+            variant="success"
             type="button"
             onClick={() => getUser(null, "edit")}
           >
