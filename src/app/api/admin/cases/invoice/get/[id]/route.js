@@ -3,13 +3,14 @@ import prisma from "@/utils/prisma";
 
 export async function GET(request, data) {
   let response = {};
-  try {    
+  try {
     const record = await prisma.case_invoices.findUnique({
       where: {
         id: parseInt(data.params.id),
-      },      
-    }); 
-    if (record) {
+      },
+    });
+
+    if (record) {          
       response.success = true;
       response.record = record;
     } else {

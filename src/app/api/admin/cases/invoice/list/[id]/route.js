@@ -24,10 +24,24 @@ export async function GET(request, data) {
         },
       },
     });
+
+    const admin = await prisma.users.findUnique({
+      where: {
+        id: 1,
+      },
+      select:{
+        name: true,        
+        email: true,
+        address: true,
+        law_firm_name: true,      
+      }
+    });
+
     // output response
     response.success = true;
     response.message = "Case invoices";
     response.records = records;
+    response.admin = admin;
   } catch (error) {
     response.error = true;
     response.message = error.message;

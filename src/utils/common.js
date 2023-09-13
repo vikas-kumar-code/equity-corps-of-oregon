@@ -7,6 +7,7 @@ const params = {
     sendCaseInvitation: 1,
     forgotPassword: 2,
     attorneyOnBoard: 3,
+    invoiceForApproval: 4,
   },
   recordPerPage: 20,
 };
@@ -90,8 +91,12 @@ const common = {
       Number(index + 1)
     );
   },
-  currencyFormat: (number) => {
-    return number ? `$${(number || "").toLocaleString("en-US")}` : '';
+  currencyFormat: (number, fixed = 0) => {
+    return number
+      ? `$${Number(number).toLocaleString("en-US", {
+          minimumFractionDigits: fixed,
+        })}`
+      : "";
   },
   currencyToNumber: (currency) => {
     return (currency || "").replace(/[^0-9.]/g, "");

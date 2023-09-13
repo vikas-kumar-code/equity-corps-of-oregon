@@ -1,10 +1,11 @@
+import common from "@/utils/common";
 import moment from "moment";
-import { useState } from "react";
 const {
   DropdownButton,
   Dropdown,
   ButtonGroup,
   Card,
+  Badge,
 } = require("react-bootstrap");
 
 export default function ListInvoice({
@@ -12,11 +13,31 @@ export default function ListInvoice({
   getRecord,
   deleteRecord,
   showInvoiceDetails,
+  maxCompensation,
+  sendInvoice,
 }) {
+  const btnStatus = {
+    0: {
+      label: "Draft",
+      bg: "secondary",
+    },
+    1: {
+      label: "Sent",
+      bg: "info",
+    },
+    2: {
+      label: "Paid",
+      bg: "success",
+    },
+  };
+
   return (
     <Card>
       <Card.Body>
         <div className="table-responsive">
+          <h6 className="float-end">
+            Maximum compensation - {common.currencyFormat(maxCompensation)}
+          </h6>
           <h5 className="">Invoices</h5>
           <div className="table-responsive min-list-height">
             <table className="table">
@@ -26,6 +47,7 @@ export default function ListInvoice({
                   <th>Invoice</th>
                   <th>Total Amount</th>
                   <th>Added On</th>
+                  <th>Status</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -34,8 +56,17 @@ export default function ListInvoice({
                   <tr>
                     <td>{index + 1}</td>
                     <td>{item.name}</td>
-                    <td>{item.total_amount?.toFixed(2)}</td>
+                    <td>{common.currencyFormat(item.total_amount, 2)}</td>
                     <td>{moment(item.added_on).format("D MMM, YYYY")}</td>
+                    <td>
+                      <Badge
+                        pill
+                        bg={btnStatus[item.status].bg || "info"}
+                        size="sm"
+                      >
+                        {btnStatus[item.status].label || "N/A"}
+                      </Badge>
+                    </td>
                     <td>
                       <DropdownButton
                         as={ButtonGroup}
@@ -45,6 +76,16 @@ export default function ListInvoice({
                         title="Action"
                         align="end"
                       >
+                        {item.status === 0 && (
+                          <Dropdown.Item
+                            eventKey="4"
+                            onClick={() => sendInvoice(item.id)}
+                          >
+                            <span class="mdi mdi-send"></span>
+                            Send
+                          </Dropdown.Item>
+                        )}
+
                         <Dropdown.Item
                           eventKey="1"
                           onClick={() => showInvoiceDetails(item)}
@@ -52,20 +93,24 @@ export default function ListInvoice({
                           <span className="mdi mdi-eye"></span>
                           View
                         </Dropdown.Item>
-                        <Dropdown.Item
-                          eventKey="2"
-                          onClick={() => getRecord(item.id)}
-                        >
-                          <span class="mdi mdi-pencil"></span>
-                          Edit
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          eventKey="3"
-                          onClick={() => deleteRecord(item.id)}
-                        >
-                          <span class="mdi mdi-delete"></span>
-                          Delete
-                        </Dropdown.Item>
+                        {item.status <= 1 && (
+                          <Dropdown.Item
+                            eventKey="2"
+                            onClick={() => getRecord(item.id)}
+                          >
+                            <span class="mdi mdi-pencil"></span>
+                            Edit
+                          </Dropdown.Item>
+                        )}
+                        {item.status == 0 && (
+                          <Dropdown.Item
+                            eventKey="3"
+                            onClick={() => deleteRecord(item.id)}
+                          >
+                            <span class="mdi mdi-delete"></span>
+                            Delete
+                          </Dropdown.Item>
+                        )}
                       </DropdownButton>
                     </td>
                   </tr>

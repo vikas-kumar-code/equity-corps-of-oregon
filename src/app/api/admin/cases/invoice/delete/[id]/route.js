@@ -15,12 +15,17 @@ export async function DELETE(request, data) {
         },
       });
       if (caseInvoiceModel) {
-        const caseInvoiceDelete = await prisma.case_invoices.delete({
-          where: { id: caseInvoiceModel.id, user_id: session.user.id },
-        });
-        if (caseInvoiceDelete) {
-          response.success = true;
-          response.message = "Case invoice has been deleted successfully.";
+        if (caseInvoiceModel.status === 0) {
+          const caseInvoiceDelete = await prisma.case_invoices.delete({
+            where: { id: caseInvoiceModel.id, user_id: session.user.id },
+          });
+          if (caseInvoiceDelete) {
+            response.success = true;
+            response.message = "Case invoice has been deleted successfully.";
+          }
+        }else{
+          response.error = true;
+          response.message = 'You can not perform this action.';
         }
       }
     } else {

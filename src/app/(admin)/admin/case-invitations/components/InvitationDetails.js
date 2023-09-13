@@ -2,6 +2,7 @@ import moment from "moment";
 import React, { useState } from "react";
 import { Modal, Badge, Tabs, Tab, Button, Row, Col } from "react-bootstrap";
 import Documents from "./Documents";
+import common from "@/utils/common";
 
 const InvitationDetails = ({
   showModal,
@@ -52,13 +53,18 @@ const InvitationDetails = ({
               <table className="table table-borderless table-striped">
                 <tbody>
                   <tr>
+                    <th>Title</th>
+                    <td>{record.case.title}</td>
+                  </tr>
+                  <tr>
                     <th>Case Number</th>
                     <td>{record.case.case_number}</td>
                   </tr>
                   <tr>
-                    <th>Title</th>
-                    <td>{record.case.title}</td>
+                    <th>Maximum Compensation</th>
+                    <td>{common.currencyFormat(record.case.maximum_compensation)}</td>
                   </tr>
+                  
                   <tr>
                     <th>Description</th>
                     <td>{record.case.description}</td>
