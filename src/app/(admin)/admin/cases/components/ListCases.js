@@ -108,41 +108,10 @@ export default function ListCases() {
   }, []);
 
   return (
-    <div>
-      {/* <Row className="pb-2">
-        <Col md={6} sm={12}>
-          <h3>Cases</h3>
-        </Col>
-        <Col md={2} sm={12} className="text-end d-grid">
-          <Button
-            variant="warning"
-            onClick={() => setShowSearchBox(!showSearchBox)}
-          >
-            {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
-          </Button>
-        </Col>
-        <Col md={2} sm={12} className="text-end d-grid">
-          <Button
-            variant="dark"
-            type="button"
-            onClick={() => setUpdateContractModal(true)}
-          >
-            Update Contract
-          </Button>
-        </Col>
-        <Col md={2} sm={12} className="text-end d-grid">
-          <Button
-            variant="primary"
-            type="button"
-            onClick={() => setShowModal(true)}
-          >
-            Add New Case
-          </Button>
-        </Col>
-      </Row> */}
+    <div>  
       <Row className="pb-2">
         <Col md={6} sm={12}>
-          <h3>Questions</h3>
+          <h3>Cases</h3>
         </Col>
         <Col md={6} sm={12} className="text-end">
           <Button
@@ -165,13 +134,6 @@ export default function ListCases() {
           </Button>
         </Col>
       </Row>
-      <SearchBox
-        open={showSearchBox}
-        title={"Search Questions"}
-        searchFields={searchFields}
-        col={6}
-      />
-      <Row></Row>
       <SearchBox
         open={showSearchBox}
         title={"Search Case"}
