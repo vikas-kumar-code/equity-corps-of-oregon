@@ -13,11 +13,14 @@ LoadingOverlay.propTypes = undefined;
 export default function SetPermission(props) {
   const [loader, setLoader] = useState(false);
   const [routes, setRoutes] = useState([]);
+  const [permissions, SetPermissions] = useState([]);
   const [errors, setErrors] = useState({});
   const [fields, setFields] = useState({ roleId: null, routesId: [] });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSelect = (roleId, routeId) => {
+  const handleSelect = (e, roleId, routeId) => {
+    const isChecked = e.target.checked;
+    console.log(isChecked);
     setFields({ ...fields, roleId, routesId: [...fields.routesId, routeId] });
   };
 
@@ -43,11 +46,12 @@ export default function SetPermission(props) {
 
   const getRoutes = async () => {
     setLoader(true);
-    await fetch(common.apiPath("admin/permissions"))
+    await fetch(common.apiPath("admin/permissions/get/" + props.recordId))
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
-          setRoutes(response.records);
+          setRoutes(response.routes);
+          SetPermissions(response.permissions);
         } else if (response.error) {
           toast.error(response.message);
         }
@@ -86,7 +90,10 @@ export default function SetPermission(props) {
                       type="checkbox"
                       id={`route-${i}-${id}`}
                     >
-                      <Form.Check.Input type="checkbox" />
+                      <Form.Check.Input
+                        type="checkbox"
+                        checked={permissions.includes(id)}
+                      />
                       <Form.Check.Label>{label}</Form.Check.Label>
                     </Form.Check>
                   </Card.Header>
@@ -103,9 +110,10 @@ export default function SetPermission(props) {
                                 id={`route-${index}-${i}-${id}`}
                               >
                                 <Form.Check.Input
+                                  checked={permissions.includes(id)}
                                   type="checkbox"
                                   onChange={(e) =>
-                                    handleSelect(props.recordId, id)
+                                    handleSelect(e, props.recordId, id)
                                   }
                                 />
                                 <Form.Check.Label>{label}</Form.Check.Label>
@@ -121,7 +129,6 @@ export default function SetPermission(props) {
                 </Card>
               );
             })}
-           
           </LoadingOverlay>
           <span className="text-danger m-2">{errors.routesId}</span>
         </Modal.Body>

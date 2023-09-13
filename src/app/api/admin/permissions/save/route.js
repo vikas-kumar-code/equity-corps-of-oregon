@@ -14,7 +14,7 @@ export async function POST(request){
             response.message = permissionData.errors;
         }else{
             await prisma.permissions.createMany({
-                
+                data: {}
             })
         }
     } catch (error) {

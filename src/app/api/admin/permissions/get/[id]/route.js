@@ -1,8 +1,9 @@
 import prisma from "@/utils/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(req) {
+export async function GET(req, data) {
   let response = {};
+  const role_id = parseInt(data.params.id);
   try {
     const routes = await prisma.routes.findMany({
       where: {
@@ -13,9 +14,16 @@ export async function GET(req) {
       },
     });
 
+    const permissions = await prisma.permissions.findMany({
+      where: {
+        role_id,
+      },
+    });
+
     response.success = true;
     response.message = "Questions list";
-    response.records = routes;
+    response.routes = routes;
+    response.permissions = permissions.map((item) => item.route_id);
   } catch (error) {
     response.error = true;
     response.message = error.message;
