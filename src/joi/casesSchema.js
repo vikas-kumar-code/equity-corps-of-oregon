@@ -5,8 +5,9 @@ const maxDocuments = 5;
 const maxAssociatedNames = 20;
 
 const casesSchema = Joi.object({
-  case_number: Joi.string().alphanum(),
   title: Joi.string().max(255).required(),
+  case_number: Joi.string().alphanum().required(),
+  maximum_compensation: Joi.number().min(1).required(),
   belongs_to: Joi.array()
     .items(Joi.string().max(50).label("Case belongs to"))
     .min(1)
@@ -39,8 +40,9 @@ const casesSchema = Joi.object({
 });
 
 const casesSchemaForm1 = Joi.object({
-  case_number: Joi.string().alphanum(),
   title: Joi.string().max(255).required(),
+  case_number: Joi.string().alphanum().required(),
+  maximum_compensation: Joi.number().min(1).required(),
   belongs_to: Joi.array()
     .items(Joi.string().max(maxAssociatedNames).label("Case belongs to"))
     .min(1)

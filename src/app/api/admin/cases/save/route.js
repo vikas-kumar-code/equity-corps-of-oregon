@@ -21,6 +21,7 @@ export async function POST(request) {
       await prisma.cases.create({
         data: {
           added_by: session.user.id,
+          maximum_compensation: data.maximum_compensation,
           case_number: data.case_number,
           title: data.title,
           case_associated_names: {

@@ -29,8 +29,9 @@ LoadingOverlay.propTypes = undefined;
 export default function AddEditCase(props) {
   const [loader, setLoader] = useState(false);
   const initialValues = {
-    case_number: "",
     title: "",
+    case_number: "",
+    maximum_compensation: "",
     belongs_to: [],
     description: "",
     milestones: [],
@@ -171,7 +172,11 @@ export default function AddEditCase(props) {
     if (fields?.documents && Array.isArray(fields.documents)) {
       const hasNewDoc = fields.documents.filter((item) => !item.id);
       if (hasNewDoc.length > 0) {
-        if (confirm("It seems you have uploaded new documents. Please click the save button to save these documents otherwise these files will not be saved.")) {
+        if (
+          confirm(
+            "It seems you have uploaded new documents. Please click the save button to save these documents otherwise these files will not be saved."
+          )
+        ) {
           props.closeModal();
         }
       } else {
@@ -247,9 +252,25 @@ export default function AddEditCase(props) {
             >
               <Tab eventKey={1} title="Basic Details">
                 <Row>
+                  <Form.Group as={Col} md={12} className="mb-2">
+                    <FloatingLabel label="Title" className="mb-3">
+                      <Form.Control
+                        type="text"
+                        name="title"
+                        placeholder="title"
+                        onChange={(event) => handleChange(event, "title")}
+                        isInvalid={!!errors.title}
+                        value={fields.title ? fields.title : ""}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.title}
+                      </Form.Control.Feedback>
+                    </FloatingLabel>
+                  </Form.Group>
+
                   <Form.Group as={Col} md={6} className="mb-2">
                     <FloatingLabel
-                      controlId="floatingInput"
+                      controlId="floatingInput1"
                       label="Case Number"
                       className="mb-3"
                     >
@@ -266,21 +287,29 @@ export default function AddEditCase(props) {
                       </Form.Control.Feedback>
                     </FloatingLabel>
                   </Form.Group>
+
                   <Form.Group as={Col} md={6} className="mb-2">
-                    <FloatingLabel label="Title" className="mb-3">
+                    <FloatingLabel
+                      controlId="floatingInput2"
+                      label="Maximum compensation"
+                      className="mb-3"
+                    >
                       <Form.Control
                         type="text"
-                        name="title"
-                        placeholder="title"
-                        onChange={(event) => handleChange(event, "title")}
-                        isInvalid={!!errors.title}
-                        value={fields.title ? fields.title : ""}
+                        name="maximum_compensation"
+                        placeholder="Maximum compensation"                        
+                        onChange={(event) =>
+                          setFields({...fields, maximum_compensation: common.currencyToNumber(event.target.value)})                          
+                        }
+                        isInvalid={!!errors.maximum_compensation}
+                        value={common.currencyFormat(fields.maximum_compensation)}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.title}
+                        {errors.maximum_compensation}
                       </Form.Control.Feedback>
                     </FloatingLabel>
                   </Form.Group>
+
                   <Form.Group as={Col} md={12} className="mb-4 show-error">
                     <Form.Label>Case Belongs To</Form.Label>
                     <TagsInput
@@ -296,7 +325,11 @@ export default function AddEditCase(props) {
                     </Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group as={Col} md={12} className="mb-2">
-                    <FloatingLabel label="Description" className="mb-3">
+                    <FloatingLabel
+                      controlId="floatingInput3"
+                      label="Description"
+                      className="mb-3"
+                    >
                       <Form.Control
                         as="textarea"
                         name="description"
@@ -304,7 +337,7 @@ export default function AddEditCase(props) {
                         onChange={(event) => handleChange(event, "description")}
                         isInvalid={!!errors.description}
                         value={fields.description ? fields.description : ""}
-                        style={{ height: 250 }}
+                        style={{ height: 200 }}
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.description}

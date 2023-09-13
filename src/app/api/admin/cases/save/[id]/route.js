@@ -53,6 +53,7 @@ export async function PUT(request, data) {
           data: {
             case_number: validated.case_number,
             title: validated.title,
+            maximum_compensation: validated.maximum_compensation,
             case_associated_names: {
               create: validated.belongs_to.map((belongsTo) => {
                 return { name: belongsTo };

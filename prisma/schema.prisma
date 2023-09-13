@@ -79,6 +79,7 @@ model cases {
   description           String                  @db.LongText
   added_by              Int
   status                Int                     @default(1)
+  maximum_compensation  Decimal                 @db.Decimal(10, 2)
   user                  users                   @relation(fields: [added_by], references: [id], onUpdate: NoAction, onDelete: NoAction)
   case_associated_names case_associated_names[]
   case_milestones       case_milestones[]
@@ -95,8 +96,10 @@ model case_invoices {
   user_id      Int
   name         String?
   particulars  String   @db.LongText
-  total_amount Float
+  total_amount Decimal  @db.Decimal(10, 2)
   added_on     DateTime @default(now())
+  /// Invoice Status [0 => draft, 1 => sent, 2 => paid]
+  status       Int      @default(0)
   case         cases    @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
   user         users    @relation(fields: [user_id], references: [id])
 }

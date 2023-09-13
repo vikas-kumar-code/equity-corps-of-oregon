@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 async function main() {
   // Start Seeding...
   await roleSeeder();
-  // await userSeeder();
+  await userSeeder();
   await routeSeeder();
   await permissionSeeder();
   await questionSeeder();

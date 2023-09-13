@@ -90,6 +90,12 @@ const common = {
       Number(index + 1)
     );
   },
+  currencyFormat: (number) => {
+    return number ? `$${(number || "").toLocaleString("en-US")}` : '';
+  },
+  currencyToNumber: (currency) => {
+    return (currency || "").replace(/[^0-9.]/g, "");
+  },
 };
 
 export default common;

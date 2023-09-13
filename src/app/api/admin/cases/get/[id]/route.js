@@ -23,6 +23,7 @@ export async function GET(request, data) {
     response.data = {
       case_number: record.case_number,
       title: record.title,
+      maximum_compensation: record.maximum_compensation,
       belongs_to: record.case_associated_names.map(
         (belongsTo) => belongsTo.name
       ),
