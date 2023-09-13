@@ -2,8 +2,10 @@ import React from "react";
 import { Modal, Row, Col, Container, Table } from "react-bootstrap";
 import "../../../../styles/invoice.css";
 import moment from "moment";
+import common from "@/utils/common";
 
-const InvoiceDetails = ({ showModal, closeModal, record }) => {
+const InvoiceDetails = ({ showModal, closeModal, record, adminDetails }) => {
+
   return (
     <Modal
       show={showModal}
@@ -24,7 +26,7 @@ const InvoiceDetails = ({ showModal, closeModal, record }) => {
                 <header>
                   <div class="row">
                     <div class="col">
-                      <span className="brand-logo">
+                      <span className="brand-logo ps-0">
                         EC<span style={{ color: "#ca8a2e" }}>O</span>
                       </span>
                     </div>
@@ -42,11 +44,14 @@ const InvoiceDetails = ({ showModal, closeModal, record }) => {
                   <div class="row contacts">
                     <div class="col invoice-to">
                       <div class="text-gray-light">INVOICE TO:</div>
-                      <h2 class="to">{record.user.name}</h2>
-                      <div class="address">{record.user.address}</div>
+                      <h6 className="mt-1">
+                        Case Number - <b>{record.case.case_number}</b>
+                      </h6>
+                      <h2 class="to">{adminDetails.name}</h2>
+                      <div class="address">{adminDetails.address}</div>
                       <div class="email">
-                        <a href={"mailto:" + record.user.email}>
-                          {record.user.email}
+                        <a href={"mailto:" + adminDetails.email}>
+                          {adminDetails.email}
                         </a>
                       </div>
                     </div>
@@ -78,7 +83,7 @@ const InvoiceDetails = ({ showModal, closeModal, record }) => {
                                 </td>
                                 <td class="text-left">{item.description}</td>
                                 <td class="total">
-                                  ${item.amount ? item.amount.toFixed(2) : ""}
+                                  {common.currencyFormat(item.amount)}
                                 </td>
                               </tr>
                             );
@@ -88,12 +93,7 @@ const InvoiceDetails = ({ showModal, closeModal, record }) => {
                         <tr>
                           <td></td>
                           <td>GRAND TOTAL</td>
-                          <td>
-                            $
-                            {record.total_amount
-                              ? record.total_amount.toFixed(2)
-                              : ""}
-                          </td>
+                          <td>{common.currencyFormat(record.total_amount)}</td>
                         </tr>
                       </tfoot>
                     </table>

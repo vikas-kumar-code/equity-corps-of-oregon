@@ -21,35 +21,40 @@ export async function PUT(request, data) {
         where: { id, user_id: session.user.id },
       });
       if (caseInvoice) {
-        let total_amount = 0;
-        validated.forEach((item) => {
-          total_amount += parseFloat(item.amount);
-        });
-        total_amount = parseFloat(total_amount.toFixed(2));
-        let particulars = JSON.stringify(validated);
-        const caseInvoiceModel = await prisma.case_invoices.update({
-          where: { id, user_id: session.user.id },
-          data: {
-            particulars,
-            total_amount,
-          },
-        });
-        if (caseInvoiceModel) {
-          await prisma.logs.create({
+        if (caseInvoice.status <= 1) {
+          let total_amount = 0;
+          validated.forEach((item) => {
+            total_amount += parseFloat(item.amount);
+          });
+          total_amount = parseFloat(total_amount.toFixed(2));
+          let particulars = JSON.stringify(validated);
+          const caseInvoiceModel = await prisma.case_invoices.update({
+            where: { id, user_id: session.user.id },
             data: {
-              case_id: caseInvoiceModel.case_id,
-              content:
-                caseInvoiceModel.name +
-                " updated by " +
-                session.user.name +
-                ".",
+              particulars,
+              total_amount,
             },
           });
-          response.success = true;
-          response.message = "Invoice updated successfully.";
+          if (caseInvoiceModel) {
+            await prisma.logs.create({
+              data: {
+                case_id: caseInvoiceModel.case_id,
+                content:
+                  caseInvoiceModel.name +
+                  " updated by " +
+                  session.user.name +
+                  ".",
+              },
+            });
+            response.success = true;
+            response.message = "Invoice updated successfully.";
+          } else {
+            response.error = true;
+            response.message = "Something went wrong. please try again.";
+          }
         } else {
           response.error = true;
-          response.message = "Something went wrong. please try again.";
+          response.message = "You can not perform this action.";
         }
       } else {
         response.error = true;

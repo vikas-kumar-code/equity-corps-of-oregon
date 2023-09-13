@@ -27,6 +27,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const [invoiceRecord, setInvoiceRecord] = useState({});
   const [records, setRecords] = useState([]);
   const [invoiceDetails, setInvoiceDetails] = useState(null);
+  const [adminDetails, setAdminDetails] = useState({});
 
   const handleErrors = (errors) => {
     if (typeof errors === "object") {
@@ -111,6 +112,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         .then((response) => {
           if (response.success) {
             setRecords(response.records);
+            setAdminDetails(response.admin);
           } else {
             toast.error(response.message);
           }
@@ -127,6 +129,29 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       setLoader(true);
       fetch(common.apiPath(`/admin/cases/invoice/delete/${id}`), {
         method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            toast.success(response.message);
+            getRecords();
+            reloadRecords();
+          } else if (response.error) {
+            toast.error(response.message);
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        })
+        .finally(() => setLoader(false));
+    }
+  };
+
+  const sendInvoice = async (id) => {
+    if (window.confirm("Are you sure to send this invoice for approval?")) {
+      setLoader(true);
+      fetch(common.apiPath(`/admin/cases/invoice/send/${id}`), {
+        method: "POST",
       })
         .then((response) => response.json())
         .then((response) => {
@@ -166,7 +191,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         keyboard={false}
         centered
         size="lg"
-        className={invoiceDetails ? 'opacity-0':''}
+        className={invoiceDetails ? "opacity-0" : ""}
       >
         <Modal.Header closeButton className="border-bottom-0">
           <h3>Manage invoices for case {record.case_number}</h3>
@@ -209,10 +234,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             name="amount"
                             placeholder="Amount"
                             isInvalid={!!errors[index + "amount"]}
-                            value={item.amount || ""}
+                            value={common.currencyFormat(item.amount)}
                             onChange={(event) => {
                               fieldsData[index].amount =
-                                event.target.value.replace(/[^0-9.]/g, "");
+                                common.currencyToNumber(event.target.value);
                               setFields(fieldsData);
                             }}
                           />
@@ -274,6 +299,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
               getRecord={getRecord}
               deleteRecord={deleteRecord}
               showInvoiceDetails={setInvoiceDetails}
+              maxCompensation={record.maximum_compensation}
+              sendInvoice={sendInvoice}
             />
           </LoadingOverlay>
         </Modal.Body>
@@ -284,6 +311,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
           showModal={invoiceDetails ? true : false}
           closeModal={() => setInvoiceDetails(null)}
           record={invoiceDetails}
+          adminDetails={adminDetails}
         />
       )}
     </>

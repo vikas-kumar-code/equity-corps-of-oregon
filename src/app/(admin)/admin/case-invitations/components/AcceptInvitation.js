@@ -167,7 +167,7 @@ export default function AcceptInvitation({
             >
               Cancel
             </Button>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="success">
               {submitted && (
                 <Spinner className="me-1" color="light" size="sm" />
               )}

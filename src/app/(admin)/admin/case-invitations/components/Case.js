@@ -60,7 +60,7 @@ export default function Case({
               <span className="mdi mdi-eye"></span>
               View
             </Dropdown.Item>
-            {record?.status !== 0 && (
+            {record?.status === 0 && (
               <Dropdown.Item eventKey="2" onClick={() => setConfirmation(true)}>
                 <span class="mdi mdi-file-check"></span>
                 Accept

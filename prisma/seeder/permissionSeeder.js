@@ -24,12 +24,13 @@ const permissionSeeder = async () => {
     "/api/admin/settings/update-profile",
     "/api/admin/settings/change-password",
     "/api/admin/download/@path",
-    "/api/admin/modules",    
+    "/api/admin/modules",
     "/api/admin/cases/invoice/save",
     "/api/admin/cases/invoice/save/:id",
     "/api/admin/cases/invoice/list/:id",
     "/api/admin/cases/invoice/get/:id",
     "/api/admin/cases/invoice/delete/:id",
+    "/api/admin/cases/invoice/send/:id",
   ];
   const ecoRoutes = await prisma.routes.findMany({
     where: {
