@@ -19,11 +19,13 @@ export async function GET(req, data) {
         role_id,
       },
     });
-
     response.success = true;
     response.message = "Questions list";
     response.routes = routes;
-    response.permissions = permissions.map((item) => item.route_id);
+    response.permissions = permissions.map((item)=>{
+      const {id, ...rest} = item;
+      return rest;
+    });
   } catch (error) {
     response.error = true;
     response.message = error.message;
