@@ -2,15 +2,16 @@
 
 import React, { useState } from "react";
 import moment from "moment";
-import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import SendInvitation from "./SendInvitation";
 import AddEditCase from "./AddEditCase";
+import Invoices from "./Invoices";
 
 export default function Case({ record, getRecords, deleteRecord, sn }) {
   const [showModal, setShowModal] = useState(false);
   const [showSendInvitationModal, setShowSendInvitationModal] = useState(false);
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
 
-  console.log(record);
   return (
     <>
       <tr key={`cases-key-${sn}`}>
@@ -38,15 +39,22 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
               eventKey="1"
               onClick={() => setShowSendInvitationModal(true)}
             >
-            <span class="mdi mdi-send"></span>
+              <span class="mdi mdi-send"></span>
               Send Invitation
             </Dropdown.Item>
+            <Dropdown.Item
+              eventKey="1"
+              onClick={() => setShowInvoiceModal(true)}
+            >
+              <span class="mdi mdi-file-document"></span>
+              Invoices
+            </Dropdown.Item>
             <Dropdown.Item eventKey="2" onClick={() => setShowModal(true)}>
-            <span class="mdi mdi-pencil"></span>
+              <span class="mdi mdi-pencil"></span>
               Edit
             </Dropdown.Item>
             <Dropdown.Item eventKey="3" onClick={() => deleteRecord(record.id)}>
-            <span class="mdi mdi-delete"></span>
+              <span class="mdi mdi-delete"></span>
               Delete
             </Dropdown.Item>
           </DropdownButton>
@@ -71,6 +79,16 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
           recordId={record.id}
           reloadRecords={getRecords}
           invitedUsers={record?.case_invitations || []}
+        />
+      )}
+      {showInvoiceModal && (
+        <Invoices
+          showModal={showInvoiceModal}
+          closeModal={() => {
+            setShowInvoiceModal(false);
+          }}
+          record={record}
+          reloadRecords={getRecords}
         />
       )}
     </>

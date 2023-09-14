@@ -63,6 +63,13 @@ export async function GET(request) {
             },
           },
         },
+        case_invoices: {
+          where: {
+            status: {
+              gte: 1,
+            },
+          },
+        },
       },
     });
     totalRecords = await prisma.cases.count({ where });

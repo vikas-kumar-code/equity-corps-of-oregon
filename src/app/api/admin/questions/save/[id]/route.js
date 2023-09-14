@@ -23,9 +23,7 @@ export async function PUT(request, data) {
         }),
       });
 
-      const validated = await validateAsync(schema, updateData, {
-        errorKey: true,
-      });
+      const validated = await validateAsync(schema, updateData);
       if (validated.errors) {
         response.error = true;
         response.message = validated.errors;

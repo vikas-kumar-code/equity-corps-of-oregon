@@ -31,17 +31,18 @@ const common = {
     return pathJoin(process.cwd(), "api", "admin", "download", path);
   },
   // create JOI errors in custom format.
-  getErrors: (errors, options = { arrayKey: false }) => {
+  getErrors: (errors, options = { removeString:"" }) => {
     let outputErrors = {};
     if (Array.isArray(errors?.details)) {
       errors?.details.forEach((err, index) => {
         outputErrors = {
           ...outputErrors,
-          [options.arrayKey ? err.path.join("") : err.path[0]]: err.message
+          [err.path.join("")]: err.message
             .replace(/\[[^\]]*\]/g, "")
             .replace(/\./g, " ")
             .replace(/"/g, "")
-            .replace(/_/g, " "),
+            .replace(/_/g, " ")
+            .replace(options.removeString,"")+'.',
         };
       });
     } else if (errors?.message && typeof errors.message === "string") {

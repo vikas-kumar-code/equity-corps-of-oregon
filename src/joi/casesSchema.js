@@ -79,15 +79,18 @@ const casesSchemaForm3 = Joi.object({
     .required(),
 });
 
-const invoiceSchema = Joi.array()
-  .items(
-    Joi.object({
-      description: Joi.string().required(),
-      amount: Joi.number().min(0).required().label("Amount"),
-    })
-  )
-  .min(1)
-  .required();
+const invoiceSchema = Joi.object({
+  due_on: Joi.date().required(),
+  particulars: Joi.array()
+    .items(
+      Joi.object({
+        description: Joi.string().required(),
+        amount: Joi.number().min(0).required().label("Amount"),
+      })
+    )
+    .min(1)
+    .required(),
+});
 
 export default casesSchema;
 

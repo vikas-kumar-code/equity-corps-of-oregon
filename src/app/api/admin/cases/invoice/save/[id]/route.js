@@ -10,29 +10,28 @@ export async function PUT(request, data) {
     const session = await getSession();
     let req = await request.json();
     const id = parseInt(data.params.id);
-    const validated = await validateAsync(invoiceSchema, req?.particulars, {
-      errorKey: true,
-    });
+    const validated = await validateAsync(invoiceSchema, req);
     if (validated.errors) {
       response.error = true;
       response.message = validated.errors;
     } else {
-      const caseInvoice = prisma.case_invoices.findUnique({
+      const caseInvoice = await prisma.case_invoices.findUnique({
         where: { id, user_id: session.user.id },
       });
       if (caseInvoice) {
         if (caseInvoice.status <= 1) {
           let total_amount = 0;
-          validated.forEach((item) => {
+          validated.particulars.forEach((item) => {
             total_amount += parseFloat(item.amount);
           });
           total_amount = parseFloat(total_amount.toFixed(2));
-          let particulars = JSON.stringify(validated);
+          let particulars = JSON.stringify(validated.particulars);
           const caseInvoiceModel = await prisma.case_invoices.update({
             where: { id, user_id: session.user.id },
             data: {
               particulars,
               total_amount,
+              due_on: validated.due_on,
             },
           });
           if (caseInvoiceModel) {
