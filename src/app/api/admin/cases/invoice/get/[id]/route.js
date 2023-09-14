@@ -10,9 +10,13 @@ export async function GET(request, data) {
       },
     });
 
-    if (record) {          
+    if (record) {
       response.success = true;
-      response.record = record;
+      response.record = {
+        ...record,
+        due_on: "", //record.due_on,
+        particulars: await JSON.parse(record.particulars),
+      };
     } else {
       response.error = true;
       response.message = "Record not found.";

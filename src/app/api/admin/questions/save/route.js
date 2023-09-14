@@ -21,7 +21,7 @@ export async function POST(request) {
       }),
     });
 
-    const validated = await validateAsync(schema, data, { errorKey: true });
+    const validated = await validateAsync(schema, data);
     if (validated.errors) {
       response.error = true;
       response.message = validated.errors;

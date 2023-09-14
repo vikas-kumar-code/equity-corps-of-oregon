@@ -16,12 +16,17 @@ import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import ListInvoice from "./ListInvoice";
 import InvoiceDetails from "./InvoiceDetails";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
-  const initialValues = [{ description: "", amount: "" }];
+  const initialValues = {
+    due_on: "",
+    particulars: [{ description: "", amount: "" }],
+  };
   const [errors, setErrors] = useState({});
   const [fields, setFields] = useState(initialValues);
-  let fieldsData = [...fields];
+  let fieldsData = { ...fields };
   const [loader, setLoader] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [invoiceRecord, setInvoiceRecord] = useState({});
@@ -39,16 +44,20 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     }
   };
 
+  const setNoError = async (field) => {
+    if (errors[field]) {
+      setErrors({ ...errors, [field]: null });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
     const validated = await validateAsync(invoiceSchema, fields, {
-      errorKey: true,
+      removeString: "particulars",
     });
-
     if (validated.errors) {
       handleErrors(validated.errors);
-      console.log(validated.errors);
     } else {
       setSubmitted(true);
       let REQUEST_URI = common.apiPath("/admin/cases/invoice/save");
@@ -61,7 +70,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       }
       fetch(REQUEST_URI, {
         method: REQUEST_METHOD,
-        body: JSON.stringify({ case_id: record.id, particulars: fields }),
+        body: JSON.stringify({
+          case_id: record.id,
+          ...fields,
+        }),
       })
         .then((response) => response.json())
         .then((response) => {
@@ -87,9 +99,9 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       await fetch(common.apiPath(`/admin/cases/invoice/get/${id}`))
         .then((response) => response.json())
         .then((response) => {
-          if (response.success) {
-            setFields(JSON.parse(response.record.particulars));
-            setInvoiceRecord(response.record);
+          if (response.success) {                        
+            setFields(response.record);
+            setInvoiceRecord(response.record);            
           } else if (response.error) {
             toast.error(response.message);
           }
@@ -171,11 +183,17 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   };
 
   const addFieldSet = () => {
-    setFields([...fields, initialValues[0]]);
+    setFields({
+      ...fields,
+      particulars: [...fields.particulars, initialValues.particulars[0]],
+    });
   };
 
   const removeFieldSet = (index) => {
-    setFields(fields.filter((value, i) => i !== index));
+    setFields({
+      ...fields,
+      particulars: fields.particulars.filter((value, i) => i !== index),
+    });
   };
 
   useEffect(() => {
@@ -205,25 +223,51 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 <h5 className="mb-2">Create Invoice</h5>
               )}
               <Form onSubmit={handleSubmit}>
-                {fields?.map((item, index) => {
+                <Row>
+                  <Col md={3} className="p-0 mx-auto mb-2">
+                    <DatePicker
+                      selected={fields.due_on}
+                      onChange={(date) => {                        
+                        setFields({ ...fields, due_on: date });
+                        setNoError("due_on");
+                      }}
+                      className="form-control w-100 py-4 text-center"
+                      placeholderText="Due On"
+                      dateFormat={"MM-dd-yyyy"}
+                      // minDate={new Date()}                      
+                    />
+                    <Form.Control.Feedback
+                      type="invalid"
+                      className="d-block text-center"
+                    >
+                      {errors["due_on"] || ""}
+                    </Form.Control.Feedback>
+                  </Col>
+                </Row>
+                {fields.particulars?.map((item, index) => {
                   return (
                     <Row className="invoice-fieldset">
                       <Col md={8} className="p-0">
                         <FloatingLabel label="Particular">
                           <Form.Control
+                            autoComplete="off"
                             row={1}
                             name="description"
                             placeholder="Particular"
-                            isInvalid={!!errors[index + "description"]}
+                            isInvalid={
+                              !!errors["particulars" + index + "description"]
+                            }
                             value={item.description}
                             onChange={(event) => {
-                              fieldsData[index].description =
+                              fieldsData.particulars[index].description =
                                 event.target.value;
                               setFields(fieldsData);
+                              setNoError("particulars" + index + "description");
                             }}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors[index + "description"] || ""}
+                            {errors["particulars" + index + "description"] ||
+                              ""}
                           </Form.Control.Feedback>
                         </FloatingLabel>
                       </Col>
@@ -233,16 +277,19 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             autoComplete="off"
                             name="amount"
                             placeholder="Amount"
-                            isInvalid={!!errors[index + "amount"]}
-                            value={common.currencyFormat(item.amount)}
+                            isInvalid={
+                              !!errors["particulars" + index + "amount"]
+                            }
+                            value={item.amount}
                             onChange={(event) => {
-                              fieldsData[index].amount =
-                                common.currencyToNumber(event.target.value);
+                              fieldsData.particulars[index].amount =
+                                event.target.value;
                               setFields(fieldsData);
+                              setNoError("particulars" + index + "amount");
                             }}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors[index + "amount"] || ""}
+                            {errors["particulars" + index + "amount"] || ""}
                           </Form.Control.Feedback>
                         </FloatingLabel>
                         {index >= 1 && (

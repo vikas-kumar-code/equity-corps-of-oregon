@@ -117,7 +117,7 @@ export default function ListInvoice({
                 ))}
                 {records.length <= 0 && (
                   <tr>
-                    <td colSpan={5}>
+                    <td colSpan={6}>
                       <h6 className="text-gray">No records available</h6>
                     </td>
                   </tr>

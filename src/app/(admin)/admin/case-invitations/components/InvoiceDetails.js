@@ -61,7 +61,7 @@ const InvoiceDetails = ({ showModal, closeModal, record, adminDetails }) => {
                         Date of Invoice:{" "}
                         {moment(record.added_on).format("DD/MM/YYYY")}
                       </div>
-                      <div class="date">Due Date: 30/10/2018</div>
+                      <div class="date">Due Date: {moment(record.due_on).format("DD/MM/YYYY")}</div>
                     </div>
                   </div>
                   <div className="table-responsive min-list-height">

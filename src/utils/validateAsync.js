@@ -6,23 +6,32 @@ const { default: common } = require("./common");
 const validateAsync = async (
   schema,
   data,
-  options = {
-    errorKey: false,
+  defaultOptions = {
     abortEarly: false,
     allowUnknown: true,
     stripUnknown: false,
+    removeString: "",
   }
 ) => {
+  let options = {
+    abortEarly: false,
+    allowUnknown: true,
+    stripUnknown: false,
+    removeString: "",
+    ...defaultOptions,
+  };
   try {
     const validatedFields = await schema.validateAsync(data, {
-      abortEarly: options?.abortEarly ? options?.abortEarly : false,
-      allowUnknown: options?.allowUnknown ? options?.allowUnknown : true,
-      stripUnknown: options?.stripUnknown ? options?.stripUnknown : false,
+      abortEarly: options?.abortEarly,
+      allowUnknown: options?.allowUnknown,
+      stripUnknown: options?.stripUnknown,
     });
     return validatedFields;
   } catch (error) {
     return {
-      errors: common.getErrors(error, { arrayKey: options.errorKey }),
+      errors: common.getErrors(error, {
+        removeString: options.removeString,
+      }),
     };
   }
 };

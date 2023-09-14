@@ -61,6 +61,7 @@ model users {
   attorney_answers           attorney_answers[]
   case_documents             case_documents[]
   case_invoices              case_invoices[]
+  payments                   payments[]
 }
 
 model roles {
@@ -91,17 +92,30 @@ model cases {
 }
 
 model case_invoices {
-  id           Int      @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   case_id      Int
   user_id      Int
   name         String?
-  particulars  String   @db.LongText
-  total_amount Decimal  @db.Decimal(10, 2)
-  added_on     DateTime @default(now())
+  particulars  String     @db.LongText
+  total_amount Decimal    @db.Decimal(10, 2)
+  added_on     DateTime   @default(now())
+  due_on       DateTime   @db.Date
   /// Invoice Status [0 => draft, 1 => sent, 2 => paid]
-  status       Int      @default(0)
-  case         cases    @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
-  user         users    @relation(fields: [user_id], references: [id])
+  status       Int        @default(0)
+  case         cases      @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  user         users      @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  payments     payments[]
+}
+
+model payments {
+  id              Int           @id @default(autoincrement())
+  case_invoice_id Int
+  user_id         Int
+  amount          Decimal       @db.Decimal(10, 2)
+  remarks         String?       @db.Text
+  added_on        DateTime      @default(now())
+  case_invoice    case_invoices @relation(fields: [case_invoice_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  user            users         @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
 }
 
 model contracts {

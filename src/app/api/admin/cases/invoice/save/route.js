@@ -10,20 +10,19 @@ export async function POST(request) {
     const session = await getSession();
     const user_id = session.user.id;
     let data = await request.json();
-    const validated = await validateAsync(invoiceSchema, data?.particulars, {
-      errorKey: true,
-    });
+    const validated = await validateAsync(invoiceSchema, data);
     if (validated.errors) {
       response.error = true;
       response.message = validated.errors;
     } else {
       const case_id = data.case_id;
+      const due_on = data.due_on;
       let total_amount = 0;
-      validated.forEach((item) => {
+      validated.particulars.forEach((item) => {
         total_amount += parseFloat(item.amount);
       });
       total_amount = parseFloat(total_amount.toFixed(2));
-      let particulars = JSON.stringify(validated);
+      let particulars = JSON.stringify(validated.particulars);
 
       await prisma.$transaction(async (tx) => {
         const caseModel = await tx.cases.findUnique({
@@ -34,8 +33,9 @@ export async function POST(request) {
             data: {
               case_id,
               user_id,
-              particulars,
+              particulars,              
               total_amount,
+              due_on,
             },
           });
           if (caseInvoiceModel) {
