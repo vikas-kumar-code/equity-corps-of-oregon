@@ -33856,5 +33856,6 @@ div.tagsinput span.tag a {
   overflow-y: auto;
 }
 
-
-
+.role_permission .card .card-body {
+  padding: 0.75rem 1.5625rem !important;
+}

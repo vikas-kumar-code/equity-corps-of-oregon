@@ -1,4 +1,5 @@
 import ListRoles from './components/ListRoles'
+import '../../../styles/backend-theme.css'
 
 export const metadata = {
     title: `Roles - Admin Panel`,

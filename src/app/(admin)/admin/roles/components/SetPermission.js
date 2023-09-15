@@ -1,7 +1,6 @@
 "use client";
 
 import permissionSchema from "@/joi/permissionSchema";
-import rolesSchema from "@/joi/rolesSchema";
 import common from "@/utils/common";
 import validateAsync from "@/utils/validateAsync";
 import React, { useState, useEffect } from "react";
@@ -13,15 +12,17 @@ LoadingOverlay.propTypes = undefined;
 export default function SetPermission(props) {
   const [loader, setLoader] = useState(false);
   const [routes, setRoutes] = useState([]);
-  const [permissions, SetPermissions] = useState([]);
+  const [permissions, setPermissions] = useState([]);
   const [errors, setErrors] = useState({});
-  const [fields, setFields] = useState({ roleId: null, routesId: [] });
   const [submitted, setSubmitted] = useState(false);
 
   const handleSelect = (e, roleId, routeId) => {
     const isChecked = e.target.checked;
-    console.log(isChecked);
-    setFields({ ...fields, roleId, routesId: [...fields.routesId, routeId] });
+    if (isChecked) {
+      setPermissions(prevPermissions => [...prevPermissions, {role_id: roleId, route_id: routeId}]);
+    } else {
+      setPermissions(prevPermissions => prevPermissions.filter(permission => permission.route_id !== routeId));
+    }
   };
 
   const handleErrors = (errors) => {
@@ -33,25 +34,42 @@ export default function SetPermission(props) {
       toast.error("Something went wrong...! please try again.");
     }
   };
-  console.log(errors.routesId);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validate = await validateAsync(permissionSchema, fields);
-    if (validate.errors) {
-      handleErrors(validate.errors);
-    } else {
-      console.log(fields);
-    }
+      const validated = await validateAsync(permissionSchema, {permissions: permissions})
+      if(validated.errors){
+        handleErrors(validated.errors)
+      }else{
+        await fetch(common.apiPath(`/admin/permissions/save`), {
+          method: "POST",
+          body: JSON.stringify({permissions: [...permissions]}),
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.success) {
+              props.closeModal();
+              getRoutes();
+              toast.success(response.message);
+            } else if (response.error) {
+              handleErrors(response.message);
+            }
+          })
+          .catch((error) => {
+            toast.error(error.message);
+          })
+          .finally(() => setSubmitted(false));
+      }
   };
 
   const getRoutes = async () => {
     setLoader(true);
-    await fetch(common.apiPath("admin/permissions/get/" + props.recordId))
+    await fetch(common.apiPath(`admin/permissions/get/${props.recordId}`))
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
           setRoutes(response.routes);
-          SetPermissions(response.permissions);
+          setPermissions(response.permissions);
         } else if (response.error) {
           toast.error(response.message);
         }
@@ -61,10 +79,12 @@ export default function SetPermission(props) {
       })
       .finally(() => setLoader(false));
   };
-
+  
+  let routeId = permissions.map(item=> item.route_id)
   useEffect(() => {
     getRoutes();
   }, []);
+
   return (
     <Modal
       show={props.showModal}
@@ -78,23 +98,23 @@ export default function SetPermission(props) {
         <Modal.Header closeButton>
           <h3>{props.recordId ? "Update" : "Assign"} Permission</h3>
         </Modal.Header>
-        <Modal.Body ModalBody className="pl-4 pr-4" style={{ minHeight: 250 }}>
+        <Modal.Body className="pl-4 pr-4 role_permission" style={{ minHeight: 250 }}>
           <LoadingOverlay active={loader} spinner text="Loading...">
             {routes.map((route, i) => {
               const { label, id, children } = route;
               return (
-                <Card key={i}>
+                <Card key={i} className="my-2">
                   <Card.Header>
                     <Form.Check
-                      key={`route-${i}`}
                       type="checkbox"
                       id={`route-${i}-${id}`}
                     >
                       <Form.Check.Input
                         type="checkbox"
-                        checked={permissions.includes(id)}
+                        checked={routeId.includes(id)}
+                        onChange={()=>{}}
                       />
-                      <Form.Check.Label>{label}</Form.Check.Label>
+                      <Form.Check.Label className="mt-2">{label}</Form.Check.Label>
                     </Form.Check>
                   </Card.Header>
                   {children.length > 0 ? (
@@ -103,14 +123,13 @@ export default function SetPermission(props) {
                         {children.map((child, index) => {
                           const { label, url, id } = child;
                           return (
-                            <Col md={3}>
+                            <Col md={3} key={`route-${index}-${i}`}>
                               <Form.Check
-                                key={`route-${index}-${i}`}
                                 type="checkbox"
                                 id={`route-${index}-${i}-${id}`}
                               >
                                 <Form.Check.Input
-                                  checked={permissions.includes(id)}
+                                  checked={routeId.includes(id)}
                                   type="checkbox"
                                   onChange={(e) =>
                                     handleSelect(e, props.recordId, id)
