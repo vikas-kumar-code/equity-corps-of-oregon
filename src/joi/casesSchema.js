@@ -92,6 +92,16 @@ const invoiceSchema = Joi.object({
     .required(),
 });
 
+const invoicePaymentSchema = Joi.object({
+  total_amount: Joi.number().min(0).required().label("amount"),
+});
+
 export default casesSchema;
 
-export { casesSchemaForm1, casesSchemaForm2, casesSchemaForm3, invoiceSchema };
+export {
+  casesSchemaForm1,
+  casesSchemaForm2,
+  casesSchemaForm3,
+  invoiceSchema,
+  invoicePaymentSchema,
+};

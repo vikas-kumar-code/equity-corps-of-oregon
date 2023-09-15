@@ -1,5 +1,6 @@
 import ListCases from "./components/ListCases";
 import "./style.css";
+import "../../../styles/animation.css"
 
 export const metadata = {
   title: `Cases - Admin Panel`

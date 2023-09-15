@@ -79,3 +79,32 @@
     transform: translateX(100%);
   }
 }
+
+
+.fade-in {
+  animation-delay: 0.2s;
+  animation: FadeInAnimation 0.4s linear forwards;
+}
+.fade-out {
+  animation-delay: 0.2s;
+  animation: FadeOutAnimation 0.3s ease forwards;
+}
+
+@keyframes FadeInAnimation {
+  from {
+    opacity: 0;    
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes FadeOutAnimation {
+  from {
+    opacity: 1;    
+  }
+  to {
+    opacity: 0;
+  }
+}
+

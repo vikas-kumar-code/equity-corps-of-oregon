@@ -1,22 +1,50 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
+import { getSession } from "@/utils/serverHelpers";
 
 export async function GET(request, data) {
   let response = {};
+  let record = {};
   try {
-    const record = await prisma.case_invoices.findUnique({
+    const session = await getSession();
+    const id = parseInt(data.params.id);
+    let where = { id };
+
+    // Get user's invoice only if user is not admin
+    if (session.user.role_id !== 1) {
+      where = { ...where, user_id: session.user.id };
+    }
+
+    record.case_invoice = await prisma.case_invoices.findUnique({
+      where,
+    });
+
+    record.case = await prisma.cases.findUnique({
       where: {
-        id: parseInt(data.params.id),
+        id: record.case_invoice.case_id,
       },
     });
 
-    if (record) {
-      response.success = true;
-      response.record = {
-        ...record,
-        due_on: "", //record.due_on,
-        particulars: await JSON.parse(record.particulars),
+    record.admin = await prisma.users.findUnique({
+      where: {
+        id: 1,
+      },
+      select: {
+        name: true,
+        email: true,
+        address: true,
+        law_firm_name: true,
+      },
+    });
+
+    if (record.case_invoice && record.case && record.admin) {
+      record.case_invoice = {
+        ...record.case_invoice,
+        due_on: "",
+        particulars: JSON.parse(record.case_invoice.particulars),
       };
+      response.success = true;
+      response.record = record;
     } else {
       response.error = true;
       response.message = "Record not found.";

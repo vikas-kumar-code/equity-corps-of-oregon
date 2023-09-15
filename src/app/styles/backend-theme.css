@@ -33848,5 +33848,13 @@ div.tagsinput span.tag a {
 }
 
 .min-list-height {
-  min-height: 400px;
+  min-height: 400px;  
 }
+
+.modal-body-scroll {
+  height: 70vh;
+  overflow-y: auto;
+}
+
+
+

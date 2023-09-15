@@ -2,7 +2,6 @@ import { invoiceSchema } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import validateAsync from "@/utils/validateAsync";
 import React, { useState } from "react";
-import { useEffect } from "react";
 import {
   Modal,
   Button,
@@ -14,10 +13,10 @@ import {
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
-import ListInvoice from "./ListInvoice";
-import InvoiceDetails from "./InvoiceDetails";
+import ListInvoices from "./ListInvoices";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import ViewInvoice from "../../cases/components/ViewInvoice";
 
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const initialValues = {
@@ -29,10 +28,13 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   let fieldsData = { ...fields };
   const [loader, setLoader] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [invoiceRecord, setInvoiceRecord] = useState({});
   const [records, setRecords] = useState([]);
-  const [invoiceDetails, setInvoiceDetails] = useState(null);
-  const [adminDetails, setAdminDetails] = useState({});
+  const [showInvoice, setShowInvoice] = useState(null);
+  const [refreshInvoices, setRefreshInvoices] = useState(true);
+
+  const refreshListInvoices = () => {
+    setRefreshInvoices(!refreshInvoices);
+  };
 
   const handleErrors = (errors) => {
     if (typeof errors === "object") {
@@ -62,10 +64,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       setSubmitted(true);
       let REQUEST_URI = common.apiPath("/admin/cases/invoice/save");
       let REQUEST_METHOD = "POST";
-      if (invoiceRecord.id) {
-        REQUEST_URI = common.apiPath(
-          `/admin/cases/invoice/save/${invoiceRecord.id}`
-        );
+      if (fields.id) {
+        REQUEST_URI = common.apiPath(`/admin/cases/invoice/save/${fields.id}`);
         REQUEST_METHOD = "PUT";
       }
       fetch(REQUEST_URI, {
@@ -80,7 +80,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
           if (response.success) {
             toast.success(response.message);
             setFields(initialValues);
-            getRecords();
+            refreshListInvoices();
             reloadRecords();
           } else if (response.error) {
             handleErrors(response.message);
@@ -95,13 +95,13 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
 
   const getRecord = async (id) => {
     setLoader(true);
+    setErrors({})
     try {
       await fetch(common.apiPath(`/admin/cases/invoice/get/${id}`))
         .then((response) => response.json())
         .then((response) => {
-          if (response.success) {                        
-            setFields(response.record);
-            setInvoiceRecord(response.record);            
+          if (response.success) {
+            setFields(response.record.case_invoice);
           } else if (response.error) {
             toast.error(response.message);
           }
@@ -110,75 +110,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       toast.error(e.message);
     } finally {
       setLoader(false);
-    }
-  };
-
-  const getRecords = async () => {
-    setLoader(true);
-    try {
-      let REQUEST_URI = common.apiPath(
-        `/admin/cases/invoice/list/${record.id}`
-      );
-      await fetch(REQUEST_URI)
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            setRecords(response.records);
-            setAdminDetails(response.admin);
-          } else {
-            toast.error(response.message);
-          }
-        });
-    } catch (err) {
-      toast.error(err.message);
-    } finally {
-      setLoader(false);
-    }
-  };
-
-  const deleteRecord = async (id) => {
-    if (window.confirm("Are you sure to delete this invoice?")) {
-      setLoader(true);
-      fetch(common.apiPath(`/admin/cases/invoice/delete/${id}`), {
-        method: "DELETE",
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            toast.success(response.message);
-            getRecords();
-            reloadRecords();
-          } else if (response.error) {
-            toast.error(response.message);
-          }
-        })
-        .catch((error) => {
-          toast.error(error.message);
-        })
-        .finally(() => setLoader(false));
-    }
-  };
-
-  const sendInvoice = async (id) => {
-    if (window.confirm("Are you sure to send this invoice for approval?")) {
-      setLoader(true);
-      fetch(common.apiPath(`/admin/cases/invoice/send/${id}`), {
-        method: "POST",
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            toast.success(response.message);
-            getRecords();
-            reloadRecords();
-          } else if (response.error) {
-            toast.error(response.message);
-          }
-        })
-        .catch((error) => {
-          toast.error(error.message);
-        })
-        .finally(() => setLoader(false));
     }
   };
 
@@ -196,10 +127,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     });
   };
 
-  useEffect(() => {
-    getRecords();
-  }, []);
-
   return (
     <>
       <Modal
@@ -209,32 +136,50 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         keyboard={false}
         centered
         size="lg"
-        className={invoiceDetails ? "opacity-0" : ""}
+        className={showInvoice ? "fade-out" : "fade-in"}
       >
         <Modal.Header closeButton className="border-bottom-0">
-          <h3>Manage invoices for case {record.case_number}</h3>
+          <h3>Manage invoices</h3>
         </Modal.Header>
         <Modal.Body className="pt-0">
           <LoadingOverlay active={loader} spinner text="Loading...">
             <div className="invoice-container">
-              {invoiceRecord.id ? (
-                <h5 className="mb-2">Update Invoice ({invoiceRecord.name})</h5>
-              ) : (
-                <h5 className="mb-2">Create Invoice</h5>
-              )}
+              <Row className="mb-2">
+                <Col>
+                  {fields.id ? (
+                    <h4 className="mb-2">Update Invoice</h4>
+                  ) : (
+                    <h4 className="mb-2">Create Invoice</h4>
+                  )}
+                </Col>
+                <Col>
+                  <h4 className="text-end">
+                    Max Compensation :{" "}
+                    {common.currencyFormat(record.maximum_compensation)}
+                  </h4>
+                </Col>
+              </Row>
+
               <Form onSubmit={handleSubmit}>
-                <Row>
-                  <Col md={3} className="p-0 mx-auto mb-2">
+                <Row className="m-0 mb-2">
+                  <Col md={8} className="p-0">
+                    <div className="form-control py-4 d-flex align-items-center">
+                      <h6 className="m-0">
+                        CASE NUMBER : <strong> {record.case_number}</strong>
+                      </h6>
+                    </div>
+                  </Col>
+                  <Col md={4} className="pe-0">
                     <DatePicker
                       selected={fields.due_on}
-                      onChange={(date) => {                        
+                      onChange={(date) => {
                         setFields({ ...fields, due_on: date });
                         setNoError("due_on");
                       }}
-                      className="form-control w-100 py-4 text-center"
+                      className="form-control w-100 py-4"
                       placeholderText="Due On"
                       dateFormat={"MM-dd-yyyy"}
-                      // minDate={new Date()}                      
+                      // minDate={new Date()}
                     />
                     <Form.Control.Feedback
                       type="invalid"
@@ -314,12 +259,11 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                   >
                     Add More
                   </Button>
-                  {invoiceRecord.id && (
+                  {fields.id && (
                     <Button
                       variant="danger"
                       className="ms-2"
                       onClick={() => {
-                        setInvoiceRecord({});
                         setFields(initialValues);
                       }}
                       disabled={submitted}
@@ -327,6 +271,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                       Cancel
                     </Button>
                   )}
+                
                   <Button
                     variant="success"
                     type="submit"
@@ -341,24 +286,21 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 </div>
               </Form>
             </div>
-            <ListInvoice
-              records={records}
+            <ListInvoices
+              caseId={record.id}
+              setShowInvoice={setShowInvoice}
               getRecord={getRecord}
-              deleteRecord={deleteRecord}
-              showInvoiceDetails={setInvoiceDetails}
-              maxCompensation={record.maximum_compensation}
-              sendInvoice={sendInvoice}
+              refresh={refreshInvoices}
             />
           </LoadingOverlay>
         </Modal.Body>
       </Modal>
 
-      {invoiceDetails && (
-        <InvoiceDetails
-          showModal={invoiceDetails ? true : false}
-          closeModal={() => setInvoiceDetails(null)}
-          record={invoiceDetails}
-          adminDetails={adminDetails}
+      {showInvoice && (
+        <ViewInvoice
+          showModal={showInvoice ? true : false}
+          closeModal={() => setShowInvoice(null)}
+          invoiceId={showInvoice}
         />
       )}
     </>

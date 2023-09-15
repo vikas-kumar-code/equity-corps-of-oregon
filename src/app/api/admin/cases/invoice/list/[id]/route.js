@@ -1,20 +1,31 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
 import { getSession } from "@/utils/serverHelpers";
+import { responsivePropType } from "react-bootstrap/esm/createUtilityClasses";
 
 export async function GET(request, data) {
-  let records = [];
+  let records = {};
   let response = {};
+
   try {
     const session = await getSession();
-    records = await prisma.case_invoices.findMany({
-      where: {
-        case_id: parseInt(data.params.id),
-        user_id: session.user.id,
-      },
+    const case_id = parseInt(data.params.id);
+    let where = { case_id };
+
+    // if user is admin then show all invoices
+    // Do not show draft invoices
+    if (session.user.role_id === 1) {
+      where = { ...where, status: { gte: 1 } };
+
+      // Show only user's invoices
+    } else {
+      where = { ...where, user_id: session.user.id };
+    }
+
+    records.case_invoices = await prisma.case_invoices.findMany({
+      where,
       orderBy: [{ id: "desc" }],
       include: {
-        case: true,
         user: {
           select: {
             name: true,
@@ -25,23 +36,20 @@ export async function GET(request, data) {
       },
     });
 
-    const admin = await prisma.users.findUnique({
+    records.case = await prisma.cases.findUnique({
       where: {
-        id: 1,
+        id: case_id,
       },
-      select:{
-        name: true,        
-        email: true,
-        address: true,
-        law_firm_name: true,      
-      }
     });
 
-    // output response
-    response.success = true;
-    response.message = "Case invoices";
-    response.records = records;
-    response.admin = admin;
+    if (records.case && records.case_invoices) {
+      response.records = records;
+      response.success = true;      
+    } else {
+      response.error = true;
+      response.message = 'Records not found.';
+    }
+
   } catch (error) {
     response.error = true;
     response.message = error.message;

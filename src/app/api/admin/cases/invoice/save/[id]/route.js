@@ -18,38 +18,51 @@ export async function PUT(request, data) {
       const caseInvoice = await prisma.case_invoices.findUnique({
         where: { id, user_id: session.user.id },
       });
-      if (caseInvoice) {
+      const caseModel = await prisma.cases.findUnique({
+        where: { id: caseInvoice.case_id },
+      });
+      if (caseInvoice && caseModel) {
         if (caseInvoice.status <= 1) {
           let total_amount = 0;
-          validated.particulars.forEach((item) => {
-            total_amount += parseFloat(item.amount);
+          validated.particulars.forEach((item, index) => {
+            total_amount += Number(item.amount);
+            validated.particulars[index].amount = Number(
+              item.amount.toFixed(2)
+            );
           });
-          total_amount = parseFloat(total_amount.toFixed(2));
+          total_amount = Number(total_amount.toFixed(2));
           let particulars = JSON.stringify(validated.particulars);
-          const caseInvoiceModel = await prisma.case_invoices.update({
-            where: { id, user_id: session.user.id },
-            data: {
-              particulars,
-              total_amount,
-              due_on: validated.due_on,
-            },
-          });
-          if (caseInvoiceModel) {
-            await prisma.logs.create({
+
+          if (total_amount <= caseModel.maximum_compensation) {
+            const caseInvoiceModel = await prisma.case_invoices.update({
+              where: { id, user_id: session.user.id },
               data: {
-                case_id: caseInvoiceModel.case_id,
-                content:
-                  caseInvoiceModel.name +
-                  " updated by " +
-                  session.user.name +
-                  ".",
+                particulars,
+                total_amount,
+                due_on: validated.due_on,
               },
             });
-            response.success = true;
-            response.message = "Invoice updated successfully.";
+            if (caseInvoiceModel) {
+              await prisma.logs.create({
+                data: {
+                  case_id: caseInvoiceModel.case_id,
+                  content:
+                    caseInvoiceModel.name +
+                    " updated by " +
+                    session.user.name +
+                    ".",
+                },
+              });
+              response.success = true;
+              response.message = "Invoice updated successfully.";
+            } else {
+              response.error = true;
+              response.message = "Something went wrong. please try again.";
+            }
           } else {
             response.error = true;
-            response.message = "Something went wrong. please try again.";
+            response.message =
+              "Total invoice amount can not be greater than maximum compensation amount.";
           }
         } else {
           response.error = true;

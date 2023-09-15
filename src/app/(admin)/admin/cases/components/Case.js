@@ -5,12 +5,12 @@ import moment from "moment";
 import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import SendInvitation from "./SendInvitation";
 import AddEditCase from "./AddEditCase";
-import Invoices from "./Invoices";
+import ListInvoices from "./ListInvoices";
 
 export default function Case({ record, getRecords, deleteRecord, sn }) {
   const [showModal, setShowModal] = useState(false);
   const [showSendInvitationModal, setShowSendInvitationModal] = useState(false);
-  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [showListInvoices, setShowListInvoices] = useState(false);
 
   return (
     <>
@@ -44,7 +44,7 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
             </Dropdown.Item>
             <Dropdown.Item
               eventKey="1"
-              onClick={() => setShowInvoiceModal(true)}
+              onClick={() => setShowListInvoices(true)}
             >
               <span class="mdi mdi-file-document"></span>
               Invoices
@@ -80,15 +80,12 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
           reloadRecords={getRecords}
           invitedUsers={record?.case_invitations || []}
         />
-      )}
-      {showInvoiceModal && (
-        <Invoices
-          showModal={showInvoiceModal}
-          closeModal={() => {
-            setShowInvoiceModal(false);
-          }}
-          record={record}
-          reloadRecords={getRecords}
+      )}      
+      {showListInvoices && (
+        <ListInvoices
+          showModal={showListInvoices}
+          closeModal={() => setShowListInvoices(false)}
+          caseId={record.id}
         />
       )}
     </>

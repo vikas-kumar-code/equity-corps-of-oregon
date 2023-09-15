@@ -100,7 +100,7 @@ model case_invoices {
   total_amount Decimal    @db.Decimal(10, 2)
   added_on     DateTime   @default(now())
   due_on       DateTime   @db.Date
-  /// Invoice Status [0 => draft, 1 => sent, 2 => paid]
+  /// Invoice Status [0 => draft, 1 => sent, 2 => partially paid, 3 => full paid]
   status       Int        @default(0)
   case         cases      @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
   user         users      @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: Cascade)

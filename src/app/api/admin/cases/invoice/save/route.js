@@ -18,10 +18,11 @@ export async function POST(request) {
       const case_id = data.case_id;
       const due_on = data.due_on;
       let total_amount = 0;
-      validated.particulars.forEach((item) => {
-        total_amount += parseFloat(item.amount);
+      validated.particulars.forEach((item, index) => {
+        total_amount += Number(item.amount);
+        validated.particulars[index].amount = Number(item.amount.toFixed(2));
       });
-      total_amount = parseFloat(total_amount.toFixed(2));
+      total_amount = Number(total_amount.toFixed(2));
       let particulars = JSON.stringify(validated.particulars);
 
       await prisma.$transaction(async (tx) => {
@@ -29,35 +30,45 @@ export async function POST(request) {
           where: { id: case_id },
         });
         if (caseModel) {
-          const caseInvoiceModel = await tx.case_invoices.create({
-            data: {
-              case_id,
-              user_id,
-              particulars,              
-              total_amount,
-              due_on,
-            },
-          });
-          if (caseInvoiceModel) {
-            const invoice = await tx.case_invoices.update({
-              where: { id: caseInvoiceModel.id },
-              data: {
-                name:
-                  "Invoice-" +
-                  caseModel.case_number +
-                  "-" +
-                  caseInvoiceModel.id,
-              },
-            });
-            await tx.logs.create({
+          if (total_amount <= caseModel.maximum_compensation) {
+            const caseInvoiceModel = await tx.case_invoices.create({
               data: {
                 case_id,
-                content: invoice.name + " added by " + session.user.name + ".",
+                user_id,
+                particulars,
+                total_amount,
+                due_on,
               },
             });
-            response.success = true;
-            response.message = "Invoice added successfully.";
+            if (caseInvoiceModel) {
+              const invoice = await tx.case_invoices.update({
+                where: { id: caseInvoiceModel.id },
+                data: {
+                  name:
+                    "Invoice-" +
+                    caseModel.case_number +
+                    "-" +
+                    caseInvoiceModel.id,
+                },
+              });
+              await tx.logs.create({
+                data: {
+                  case_id,
+                  content:
+                    invoice.name + " added by " + session.user.name + ".",
+                },
+              });
+              response.success = true;
+              response.message = "Invoice added successfully.";
+            }
+          } else {
+            response.error = true;
+            response.message =
+              "Total invoice amount can not be greater than maximum compensation amount.";
           }
+        } else {
+          response.error = true;
+          response.message = "Record not found.";
         }
       });
     }
