@@ -6,9 +6,13 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   let response = {};
   const permissionReq = await request.json();
-  console.log(permissionReq.permissions[0].role_id);
   try {
     if (permissionReq) {
+      const validated = await validateAsync(permissionSchema, permissionReq);
+      if (validated.errors) {
+        response.error = true;
+        response.message = validated.errors;
+      } else {
         const deletedData = await prisma.permissions.deleteMany({
           where: {
             role_id: permissionReq.permissions[0].role_id,
@@ -16,18 +20,15 @@ export async function POST(request) {
         });
         if (deletedData) {
           const record = await prisma.permissions.createMany({
-            data: [
-              {
-                role_id: permissionReq.permissions[0].role_id,
-                route_id: permissionReq.permissions[0].route_id,
-              },
-            ],
+            data: permissionReq.permissions,
           });
+
           if (record) {
             response.success = true;
-            response.message = "Permission assigned successfully!";
+            response.message = "Permissions assigned successfully!";
             response.record = record;
           }
+        }
       }
     }
   } catch (error) {

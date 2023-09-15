@@ -102,7 +102,7 @@ export default function ListRoles() {
               </thead>
               <tbody>
                 {records.map((record, index) => (
-                  <tr>
+                  <tr key={`roles-${index}`}>
                     <td>
                       {pageNumber * recordPerPage -
                         recordPerPage +
@@ -135,14 +135,14 @@ export default function ListRoles() {
                           eventKey="1"
                           onClick={() => getRecord(record.id)}
                         >
-                          <span class="mdi mdi-pencil"></span>
+                          <span className="mdi mdi-pencil"></span>
                           Edit
                         </Dropdown.Item>
                         <Dropdown.Item
                           eventKey="2"
                           onClick={() => deleteRecord(record.id)}
                         >
-                          <span class="mdi mdi-delete"></span>
+                          <span className="mdi mdi-delete"></span>
                           Delete
                         </Dropdown.Item>
                         <Dropdown.Item
@@ -152,7 +152,7 @@ export default function ListRoles() {
                             setRecordId(record.id);
                           }}
                         >
-                          <span class="mdi mdi-pencil"></span>
+                          <span class="mdi mdi-key-variant"></span>
                           Permissions
                         </Dropdown.Item>
                       </DropdownButton>

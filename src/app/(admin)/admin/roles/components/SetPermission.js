@@ -1,7 +1,6 @@
 "use client";
 
 import permissionSchema from "@/joi/permissionSchema";
-import rolesSchema from "@/joi/rolesSchema";
 import common from "@/utils/common";
 import validateAsync from "@/utils/validateAsync";
 import React, { useState, useEffect } from "react";
@@ -15,7 +14,6 @@ export default function SetPermission(props) {
   const [routes, setRoutes] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [errors, setErrors] = useState({});
-  // const [fields, setFields] = useState([{ role_id: props.recordId, route_id: null }]);
   const [submitted, setSubmitted] = useState(false);
 
   const handleSelect = (e, roleId, routeId) => {
@@ -39,24 +37,29 @@ export default function SetPermission(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-      await fetch(common.apiPath(`/admin/permissions/save`), {
-        method: "POST",
-        body: JSON.stringify({permissions: [...permissions]}),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            props.closeModal();
-            getRoutes();
-            toast.success(response.message);
-          } else if (response.error) {
-            handleErrors(response.message);
-          }
+      const validated = await validateAsync(permissionSchema, {permissions: permissions})
+      if(validated.errors){
+        handleErrors(validated.errors)
+      }else{
+        await fetch(common.apiPath(`/admin/permissions/save`), {
+          method: "POST",
+          body: JSON.stringify({permissions: [...permissions]}),
         })
-        .catch((error) => {
-          toast.error(error.message);
-        })
-        .finally(() => setSubmitted(false));
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.success) {
+              props.closeModal();
+              getRoutes();
+              toast.success(response.message);
+            } else if (response.error) {
+              handleErrors(response.message);
+            }
+          })
+          .catch((error) => {
+            toast.error(error.message);
+          })
+          .finally(() => setSubmitted(false));
+      }
   };
 
   const getRoutes = async () => {
@@ -76,8 +79,7 @@ export default function SetPermission(props) {
       })
       .finally(() => setLoader(false));
   };
-
-  console.log(permissions);
+  
   let routeId = permissions.map(item=> item.route_id)
   useEffect(() => {
     getRoutes();
@@ -96,12 +98,12 @@ export default function SetPermission(props) {
         <Modal.Header closeButton>
           <h3>{props.recordId ? "Update" : "Assign"} Permission</h3>
         </Modal.Header>
-        <Modal.Body ModalBody className="pl-4 pr-4" style={{ minHeight: 250 }}>
+        <Modal.Body className="pl-4 pr-4 role_permission" style={{ minHeight: 250 }}>
           <LoadingOverlay active={loader} spinner text="Loading...">
             {routes.map((route, i) => {
               const { label, id, children } = route;
               return (
-                <Card key={i}>
+                <Card key={i} className="my-2">
                   <Card.Header>
                     <Form.Check
                       type="checkbox"
@@ -109,9 +111,10 @@ export default function SetPermission(props) {
                     >
                       <Form.Check.Input
                         type="checkbox"
-                        checked={permissions.includes(id)}
+                        checked={routeId.includes(id)}
+                        onChange={()=>{}}
                       />
-                      <Form.Check.Label>{label}</Form.Check.Label>
+                      <Form.Check.Label className="mt-2">{label}</Form.Check.Label>
                     </Form.Check>
                   </Card.Header>
                   {children.length > 0 ? (
@@ -120,9 +123,8 @@ export default function SetPermission(props) {
                         {children.map((child, index) => {
                           const { label, url, id } = child;
                           return (
-                            <Col md={3}>
+                            <Col md={3} key={`route-${index}-${i}`}>
                               <Form.Check
-                                key={`route-${index}-${i}`}
                                 type="checkbox"
                                 id={`route-${index}-${i}-${id}`}
                               >

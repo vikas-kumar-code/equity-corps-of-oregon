@@ -33850,3 +33850,7 @@ div.tagsinput span.tag a {
 .min-list-height {
   min-height: 400px;
 }
+
+.role_permission .card .card-body {
+  padding: 0.75rem 1.5625rem !important;
+}
