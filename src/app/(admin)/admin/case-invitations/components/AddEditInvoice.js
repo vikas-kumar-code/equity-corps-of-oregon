@@ -155,7 +155,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 <Col>
                   <h4 className="text-end">
                     Max Compensation :{" "}
-                    {common.currencyFormat(record.maximum_compensation)}
+                    {common.currencyFormat(record.maximum_compensation,2)}
                   </h4>
                 </Col>
               </Row>
