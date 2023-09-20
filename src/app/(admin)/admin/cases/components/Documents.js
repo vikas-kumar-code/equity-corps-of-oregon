@@ -51,29 +51,34 @@ export default function Documents(props) {
     e.preventDefault();
     if (handleValidation()) {
       setSubmitted(true);
-      const data = new FormData();
-      data.append("document", selectedDocument);
-      const res = await fetch(common.apiPath("/upload"), {
-        method: "POST",
-        body: data,
-      });
-      const response = await res.json();
-      if (response.success) {
-        props?.updateDocuments([
-          ...props?.documents,
-          {
-            document_name: documentName,
-            file_name: response.file,
-            uploaded_on: new Date(),
-          },
-        ]);
-        setDocumentName("");
-        setSelectedDocument(null);
-        window.document.getElementById("document").value = "";
-      } else {
-        toast.error(response.message);
+      try {
+        const data = new FormData();
+        data.append("document", selectedDocument);
+        const res = await fetch(common.apiPath("/upload"), {
+          method: "POST",
+          body: data,
+        });
+        const response = await res.json();
+        if (response.success) {
+          props?.updateDocuments([
+            ...props?.documents,
+            {
+              document_name: documentName,
+              file_name: response.file,
+              uploaded_on: new Date(),
+            },
+          ]);
+          setDocumentName("");
+          setSelectedDocument(null);
+          window.document.getElementById("document").value = "";
+        } else {
+          toast.error(response.message);
+        }
+      } catch (err) {
+        toast.error(err.message);
+      } finally {
+        setSubmitted(false);
       }
-      setSubmitted(false);
     }
   };
 

@@ -18,8 +18,6 @@ const placeholders = (models = {}) => {
     // Populating case roles
     role_name: `${models?.roles?.name || "N/A"}`,
 
-    // Populating case associated names
-    case_associated_name: `${models?.case_associated_names?.name || "N/A"}`,
   };
 };
 

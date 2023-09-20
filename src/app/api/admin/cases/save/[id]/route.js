@@ -22,15 +22,6 @@ export async function PUT(request, data) {
     } else {
       // begin transaction
       await prisma.$transaction(async (tx) => {
-        // delete all Case associated names
-        const deleteAssociatedNames = await tx.case_associated_names.deleteMany(
-          {
-            where: {
-              case_id: caseId,
-            },
-          }
-        );
-
         // delete all Milestones
         const deleteMilestones = await tx.case_milestones.deleteMany({
           where: {
@@ -54,11 +45,6 @@ export async function PUT(request, data) {
             case_number: validated.case_number,
             title: validated.title,
             maximum_compensation: validated.maximum_compensation,
-            case_associated_names: {
-              create: validated.belongs_to.map((belongsTo) => {
-                return { name: belongsTo };
-              }),
-            },
             description: validated.description,
             case_milestones: { create: validated.milestones },
             case_documents: {

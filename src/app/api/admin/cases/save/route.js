@@ -23,12 +23,7 @@ export async function POST(request) {
           added_by: session.user.id,
           maximum_compensation: data.maximum_compensation,
           case_number: data.case_number,
-          title: data.title,
-          case_associated_names: {
-            create: data.belongs_to.map((belongsTo) => {
-              return { name: belongsTo };
-            }),
-          },
+          title: data.title,       
           description: data.description,
           case_milestones: { create: data.milestones },
           case_documents: {

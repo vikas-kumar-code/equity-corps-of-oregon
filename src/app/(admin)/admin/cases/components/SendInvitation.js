@@ -29,49 +29,51 @@ const SendInvitation = (props) => {
     if (searchTimeOut > 0) {
       clearTimeout(searchTimeOut);
     }
-
     return new Promise((resolve) => {
       if (inputValue !== "") {
         searchTimeOut = setTimeout(() => {
-          fetch(
-            common.apiPath(
-              `/admin/users/search/?role_id=3&keyword=${inputValue}`
-            )
-          )
-            .then((response) => response.json())
-            .then((response) => {
-              if (response.success) {
-                let userResponse = JSON.parse(response.records);
-                const excludeUsers = [];
-                // Exclude invited users
-                if (props?.invitedUsers) {
-                  props?.invitedUsers.forEach((item) => {
-                    if (item?.user?.id) {
-                      excludeUsers.push(item?.user?.id);
-                    }
-                  });
-                }
-                let users = userResponse.filter(
-                  (user) => !excludeUsers.includes(user.id)
-                );
-                users = users.map((user) => ({
-                  label: user.name,
-                  value: user.id,
-                }));
-                setUsers(users);
-                resolve(filterUser(inputValue));
-              } else if (response.error) {
-                toast.error(response.message);
-              }
-            })
-            .catch((error) => {
-              toast.error(error.message);
-            });
+          resolve(filterUser(inputValue));
         }, 500);
       } else {
         resolve(filterUser(inputValue));
       }
     });
+  };
+
+  const loadUsers = async () => {
+    setErrors(null);
+    try {
+      await fetch(common.apiPath(`/admin/users/search/?role_id=3`))
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            let userResponse = JSON.parse(response.records);
+            const excludeUsers = [];
+            // Exclude invited users
+            if (props?.invitedUsers) {
+              props?.invitedUsers.forEach((item) => {
+                if (item?.user?.id) {
+                  excludeUsers.push(item?.user?.id);
+                }
+              });
+            }
+            let users = userResponse.filter(
+              (user) => !excludeUsers.includes(user.id)
+            );
+            users = users.map((user) => ({
+              label: user.name,
+              value: user.id,
+            }));
+            setUsers(users);
+          } else if (response.error) {
+            toast.error(response.message);
+          }
+        });
+    } catch (e) {
+      toast.error(e.message);
+    } finally {
+      setLoader(false);
+    }
   };
 
   const filterUser = (inputValue) => {
@@ -126,7 +128,7 @@ const SendInvitation = (props) => {
           .then((response) => {
             if (response.success) {
               toast.success(response.message);
-              props.reloadRecords();
+              props.reloadRecords();              
             } else if (response.error) {
               toast.error(response.message);
             }
@@ -154,6 +156,10 @@ const SendInvitation = (props) => {
     },
   };
 
+  useEffect(() => {
+    loadUsers();
+  }, []);
+
   return (
     <Modal
       show={props.showModal}
@@ -168,11 +174,11 @@ const SendInvitation = (props) => {
           <Modal.Header closeButton className="border-bottom-0">
             <h3>Send Invitation</h3>
           </Modal.Header>
-          <Modal.Body className="show-error">
+          <Modal.Body className="show-error pt-0">
             {props?.invitedUsers && props?.invitedUsers?.length > 0 && (
               <div
                 className="table-responsive mb-2"
-                style={{ maxHeight: "200px" }}
+                style={{ maxHeight: "45vh", minHeight: "auto" }}
               >
                 <Table
                   bordered
@@ -196,7 +202,7 @@ const SendInvitation = (props) => {
                       return (
                         <tr>
                           <td>
-                            {`${data?.user?.name}`} <br />{" "}
+                            {`${data?.user?.name}`} <br />
                             {`${data?.user?.email}`}
                           </td>
                           <td className="text-center">
@@ -229,9 +235,9 @@ const SendInvitation = (props) => {
               <AsyncSelect
                 className="multi-select-input"
                 isMulti
-                cacheOptions
-                defaultOptions
+                cacheOptions                
                 loadOptions={promiseUserOptions}
+                defaultOptions={users}
                 value={selected}
                 onChange={setSelected}
               />
