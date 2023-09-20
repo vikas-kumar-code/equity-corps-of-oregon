@@ -83,7 +83,7 @@ export async function POST(request, data) {
             response.error = true;
             response.message = {
               total_amount:
-                "Max due amount is " +
+                "Due amount is " +
                 common.currencyFormat(
                   caseInvoice.total_amount - paidAmount,
                   2

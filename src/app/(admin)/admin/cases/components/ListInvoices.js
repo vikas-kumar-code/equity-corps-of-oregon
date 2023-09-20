@@ -98,7 +98,7 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                     MAX COMPENSATION:{" "}
                     <strong>
                       {common.currencyFormat(
-                        records.case?.maximum_compensation
+                        records.case?.maximum_compensation,2
                       )}
                     </strong>
                   </h6>
