@@ -61,7 +61,7 @@ export default function Documents(props) {
         <Col md={8}>
           <LoadingOverlay active={loader} spinner text="Loading...">
             <Card>
-              <Card.Body>
+              <Card.Body style={{ maxHeight: "55vh", overflowY: "auto" }}>
                 <Card.Title>Documents</Card.Title>
                 <div className="table-responsive min-list-height">
                   <table className="table">

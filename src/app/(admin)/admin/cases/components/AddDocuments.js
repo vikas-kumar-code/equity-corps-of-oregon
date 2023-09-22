@@ -75,9 +75,9 @@ function AddDocuments(props) {
               uploaded_on: new Date(),
             };
           });
-          props?.updateDocuments([...props.documents,...docList]);
+          props?.updateDocuments([...props.documents, ...docList]);
           handleClose();
-          toast.success('File uploaded successfully.');
+          toast.success("File uploaded successfully.");
         } else {
           toast.error(response.message);
         }
@@ -89,7 +89,7 @@ function AddDocuments(props) {
     }
   };
 
-  const handleValidation = () => {      
+  const handleValidation = () => {
     if (Array.isArray(documents) && documents.length > 0) {
       if (
         Array.isArray(documentNames) &&
@@ -109,52 +109,50 @@ function AddDocuments(props) {
   return (
     <>
       <Card>
-        <Card.Body>
+        <Card.Body style={{ maxHeight: "47vh", overflowY: "auto" }}>
           <Card.Title>Upload Documents</Card.Title>
           {documents && (
-            <div style={{ maxHeight: "65vh", overflowY: "auto" }}>
-              <Table borderless bordered>
-                <tbody>
-                  {Array.isArray(documents) &&
-                    documents?.map((doc, index) => {
-                      return (
-                        <tr>
-                          <td className="p-0">
-                            <FloatingLabel
-                              key={index}
-                              label={`Document ${index + 1}`}
-                              className="mb-2"
-                            >
-                              <Form.Control
+            <Table borderless bordered>
+              <tbody>
+                {Array.isArray(documents) &&
+                  documents?.map((doc, index) => {
+                    return (
+                      <tr>
+                        <td className="p-0">
+                          <FloatingLabel
+                            key={index}
+                            label={`Document ${index + 1}`}
+                            className="mb-2"
+                          >
+                            <Form.Control
                               className="pe-5"
-                                type="text"
-                                name="document_name"
-                                placeholder="Document name"
-                                value={documentNames[index] || ""}
-                                onChange={(e) => {
-                                  let docs = [...documentNames];
-                                  docs[index] = e.target.value;
-                                  setDocumentNames(docs);
-                                }}
-                              />
-                              <Button
-                                key={index}
-                                variant="secondary"
-                                size="sm"
-                                className="doc-remove"
-                                onClick={() => removeDocument(index)}
-                                style={{ top: 17 }}
-                              >
+                              type="text"
+                              name="document_name"
+                              placeholder="Document name"
+                              value={documentNames[index] || ""}
+                              onChange={(e) => {
+                                let docs = [...documentNames];
+                                docs[index] = e.target.value;
+                                setDocumentNames(docs);
+                              }}
+                            />
+                            <Button
+                              key={index}
+                              variant="secondary"
+                              size="sm"
+                              className="doc-remove"
+                              onClick={() => removeDocument(index)}
+                              style={{ top: 17 }}
+                            >
                               <span class="mdi mdi-close-circle"></span>
-                              </Button>
-                            </FloatingLabel>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </Table>
-            </div>
+                            </Button>
+                          </FloatingLabel>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </Table>
           )}
           <Form.Group controlId="formFileLg" className="mb-3">
             <Form.Control
