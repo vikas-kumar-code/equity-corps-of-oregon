@@ -33,7 +33,25 @@ export async function PUT(request, data) {
           total_amount = Number(total_amount.toFixed(2));
           let particulars = JSON.stringify(validated.particulars);
 
-          if (total_amount <= caseModel.maximum_compensation) {
+          const caseInvoices = await prisma.case_invoices.findMany({
+            where: {
+              case_id: caseModel.id,
+              user_id: session.user.id,
+              NOT: {
+                id: id,
+              },
+            },
+          });
+
+             
+          let allInvoiceAmout = total_amount;
+          if (caseInvoices) {
+            caseInvoices.forEach((item) => {
+              allInvoiceAmout += Number(item.total_amount);
+            });            
+          }
+
+          if (allInvoiceAmout <= caseModel.maximum_compensation) {
             const caseInvoiceModel = await prisma.case_invoices.update({
               where: { id, user_id: session.user.id },
               data: {
@@ -62,7 +80,7 @@ export async function PUT(request, data) {
           } else {
             response.error = true;
             response.message =
-              "Total invoice amount can not be greater than maximum compensation amount.";
+              "The total amount of all invoices cannot exceed the maximum compensation amount."
           }
         } else {
           response.error = true;

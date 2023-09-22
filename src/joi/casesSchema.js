@@ -1,19 +1,13 @@
 const Joi = require("joi");
 
 const maxMilestones = 4;
-const maxDocuments = 5;
-const maxAssociatedNames = 20;
+const maxDocuments = 200;
 
 const casesSchema = Joi.object({
   title: Joi.string().max(255).required(),
-  case_number: Joi.string().alphanum().required(),
+  case_number: Joi.string().required(),
   maximum_compensation: Joi.number().min(1).required(),
-  belongs_to: Joi.array()
-    .items(Joi.string().max(50).label("Case belongs to"))
-    .min(1)
-    .max(maxAssociatedNames)
-    .required(),
-  description: Joi.string(),
+  description: Joi.string().optional().allow(null,""," "),
   status: Joi.number().integer().default(1),
   milestones: Joi.array()
     .items(
@@ -41,14 +35,9 @@ const casesSchema = Joi.object({
 
 const casesSchemaForm1 = Joi.object({
   title: Joi.string().max(255).required(),
-  case_number: Joi.string().alphanum().required(),
-  maximum_compensation: Joi.number().min(1).required(),
-  belongs_to: Joi.array()
-    .items(Joi.string().max(maxAssociatedNames).label("Case belongs to"))
-    .min(1)
-    .max(50)
-    .required(),
-  description: Joi.string(),
+  case_number: Joi.string().required(),
+  maximum_compensation: Joi.number().min(1).required(),  
+  description: Joi.string().optional().allow(null,""," "),
 });
 
 const casesSchemaForm2 = Joi.object({

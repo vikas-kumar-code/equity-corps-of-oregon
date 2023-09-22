@@ -10,7 +10,6 @@ export async function GET(request, data) {
         id: Number(data.params.id),
       },
       include: {
-        case_associated_names: true,
         case_milestones: true,
         case_documents: true,
         logs: {
@@ -23,10 +22,7 @@ export async function GET(request, data) {
     response.data = {
       case_number: record.case_number,
       title: record.title,
-      maximum_compensation: record.maximum_compensation,
-      belongs_to: record.case_associated_names.map(
-        (belongsTo) => belongsTo.name
-      ),
+      maximum_compensation: record.maximum_compensation,    
       description: record.description,
       milestones:
         record.case_milestones.map((milestone) => {

@@ -32,7 +32,6 @@ export default function AddEditCase(props) {
     title: "",
     case_number: "",
     maximum_compensation: "",
-    belongs_to: [],
     description: "",
     milestones: [],
     documents: [],
@@ -121,11 +120,7 @@ export default function AddEditCase(props) {
               if (typeof response.message === "object") {
                 setErrors(response.message);
                 const eFileds = response.message;
-                if (
-                  "case_number" in eFileds ||
-                  "belongs_to" in eFileds ||
-                  "description" in eFileds
-                ) {
+                if ("case_number" in eFileds || "description" in eFileds) {
                   setActiveTab(1);
                 } else if ("milestones" in eFileds) {
                   setActiveTab(2);
@@ -243,7 +238,7 @@ export default function AddEditCase(props) {
           <Modal.Header closeButton className="border-bottom-0">
             <h3>{props.recordId ? "Update" : "Add New"} Case</h3>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className="pt-0">
             <Tabs
               activeKey={activeTab}
               id="justify-tab-example"
@@ -278,7 +273,9 @@ export default function AddEditCase(props) {
                         type="text"
                         name="case_number"
                         placeholder="case_number"
-                        onChange={(event) => handleChange(event, "case_number")}
+                        onChange={(event) => {                          
+                          setFields({...fields, case_number: event.target.value.replace(/ /g,"")})
+                        }}                          
                         isInvalid={!!errors.case_number}
                         value={fields.case_number ? fields.case_number : ""}
                       />
@@ -297,12 +294,15 @@ export default function AddEditCase(props) {
                       <Form.Control
                         type="text"
                         name="maximum_compensation"
-                        placeholder="Maximum compensation"                        
+                        placeholder="Maximum compensation"
                         onChange={(event) =>
-                          setFields({...fields, maximum_compensation: common.currencyToNumber(event.target.value)})                          
+                          setFields({
+                            ...fields,
+                            maximum_compensation: event.target.value,
+                          })
                         }
                         isInvalid={!!errors.maximum_compensation}
-                        value={common.currencyFormat(fields.maximum_compensation)}
+                        value={fields.maximum_compensation}
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.maximum_compensation}
@@ -310,25 +310,10 @@ export default function AddEditCase(props) {
                     </FloatingLabel>
                   </Form.Group>
 
-                  <Form.Group as={Col} md={12} className="mb-4 show-error">
-                    <Form.Label>Case Belongs To</Form.Label>
-                    <TagsInput
-                      value={fields.belongs_to}
-                      onChange={(tags) =>
-                        setFields({ ...fields, belongs_to: tags })
-                      }
-                      name="fruits"
-                      placeHolder="Enter Name Of Person Who Belongs To This Case."
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.belongs_to}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                  <Form.Group as={Col} md={12} className="mb-2">
+                  <Form.Group as={Col} md={12}>
                     <FloatingLabel
                       controlId="floatingInput3"
-                      label="Description"
-                      className="mb-3"
+                      label="Description"                      
                     >
                       <Form.Control
                         as="textarea"
@@ -337,9 +322,9 @@ export default function AddEditCase(props) {
                         onChange={(event) => handleChange(event, "description")}
                         isInvalid={!!errors.description}
                         value={fields.description ? fields.description : ""}
-                        style={{ height: 200 }}
+                        style={{ height: 130 }}
                       />
-                      <Form.Control.Feedback type="invalid">
+                      <Form.Control.Feedback type="invalid" className="mt-3">
                         {errors.description}
                       </Form.Control.Feedback>
                     </FloatingLabel>

@@ -29,8 +29,23 @@ export async function POST(request) {
         const caseModel = await tx.cases.findUnique({
           where: { id: case_id },
         });
+
         if (caseModel) {
-          if (total_amount <= caseModel.maximum_compensation) {
+          const caseInvoices = await tx.case_invoices.findMany({
+            where: {
+              case_id: caseModel.id,
+              user_id: user_id,
+            },
+          });
+
+          let allInvoiceAmout = total_amount;
+          if (caseInvoices) {
+            caseInvoices.forEach((item) => {
+              allInvoiceAmout += Number(item.total_amount);
+            });            
+          }
+
+          if (allInvoiceAmout <= caseModel.maximum_compensation) {
             const caseInvoiceModel = await tx.case_invoices.create({
               data: {
                 case_id,
@@ -64,7 +79,7 @@ export async function POST(request) {
           } else {
             response.error = true;
             response.message =
-              "Total invoice amount can not be greater than maximum compensation amount.";
+              "The total amount of all invoices cannot exceed the maximum compensation amount.";
           }
         } else {
           response.error = true;

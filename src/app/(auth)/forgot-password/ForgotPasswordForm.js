@@ -11,24 +11,18 @@ import { toast } from "react-toastify";
 
 export default function ForgotPasswordForm() {
   const [fields, setFields] = useState({});
-  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState(null);
   const [loader, setLoader] = useState(false);
   const [status, setStatus] = useState(1);
 
   const handleErrors = (errors) => {
-    if (typeof errors === "object") {
-      setErrors(errors);
-    } else if (typeof errors === "string") {
-      toast.error(errors);
-    } else {
-      toast.error("Something went wrong...! please try again.");
-    }
+    setErrors(errors);
   };
 
   const sendVerificationCode = async (e) => {
     e.preventDefault();
     setLoader(true);
-    setError(null);
+    setErrors(null);
     try {
       const validated = await validateAsync(emailSchema, fields);
       if (validated.errors) {
@@ -57,7 +51,7 @@ export default function ForgotPasswordForm() {
   const submitNewPassword = async (e) => {
     e.preventDefault();
     setLoader(true);
-    setError(null);
+    setErrors(null);
     try {
       const validated = await validateAsync(resetPasswordSchema, fields);
       if (validated.errors) {
@@ -91,8 +85,8 @@ export default function ForgotPasswordForm() {
         <div>
           <h3 className="card-title text-left mb-3">Forgot Password?</h3>
           <Form onSubmit={sendVerificationCode}>
-            {typeof error == "string" && (
-              <p className="text-danger text-center uc-first">{error}</p>
+            {typeof errors == "string" && (
+              <p className="text-danger text-center uc-first">{errors}</p>
             )}
             <Form.Group className="mb-2">
               <Form.Label>Email *</Form.Label>
@@ -105,10 +99,10 @@ export default function ForgotPasswordForm() {
                 onChange={(event) =>
                   setFields({ ...fields, email: event.target.value })
                 }
-                isInvalid={!!error?.email}
+                isInvalid={!!errors?.email}
               />
               <Form.Control.Feedback type="invalid">
-                {error?.email}
+                {errors?.email}
               </Form.Control.Feedback>
             </Form.Group>
             <div className="form-group d-flex align-items-center justify-content-between">
@@ -151,10 +145,10 @@ export default function ForgotPasswordForm() {
                 onChange={(event) =>
                   setFields({ ...fields, password: event.target.value })
                 }
-                isInvalid={!!error?.password}
+                isInvalid={!!errors?.password}
               />
               <Form.Control.Feedback type="invalid">
-                {error?.password}
+                {errors?.password}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-2">
@@ -170,11 +164,11 @@ export default function ForgotPasswordForm() {
                     password_confirmation: event.target.value,
                   })
                 }
-                isInvalid={!!error?.password_confirmation}
+                isInvalid={!!errors?.password_confirmation}
               />
-              {error?.password_confirmation && (
+              {errors?.password_confirmation && (
                 <Form.Control.Feedback type="invalid">
-                  {error?.password_confirmation}
+                  {errors?.password_confirmation}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
@@ -191,10 +185,10 @@ export default function ForgotPasswordForm() {
                     verification_code: event.target.value,
                   })
                 }
-                isInvalid={!!error?.verification_code}
+                isInvalid={!!errors?.verification_code}
               />
               <Form.Control.Feedback type="invalid">
-                {error?.verification_code}
+                {errors?.verification_code}
               </Form.Control.Feedback>
             </Form.Group>
             <div className="d-grid mt-3">
