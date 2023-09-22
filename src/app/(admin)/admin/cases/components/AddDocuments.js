@@ -126,6 +126,7 @@ function AddDocuments(props) {
                               className="mb-2"
                             >
                               <Form.Control
+                              className="pe-5"
                                 type="text"
                                 name="document_name"
                                 placeholder="Document name"
@@ -186,7 +187,7 @@ function AddDocuments(props) {
           </Button>
           <Button
             variant="success"
-            type="submit"
+            type="button"
             disabled={submitted}
             onClick={handleUpload}
           >

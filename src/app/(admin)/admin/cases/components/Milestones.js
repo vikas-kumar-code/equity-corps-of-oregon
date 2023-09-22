@@ -14,7 +14,7 @@ function Milestones(props) {
     }
   };
   return (
-    <>
+    <div className="p-3">
       <Row>
         <Col className="">Milestones</Col>
         <Col className="text-end">
@@ -80,7 +80,7 @@ function Milestones(props) {
           }
         />
       </Row>
-    </>
+    </div>
   );
 }
 
