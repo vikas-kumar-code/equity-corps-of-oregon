@@ -14,65 +14,68 @@ function Milestones(props) {
     }
   };
   return (
-    <Row>
-      <Col md={12} className="text-end">
+    <div className="card2">
+      <div className="card2-header">
+        <div className="card2-title"> Milestones</div>
         <Button variant="primary" onClick={() => setShowModal(true)}>
-          Add New Milestone
-        </Button>
-      </Col>
-      <Col md={12} sm={12}>
-        <div className="table-responsive show-error min-list-height">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Date </th>
-                <th>Comment</th>
-                <th className="text-end">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {props?.milestones?.map((record, index) => (
-                <tr key={`milestones-key-${index}`}>
-                  <td>{Number(index + 1)}.</td>
-                  <td>
-                    {moment(new Date(record.milestone_date)).format(
-                      "MMMM DD, YYYY"
-                    )}
-                  </td>
-                  <td>{record.comment}</td>
-                  <td className="text-end">
-                    {record.case_id !== undefined && (
-                      <Button variant="primary" className="me-2">
-                        Edit
-                      </Button>
-                    )}
-                    <Button
-                      variant="danger"
-                      onClick={() => deleteRecord(index)}
-                      size="sm"
-                    >
-                      Delete
-                    </Button>
-                  </td>
+            Add New Milestone
+          </Button>
+      </div>
+      <Row>
+        <Col md={12} sm={12}>
+          <div className="table-responsive overflow-auto" style={{height:'45vh'}}>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Date </th>
+                  <th>Comment</th>
+                  <th className="text-end">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <Form.Control.Feedback type="invalid" className="text-center pt-4">
-            {props?.errors?.milestones}
-          </Form.Control.Feedback>
-        </div>
-      </Col>
-      <AddEditMilestone
-        setErrors={props.setErrors}
-        showModal={showModal}
-        closeModal={() => setShowModal(false)}
-        updateMilestones={(milestones) =>
-          props?.updateMilestones([...props?.milestones, milestones])
-        }
-      />
-    </Row>
+              </thead>
+              <tbody>
+                {props?.milestones?.map((record, index) => (
+                  <tr key={`milestones-key-${index}`}>
+                    <td>{Number(index + 1)}.</td>
+                    <td>
+                      {moment(new Date(record.milestone_date)).format(
+                        "MMMM DD, YYYY"
+                      )}
+                    </td>
+                    <td>{record.comment}</td>
+                    <td className="text-end">
+                      {record.case_id !== undefined && (
+                        <Button variant="primary" className="me-2">
+                          Edit
+                        </Button>
+                      )}
+                      <Button
+                        variant="danger"
+                        onClick={() => deleteRecord(index)}
+                        size="sm"
+                      >
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <Form.Control.Feedback type="invalid" className="text-center pt-4">
+              {props?.errors?.milestones}
+            </Form.Control.Feedback>
+          </div>
+        </Col>
+        <AddEditMilestone
+          setErrors={props.setErrors}
+          showModal={showModal}
+          closeModal={() => setShowModal(false)}
+          updateMilestones={(milestones) =>
+            props?.updateMilestones([...props?.milestones, milestones])
+          }
+        />
+      </Row>
+    </div>
   );
 }
 

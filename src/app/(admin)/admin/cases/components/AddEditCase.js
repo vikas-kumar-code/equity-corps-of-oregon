@@ -238,7 +238,7 @@ export default function AddEditCase(props) {
           <Modal.Header closeButton className="border-bottom-0">
             <h3>{props.recordId ? "Update" : "Add New"} Case</h3>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className="pt-0">
             <Tabs
               activeKey={activeTab}
               id="justify-tab-example"
@@ -310,11 +310,10 @@ export default function AddEditCase(props) {
                     </FloatingLabel>
                   </Form.Group>
 
-                  <Form.Group as={Col} md={12} className="mb-2">
+                  <Form.Group as={Col} md={12}>
                     <FloatingLabel
                       controlId="floatingInput3"
-                      label="Description"
-                      className="mb-3"
+                      label="Description"                      
                     >
                       <Form.Control
                         as="textarea"
@@ -323,9 +322,9 @@ export default function AddEditCase(props) {
                         onChange={(event) => handleChange(event, "description")}
                         isInvalid={!!errors.description}
                         value={fields.description ? fields.description : ""}
-                        style={{ height: 200 }}
+                        style={{ height: 130 }}
                       />
-                      <Form.Control.Feedback type="invalid">
+                      <Form.Control.Feedback type="invalid" className="mt-3">
                         {errors.description}
                       </Form.Control.Feedback>
                     </FloatingLabel>
