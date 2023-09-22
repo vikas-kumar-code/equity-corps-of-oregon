@@ -19,7 +19,6 @@ const params = {
     "jpeg",
     "png",
     "pdf",
-    "csv",
   ],
 };
 

@@ -35,23 +35,23 @@
   position: relative;
   top: -3px;
 }
-
-.card2 {
-  border: 1px solid #dfdfdf;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.card2-header {
-  background-color: #eee;
-  padding: 0.5rem 0.8rem;
-  margin: 0;
+.doc-remove {
+  border-radius: 50%;
+  position: absolute;
+  background-color: transparent !important;
+  top: 21px !important;
+  right: 10px;
+  font-size: 24px !important;
+  padding: 0;
+  height: 21px;
+  width: 26px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  color: #cf2222;
+  border: 0;
 }
-.card2-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #414550;
+
+.doc-remove:hover{
+  color: #c21111 !important;
 }

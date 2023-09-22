@@ -14,16 +14,21 @@ function Milestones(props) {
     }
   };
   return (
-    <div className="card2">
-      <div className="card2-header">
-        <div className="card2-title"> Milestones</div>
-        <Button variant="primary" onClick={() => setShowModal(true)}>
+    <>
+      <Row>
+        <Col className="">Milestones</Col>
+        <Col className="text-end">
+          <Button variant="primary" onClick={() => setShowModal(true)}>
             Add New Milestone
           </Button>
-      </div>
+        </Col>
+      </Row>
       <Row>
         <Col md={12} sm={12}>
-          <div className="table-responsive overflow-auto" style={{height:'45vh'}}>
+          <div
+            className="table-responsive overflow-auto"
+            style={{ height: "45vh" }}
+          >
             <table className="table">
               <thead>
                 <tr>
@@ -75,7 +80,7 @@ function Milestones(props) {
           }
         />
       </Row>
-    </div>
+    </>
   );
 }
 

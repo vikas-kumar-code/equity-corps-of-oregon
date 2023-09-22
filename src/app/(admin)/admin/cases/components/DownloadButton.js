@@ -18,15 +18,15 @@ const DownloadButton = ({ path = "", fileName = "" }) => {
       URL.revokeObjectURL(anchor.href);
       document.body.removeChild(anchor);
       setLoader(false);
-    } catch (error) {        
+    } catch (error) {
       setLoader(false);
     }
   };
 
   return (
-    <Button variant="primary" size="sm" onClick={downloadFile}>
-      {loader && <Spinner size="sm" variant="light" className="me-1" />}
-      Download
+    <Button variant="none" size="sm" onClick={downloadFile}>
+      {loader && <Spinner size="sm" variant="light" className="me-1 p-0" />}
+      <span class="mdi mdi-folder-download text-success fs-4"></span>
     </Button>
   );
 };
