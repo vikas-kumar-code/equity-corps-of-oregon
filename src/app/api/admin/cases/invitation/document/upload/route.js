@@ -1,73 +1,79 @@
 import { NextResponse } from "next/server";
-import { extname } from "path";
-import { writeFile } from "fs/promises";
-import { existsSync, mkdirSync } from "fs";
-import common from "@/utils/common";
 import prisma from "@/utils/prisma";
-import { getSession } from "@/utils/serverHelpers";
+import { getSession, moveFile } from "@/utils/serverHelpers";
+import common from "@/utils/common";
 
 export async function POST(request) {
   const response = {};
   try {
-    const data = await request.formData();
+    const data = await request.json();
     const session = await getSession();
 
-    if (data.get("document")) {
-      if (data.get("document_name")) {
-        if (data.get("case_id")) {
-          const caseModel = await prisma.cases.findUnique({
-            where: { id: parseInt(data.get("case_id")) },
-          });
-          if (caseModel) {
-            const file = data.get("document");
-            const bytes = await file.arrayBuffer();
-            const buffer = Buffer.from(bytes);
-            const fileExt = extname(file.name);
-            const fileName = Date.now() + fileExt;
-            const destPath = common.basePath("public/uploads/case_documents");
-            const saveFilePath = common.basePath(
-              "public/uploads/case_documents/" + fileName
-            );
-            if (!existsSync(destPath)) {
-              mkdirSync(destPath, { recursive: true, mode: "777" });
-            }
-            await writeFile(saveFilePath, buffer);
-
-            const caseDocumentModel = await prisma.case_documents.create({
-              data: {
-                case_id: caseModel.id,
-                document_name: data.get("document_name"),
-                file_name: fileName,
-                uploaded_by: session.user.id,
+    if (data.documents) {
+      if (data.case_id) {
+        const caseModel = await prisma.cases.findUnique({
+          where: {
+            id: parseInt(data.case_id),
+            case_invitations: {
+              some: {
+                user_id: session.user.id,
               },
+            },
+          },
+        });
+        if (caseModel) {
+          if (Array.isArray(data.documents) && data.documents.length > 0) {
+            await prisma.$transaction(async (tx) => {
+              const caseDocumentModel = await tx.case_documents.createMany({
+                data: data.documents.map((item) => {
+                  return {
+                    case_id: caseModel.id,
+                    document_name: item.document_name,
+                    file_name: item.file_name,
+                    uploaded_by: session.user.id,
+                  };
+                }),
+              });
+              const uplaodedDocs = data.documents.map(
+                (item) => item.document_name
+              );
+              if (caseDocumentModel) {
+                // Move uploaded documents
+                data.documents.forEach((doc) => {
+                  moveFile(
+                    common.publicPath("temp/" + doc.file_name), // source path
+                    common.publicPath("uploads/case_documents/" + doc.file_name) // destination path
+                  );
+                });
+
+                await tx.logs.create({
+                  data: {
+                    case_id: caseModel.id,
+                    content:
+                      `Documents (${uplaodedDocs.join(",")}) uploaded by ` +
+                      session.user.name +
+                      ".",
+                  },
+                });
+
+                response.success = true;
+                response.message = "File uploaded successfully.";
+              } else {
+                response.error = true;
+                response.message = "Something went wrong. please try again.";
+              }
             });
-
-            await prisma.logs.create({
-              data: {
-                case_id: caseDocumentModel.case_id,
-                content: `Document (${caseDocumentModel.document_name}) uploaded by ` + session.user.name + ".",
-              },
-            });
-
-            if (caseDocumentModel) {
-
-              response.success = true;
-              response.message = "File uploaded successfully.";
-            } else {
-              response.error = true;
-              response.message = "Something went wrong. please try again.";
-            }
           } else {
             response.error = true;
-            response.message = "Record not found.";
+            response.message = "Something went wrong. please try again.";
           }
         } else {
           response.error = true;
-          response.message = "Case id is missing.";
+          response.message = "Record not found.";
         }
       } else {
         response.error = true;
-        response.message = "Document name is required.";
+        response.message = "Case id is missing.";
       }
     } else {
       response.error = true;

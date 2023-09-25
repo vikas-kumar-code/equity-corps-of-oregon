@@ -11518,8 +11518,7 @@ progress {
 
 .table-responsive {
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  min-height: 300px;
+  -webkit-overflow-scrolling: touch;  
 }
 
 @media (max-width: 575.98px) {
@@ -28892,8 +28891,8 @@ div.tagsinput {
 .jsgrid .jsgrid-table thead th {
   border-top: 0;
   border-bottom-width: 1px;
-  font-weight: 900;
-  color: #6c7293;
+  font-weight: 700;
+  color: #585e7d;
 }
 
 .table thead th i,
@@ -29149,7 +29148,7 @@ div.tagsinput {
 .tab-content {
   border: 1px solid #2c2e33;
   border-top: 0;
-  padding: 2rem 1rem;
+  padding: 1rem 1rem;
   text-align: justify;
 }
 
@@ -33777,11 +33776,11 @@ div.tagsinput span.tag a {
 
 /* button close */
 .btn-close {
-  background-color: #fff;
-  opacity: 1;
-  background-size: 44%;
-  padding: 6px !important;
-  margin: -23.5px 0px -12.5px auto !important;
+    background-color: #fff;
+    opacity: 1;
+    background-size: 44%;
+    padding: 6px !important;
+    margin-right: -2px !important;
 }
 
 /* button close */

@@ -17,10 +17,10 @@ export default withAuth(
         token.routes.find((route) => {
           const patternParts = route.url.split("/");
           const patternMethod = route.method?.toLowerCase() || "get";
-
+          
           // For pattern -> [[...path]]
-          if (patternParts.slice(-1) === "@path") {
-            if (requestedPath.startsWith(route.url.replace("@path"))) {
+          if (String(patternParts.slice(-1)) === "@path") {            
+            if (requestedPath.startsWith(route.url.replace("@path",''))) {
               if (requestParts.length >= patternParts.length) {
                 access = true;
               }
@@ -51,6 +51,7 @@ export default withAuth(
     // Send response for unauthorized access.
     if (!access) {
       if (requestedPath.startsWith("/api")) {
+        console.log('Access denied................................');
         return NextResponse.json({
           error: true,
           message: "You are not allowed to access this route.",

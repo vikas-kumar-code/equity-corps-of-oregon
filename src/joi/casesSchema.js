@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const maxMilestones = 4;
-const maxDocuments = 5;
+const maxDocuments = 200;
 
 const casesSchema = Joi.object({
   title: Joi.string().max(255).required(),

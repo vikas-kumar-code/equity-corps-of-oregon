@@ -3,12 +3,11 @@ import prisma from "@/utils/prisma";
 import { deleteFile, getSession } from "@/utils/serverHelpers";
 import path from "path";
 
-export async function DELETE(request) {
+export async function DELETE(request, data) {
   const response = {};
   try {
-    const session = await getSession();
-    const data = await request.json();
-    const id = parseInt(data.id);
+    const session = await getSession();    
+    const id = parseInt(data.params.id);
     if (id) {
       const caseDocument = await prisma.case_documents.findUnique({
         where: { id, uploaded_by: session.user.id },
@@ -32,7 +31,6 @@ export async function DELETE(request) {
               )
             );
           }
-
           await prisma.logs.create({
             data: {
               case_id: caseDocumentModel.case_id,

@@ -37,6 +37,8 @@ const routeSeeder = async () => {
           { label: "Get Invoice", url: "/api/admin/cases/invoice/get/:id", method: 'get' },
           { label: "Delete Invoice", url: "/api/admin/cases/invoice/delete/:id", method: 'delete' },
           { label: "Send invoice for approval", url: "/api/admin/cases/invoice/send/:id", method: 'post' },
+          { label: "Upload Files", url: "/api/admin/cases/invitation/document/upload", method: 'post' },
+          { label: "Delete eco provider file", url: "/api/admin/cases/invitation/document/delete/:id", method: 'delete' },
         ],
       },
     },

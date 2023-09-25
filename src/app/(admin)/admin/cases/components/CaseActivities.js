@@ -2,7 +2,7 @@ import moment from "moment";
 
 const CaseActivities = ({ logs = [] }) => {
   return (
-    <div style={{ maxHeight: "250px", overflowY: "auto" }}>
+    <div className="overflow-auto" style={{ height: "50vh"}}>
       <ol className="activity-feed">
         {logs.map((log) => {
           return (

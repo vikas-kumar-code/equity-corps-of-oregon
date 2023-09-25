@@ -21,6 +21,7 @@ export async function POST(request) {
           status: validated.status,
           role_id: validated.role_id,
           on_board_status: 2,
+          verified: validated.verified,
         },
       });
       if (newUser) {
