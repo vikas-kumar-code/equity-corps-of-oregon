@@ -11,6 +11,7 @@ const addUpdateUserSchema = Joi.object({
   }),
   status: Joi.number().required(),
   role_id: Joi.number().required(),
+  verified: Joi.number().min(0).max(1).required(),
 });
 
 const addUserSchema = Joi.object({
@@ -24,6 +25,7 @@ const addUserSchema = Joi.object({
   }),
   status: Joi.number().required(),
   role_id: Joi.number().required().label('role'),
+  verified: Joi.number().min(0).max(1).required(),
 });
 
 const updateUserSchema = Joi.object({
@@ -37,6 +39,7 @@ const updateUserSchema = Joi.object({
   }),
   status: Joi.number().required(),
   role_id: Joi.number().required().label('role'),
+  verified: Joi.number().min(0).max(1).required(),
 });
 
 export default addUpdateUserSchema;

@@ -21,7 +21,7 @@ LoadingOverlay.propTypes = undefined;
 
 export default function AddEditUser(props) {
   const [loader, setLoader] = useState(false);
-  const [fields, setFields] = useState({ status: 1 });
+  const [fields, setFields] = useState({ status: 1, verified: 0 });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [roles, setRoles] = useState([]);
@@ -35,6 +35,13 @@ export default function AddEditUser(props) {
       }
     } else {
       setFields({ ...fields, [field]: e.target.value });
+    }
+    setNoError(field);
+  };
+
+  const setNoError = async (field) => {
+    if (errors[field]) {
+      setErrors({ ...errors, [field]: null });
     }
   };
 
@@ -232,7 +239,25 @@ export default function AddEditUser(props) {
                 {errors.role_id}
               </Form.Control.Feedback>
             </FloatingLabel>
-            <Form.Label>Status</Form.Label>
+            <Form.Check
+              type="checkbox"
+              id="verified"
+              checked={fields?.verified === 1 ? true : false}
+              label="Verified"
+              className="ms-1 mb-0"
+              onClick={(e) => {
+                setFields({
+                  ...fields,
+                  verified: e.target.checked ? 1 : 0,
+                });
+                setNoError("verified");
+              }}
+            />
+            <Form.Control.Feedback type="invalid" className="d-block">
+              {errors.verified}
+            </Form.Control.Feedback>
+
+            <Form.Label className="mt-2">Status</Form.Label>
             <div className="ps-2">
               <Row>
                 <Col md={3}>

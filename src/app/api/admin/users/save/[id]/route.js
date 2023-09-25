@@ -45,6 +45,7 @@ export async function PUT(request, data) {
             password: await hash(validated.password, 10),
             status: validated.status,
             role_id: validated.role_id,
+            verified: validated.verified,
           },
           where: {
             id: Number(data.params.id),
@@ -57,6 +58,7 @@ export async function PUT(request, data) {
             email: validated.email,
             status: validated.status,
             role_id: validated.role_id,
+            verified: validated.verified,
           },
           where: {
             id: Number(data.params.id),
