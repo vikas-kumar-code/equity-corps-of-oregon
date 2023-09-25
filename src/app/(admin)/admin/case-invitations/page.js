@@ -1,5 +1,6 @@
 import ListCaseInvitations from './components/ListCaseInvitations';
 import './style.css';
+import '../cases/style.css';
 
 export default function Cases() {
     return (

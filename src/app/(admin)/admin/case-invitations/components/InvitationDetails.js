@@ -62,9 +62,11 @@ const InvitationDetails = ({
                   </tr>
                   <tr>
                     <th>Maximum Compensation</th>
-                    <td>{common.currencyFormat(record.case.maximum_compensation)}</td>
+                    <td>
+                      {common.currencyFormat(record.case.maximum_compensation)}
+                    </td>
                   </tr>
-                  
+
                   <tr>
                     <th>Description</th>
                     <td>{record.case.description}</td>
@@ -86,27 +88,38 @@ const InvitationDetails = ({
             </div>
           </Tab>
           <Tab eventKey={2} title="Milestones">
-            <div className="table-responsive min-list-height">
-              <table className="table table-borderless table-striped">
-                <tbody>
-                  <tr className="mx-5">
-                    <th colSpan={4}>#</th>
-                    <th colSpan={4}>Comment</th>
-                    <th colSpan={4}>Updated On</th>
-                  </tr>
-                  {record.case.case_milestones.map((mile, i) => {
-                    return (
-                      <tr key={i}>
-                        <td colSpan={4}>{mile.id}</td>
-                        <td colSpan={4}>{mile.comment}</td>
-                        <td colSpan={4}>
-                          {moment(mile.milestone_date).format("D MMM,  YYYY")}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+            <div className="p-3">
+              <Row>
+                <Col className="">Milestones</Col>
+              </Row>
+              <Row>
+                <Col md={12} sm={12}>
+                  <div className="table-responsive min-list-height">
+                    <table className="table table-borderless">
+                      <tbody>
+                        <tr className="mx-5">
+                          <th>#</th>
+                          <th>Comment</th>
+                          <th>Updated On</th>
+                        </tr>
+                        {record.case.case_milestones.map((mile, i) => {
+                          return (
+                            <tr key={i}>
+                              <td>{mile.id}</td>
+                              <td>{mile.comment}</td>
+                              <td className="text-start">
+                                {moment(mile.milestone_date).format(
+                                  "D MMM,  YYYY"
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </Col>
+              </Row>
             </div>
           </Tab>
           <Tab eventKey={3} title="Documents">

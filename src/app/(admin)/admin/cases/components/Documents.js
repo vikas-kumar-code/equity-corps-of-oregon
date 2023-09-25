@@ -1,14 +1,6 @@
 import moment from "moment";
 import React, { useState } from "react";
-import {
-  Row,
-  Col,
-  Form,
-  Card,
-  FloatingLabel,
-  Button,
-  Spinner,
-} from "react-bootstrap";
+import { Row, Col, Card, Button } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import common from "@/utils/common";
