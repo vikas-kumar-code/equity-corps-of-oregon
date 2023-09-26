@@ -3,6 +3,7 @@ import common from "@/utils/common";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Card, Row } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 const StatusCard = () => {
   const [records, setRecords] = useState([]);

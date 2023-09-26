@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
+import { toast } from "react-toastify";
 
 const ListAttorney = () => {
   const [records, setRecords] = useState([]);

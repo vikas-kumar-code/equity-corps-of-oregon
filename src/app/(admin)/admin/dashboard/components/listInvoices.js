@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
+import { toast } from "react-toastify";
 
 const ListInvoices = () => {
   const [records, setRecords] = useState([]);
@@ -30,7 +31,6 @@ const ListInvoices = () => {
       })
       .finally(() => setLoader(false));
   };
-  console.log(records);
 
   useEffect(() => {
     getRecords();
