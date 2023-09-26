@@ -67,6 +67,7 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
     getRecords();
   }, []);
 
+  console.log(records.case_invoices);
   return (
     <>
       <Modal
@@ -113,6 +114,7 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                           <th>#</th>
                           <th>Invoice</th>
                           <th>Total Amount</th>
+                          <th>Paid Amount</th>
                           <th>Added On</th>
                           <th>Status</th>
                           <th>Action</th>
@@ -120,9 +122,13 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                       </thead>
                       <tbody>
                         {records.case_invoices.map((item, index) => (
+                          <>
                           <tr>
                             <td>{index + 1}</td>
                             <td>{item.name}</td>
+                            <td>
+                              {common.currencyFormat(item.total_amount, 2)}
+                            </td>
                             <td>
                               {common.currencyFormat(item.total_amount, 2)}
                             </td>
@@ -166,6 +172,14 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                               </DropdownButton>
                             </td>
                           </tr>
+                          {item.status === 2 && <tr>
+                            <td colSpan={4}>
+                              Payments
+                            </td>
+                            <td>$200</td>
+                            <td>$300</td>
+                          </tr>}
+                          </>
                         ))}
                         {(!records.case_invoices ||
                           records.case_invoices.length <= 0) && (

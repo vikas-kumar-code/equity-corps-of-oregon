@@ -38,9 +38,7 @@ export default function ListCases() {
 
   const getRecords = async () => {
     setLoader(true);
-    let REQUEST_URI = common.apiPath(`/admin/cases`);
-    REQUEST_URI = common.apiPath(`/admin/cases?${searchParams.toString()}`);
-    fetch(REQUEST_URI)
+    fetch(common.apiPath(`/admin/cases?${searchParams.toString()}`))
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {

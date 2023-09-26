@@ -7,7 +7,12 @@ const routeSeeder = async () => {
       label: "Dashboard",
       icon: "mdi mdi-view-dashboard",
       url: "/admin/dashboard", 
-      method: "get",     
+      method: "get",
+      children: {
+        create: [
+          { label: "Dashboard Details", url: "/api/admin/dashboard", method: "get"},
+        ],
+      },     
     },
     {
       label: "Cases",
