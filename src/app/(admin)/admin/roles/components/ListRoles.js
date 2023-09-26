@@ -145,7 +145,7 @@ export default function ListRoles() {
                           <span className="mdi mdi-delete"></span>
                           Delete
                         </Dropdown.Item>
-                        <Dropdown.Item
+                        {/* <Dropdown.Item
                           eventKey="1"
                           onClick={() => {
                             setShowModal(true);
@@ -154,7 +154,7 @@ export default function ListRoles() {
                         >
                           <span class="mdi mdi-key-variant"></span>
                           Permissions
-                        </Dropdown.Item>
+                        </Dropdown.Item> */}
                       </DropdownButton>
                     </td>
                   </tr>
