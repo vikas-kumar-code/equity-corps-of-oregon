@@ -1,10 +1,11 @@
+import NextPagination from "@/app/components/NextPagination";
 import React from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 
 const ListAttorney = (props) => {
-  const { recentAttorney } = props.records;
-  console.log(recentAttorney);
+  const { recentAttorney, totalAttorney } = props.records;
+  
   return (
     <Row>
       <Col className="grid-margin">
@@ -43,6 +44,9 @@ const ListAttorney = (props) => {
               </table>
             </div>
           </Card.Body>
+          <Card.Footer className="text-end">
+              <NextPagination totalItemsCount={totalAttorney} />
+            </Card.Footer>
         </Card>
         </LoadingOverlay>
       </Col>
