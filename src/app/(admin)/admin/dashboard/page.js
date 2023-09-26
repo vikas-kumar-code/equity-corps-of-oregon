@@ -46,9 +46,9 @@ export default async function Dashboard() {
           <ListInvoices records={records} loader={loader} />
         </Col>
         <Col md={5}>
-          {/* {records.role_id === 1 && ( */}
-          <ListAttorney records={records} loader={loader} />
-          {/* )} */}
+          {records.role_id === 1 && (
+            <ListAttorney records={records} loader={loader} />
+          )}
         </Col>
       </Row>
     </div>
