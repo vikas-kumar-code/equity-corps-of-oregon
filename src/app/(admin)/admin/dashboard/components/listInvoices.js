@@ -1,18 +1,46 @@
+"use client"
 import NextPagination from "@/app/components/NextPagination";
 import common from "@/utils/common";
 import moment from "moment";
+import { useSearchParams } from "next/navigation";
 import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 
-const ListInvoices = (props) => {
-  const { recentInvoices, totalInvoices } = props.records;
-  console.log(totalInvoices);
+const ListInvoices = () => {
+  const [records, setRecords] = useState([]);
+  const [loader, setLoader] = useState(false);
+  const searchParams = useSearchParams();
+
+  const getRecords = async () => {
+    setLoader(true);
+    await fetch(common.apiPath(`/admin/dashboard?${searchParams.toString()}`))
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          setRecords(response.records);
+        } else {
+          toast.error(response.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => setLoader(false));
+  };
+  console.log(records);
+
+  useEffect(() => {
+    getRecords();
+  }, [searchParams]);
+
   return (
     <Row>
       <Col md={12} className="grid-margin">
         <LoadingOverlay
-          active={props.loader}
+          active={loader}
           spinner
           text="Loading your content..."
         >
@@ -31,7 +59,7 @@ const ListInvoices = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {recentInvoices?.map((invoice, i) => {
+                    {records.recentInvoices?.map((invoice, i) => {
                       const {
                         id,
                         status,
@@ -84,7 +112,7 @@ const ListInvoices = (props) => {
               </div>
             </Card.Body> 
             <Card.Footer className="text-end">
-              <NextPagination totalItemsCount={totalInvoices} />
+              <NextPagination totalItemsCount={records.totalInvoices} />
             </Card.Footer>
           </Card>
         </LoadingOverlay>

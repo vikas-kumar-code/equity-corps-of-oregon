@@ -1,15 +1,41 @@
+"use client"
+import common from "@/utils/common";
+import { useEffect } from "react";
+import { useState } from "react";
 import { Card, Row } from "react-bootstrap";
 
-const StatusCard = (props) => {
-  const { counts } = props.records;
+const StatusCard = () => {
+  const [records, setRecords] = useState([]);
+  const [loader, setLoader] = useState(false);
+
+  const getRecords = async () => {
+    setLoader(true);
+    await fetch(common.apiPath(`/admin/dashboard`))
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          setRecords(response.records);
+        } else {
+          toast.error(response.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => setLoader(false));
+  };
+
+  useEffect(() => {
+    getRecords();
+  }, []);
 
   return (
     <div className="row">
-      {counts?.map((c, i) => {
-          const { count, label, icon } = c;
+      {records?.counts?.map((rc, i) => {
+          const { count, label, icon } = rc;
           return (
             <div key={`status-card-${i}`} className="col-xl-3 col-sm-6 grid-margin stretch-card">
-              {counts ? (
+              {records?.counts ? (
                 <Card>
                   <Card.Body>
                     <Row>
@@ -36,7 +62,7 @@ const StatusCard = (props) => {
                     <Row>
                       <div className="col-9">
                         <div className="d-flex align-items-center align-self-start">
-                          <h3 className="mb-0">dsgsdg</h3>
+                          <h3 className="mb-0"></h3>
                         </div>
                       </div>
                       <div className="col-3">
@@ -47,7 +73,7 @@ const StatusCard = (props) => {
                         </div>
                       </div>
                     </Row>
-                    <h5 className="text-muted font-weight-normal">sdfgsdfg</h5>
+                    <h5 className="text-muted font-weight-normal"></h5>
                   </Card.Body>
                 </Card>
               )}
