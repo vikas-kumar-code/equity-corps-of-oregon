@@ -99,7 +99,8 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                     MAX COMPENSATION:{" "}
                     <strong>
                       {common.currencyFormat(
-                        records.case?.maximum_compensation,2
+                        records.case?.maximum_compensation,
+                        2
                       )}
                     </strong>
                   </h6>
@@ -123,62 +124,62 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                       <tbody>
                         {records.case_invoices.map((item, index) => (
                           <>
-                          <tr>
-                            <td>{index + 1}</td>
-                            <td>{item.name}</td>
-                            <td>
-                              {common.currencyFormat(item.total_amount, 2)}
-                            </td>
-                            <td>
-                              {common.currencyFormat(item.total_amount, 2)}
-                            </td>
-                            <td>
-                              {moment(item.added_on).format("D MMM, YYYY")}
-                            </td>
-                            <td>
-                              <Badge
-                                pill
-                                bg={btnStatus[item.status].bg || "info"}
-                                size="sm"
-                              >
-                                {btnStatus[item.status].label || "N/A"}
-                              </Badge>
-                            </td>
-                            <td>
-                              <DropdownButton
-                                as={ButtonGroup}
-                                key="action-1"
-                                id={`action-btn-1`}
-                                variant="primary"
-                                title="Action"
-                                align="end"
-                              >
-                                <Dropdown.Item
-                                  eventKey="1"
-                                  onClick={() => setShowInvoice(item.id)}
+                            <tr>
+                              <td>{index + 1}</td>
+                              <td>{item.name}</td>
+                              <td>
+                                {common.currencyFormat(item.total_amount, 2)}
+                              </td>
+                              <td>
+                                {common.currencyFormat(item.total_amount, 2)}
+                              </td>
+                              <td>
+                                {moment(item.added_on).format("D MMM, YYYY")}
+                              </td>
+                              <td>
+                                <Badge
+                                  pill
+                                  bg={btnStatus[item.status].bg || "info"}
+                                  size="sm"
                                 >
-                                  <span className="mdi mdi-eye"></span>
-                                  View
-                                </Dropdown.Item>
-                                {item.status <= 2 && (
+                                  {btnStatus[item.status].label || "N/A"}
+                                </Badge>
+                              </td>
+                              <td>
+                                <DropdownButton
+                                  as={ButtonGroup}
+                                  key="action-1"
+                                  id={`action-btn-1`}
+                                  variant="primary"
+                                  title="Action"
+                                  align="end"
+                                >
                                   <Dropdown.Item
-                                    eventKey="2"
-                                    onClick={() => setInvoicePayment(item)}
+                                    eventKey="1"
+                                    onClick={() => setShowInvoice(item.id)}
                                   >
-                                    <span class="mdi mdi-currency-usd"></span>
-                                    Pay
+                                    <span className="mdi mdi-eye"></span>
+                                    View
                                   </Dropdown.Item>
-                                )}
-                              </DropdownButton>
-                            </td>
-                          </tr>
-                          {item.status === 2 && <tr>
-                            <td colSpan={4}>
-                              Payments
-                            </td>
-                            <td>$200</td>
-                            <td>$300</td>
-                          </tr>}
+                                  {item.status <= 2 && (
+                                    <Dropdown.Item
+                                      eventKey="2"
+                                      onClick={() => setInvoicePayment(item)}
+                                    >
+                                      <span class="mdi mdi-currency-usd"></span>
+                                      Pay
+                                    </Dropdown.Item>
+                                  )}
+                                </DropdownButton>
+                              </td>
+                            </tr>
+                            {item.status === 2 && (
+                              <tr>
+                                <td colSpan={4}>Payments</td>
+                                <td>$200</td>
+                                <td>$300</td>
+                              </tr>
+                            )}
                           </>
                         ))}
                         {(!records.case_invoices ||
