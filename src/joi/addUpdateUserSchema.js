@@ -5,7 +5,7 @@ const addUpdateUserSchema = Joi.object({
   email: Joi.string()
     .email({ tlds: { allow: false } })
     .required(),
-  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).optional(),
+  password: Joi.string().optional(),
   confirm_password: Joi.any().valid(Joi.ref("password")).optional().messages({
     "any.only": "Confirm password doest not match",
   }),
@@ -19,7 +19,7 @@ const addUserSchema = Joi.object({
   email: Joi.string()
     .email({ tlds: { allow: false } })
     .required(),
-  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
+  password: Joi.string().required(),
   confirm_password: Joi.any().valid(Joi.ref("password")).required().messages({
     "any.only": "Confirm password doest not match",
   }),
@@ -33,7 +33,7 @@ const updateUserSchema = Joi.object({
   email: Joi.string()
     .email({ tlds: { allow: false } })
     .required(),
-  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).optional(),
+  password: Joi.string().optional(),
   confirm_password: Joi.any().valid(Joi.ref("password")).optional().messages({
     "any.only": "Confirm password doest not match",
   }),

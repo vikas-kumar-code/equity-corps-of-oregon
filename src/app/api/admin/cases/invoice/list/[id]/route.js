@@ -32,6 +32,7 @@ export async function GET(request, data) {
             address: true,
           },
         },
+        payments: true,
       },
     });
 
