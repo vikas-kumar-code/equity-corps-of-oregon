@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
 import { getSession } from "@/utils/serverHelpers";
-import { responsivePropType } from "react-bootstrap/esm/createUtilityClasses";
 
 export async function GET(request, data) {
   let records = {};
@@ -33,6 +32,7 @@ export async function GET(request, data) {
             address: true,
           },
         },
+        payments: true,
       },
     });
 
