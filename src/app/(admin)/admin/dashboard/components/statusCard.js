@@ -1,17 +1,43 @@
+"use client"
+import common from "@/utils/common";
+import { useEffect } from "react";
+import { useState } from "react";
 import { Card, Row } from "react-bootstrap";
+import { toast } from "react-toastify";
 
-const StatusCard = (props) => {
-  const { counts } = props.records;
+const StatusCard = () => {
+  const [records, setRecords] = useState([]);
+  const [loader, setLoader] = useState(false);
+
+  const getRecords = async () => {
+    setLoader(true);
+    await fetch(common.apiPath(`/admin/dashboard`))
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          setRecords(response.records);
+        } else {
+          toast.error(response.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => setLoader(false));
+  };
+
+  useEffect(() => {
+    getRecords();
+  }, []);
 
   return (
     <div className="row">
-      {counts &&
-        counts.map((c) => {
-          const { count, label, icon } = c;
+      {records?.counts?.map((rc, i) => {
+          const { count, label, icon } = rc;
           return (
-            <div className="col-xl-3 col-sm-6 grid-margin stretch-card">
-              <Card>
-                {label ? (
+            <div key={`status-card-${i}`} className="col-xl-3 col-sm-6 grid-margin stretch-card">
+              {records?.counts ? (
+                <Card>
                   <Card.Body>
                     <Row>
                       <div className="col-9">
@@ -30,8 +56,10 @@ const StatusCard = (props) => {
                     </Row>
                     <h5 className="text-muted font-weight-normal">{label}</h5>
                   </Card.Body>
-                ) : (
-                  <Card.Body className="skeleton-box">
+                </Card>
+              ) : (
+                <Card className="skeleton-box bg-info">
+                  <Card.Body>
                     <Row>
                       <div className="col-9">
                         <div className="d-flex align-items-center align-self-start">
@@ -40,14 +68,16 @@ const StatusCard = (props) => {
                       </div>
                       <div className="col-3">
                         <div className="icon icon-box-success ">
-                          <span style={{ fontSize: 30 }}></span>
+                          <span
+                            style={{ fontSize: 30 }}
+                          ></span>
                         </div>
                       </div>
                     </Row>
                     <h5 className="text-muted font-weight-normal"></h5>
                   </Card.Body>
-                )}
-              </Card>
+                </Card>
+              )}
             </div>
           );
         })}

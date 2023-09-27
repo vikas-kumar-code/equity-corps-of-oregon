@@ -17,6 +17,7 @@ import LoadingOverlay from "react-loading-overlay";
 import { useEffect } from "react";
 import ViewInvoice from "./ViewInvoice";
 import InvoicePayment from "./InvoicePayment";
+import AmountTooltip from "./AmountTooltip";
 
 const ListInvoices = ({ showModal, closeModal, caseId }) => {
   const [showInvoice, setShowInvoice] = useState(null);
@@ -179,10 +180,17 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                             </td>
                           </tr>
                           {item.status === 2 && (
-                            <tr>
-                              <td></td>
-                              <td colSpan={6} className="text-start">
-                                <strong>Payments - {(item.payments.map(pay=> common.currencyFormat(pay.amount))).join(', ')} </strong>
+                            <tr style={{ backgroundColor: "#009c0014" }}>
+                              <td className="py-2"></td>
+                              <td
+                                colSpan={6}
+                                className="text-start py-2"
+                                style={{ color: "#434343" }}
+                              >
+                                <strong>
+                                  Payments -
+                                  <AmountTooltip item={item}/>
+                                </strong>
                               </td>
                             </tr>
                           )}
