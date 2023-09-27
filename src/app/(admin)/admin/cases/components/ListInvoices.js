@@ -17,7 +17,7 @@ import LoadingOverlay from "react-loading-overlay";
 import { useEffect } from "react";
 import ViewInvoice from "./ViewInvoice";
 import InvoicePayment from "./InvoicePayment";
-import AmountTooltip from "./AmountTooltip";
+import PaymentButtons from "./PaymentButtons";
 
 const ListInvoices = ({ showModal, closeModal, caseId }) => {
   const [showInvoice, setShowInvoice] = useState(null);
@@ -25,6 +25,7 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
   const [payModal, setPayModal] = useState(null);
   const [records, setRecords] = useState({});
   const [loader, setLoader] = useState(true);
+  let paidAmount = 0;
 
   const getRecords = async () => {
     setLoader(true);
@@ -137,7 +138,13 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                               {common.currencyFormat(item.total_amount, 2)}
                             </td>
                             <td>
-                              {common.currencyFormat(item.total_amount, 2)}
+                              {common.currencyFormat(
+                                item.payments.reduce(
+                                  (total, pay) => total + Number(pay.amount),
+                                  0
+                                ),
+                                2
+                              )}
                             </td>
                             <td>
                               {moment(item.added_on).format("D MMM, YYYY")}
@@ -189,7 +196,7 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                               >
                                 <strong>
                                   Payments -
-                                  <AmountTooltip item={item}/>
+                                  <PaymentButtons item={item} />
                                 </strong>
                               </td>
                             </tr>
