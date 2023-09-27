@@ -10,7 +10,7 @@ import { Card, Col, Row } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 
-const ListInvoices = () => {
+const ListRecentInvoices = () => {
   const [records, setRecords] = useState([]);
   const [loader, setLoader] = useState(false);
   const searchParams = useSearchParams();
@@ -121,4 +121,4 @@ const ListInvoices = () => {
   );
 };
 
-export default ListInvoices;
+export default ListRecentInvoices;

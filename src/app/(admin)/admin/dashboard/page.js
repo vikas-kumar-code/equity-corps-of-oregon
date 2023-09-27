@@ -1,6 +1,6 @@
 import StatusCard from "./components/StatusCard";
-import ListInvoices from "./components/ListInvoices";
 import ListAttorney from "./components/ListAttorney";
+import ListRecentInvoices from "./components/ListRecentInvoices";
 
 export const metadata = {
   title: `Dashboard - Admin Panel`,
@@ -11,7 +11,7 @@ export default async function Dashboard() {
       <StatusCard/>
       <div className="row">
         <div className="col-md-7">
-          <ListInvoices />
+          <ListRecentInvoices />
         </div>
         <div className="col-md-5">
           <ListAttorney />
