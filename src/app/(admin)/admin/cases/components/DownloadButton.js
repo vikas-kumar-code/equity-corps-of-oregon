@@ -27,7 +27,7 @@ const DownloadButton = ({ path = "", fileName = "" }) => {
     <Spinner size="sm" variant="primary" />
   ) : (
     <Button variant="none" size="sm" onClick={downloadFile}>
-      <span class="mdi mdi-folder-download text-success fs-4"></span>
+      <span className="mdi mdi-folder-download text-success fs-4"></span>
     </Button>
   );
 };

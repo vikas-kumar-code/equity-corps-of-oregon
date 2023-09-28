@@ -105,7 +105,7 @@ export default function Documents(props) {
                                   size="sm"
                                   className="me-1 p-0"
                                 >
-                                  <span class="mdi mdi-delete-circle text-danger fs-4"></span>
+                                  <span className="mdi mdi-delete-circle text-danger fs-4"></span>
                                 </Button>
                               )} */}
                               <DownloadButton

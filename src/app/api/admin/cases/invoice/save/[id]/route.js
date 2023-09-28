@@ -73,6 +73,7 @@ export async function PUT(request, data) {
               });
               response.success = true;
               response.message = "Invoice updated successfully.";
+              response.id = caseInvoiceModel.id;
             } else {
               response.error = true;
               response.message = "Something went wrong. please try again.";

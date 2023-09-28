@@ -179,7 +179,7 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                                     eventKey="2"
                                     onClick={() => setInvoicePayment(item)}
                                   >
-                                    <span class="mdi mdi-currency-usd"></span>
+                                    <span className="mdi mdi-currency-usd"></span>
                                     Pay
                                   </Dropdown.Item>
                                 )}

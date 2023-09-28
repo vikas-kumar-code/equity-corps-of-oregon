@@ -166,11 +166,11 @@ const InvitationDetails = ({
               <ol className="activity-feed">
                 {record.case.logs.map((log, i) => {
                   return (
-                    <li class="feed-item">
-                      <time class="date">
+                    <li className="feed-item">
+                      <time className="date">
                         {moment(log.created_at).format("LLLL")}
                       </time>
-                      <span class="text">{log.content}</span>
+                      <span className="text">{log.content}</span>
                     </li>
                   );
                 })}

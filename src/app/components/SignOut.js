@@ -17,14 +17,14 @@ export default function SignOut() {
         id="nav-dropdown"
       >
         <NavDropdown.Item eventKey="4.1" href="/admin/settings">
-          <span class="mdi mdi-settings"></span>
+          <span className="mdi mdi-settings"></span>
           Settings
         </NavDropdown.Item>
         <NavDropdown.Item
           eventKey="4.2"
           onClick={() => signOut({ callbackUrl: "/login" })}
         >
-          <span class="mdi mdi-logout-variant"></span>
+          <span className="mdi mdi-logout-variant"></span>
           Sign Out
         </NavDropdown.Item>
       </NavDropdown>

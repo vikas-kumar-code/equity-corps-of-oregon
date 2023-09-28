@@ -161,7 +161,7 @@ const ListInvoices = ({
                                   eventKey="4"
                                   onClick={() => sendInvoice(item.id)}
                                 >
-                                  <span class="mdi mdi-send"></span>
+                                  <span className="mdi mdi-send"></span>
                                   Send
                                 </Dropdown.Item>
                               )}
@@ -178,7 +178,7 @@ const ListInvoices = ({
                                   eventKey="2"
                                   onClick={() => getRecord(item.id)}
                                 >
-                                  <span class="mdi mdi-pencil"></span>
+                                  <span className="mdi mdi-pencil"></span>
                                   Edit
                                 </Dropdown.Item>
                               )}
@@ -187,7 +187,7 @@ const ListInvoices = ({
                                   eventKey="3"
                                   onClick={() => deleteRecord(item.id)}
                                 >
-                                  <span class="mdi mdi-delete"></span>
+                                  <span className="mdi mdi-delete"></span>
                                   Delete
                                 </Dropdown.Item>
                               )}

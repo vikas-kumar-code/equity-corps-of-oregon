@@ -144,7 +144,7 @@ function AddDocuments(props) {
                               onClick={() => removeDocument(index)}
                               style={{ top: 17 }}
                             >
-                              <span class="mdi mdi-close-circle"></span>
+                              <span className="mdi mdi-close-circle"></span>
                             </Button>
                           </FloatingLabel>
                         </td>
