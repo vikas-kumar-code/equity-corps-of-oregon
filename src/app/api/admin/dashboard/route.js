@@ -11,12 +11,12 @@ export async function GET(request) {
       response.counts = [
         {
           count: await prisma.cases.count(),
-          label: "Total Cases",
+          label: "Total Case",
           icon: "mdi mdi-alpha-c-circle",
         },
         {
           count: await prisma.users.count(),
-          label: "Total Users",
+          label: "Total User",
           icon: "mdi mdi-account",
         },
         {
@@ -27,7 +27,7 @@ export async function GET(request) {
               },
             },
           }),
-          label: "Total Invoices",
+          label: "Total Invoice",
           icon: "mdi mdi-receipt",
         },
         {
@@ -74,12 +74,12 @@ export async function GET(request) {
       response.counts = [
         {
           count: await prisma.case_invitations.count({ where }),
-          label: "Total Case Invitations",
+          label: "Total Case Invitation",
           icon: "mdi mdi-alpha-c-circle",
         },
         {
           count: await prisma.case_invoices.count({ where }),
-          label: "Total Invoices",
+          label: "Total Invoice",
           icon: "mdi mdi-receipt",
         },
       ];

@@ -35,33 +35,31 @@ const Dashboard = () => {
     getRecords();
   }, []);
 
-  return (
-    <div>
-      <Cards records={records} loader={loader} />
-      {loader ? (
-        <div className="text-center" style={{marginTop:'17%' }}>          
-          <Spinner animation="border" variant="primary" />
-        </div>
-      ) : (
-        <div className="row">
-          {records.recentInvoices && (
-            <div className="col-md-6">
-              <RecentInvoices records={records} loader={loader} />
-            </div> 
-          )}
-          {records.recentAttorney && (
-            <div className="col-md-6">
-              <RecentAttorney records={records} loader={loader} />
-            </div>
-          )}
-          {records.recentCaseInvitations && (
-            <div className="col-md-6">
-              <RecentCaseInvitations records={records} loader={loader} />
-            </div>
-          )}
-        </div>
-      )}
+  return loader ? (
+    <div className="text-center" style={{ marginTop: "17%" }}>
+      <Spinner animation="border" variant="primary" />
     </div>
+  ) : (
+    <>
+      <Cards records={records} loader={loader} />
+      <div className="row">
+        {records.recentInvoices && (
+          <div className="col-md-6">
+            <RecentInvoices records={records} />
+          </div>
+        )}
+        {records.recentAttorney && (
+          <div className="col-md-6">
+            <RecentAttorney records={records} />
+          </div>
+        )}
+        {records.recentCaseInvitations && (
+          <div className="col-md-6">
+            <RecentCaseInvitations records={records} />
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
