@@ -1,35 +1,6 @@
-"use client"
-import common from "@/utils/common";
-import { useEffect } from "react";
-import { useState } from "react";
 import { Card, Row } from "react-bootstrap";
-import { toast } from "react-toastify";
 
-const StatusCard = () => {
-  const [records, setRecords] = useState([]);
-  const [loader, setLoader] = useState(false);
-
-  const getRecords = async () => {
-    setLoader(true);
-    await fetch(common.apiPath(`/admin/dashboard`))
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.success) {
-          setRecords(response.records);
-        } else {
-          toast.error(response.message);
-        }
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      })
-      .finally(() => setLoader(false));
-  };
-
-  useEffect(() => {
-    getRecords();
-  }, []);
-
+const StatusCard = ({records}) => {
   return (
     <div className="row">
       {records?.counts?.map((rc, i) => {

@@ -101,7 +101,7 @@ export async function GET(request) {
         {
           count: totalInvoices,
           label: "Total Invoices",
-          icon: "mdi mdi-alpha-c-circle",
+          icon: "mdi mdi-receipt",
         },
       ];
 
@@ -111,6 +111,18 @@ export async function GET(request) {
         orderBy: [{ id: "asc" }],
       });
 
+      const recentCaseInvitations = await prisma.case_invitations.findMany({
+        where: invoicesWhere,
+        ...paginate,
+        orderBy: [{ id: "asc" }],
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          case: true,
+        },
+      });
+
       return NextResponse.json({
         success: true,
         records: {
@@ -118,6 +130,7 @@ export async function GET(request) {
           counts: counts,
           recentInvoices: recentInvoices,
           totalInvoices: totalInvoices,
+          recentCaseInvitations: recentCaseInvitations
         },
       });
     }
