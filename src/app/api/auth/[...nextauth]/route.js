@@ -7,6 +7,7 @@ import prisma from "@/utils/prisma";
 export const authOptions = {
   session: {
     strategy: "jwt",
+    // maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -93,7 +94,8 @@ export const authOptions = {
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.role_id = token.role_id;
-      session.user.routes = token.routes;
+      session.user.routes = token.routes;   
+      session.maxAge = 0;   
       return session;
     },
     async jwt({ token, user }) {
@@ -102,6 +104,7 @@ export const authOptions = {
         token.role_id = user.role_id;
         token.name = user.name;
         token.routes = user.routes;
+        token.maxAge = 0;
       }
       return token;
     },
