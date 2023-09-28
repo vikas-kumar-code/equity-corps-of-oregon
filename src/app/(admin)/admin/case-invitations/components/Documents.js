@@ -41,8 +41,8 @@ export default function Documents(props) {
     if (window.confirm("Are you sure to delete?")) {
       try {
         setLoader(true);
-        await fetch(common.apiPath("/admin/cases/invitation/document/delete/"+document_id), {
-          method: "DELETE",          
+        await fetch(common.apiPath("/admin/cases/invitation/document/delete/" + document_id), {
+          method: "DELETE",
         })
           .then((response) => response.json())
           .then((response) => {
@@ -106,7 +106,7 @@ export default function Documents(props) {
                                   size="sm"
                                   className="me-1 p-0"
                                 >
-                                  <span class="mdi mdi-delete-circle text-danger fs-4"></span>
+                                  <span className="mdi mdi-delete-circle text-danger fs-4"></span>
                                 </Button>
                               )}
                               <DownloadButton

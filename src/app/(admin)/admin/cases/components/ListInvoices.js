@@ -166,7 +166,7 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                                       eventKey="2"
                                       onClick={() => setInvoicePayment(item)}
                                     >
-                                      <span class="mdi mdi-currency-usd"></span>
+                                      <span className="mdi mdi-currency-usd"></span>
                                       Pay
                                     </Dropdown.Item>
                                   )}
@@ -184,14 +184,14 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                         ))}
                         {(!records.case_invoices ||
                           records.case_invoices.length <= 0) && (
-                          <tr>
-                            <td colSpan={6}>
-                              <h6 className="text-gray">
-                                No records available
-                              </h6>
-                            </td>
-                          </tr>
-                        )}
+                            <tr>
+                              <td colSpan={6}>
+                                <h6 className="text-gray">
+                                  No records available
+                                </h6>
+                              </td>
+                            </tr>
+                          )}
                       </tbody>
                     </table>
                   </div>

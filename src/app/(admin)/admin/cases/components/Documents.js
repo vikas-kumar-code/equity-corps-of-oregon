@@ -83,14 +83,14 @@ export default function Documents(props) {
                                 size="sm"
                                 className="me-1 p-0"
                               >
-                                <span class="mdi mdi-delete-circle text-danger fs-4"></span>
+                                <span className="mdi mdi-delete-circle text-danger fs-4"></span>
                               </Button>
                               <DownloadButton
                                 fileName={record.document_name}
                                 path={common.downloadLink(
                                   "uploads/case_documents/" +
-                                    record.file_name +
-                                    "?temp=true"
+                                  record.file_name +
+                                  "?temp=true"
                                 )}
                               />
                             </div>
