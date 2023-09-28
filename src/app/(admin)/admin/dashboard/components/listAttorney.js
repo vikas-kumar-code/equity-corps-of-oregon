@@ -1,42 +1,10 @@
-"use client";
 import NextPagination from "@/app/components/NextPagination";
-import common from "@/utils/common";
-import { useSearchParams } from "next/navigation";
 import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
-import { toast } from "react-toastify";
 
-const ListAttorney = () => {
-  const [records, setRecords] = useState([]);
-  const [loader, setLoader] = useState(false);
-  const searchParams = useSearchParams();
-
-  const getRecords = async () => {
-    setLoader(true);
-    await fetch(common.apiPath(`/admin/dashboard?${searchParams.toString()}`))
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.success) {
-          setRecords(response.records);
-        } else {
-          toast.error(response.message);
-        }
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      })
-      .finally(() => setLoader(false));
-  };
-
-  useEffect(() => {
-    getRecords();
-  }, [searchParams]);
-
+const ListAttorney = ({records, loader}) => {
   return (
-    records.role_id === 1 && (
       <Row>
         <Col className="grid-margin">
           <LoadingOverlay
@@ -71,6 +39,14 @@ const ListAttorney = () => {
                           </tr>
                         );
                       })}
+                      {(!records.recentAttorney ||
+                        records.recentAttorney.length <= 0) && (
+                        <tr>
+                          <td colSpan={6}>
+                            <h6 className="text-gray">No records available</h6>
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -83,7 +59,6 @@ const ListAttorney = () => {
         </Col>
       </Row>
     )
-  );
 };
 
 export default ListAttorney;
