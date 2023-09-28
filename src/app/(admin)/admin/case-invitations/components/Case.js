@@ -62,13 +62,13 @@ export default function Case({
             </Dropdown.Item>
             {record?.status === 0 && (
               <Dropdown.Item eventKey="2" onClick={() => setConfirmation(true)}>
-                <span class="mdi mdi-file-check"></span>
+                <span className="mdi mdi-file-check"></span>
                 Accept
               </Dropdown.Item>
             )}
             {record?.status > 0 && (
               <Dropdown.Item eventKey="3" onClick={() => setInvoiceModal(true)}>
-                <span class="mdi mdi-file-document"></span>
+                <span className="mdi mdi-file-document"></span>
                 Invoice
               </Dropdown.Item>
             )}

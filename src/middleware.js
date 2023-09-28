@@ -50,8 +50,7 @@ export default withAuth(
 
     // Send response for unauthorized access.
     if (!access) {
-      if (requestedPath.startsWith("/api")) {
-        console.log('Access denied................................');
+      if (requestedPath.startsWith("/api")) {        
         return NextResponse.json({
           error: true,
           message: "You are not allowed to access this route.",

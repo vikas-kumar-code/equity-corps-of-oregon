@@ -10,16 +10,7 @@ const params = {
     invoiceForApproval: 4,
   },
   recordPerPage: 20,
-  allowedExtensions: [
-    "docx",
-    "doc",
-    "xl",
-    "xls",
-    "jpg",
-    "jpeg",
-    "png",
-    "pdf",
-  ],
+  allowedExtensions: ["docx", "doc", "xl", "xls", "jpg", "jpeg", "png", "pdf"],
 };
 
 const common = {
@@ -104,11 +95,15 @@ const common = {
     );
   },
   currencyFormat: (number, fixed = 0) => {
-    return number
-      ? `$${Number(number).toLocaleString("en-US", {
-          minimumFractionDigits: fixed,
-        })}`
-      : "";
+    if (number) {
+      return number
+        ? `$${Number(number).toLocaleString("en-US", {
+            minimumFractionDigits: fixed,
+          })}`
+        : "";
+    } else {
+      return "$0.00";
+    }
   },
   currencyToNumber: (currency) => {
     return (currency || "").replace(/[^0-9.]/g, "");

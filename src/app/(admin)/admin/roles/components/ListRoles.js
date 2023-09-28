@@ -152,7 +152,7 @@ export default function ListRoles() {
                             setRecordId(record.id);
                           }}
                         >
-                          <span class="mdi mdi-key-variant"></span>
+                          <span className="mdi mdi-key-variant"></span>
                           Permissions
                         </Dropdown.Item> */}
                       </DropdownButton>

@@ -37,7 +37,7 @@ export const authOptions = {
           );
           if (isPasswordValid) {
             if (user.status === 1) {
-              if (user.verified === 1) {
+              // if (user.verified === 1) {
                 if (user.on_board_status === 1) {
                   // update on board status
                   await prisma.users.update({
@@ -70,9 +70,9 @@ export const authOptions = {
                 }
 
                 return user;
-              } else {
-                throw new Error("Your account is not verified.");
-              }
+              // } else {
+              //   throw new Error("Your account is not verified.");
+              // }
             } else {
               throw new Error("Your account is not active.");
             }
