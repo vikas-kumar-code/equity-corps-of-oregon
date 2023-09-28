@@ -1,65 +1,56 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import common from "@/utils/common";
+import { getSession } from "@/utils/serverHelpers";
 
 export async function GET(request) {
-  const session = await getServerSession(authOptions);
-  let counts = [];
-  let invoicesWhere = {};
+  const session = await getSession();
+  const response = {};
   try {
-    const paginate = common.paginate(request);
-
+    // Admin dashboard data
     if (session.user.role_id === 1) {
-      invoicesWhere = {
-        status: {
-          gte: 1,
-        },
-      };
-
-      const totalUsers = await prisma.users.count();
-
-      const totalCases = await prisma.cases.count({
-        where: {
-          status: 1,
-        },
-      });
-
-      const totalInvoices = await prisma.case_invoices.count({
-        where: invoicesWhere,
-      });
-
-      const totalAttorney = await prisma.users.count({ where: { role_id: 2 } });
-      counts = [
+      response.counts = [
         {
-          count: totalCases,
+          count: await prisma.cases.count(),
           label: "Total Cases",
           icon: "mdi mdi-alpha-c-circle",
         },
-        { count: totalUsers, label: "Total Users", icon: "mdi mdi-account" },
         {
-          count: totalInvoices,
+          count: await prisma.users.count(),
+          label: "Total Users",
+          icon: "mdi mdi-account",
+        },
+        {
+          count: await prisma.case_invoices.count({
+            where: {
+              status: {
+                gte: 1,
+              },
+            },
+          }),
           label: "Total Invoices",
           icon: "mdi mdi-receipt",
         },
         {
-          count: totalAttorney,
+          count: await prisma.users.count({ where: { role_id: 2 } }),
           label: "Total Attorney",
           icon: "mdi mdi-account",
         },
       ];
 
-      const recentInvoices = await prisma.case_invoices.findMany({
-        where: invoicesWhere,
-        ...paginate,
-        orderBy: [{ added_on: "asc" }],
+      response.recentInvoices = await prisma.case_invoices.findMany({
+        where: {
+          status: {
+            gte: 1,
+          },
+        },
+        orderBy: [{ id: "desc" }],
+        take: 10,
       });
 
-      const recentAttorney = await prisma.users.findMany({
+      response.recentAttorney = await prisma.users.findMany({
         where: { role_id: 2 },
-        ...paginate,
-        orderBy: [{ id: "asc" }],
+        take: 10,
+        orderBy: [{ id: "desc" }],
         select: {
           id: true,
           name: true,
@@ -71,73 +62,48 @@ export async function GET(request) {
 
       return NextResponse.json({
         success: true,
-        records: {
-          role_id: session.user.role_id,
-          counts: counts,
-          recentInvoices: recentInvoices,
-          recentAttorney: recentAttorney,
-          totalInvoices: totalInvoices,
-          totalAttorney: totalAttorney,
-        },
-      });
-    } else if (session.user.role_id === 3) {
-      invoicesWhere = {
-        user_id: session.user.id,
-      };
-      const totalInvitations = await prisma.case_invitations.count({
-        where: invoicesWhere,
-      });
-      const totalInvoices = await prisma.case_invoices.count({
-        where: invoicesWhere,
+        records: response,
       });
 
-      counts = [
-        ...counts,
+      // Eco provider dashboard data
+    } else if (session.user.role_id === 3) {
+      let where = {
+        user_id: session.user.id,
+      };
+
+      response.counts = [
         {
-          count: totalInvitations,
+          count: await prisma.case_invitations.count({ where }),
           label: "Total Case Invitations",
           icon: "mdi mdi-alpha-c-circle",
         },
         {
-          count: totalInvoices,
+          count: await prisma.case_invoices.count({ where }),
           label: "Total Invoices",
           icon: "mdi mdi-receipt",
         },
       ];
 
-      const recentInvoices = await prisma.case_invoices.findMany({
-        where: invoicesWhere,
-        ...paginate,
-        orderBy: [{ id: "asc" }],
+      response.recentInvoices = await prisma.case_invoices.findMany({
+        where,
+        orderBy: [{ id: "desc" }],
       });
 
-      const recentCaseInvitations = await prisma.case_invitations.findMany({
-        where: invoicesWhere,
-        ...paginate,
-        orderBy: [{ id: "asc" }],
-        select: {
-          id: true,
-          first_name: true,
-          last_name: true,
-          case: true,
-        },
+      response.recentCaseInvitations = await prisma.case_invitations.findMany({
+        where,
+        orderBy: [{ id: "desc" }],
+        include: { case: true },
       });
 
       return NextResponse.json({
         success: true,
-        records: {
-          role_id: session.user.role_id,
-          counts: counts,
-          recentInvoices: recentInvoices,
-          totalInvoices: totalInvoices,
-          recentCaseInvitations: recentCaseInvitations
-        },
+        records: response,
       });
     }
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json({
       error: true,
-      message: error.message,
+      message: err.message,
     });
   }
 }

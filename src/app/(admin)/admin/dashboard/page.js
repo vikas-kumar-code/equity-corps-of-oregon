@@ -1,12 +1,13 @@
-import DashboardData from "./components/DashboardData";
+import Dashboard from "./components/Dashboard";
 
 export const metadata = {
   title: `Dashboard - Admin Panel`,
 };
-export default async function Dashboard() {
+
+export default async function DashboardPage() {
   return (
     <div className="content-wrapper">
-      <DashboardData />
+      <Dashboard />
     </div>
   );
 }
