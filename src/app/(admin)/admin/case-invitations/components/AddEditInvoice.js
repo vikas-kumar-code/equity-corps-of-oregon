@@ -25,10 +25,9 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   };
   const [errors, setErrors] = useState({});
   const [fields, setFields] = useState(initialValues);
-  let fieldsData = { ...fields };
+  let fieldsData = JSON.parse(JSON.stringify(fields));
   const [loader, setLoader] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [records, setRecords] = useState([]);
   const [showInvoice, setShowInvoice] = useState(null);
   const [refreshInvoices, setRefreshInvoices] = useState(true);
 
@@ -52,8 +51,29 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const sendInvoice = async (id) => {
+    fetch(common.apiPath(`/admin/cases/invoice/send/${id}`), {
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          toast.success(response.message);
+          setFields(initialValues);
+          refreshListInvoices();
+          reloadRecords();
+        } else if (response.error) {
+          toast.error(response.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => setSubmitted(false));
+  };
+
+  const handleSubmit = async (e = null, send_invoice = false) => {
+    e?.preventDefault();
     setErrors({});
     const validated = await validateAsync(invoiceSchema, fields, {
       removeString: "particulars",
@@ -61,7 +81,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     if (validated.errors) {
       handleErrors(validated.errors);
     } else {
-      setSubmitted(true);
+      setSubmitted(send_invoice ? 2 : 1);
       let REQUEST_URI = common.apiPath("/admin/cases/invoice/save");
       let REQUEST_METHOD = "POST";
       if (fields.id) {
@@ -78,24 +98,29 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
-            toast.success(response.message);
-            setFields(initialValues);
-            refreshListInvoices();
-            reloadRecords();
+            if (send_invoice && response?.id) {
+              sendInvoice(response.id);
+            } else {
+              toast.success(response.message);
+              setFields(initialValues);
+              refreshListInvoices();
+              reloadRecords();
+              setSubmitted(false)
+            }
           } else if (response.error) {
             handleErrors(response.message);
           }
         })
         .catch((error) => {
+          setSubmitted(false);
           toast.error(error.message);
-        })
-        .finally(() => setSubmitted(false));
+        })      
     }
   };
 
   const getRecord = async (id) => {
     setLoader(true);
-    setErrors({})
+    setErrors({});
     try {
       await fetch(common.apiPath(`/admin/cases/invoice/get/${id}`))
         .then((response) => response.json())
@@ -155,7 +180,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 <Col>
                   <h4 className="text-end">
                     Max Compensation :{" "}
-                    {common.currencyFormat(record.maximum_compensation,2)}
+                    {common.currencyFormat(record.maximum_compensation, 2)}
                   </h4>
                 </Col>
               </Row>
@@ -171,7 +196,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                   </Col>
                   <Col md={4} className="pe-0">
                     <DatePicker
-                      selected={fields.due_on}
+                      selected={Date.parse(fields.due_on)}
                       onChange={(date) => {
                         setFields({ ...fields, due_on: date });
                         setNoError("due_on");
@@ -228,7 +253,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             value={item.amount}
                             onChange={(event) => {
                               fieldsData.particulars[index].amount =
-                                event.target.value;
+                                event.target.value.replace(/[^0-9.]/g, "");
                               setFields(fieldsData);
                               setNoError("particulars" + index + "amount");
                             }}
@@ -244,7 +269,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             size="sm"
                             className="q-opt-remove btn-close"
                             onClick={() => removeFieldSet(index)}
-                            style={{ right: 9 }}
+                            style={{ right: 9, top: 17 }}
                           />
                         )}
                       </Col>
@@ -255,7 +280,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                   <Button
                     variant="primary"
                     onClick={() => addFieldSet()}
-                    disabled={submitted}
+                    disabled={!!submitted}
                   >
                     Add More
                   </Button>
@@ -266,22 +291,35 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                       onClick={() => {
                         setFields(initialValues);
                       }}
-                      disabled={submitted}
+                      disabled={!!submitted}
                     >
                       Cancel
                     </Button>
                   )}
-                
+
                   <Button
-                    variant="success"
+                    variant="warning"
                     type="submit"
                     className="ms-2"
-                    disabled={submitted}
+                    disabled={!!submitted}
                   >
-                    {submitted && (
+                    {submitted === 1 && (
                       <Spinner className="me-1" color="light" size="sm" />
                     )}
-                    Submit
+                    Save as draft
+                  </Button>
+
+                  <Button
+                    variant="success"
+                    type="button"
+                    className="ms-2"
+                    disabled={!!submitted}
+                    onClick={() => handleSubmit(null, true)}
+                  >
+                    {submitted === 2 && (
+                      <Spinner className="me-1" color="light" size="sm" />
+                    )}
+                    Save & Send
                   </Button>
                 </div>
               </Form>

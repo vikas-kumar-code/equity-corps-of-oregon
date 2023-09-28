@@ -53,8 +53,6 @@
 /* Skeleton Loading css */
 
 .skeleton-box {
-  /* filter: blur(8px);
-  -webkit-filter: blur(8px); */
   position: relative;
   overflow: hidden;
 }
@@ -76,6 +74,27 @@
   animation: shimmer 2s infinite;
   content: "";
 }
+.skeleton-box-gray{
+  overflow: hidden;
+}
+.skeleton-box-gray::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+  100deg,
+  rgb(208 208 208 / 0%) 0,
+  rgb(201 201 201 / 20%) 20%,
+  rgb(202 202 202 / 50%) 60%,
+  rgba(255, 255, 255, 0)
+);
+  animation: shimmer 2s infinite;
+  content: "";
+}
+
 @keyframes shimmer {
   100% {
     transform: translateX(100%);

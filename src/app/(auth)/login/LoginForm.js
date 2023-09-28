@@ -2,7 +2,7 @@
 import { signIn } from "next-auth/react";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Spinner } from "react-bootstrap";
+import { Form, Spinner } from "react-bootstrap";
 import Link from "next/link";
 
 export default function LoginForm() {
@@ -55,11 +55,14 @@ export default function LoginForm() {
         />
       </div>
       <div className="form-group d-flex align-items-center justify-content-between">
-        <div className="form-check">
-          <label className="form-check-label">
-            <input type="checkbox" className="form-check-input" /> Remember me{" "}
-          </label>
-        </div>
+        <Form.Check          
+          type="checkbox"
+          id="remember-me"
+          label="Remember me"
+          onChange={(e) => {
+            setFields({ ...fields, remember: e.target?.checked ? 1 : 0 });
+          }}
+        />
         <Link href="/forgot-password" className="forgot-pass">
           Forgot password
         </Link>

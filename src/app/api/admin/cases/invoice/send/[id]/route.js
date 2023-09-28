@@ -28,7 +28,6 @@ export async function POST(request, data) {
             status: 1,
           },
         });
-        console.log(updateInvoice,'zzzzzzzzzzzzzzzz');
         if (updateInvoice) {
           response.success = true;
           response.message = "The invoice has been sent for approval.";

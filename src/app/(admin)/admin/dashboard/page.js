@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 import TotalCounts from "./components/TotalCounts";
+=======
+import Dashboard from "./components/Dashboard";
+>>>>>>> 227e7da595f1e61849f8fe228956b10d35dd4be7
 
 export const metadata = {
   title: `Dashboard - Admin Panel`,
 };
+<<<<<<< HEAD
 export default async function Dashboard() {
   return (
     <div className="content-wrapper">
@@ -686,6 +691,13 @@ export default async function Dashboard() {
           </div>
         </div>
       </div>
+=======
+
+export default async function DashboardPage() {
+  return (
+    <div className="content-wrapper">
+      <Dashboard />
+>>>>>>> 227e7da595f1e61849f8fe228956b10d35dd4be7
     </div>
   );
 }

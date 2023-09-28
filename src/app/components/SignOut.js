@@ -1,8 +1,7 @@
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
-import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { Nav, NavDropdown } from "react-bootstrap";
 
 export default function SignOut() {
   const session = useSession();
@@ -17,15 +16,15 @@ export default function SignOut() {
         }
         id="nav-dropdown"
       >
-        <NavDropdown.Item eventKey="4.1">
-        <span class="mdi mdi-settings"></span>
+        <NavDropdown.Item eventKey="4.1" href="/admin/settings">
+          <span className="mdi mdi-settings"></span>
           Settings
         </NavDropdown.Item>
         <NavDropdown.Item
           eventKey="4.2"
           onClick={() => signOut({ callbackUrl: "/login" })}
         >
-          <span class="mdi mdi-logout-variant"></span>
+          <span className="mdi mdi-logout-variant"></span>
           Sign Out
         </NavDropdown.Item>
       </NavDropdown>

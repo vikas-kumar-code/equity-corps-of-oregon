@@ -42,7 +42,7 @@ export async function POST(request) {
           if (caseInvoices) {
             caseInvoices.forEach((item) => {
               allInvoiceAmout += Number(item.total_amount);
-            });            
+            });
           }
 
           if (allInvoiceAmout <= caseModel.maximum_compensation) {
@@ -75,6 +75,7 @@ export async function POST(request) {
               });
               response.success = true;
               response.message = "Invoice added successfully.";
+              response.id = caseInvoiceModel.id;
             }
           } else {
             response.error = true;

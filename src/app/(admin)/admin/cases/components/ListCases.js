@@ -25,6 +25,7 @@ export default function ListCases() {
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [updateContractModal, setUpdateContractModal] = useState(false);
+  
   const searchFields = [
     { label: "Case Number", type: "text", name: "case_number" },
     { label: "Case Title", type: "text", name: "title" },
@@ -41,6 +42,7 @@ export default function ListCases() {
     fetch(common.apiPath(`/admin/cases?${searchParams.toString()}`))
       .then((response) => response.json())
       .then((response) => {
+        console.log(response);
         if (response.success) {
           setRecords(response.records);
           setTotalRecords(response.totalRecords);
@@ -156,6 +158,7 @@ export default function ListCases() {
                         <th>#</th>
                         <th>Case Number</th>
                         <th>Ttile</th>
+                        <th>Eco Providers</th>
                         <th>Status</th>
                         <th>Added On</th>
                         <th>Action</th>

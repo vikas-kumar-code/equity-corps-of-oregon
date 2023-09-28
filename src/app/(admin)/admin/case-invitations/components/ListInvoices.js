@@ -173,7 +173,7 @@ const ListInvoices = ({
                                 <span className="mdi mdi-eye"></span>
                                 View
                               </Dropdown.Item>
-                              {item.status <= 1 && (
+                              {item.status === 0 && (
                                 <Dropdown.Item
                                   eventKey="2"
                                   onClick={() => getRecord(item.id)}

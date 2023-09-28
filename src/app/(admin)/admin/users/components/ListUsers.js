@@ -218,14 +218,14 @@ export default function ListUsers() {
                                 onClick={() => getUser(record.id, "edit")}
                                 eventKey="2"
                               >
-                              <span class="mdi mdi-pencil"></span>
+                              <span className="mdi mdi-pencil"></span>
                                 Edit
                               </Dropdown.Item>
                               <Dropdown.Item
                                 eventKey="3"
                                 onClick={() => deleteUser(record.id)}
                               >
-                              <span class="mdi mdi-delete"></span>
+                              <span className="mdi mdi-delete"></span>
                                 Delete
                               </Dropdown.Item>
                               {record.on_board_status === 1 && (

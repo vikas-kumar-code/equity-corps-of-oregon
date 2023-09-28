@@ -13,29 +13,29 @@ export default function Documents(props) {
   const session = useSession();
   const user = session.data.user || {};
 
-  const updateDocuments = async (documents) => {
-    try {
-      setLoader(true);
-      const res = await fetch(
-        common.apiPath("admin/cases/invitation/document/upload"),
-        {
-          method: "POST",
-          body: JSON.stringify({ documents: documents, case_id: props.caseId }),
-        }
-      );
-      const response = await res.json();
-      if (response.success) {
-        props.reloadRecords();
-        // toast.success(response.message);
-      } else {
-        toast.error(response.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      setLoader(false);
-    }
-  };
+  // const updateDocuments = async (documents) => {
+  //   try {
+  //     setLoader(true);
+  //     const res = await fetch(
+  //       common.apiPath("admin/cases/invitation/document/upload"),
+  //       {
+  //         method: "POST",
+  //         body: JSON.stringify({ documents: documents, case_id: props.caseId }),
+  //       }
+  //     );
+  //     const response = await res.json();
+  //     if (response.success) {
+  //       props.reloadRecords();
+  //       // toast.success(response.message);
+  //     } else {
+  //       toast.error(response.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   } finally {
+  //     setLoader(false);
+  //   }
+  // };
 
   const deleteRecord = async (document_id) => {
     if (window.confirm("Are you sure to delete?")) {
@@ -69,10 +69,10 @@ export default function Documents(props) {
         </h5>
       )}
       <Row>
-        <Col md={4}>
+        {/* <Col md={4}>
           <AddDocuments documents={[]} updateDocuments={updateDocuments} />
-        </Col>
-        <Col md={8}>
+        </Col> */}
+        <Col md={12}>
           <LoadingOverlay active={loader} spinner text="Loading...">
             <Card>
               <Card.Body style={{ maxHeight: "326px", overflowY: "auto" }}>
@@ -97,9 +97,8 @@ export default function Documents(props) {
                               "MMMM DD, YYYY"
                             )}
                           </td>
-                          <td>
-                            <div className="d-flex">
-                              {user && user.id === record.uploaded_by && (
+                          <td className="text-center">                            
+                              {/* {user && user.id === record.uploaded_by && (
                                 <Button
                                   variant="none"
                                   onClick={() => deleteRecord(record.id)}
@@ -108,14 +107,13 @@ export default function Documents(props) {
                                 >
                                   <span className="mdi mdi-delete-circle text-danger fs-4"></span>
                                 </Button>
-                              )}
+                              )} */}
                               <DownloadButton
                                 fileName={record.document_name}
                                 path={common.downloadLink(
                                   "uploads/case_documents/" + record.file_name
                                 )}
                               />
-                            </div>
                           </td>
                         </tr>
                       ))}

@@ -6,6 +6,7 @@ import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import SendInvitation from "./SendInvitation";
 import AddEditCase from "./AddEditCase";
 import ListInvoices from "./ListInvoices";
+import EcoProviders from "./EcoProviders";
 
 export default function Case({ record, getRecords, deleteRecord, sn }) {
   const [showModal, setShowModal] = useState(false);
@@ -18,6 +19,7 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
         <td>{sn}.</td>
         <td>{record.case_number}</td>
         <td>{record.title}</td>
+        <td><EcoProviders record={record} /></td>
         <td>
           {record.status ? (
             <span className="badge badge-success rounded-pill">Active</span>

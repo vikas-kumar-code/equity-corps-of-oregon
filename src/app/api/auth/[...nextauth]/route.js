@@ -7,6 +7,7 @@ import prisma from "@/utils/prisma";
 export const authOptions = {
   session: {
     strategy: "jwt",
+    // maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -37,7 +38,7 @@ export const authOptions = {
           );
           if (isPasswordValid) {
             if (user.status === 1) {
-              if (user.verified === 1) {
+              // if (user.verified === 1) {
                 if (user.on_board_status === 1) {
                   // update on board status
                   await prisma.users.update({
@@ -70,9 +71,9 @@ export const authOptions = {
                 }
 
                 return user;
-              } else {
-                throw new Error("Your account is not verified.");
-              }
+              // } else {
+              //   throw new Error("Your account is not verified.");
+              // }
             } else {
               throw new Error("Your account is not active.");
             }
@@ -93,7 +94,8 @@ export const authOptions = {
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.role_id = token.role_id;
-      session.user.routes = token.routes;
+      session.user.routes = token.routes;   
+      session.maxAge = 0;   
       return session;
     },
     async jwt({ token, user }) {
@@ -102,6 +104,7 @@ export const authOptions = {
         token.role_id = user.role_id;
         token.name = user.name;
         token.routes = user.routes;
+        token.maxAge = 0;
       }
       return token;
     },

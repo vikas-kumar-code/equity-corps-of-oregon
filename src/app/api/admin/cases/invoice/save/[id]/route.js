@@ -22,7 +22,7 @@ export async function PUT(request, data) {
         where: { id: caseInvoice.case_id },
       });
       if (caseInvoice && caseModel) {
-        if (caseInvoice.status <= 1) {
+        if (caseInvoice.status === 0) {
           let total_amount = 0;
           validated.particulars.forEach((item, index) => {
             total_amount += Number(item.amount);
@@ -73,6 +73,7 @@ export async function PUT(request, data) {
               });
               response.success = true;
               response.message = "Invoice updated successfully.";
+              response.id = caseInvoiceModel.id;
             } else {
               response.error = true;
               response.message = "Something went wrong. please try again.";
@@ -84,7 +85,7 @@ export async function PUT(request, data) {
           }
         } else {
           response.error = true;
-          response.message = "You can not perform this action.";
+          response.message = "Only draft invoices can be edited.";
         }
       } else {
         response.error = true;

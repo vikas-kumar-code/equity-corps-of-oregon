@@ -39,8 +39,12 @@ export async function GET(request, data) {
 
     if (record.case_invoice && record.case && record.admin) {
       record.case_invoice = {
+<<<<<<< HEAD
         ...record.case_invoice,
         //due_on: "",
+=======
+        ...record.case_invoice,        
+>>>>>>> 227e7da595f1e61849f8fe228956b10d35dd4be7
         particulars: JSON.parse(record.case_invoice.particulars),
       };
       response.success = true;

@@ -37,7 +37,7 @@ export default function FrontNavigation() {
             <button className="dropbtn">
               About <BiSolidDownArrow className="arrow" />
             </button>
-            <div class="dropdown-content">
+            <div className="dropdown-content">
               <Link
                 href="/about"
                 className={
@@ -86,11 +86,11 @@ export default function FrontNavigation() {
           </div>
         </li>
         <li>
-          <div class="dropdown">
-            <button class="dropbtn">
+          <div className="dropdown">
+            <button className="dropbtn">
               Get Involved <BiSolidDownArrow className="arrow" />
             </button>
-            <div class="dropdown-content">
+            <div className="dropdown-content">
               <Link
                 href="/getInvolved"
                 className={
@@ -146,16 +146,16 @@ export default function FrontNavigation() {
         </li>
         {session.data !== null && session.status === "authenticated" ? (
           <li className="nav-item mt-2 mt-lg-0">
-            <div class="dropdown">
-              <button class="dropbtn">
+            <div className="dropdown">
+              <button className="dropbtn">
                 My Account <BiSolidDownArrow className="arrow" />
               </button>
-              <div class="dropdown-content" style={{right:0}}>
+              <div className="dropdown-content" style={{right:0}}>
                 <Link href="/login" className="nav-link">
                   Dashboard
                 </Link>
                 <Link
-                  href="javascript:void(0)"
+                  href="#!"
                   className="nav-link"
                   onClick={() => signOut({ callbackUrl: "/login" })}
                 >
