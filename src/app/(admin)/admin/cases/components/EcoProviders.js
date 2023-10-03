@@ -18,8 +18,8 @@ export default function EcoProviders({ record }) {
     } else {
       return (
         <>
-          {record.case_invitations[0].user.name}
-          {record.case_invitations.length > 1 && (
+          {record?.case_invitations[0]?.user?.name ?? "N/A"}
+          {record?.case_invitations?.length > 1 && (
             <Button
               variant="link"
               className="p-2"

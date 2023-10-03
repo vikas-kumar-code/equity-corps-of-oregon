@@ -32,6 +32,7 @@ export default function AddEditCase(props) {
     title: "",
     case_number: "",
     maximum_compensation: "",
+    hourly_rate: "",
     description: "",
     milestones: [],
     documents: [],
@@ -192,10 +193,6 @@ export default function AddEditCase(props) {
     }
   }, [activeTab]);
 
-  useEffect(() => {
-    console.log(fields);
-  }, [fields]);
-
   const renderButtons = (step) => {
     return (
       <React.Fragment>
@@ -263,7 +260,7 @@ export default function AddEditCase(props) {
                     </FloatingLabel>
                   </Form.Group>
 
-                  <Form.Group as={Col} md={6} className="mb-2">
+                  <Form.Group as={Col} md={4} className="mb-2">
                     <FloatingLabel
                       controlId="floatingInput1"
                       label="Case Number"
@@ -284,8 +281,31 @@ export default function AddEditCase(props) {
                       </Form.Control.Feedback>
                     </FloatingLabel>
                   </Form.Group>
-
-                  <Form.Group as={Col} md={6} className="mb-2">
+                  <Form.Group as={Col} md={4} className="mb-2">
+                    <FloatingLabel
+                      controlId="floatingInput2"
+                      label="Hourly Rate"
+                      className="mb-3"
+                    >
+                      <Form.Control
+                        type="text"
+                        name="hourly_rate"
+                        placeholder="Hourly Rate"
+                        onChange={(event) =>
+                          setFields({
+                            ...fields,
+                            hourly_rate: event.target.value,
+                          })
+                        }
+                        isInvalid={!!errors.hourly_rate}
+                        value={fields.hourly_rate}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.hourly_rate}
+                      </Form.Control.Feedback>
+                    </FloatingLabel>
+                  </Form.Group>
+                  <Form.Group as={Col} md={4} className="mb-2">
                     <FloatingLabel
                       controlId="floatingInput2"
                       label="Maximum compensation"

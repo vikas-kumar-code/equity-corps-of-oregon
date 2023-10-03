@@ -21,7 +21,6 @@ export default function ListCaseInvitations() {
   const [pageNumber, setPageNumber] = useState(1);
   const [totalRecords, setTotalRecords] = useState(1);
   const [showSearchBox, setShowSearchBox] = useState(false);
-  // const [fields, setFields] = useState(null);
 
   const searchFields = [
     { label: "Case Number", type: "text", name: "case_number" },
@@ -29,12 +28,7 @@ export default function ListCaseInvitations() {
   ];
 
   const getRecords = async () => {
-    // let REQUEST_URI = common.apiPath(`/admin/cases/invitation?page=${pageNumber}`);
-    // if (fields !== null) {
-    //   fields["page"] = pageNumber;
-    //   const queryString = new URLSearchParams(fields).toString();
       let REQUEST_URI = common.apiPath(`/admin/cases/invitation?${searchParams.toString()}`);
-    // }
     fetch(REQUEST_URI)
       .then((response) => response.json())
       .then((response) => {
@@ -50,8 +44,8 @@ export default function ListCaseInvitations() {
       })
       .finally(() => setLoader(false));
   };
+  console.log(records);
 
-  console.log(searchParams);
   useEffect(() => {
     getRecords();
   }, [searchParams]);

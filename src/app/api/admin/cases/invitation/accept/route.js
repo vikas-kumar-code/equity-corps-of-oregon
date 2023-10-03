@@ -35,6 +35,7 @@ export async function POST(request) {
           },
         });
       }
+      console.log(caseInvitation.status);
 
       if (caseInvitation) {
         if (caseInvitation.status === 0) {
@@ -50,6 +51,17 @@ export async function POST(request) {
               },
             });
             if (updateInvitation) {
+              // Updating case status 
+              
+              await tx.cases.update({
+                where: {
+                  id: caseInvitation?.case?.id,
+                },
+                data:{
+                  status: 2
+                }
+              });
+
               response.success = true;
               response.message = "Invitation has been accepted successfully.";
 
