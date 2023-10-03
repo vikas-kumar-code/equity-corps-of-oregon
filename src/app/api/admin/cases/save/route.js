@@ -22,6 +22,7 @@ export async function POST(request) {
         data: {
           added_by: session.user.id,
           maximum_compensation: data.maximum_compensation,
+          hourly_rate: data.hourly_rate,
           case_number: data.case_number,
           title: data.title,       
           description: data.description,
