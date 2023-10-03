@@ -18,7 +18,6 @@ const Dashboard = () => {
     await fetch(common.apiPath(`/admin/dashboard`))
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         if (response.success) {
           setRecords(response.records);
         } else {

@@ -109,6 +109,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
             }
           } else if (response.error) {
             handleErrors(response.message);
+            setSubmitted(false)
           }
         })
         .catch((error) => {

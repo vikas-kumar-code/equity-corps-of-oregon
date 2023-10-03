@@ -1,8 +1,7 @@
 @font-face {
     font-family: "Material Design Icons";
     src: url("/fonts/mdi/materialdesignicons-webfont.eot?v=3.9.97");
-    src: url("/fonts/mdi/materialdesignicons-webfont.eot?#iefix&v=3.9.97") format("embedded-opentype"),
-        url("/fonts/materialdesignicons-webfont.woff2?v=3.9.97") format("woff2"),
+    src: url("/fonts/mdi/materialdesignicons-webfont.eot?#iefix&v=3.9.97") format("embedded-opentype"),        
         url("/fonts/mdi/materialdesignicons-webfont.woff?v=3.9.97") format("woff"),
         url("/fonts/mdi/materialdesignicons-webfont.ttf?v=3.9.97") format("truetype");
     font-weight: normal;
