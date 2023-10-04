@@ -39,6 +39,7 @@ const casesSchemaForm1 = Joi.object({
   case_number: Joi.string().required(),
   hourly_rate: Joi.number().min(0).optional().allow(""),
   maximum_compensation: Joi.number().min(1).required(),  
+  hourly_rate: Joi.number().optional().allow(null,""," "),  
   description: Joi.string().optional().allow(null,""," "),
 });
 

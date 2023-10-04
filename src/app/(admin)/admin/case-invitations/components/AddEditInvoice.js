@@ -37,19 +37,12 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   let fieldsData = JSON.parse(JSON.stringify(fields));
   const [loader, setLoader] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [amount, setAmount] = useState(1);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [showInvoice, setShowInvoice] = useState(null);
   const [refreshInvoices, setRefreshInvoices] = useState(true);
   const [categories, setCategories] = useState([]);
 
   const refreshListInvoices = () => {
     setRefreshInvoices(!refreshInvoices);
-  };
-
-  const handleSelect = (option, i) => {
-    setSelectedOption(option);
-    console.log("Selected Label:", option.label);
   };
 
   const handleErrors = (errors) => {
