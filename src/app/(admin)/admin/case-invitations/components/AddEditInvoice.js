@@ -1,7 +1,7 @@
 import { invoiceSchema } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import validateAsync from "@/utils/validateAsync";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Button,
@@ -17,22 +17,39 @@ import ListInvoices from "./ListInvoices";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ViewInvoice from "../../cases/components/ViewInvoice";
+import Select from "react-select";
 
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const initialValues = {
     due_on: "",
-    particulars: [{ description: "", amount: "" }],
+    particulars: [
+      {
+        category: null,
+        other_category: "",
+        show_other_category: false,
+        hours_worked: "",
+        amount: "",
+      },
+    ],
   };
   const [errors, setErrors] = useState({});
   const [fields, setFields] = useState(initialValues);
   let fieldsData = JSON.parse(JSON.stringify(fields));
   const [loader, setLoader] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [amount, setAmount] = useState(1);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [showInvoice, setShowInvoice] = useState(null);
   const [refreshInvoices, setRefreshInvoices] = useState(true);
+  const [categories, setCategories] = useState([]);
 
   const refreshListInvoices = () => {
     setRefreshInvoices(!refreshInvoices);
+  };
+
+  const handleSelect = (option, i) => {
+    setSelectedOption(option);
+    console.log("Selected Label:", option.label);
   };
 
   const handleErrors = (errors) => {
@@ -75,9 +92,11 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const handleSubmit = async (e = null, send_invoice = false) => {
     e?.preventDefault();
     setErrors({});
+    console.log("fieldsssssssss", fields);
     const validated = await validateAsync(invoiceSchema, fields, {
       removeString: "particulars",
     });
+    console.log(validated, "xxxxxxxxxxxxxxxxxxx");
     if (validated.errors) {
       handleErrors(validated.errors);
     } else {
@@ -105,17 +124,17 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
               setFields(initialValues);
               refreshListInvoices();
               reloadRecords();
-              setSubmitted(false)
+              setSubmitted(false);
             }
           } else if (response.error) {
             handleErrors(response.message);
-            setSubmitted(false)
+            setSubmitted(false);
           }
         })
         .catch((error) => {
           setSubmitted(false);
           toast.error(error.message);
-        })      
+        });
     }
   };
 
@@ -128,6 +147,32 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         .then((response) => {
           if (response.success) {
             setFields(response.record.case_invoice);
+          } else if (response.error) {
+            toast.error(response.message);
+          }
+        });
+    } catch (e) {
+      toast.error(e.message);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const getInvoiceCategories = async () => {
+    setLoader(true);
+    try {
+      await fetch(common.apiPath(`/admin/cases/invoice/categories`))
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            setCategories(
+              response.records.map((item) => {
+                return {
+                  value: item.id,
+                  label: item.name,
+                };
+              })
+            );
           } else if (response.error) {
             toast.error(response.message);
           }
@@ -153,6 +198,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     });
   };
 
+  useEffect(() => {
+    getInvoiceCategories();
+  }, []);
+
   return (
     <>
       <Modal
@@ -171,14 +220,19 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
           <LoadingOverlay active={loader} spinner text="Loading...">
             <div className="invoice-container">
               <Row className="mb-2">
-                <Col>
+                <Col md={4}>
                   {fields.id ? (
                     <h4 className="mb-2">Update Invoice</h4>
                   ) : (
                     <h4 className="mb-2">Create Invoice</h4>
                   )}
                 </Col>
-                <Col>
+                <Col md={3}>
+                  <h4 className="text-end">
+                    Hourly rate : {common.currencyFormat(record.hourly_rate, 2)}
+                  </h4>
+                </Col>
+                <Col md={5}>
                   <h4 className="text-end">
                     Max Compensation :{" "}
                     {common.currencyFormat(record.maximum_compensation, 2)}
@@ -218,26 +272,115 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 {fields.particulars?.map((item, index) => {
                   return (
                     <Row className="invoice-fieldset">
-                      <Col md={8} className="p-0">
-                        <FloatingLabel label="Particular">
+                      <Col md={5} className="p-0 invoice_drop_down">
+                        {item.show_other_category ? (
+                          <FloatingLabel label="Desribe your category">
+                            <Form.Control
+                              autoComplete="off"
+                              row={1}
+                              placeholder="Category"
+                              isInvalid={
+                                !!errors[
+                                  "particulars" + index + "other_category"
+                                ]
+                              }
+                              value={item.other_category}
+                              onChange={(event) => {
+                                fieldsData.particulars[index].other_category =
+                                  event.target.value;
+                                setFields(fieldsData);
+                                setNoError(
+                                  "particulars" + index + "other_category"
+                                );
+                              }}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors[
+                                "particulars" + index + "other_category"
+                              ] || ""}
+                            </Form.Control.Feedback>
+                            <Button
+                              key={index}
+                              variant="secondary"
+                              size="sm"
+                              className="q-opt-remove btn-close"
+                              onClick={() => {
+                                fieldsData.particulars[index].other_category =
+                                  "";
+                                fieldsData.particulars[
+                                  index
+                                ].show_other_category = false;
+                                fieldsData.particulars[index].category = null;
+                                setFields(fieldsData);
+                              }}
+                              style={{ right: 9, top: 17 }}
+                            />
+                          </FloatingLabel>
+                        ) : (
+                          <>
+                            <Select
+                              placeholder="Select"
+                              defaultOptions={categories.map((item) => {
+                                return { value: item.id, label: item.name };
+                              })}
+                              options={categories}
+                              value={item.category}
+                              onChange={(option) => {
+                                fieldsData.particulars[index].category = option;
+                                if (
+                                  option.value ===
+                                  categories[categories.length - 1].value
+                                ) {
+                                  fieldsData.particulars[
+                                    index
+                                  ].show_other_category = true;
+                                }
+                                setFields(fieldsData);
+                                setNoError("particulars" + index + "category");
+                              }}
+                            />
+                            <Form.Control.Feedback
+                              type="invalid"
+                              className="d-block"
+                            >
+                              {errors["particulars" + index + "category"] || ""}
+                            </Form.Control.Feedback>
+                          </>
+                        )}
+                      </Col>
+                      <Col md={3} className="p-0 ps-2">
+                        <FloatingLabel label="Hours worked">
                           <Form.Control
                             autoComplete="off"
                             row={1}
-                            name="description"
-                            placeholder="Particular"
+                            name="hours_worked"
+                            placeholder="Hours Worked"
                             isInvalid={
-                              !!errors["particulars" + index + "description"]
+                              !!errors["particulars" + index + "hours_worked"]
                             }
-                            value={item.description}
+                            value={item.hours_worked}
                             onChange={(event) => {
-                              fieldsData.particulars[index].description =
-                                event.target.value;
+                              fieldsData.particulars[index].hours_worked =
+                                event.target.value.replace(
+                                  /[^0-9.]|(\.(?=.*\.))/g,
+                                  ""
+                                );
+                              fieldsData.particulars[index].amount = "";
+                              if (record.hourly_rate) {
+                                fieldsData.particulars[index].amount =
+                                  Number(record.hourly_rate) *
+                                  Number(
+                                    fieldsData.particulars[index].hours_worked
+                                  );
+                              }
                               setFields(fieldsData);
-                              setNoError("particulars" + index + "description");
+                              setNoError(
+                                "particulars" + index + "hours_worked"
+                              );
                             }}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors["particulars" + index + "description"] ||
+                            {errors["particulars" + index + "hours_worked"] ||
                               ""}
                           </Form.Control.Feedback>
                         </FloatingLabel>
@@ -255,6 +398,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             onChange={(event) => {
                               fieldsData.particulars[index].amount =
                                 event.target.value.replace(/[^0-9.]/g, "");
+                              fieldsData.particulars[index].hours_worked = "";
                               setFields(fieldsData);
                               setNoError("particulars" + index + "amount");
                             }}

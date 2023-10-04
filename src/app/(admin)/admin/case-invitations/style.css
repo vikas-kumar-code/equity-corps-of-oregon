@@ -83,6 +83,10 @@
   border-width: 1px !important;
 }
 
+.css-1nmdiq5-menu{
+  z-index: 10 !important;
+}
+
 @keyframes FieldsetAnimation {
   0% {
     opacity: 0;

@@ -44,10 +44,7 @@ const RecentInvoices = ({ records, loader }) => {
                     id,
                     status,
                     name,
-                    particulars,
                     total_amount,
-                    added_on,
-                    due_on,
                   } = invoice;
                   return (
                     <tr key={`invoice-${id}-${i}`}>

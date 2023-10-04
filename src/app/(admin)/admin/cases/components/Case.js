@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import moment from "moment";
-import { ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import { Badge, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import SendInvitation from "./SendInvitation";
 import AddEditCase from "./AddEditCase";
 import ListInvoices from "./ListInvoices";
@@ -13,19 +13,34 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
   const [showSendInvitationModal, setShowSendInvitationModal] = useState(false);
   const [showListInvoices, setShowListInvoices] = useState(false);
 
+  const btnStatus = {
+    0: {
+      label: "New Case",
+      bg: "info",
+    },
+    1: {
+      label: "Invitation Sent",
+      bg: "dark",
+    },
+    2: {
+      label: "Accepted",
+      bg: "success",
+    },
+  };
+
   return (
     <>
       <tr key={`cases-key-${sn}`}>
         <td>{sn}.</td>
         <td>{record.case_number}</td>
         <td>{record.title}</td>
-        <td><EcoProviders record={record} /></td>
         <td>
-          {record.status ? (
-            <span className="badge badge-success rounded-pill">Active</span>
-          ) : (
-            <span className="badge badge-danger rounded-pill">Inactive</span>
-          )}
+          <EcoProviders record={record} />
+        </td>
+        <td>
+          <Badge pill bg={btnStatus[record.status].bg || "info"} size="sm">
+            {btnStatus[record.status].label || "N/A"}
+          </Badge>
         </td>
         <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
         <td>
@@ -82,7 +97,7 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
           reloadRecords={getRecords}
           invitedUsers={record?.case_invitations || []}
         />
-      )}      
+      )}
       {showListInvoices && (
         <ListInvoices
           showModal={showListInvoices}

@@ -6,6 +6,7 @@ const maxDocuments = 200;
 const casesSchema = Joi.object({
   title: Joi.string().max(255).required(),
   case_number: Joi.string().required(),
+  hourly_rate: Joi.number().min(0).optional().allow(""),
   maximum_compensation: Joi.number().min(1).required(),
   description: Joi.string().optional().allow(null,""," "),
   status: Joi.number().integer().default(1),
@@ -36,6 +37,7 @@ const casesSchema = Joi.object({
 const casesSchemaForm1 = Joi.object({
   title: Joi.string().max(255).required(),
   case_number: Joi.string().required(),
+  hourly_rate: Joi.number().min(0).optional().allow(""),
   maximum_compensation: Joi.number().min(1).required(),  
   description: Joi.string().optional().allow(null,""," "),
 });
@@ -73,13 +75,18 @@ const invoiceSchema = Joi.object({
   particulars: Joi.array()
     .items(
       Joi.object({
-        description: Joi.string().required(),
+        category: Joi.object().optional().allow('',null),
+        other_category: Joi.string().optional().allow('',null),
+        show_other_category: Joi.boolean().required(),
+        hours_worked: Joi.number().optional().allow('',null),
         amount: Joi.number().min(0).required().label("Amount"),
       })
     )
     .min(1)
     .required(),
 });
+
+
 
 const invoicePaymentSchema = Joi.object({
   total_amount: Joi.number().min(0).required().label("amount"),
