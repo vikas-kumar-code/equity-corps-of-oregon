@@ -222,7 +222,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 </Col>
                 <Col md={3}>
                   <h4 className="text-end">
-                    Hourly rate : {common.currencyFormat(record.hourly_rate, 2)}
+                    Hourly rate :{" "}
+                    {record.hourly_rate
+                      ? common.currencyFormat(record.hourly_rate, 2)
+                      : "N/A"}
                   </h4>
                 </Col>
                 <Col md={5}>
@@ -358,8 +361,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                                   /[^0-9.]|(\.(?=.*\.))/g,
                                   ""
                                 );
-                              fieldsData.particulars[index].amount = "";
                               if (record.hourly_rate) {
+                                fieldsData.particulars[index].amount = "";
                                 fieldsData.particulars[index].amount =
                                   Number(record.hourly_rate) *
                                   Number(
@@ -381,6 +384,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                       <Col md={4} className="position-relative pe-0">
                         <FloatingLabel label="Amount">
                           <Form.Control
+                            disabled={record.hourly_rate ? true : false}
                             autoComplete="off"
                             name="amount"
                             placeholder="Amount"
@@ -391,7 +395,9 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             onChange={(event) => {
                               fieldsData.particulars[index].amount =
                                 event.target.value.replace(/[^0-9.]/g, "");
-                              fieldsData.particulars[index].hours_worked = "";
+                              if (record.hourly_rate) {
+                                fieldsData.particulars[index].hours_worked = "";
+                              }
                               setFields(fieldsData);
                               setNoError("particulars" + index + "amount");
                             }}
