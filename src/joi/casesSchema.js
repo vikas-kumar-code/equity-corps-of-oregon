@@ -75,6 +75,7 @@ const invoiceSchema = Joi.object({
     .items(
       Joi.object({
         description: Joi.string().required(),
+        hours_worked: Joi.number().optional().allow(null,""," "),
         amount: Joi.number().min(0).required().label("Amount"),
       })
     )
