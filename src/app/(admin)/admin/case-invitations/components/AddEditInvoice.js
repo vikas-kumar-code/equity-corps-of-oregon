@@ -295,9 +295,9 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             onChange={(event) => {
                               fieldsData.particulars[index].hours_worked =
                                 event.target.value;
-                              fieldsData.particulars[index].amount =
+                              typeof(item.hours_worked) === 'number' && (fieldsData.particulars[index].amount =
                                 parseInt(record.hourly_rate) *
-                                parseInt(item.hours_worked);
+                                parseInt(item.hours_worked));
                               setFields(fieldsData);
                               setNoError(
                                 "particulars" + index + "hours_worked"
