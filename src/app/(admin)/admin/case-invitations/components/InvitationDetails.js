@@ -66,7 +66,12 @@ const InvitationDetails = ({
                       {common.currencyFormat(record.case.maximum_compensation)}
                     </td>
                   </tr>
-
+                  <tr>
+                    <th>Hourly Rate</th>
+                    <td>
+                    {common.currencyFormat(record.case.hourly_rate)}
+                    </td>
+                  </tr>
                   <tr>
                     <th>Description</th>
                     <td>{record.case.description}</td>

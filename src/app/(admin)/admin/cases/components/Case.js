@@ -28,7 +28,6 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
     },
   };
 
-  console.log(record.status);
   return (
     <>
       <tr key={`cases-key-${sn}`}>
@@ -42,11 +41,6 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
           <Badge pill bg={btnStatus[record.status].bg || "info"} size="sm">
             {btnStatus[record.status].label || "N/A"}
           </Badge>
-          {/* {record.status ? (
-            <span className="badge badge-success rounded-pill">Active</span>
-          ) : (
-            <span className="badge badge-danger rounded-pill">Inactive</span>
-          )} */}
         </td>
         <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
         <td>

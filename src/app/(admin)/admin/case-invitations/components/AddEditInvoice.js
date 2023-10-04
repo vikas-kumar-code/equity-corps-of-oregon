@@ -17,22 +17,30 @@ import ListInvoices from "./ListInvoices";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ViewInvoice from "../../cases/components/ViewInvoice";
+import Select from "react-select";
 
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const initialValues = {
     due_on: "",
-    particulars: [{ description: "", amount: "" }],
+    particulars: [{ description: "", hours_worked: "", amount: "" }],
   };
   const [errors, setErrors] = useState({});
   const [fields, setFields] = useState(initialValues);
   let fieldsData = JSON.parse(JSON.stringify(fields));
   const [loader, setLoader] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [amount, setAmount] = useState(1);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [showInvoice, setShowInvoice] = useState(null);
   const [refreshInvoices, setRefreshInvoices] = useState(true);
 
   const refreshListInvoices = () => {
     setRefreshInvoices(!refreshInvoices);
+  };
+
+  const handleSelect = (option, i) => {
+    setSelectedOption(option);
+    console.log("Selected Label:", option.label);
   };
 
   const handleErrors = (errors) => {
@@ -105,17 +113,17 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
               setFields(initialValues);
               refreshListInvoices();
               reloadRecords();
-              setSubmitted(false)
+              setSubmitted(false);
             }
           } else if (response.error) {
             handleErrors(response.message);
-            setSubmitted(false)
+            setSubmitted(false);
           }
         })
         .catch((error) => {
           setSubmitted(false);
           toast.error(error.message);
-        })      
+        });
     }
   };
 
@@ -153,6 +161,15 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     });
   };
 
+  const data = [
+    { label: "Research", value: "Research" },
+    { label: "Preparation", value: "Preparation" },
+    { label: "Appointments", value: "Appointments" },
+    { label: "Interview/Hearing", value: "Interview/Hearing" },
+    { label: "Drafting/Writing", value: "Drafting/Writing" },
+    { label: "Other - Describe", value: "Other" },
+  ];
+  console.log(fields.particulars);
   return (
     <>
       <Modal
@@ -218,22 +235,104 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 {fields.particulars?.map((item, index) => {
                   return (
                     <Row className="invoice-fieldset">
-                      <Col md={8} className="p-0">
-                        <FloatingLabel label="Particular">
+                      <Col md={5} className="p-0 invoice_drop_down">
+                        {/* <FloatingLabel label="Particulars"> */}
+                        {/* <Form.Select
+                            aria-label="Default select example"
+                            onChange={(e) => {
+                              setOtherDescribe(e.target.value);
+                              fieldsData.particulars[index].description =
+                                e.target.value;
+                              setFields(fieldsData);
+                              setNoError("particulars" + index + "description");
+                            }}
+                          ><option value="Category">Category</option>
+                            <option value="Research">Research</option>
+                            <option value="Preparation">Preparation</option>
+                            <option value="Appointments">Appointments</option>
+                            <option value="Interview/Hearing">
+                              Interview/Hearing
+                            </option>
+                            <option value="Drafting/Writing">
+                              Drafting/Writing
+                            </option>
+                            <option value="">Other - Describe</option>
+                          </Form.Select> */}
+                        {/* </FloatingLabel> */}
+                        {item.description == "Other - Describe" ? (
+                          <FloatingLabel label="Particulars">
+                            <Form.Control
+                              autoComplete="off"
+                              row={1}
+                              name="particulars"
+                              placeholder="Particulars"
+                              isInvalid={
+                                !!errors["particulars" + index + "description"]
+                              }
+                              value={item.description || ''}
+                              onChange={(event) => {
+                                fieldsData.particulars[index].description =
+                                  event.target.value;
+                                setFields(fieldsData);
+                                setNoError(
+                                  "particulars" + index + "description"
+                                );
+                              }}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors["particulars" + index + "description"] ||
+                                ""}
+                            </Form.Control.Feedback>
+                            {item.description == "Other - Describe" && (
+                              <Button
+                                key={index}
+                                variant="secondary"
+                                size="sm"
+                                className="q-opt-remove btn-close"
+                                onClick={() => {
+                                  fieldsData.particulars[index].description =
+                                    "";
+                                  setFields(fieldsData);
+                                }}
+                                style={{ right: 9, top: 17 }}
+                              />
+                            )}
+                          </FloatingLabel>
+                        ) : (
+                          <Select
+                            defaultOptions={data[0]}
+                            options={data}
+                            // onChange={()=>handleSelect(index)}
+                            onChange={(option) => {
+                              fieldsData.particulars[index].description =
+                                option.label;
+                              setFields(fieldsData);
+                              setNoError("particulars" + index + "description");
+                            }}
+                          />
+                        )}
+                      </Col>
+                      <Col md={3} className="p-0">
+                        <FloatingLabel label="Hours Worked">
                           <Form.Control
                             autoComplete="off"
                             row={1}
-                            name="description"
-                            placeholder="Particular"
+                            name="hours_worked"
+                            placeholder="Hours Worked"
                             isInvalid={
-                              !!errors["particulars" + index + "description"]
+                              !!errors["particulars" + index + "hours_worked"]
                             }
-                            value={item.description}
+                            value={item.hours_worked}
                             onChange={(event) => {
-                              fieldsData.particulars[index].description =
+                              fieldsData.particulars[index].hours_worked =
                                 event.target.value;
+                              fieldsData.particulars[index].amount =
+                                parseInt(record.hourly_rate) *
+                                parseInt(item.hours_worked);
                               setFields(fieldsData);
-                              setNoError("particulars" + index + "description");
+                              setNoError(
+                                "particulars" + index + "hours_worked"
+                              );
                             }}
                           />
                           <Form.Control.Feedback type="invalid">

@@ -81,7 +81,7 @@ model cases {
   added_by             Int
   status               Int                @default(0)
   maximum_compensation Decimal            @db.Decimal(10, 2)
-  hourly_rate          Decimal            @db.Decimal(10, 2)
+  hourly_rate          Decimal?           @db.Decimal(10, 2)
   user                 users              @relation(fields: [added_by], references: [id], onUpdate: NoAction, onDelete: NoAction)
   case_milestones      case_milestones[]
   case_documents       case_documents[]
