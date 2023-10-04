@@ -33836,3 +33836,9 @@ div.tagsinput span.tag a {
 .z-value-0 .card {
   position: unset !important;
 }
+.select-height{
+height: 58px !important;
+}
+.select-height .css-13cymwt-control{
+  height: 100% !important;
+}
