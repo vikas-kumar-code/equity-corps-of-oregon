@@ -29,18 +29,11 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   let fieldsData = JSON.parse(JSON.stringify(fields));
   const [loader, setLoader] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [amount, setAmount] = useState(1);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [showInvoice, setShowInvoice] = useState(null);
   const [refreshInvoices, setRefreshInvoices] = useState(true);
 
   const refreshListInvoices = () => {
     setRefreshInvoices(!refreshInvoices);
-  };
-
-  const handleSelect = (option, i) => {
-    setSelectedOption(option);
-    console.log("Selected Label:", option.label);
   };
 
   const handleErrors = (errors) => {
@@ -169,7 +162,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     { label: "Drafting/Writing", value: "Drafting/Writing" },
     { label: "Other - Describe", value: "Other" },
   ];
-  console.log(fields.particulars);
+
   return (
     <>
       <Modal
@@ -236,29 +229,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                   return (
                     <Row className="invoice-fieldset">
                       <Col md={5} className="p-0 invoice_drop_down">
-                        {/* <FloatingLabel label="Particulars"> */}
-                        {/* <Form.Select
-                            aria-label="Default select example"
-                            onChange={(e) => {
-                              setOtherDescribe(e.target.value);
-                              fieldsData.particulars[index].description =
-                                e.target.value;
-                              setFields(fieldsData);
-                              setNoError("particulars" + index + "description");
-                            }}
-                          ><option value="Category">Category</option>
-                            <option value="Research">Research</option>
-                            <option value="Preparation">Preparation</option>
-                            <option value="Appointments">Appointments</option>
-                            <option value="Interview/Hearing">
-                              Interview/Hearing
-                            </option>
-                            <option value="Drafting/Writing">
-                              Drafting/Writing
-                            </option>
-                            <option value="">Other - Describe</option>
-                          </Form.Select> */}
-                        {/* </FloatingLabel> */}
                         {item.description == "Other - Describe" ? (
                           <FloatingLabel label="Particulars">
                             <Form.Control
@@ -271,8 +241,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                               }
                               value={item.description || ''}
                               onChange={(event) => {
-                                fieldsData.particulars[index].description =
-                                  event.target.value;
+                                fieldsData.particulars[index].description = event.target.value;
                                 setFields(fieldsData);
                                 setNoError(
                                   "particulars" + index + "description"
@@ -336,7 +305,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             }}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors["particulars" + index + "description"] ||
+                            {errors["particulars" + index + "hours_worked"] ||
                               ""}
                           </Form.Control.Feedback>
                         </FloatingLabel>
