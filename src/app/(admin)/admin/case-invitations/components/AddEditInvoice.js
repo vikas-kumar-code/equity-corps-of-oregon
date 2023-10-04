@@ -1,7 +1,7 @@
 import { invoiceSchema } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import validateAsync from "@/utils/validateAsync";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Button,
@@ -22,7 +22,15 @@ import Select from "react-select";
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const initialValues = {
     due_on: "",
-    particulars: [{ description: "", hours_worked: "", amount: "" }],
+    particulars: [
+      {
+        category: null,
+        other_category: "",
+        show_other_category: false,
+        hours_worked: "",
+        amount: "",
+      },
+    ],
   };
   const [errors, setErrors] = useState({});
   const [fields, setFields] = useState(initialValues);
@@ -31,6 +39,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const [submitted, setSubmitted] = useState(false);
   const [showInvoice, setShowInvoice] = useState(null);
   const [refreshInvoices, setRefreshInvoices] = useState(true);
+  const [categories, setCategories] = useState([]);
 
   const refreshListInvoices = () => {
     setRefreshInvoices(!refreshInvoices);
@@ -76,9 +85,11 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const handleSubmit = async (e = null, send_invoice = false) => {
     e?.preventDefault();
     setErrors({});
+    console.log("fieldsssssssss", fields);
     const validated = await validateAsync(invoiceSchema, fields, {
       removeString: "particulars",
     });
+    console.log(validated, "xxxxxxxxxxxxxxxxxxx");
     if (validated.errors) {
       handleErrors(validated.errors);
     } else {
@@ -140,6 +151,32 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     }
   };
 
+  const getInvoiceCategories = async () => {
+    setLoader(true);
+    try {
+      await fetch(common.apiPath(`/admin/cases/invoice/categories`))
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            setCategories(
+              response.records.map((item) => {
+                return {
+                  value: item.id,
+                  label: item.name,
+                };
+              })
+            );
+          } else if (response.error) {
+            toast.error(response.message);
+          }
+        });
+    } catch (e) {
+      toast.error(e.message);
+    } finally {
+      setLoader(false);
+    }
+  };
+
   const addFieldSet = () => {
     setFields({
       ...fields,
@@ -154,14 +191,9 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     });
   };
 
-  const data = [
-    { label: "Research", value: "Research" },
-    { label: "Preparation", value: "Preparation" },
-    { label: "Appointments", value: "Appointments" },
-    { label: "Interview/Hearing", value: "Interview/Hearing" },
-    { label: "Drafting/Writing", value: "Drafting/Writing" },
-    { label: "Other - Describe", value: "Other" },
-  ];
+  useEffect(() => {
+    getInvoiceCategories();
+  }, []);
 
   return (
     <>
@@ -181,14 +213,19 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
           <LoadingOverlay active={loader} spinner text="Loading...">
             <div className="invoice-container">
               <Row className="mb-2">
-                <Col>
+                <Col md={4}>
                   {fields.id ? (
                     <h4 className="mb-2">Update Invoice</h4>
                   ) : (
                     <h4 className="mb-2">Create Invoice</h4>
                   )}
                 </Col>
-                <Col>
+                <Col md={3}>
+                  <h4 className="text-end">
+                    Hourly rate : {common.currencyFormat(record.hourly_rate, 2)}
+                  </h4>
+                </Col>
+                <Col md={5}>
                   <h4 className="text-end">
                     Max Compensation :{" "}
                     {common.currencyFormat(record.maximum_compensation, 2)}
@@ -229,60 +266,83 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                   return (
                     <Row className="invoice-fieldset">
                       <Col md={5} className="p-0 invoice_drop_down">
-                        {item.description == "Other - Describe" ? (
-                          <FloatingLabel label="Particulars">
+                        {item.show_other_category ? (
+                          <FloatingLabel label="Desribe your category">
                             <Form.Control
                               autoComplete="off"
                               row={1}
-                              name="particulars"
-                              placeholder="Particulars"
+                              placeholder="Category"
                               isInvalid={
-                                !!errors["particulars" + index + "description"]
+                                !!errors[
+                                  "particulars" + index + "other_category"
+                                ]
                               }
-                              value={item.description || ''}
+                              value={item.other_category}
                               onChange={(event) => {
-                                fieldsData.particulars[index].description = event.target.value;
+                                fieldsData.particulars[index].other_category =
+                                  event.target.value;
                                 setFields(fieldsData);
                                 setNoError(
-                                  "particulars" + index + "description"
+                                  "particulars" + index + "other_category"
                                 );
                               }}
                             />
                             <Form.Control.Feedback type="invalid">
-                              {errors["particulars" + index + "description"] ||
-                                ""}
+                              {errors[
+                                "particulars" + index + "other_category"
+                              ] || ""}
                             </Form.Control.Feedback>
-                            {item.description == "Other - Describe" && (
-                              <Button
-                                key={index}
-                                variant="secondary"
-                                size="sm"
-                                className="q-opt-remove btn-close"
-                                onClick={() => {
-                                  fieldsData.particulars[index].description =
-                                    "";
-                                  setFields(fieldsData);
-                                }}
-                                style={{ right: 9, top: 17 }}
-                              />
-                            )}
+                            <Button
+                              key={index}
+                              variant="secondary"
+                              size="sm"
+                              className="q-opt-remove btn-close"
+                              onClick={() => {
+                                fieldsData.particulars[index].other_category =
+                                  "";
+                                fieldsData.particulars[
+                                  index
+                                ].show_other_category = false;
+                                fieldsData.particulars[index].category = null;
+                                setFields(fieldsData);
+                              }}
+                              style={{ right: 9, top: 17 }}
+                            />
                           </FloatingLabel>
                         ) : (
-                          <Select
-                            defaultOptions={data[0]}
-                            options={data}
-                            // onChange={()=>handleSelect(index)}
-                            onChange={(option) => {
-                              fieldsData.particulars[index].description =
-                                option.label;
-                              setFields(fieldsData);
-                              setNoError("particulars" + index + "description");
-                            }}
-                          />
+                          <>
+                            <Select
+                              placeholder="Select"
+                              defaultOptions={categories.map((item) => {
+                                return { value: item.id, label: item.name };
+                              })}
+                              options={categories}
+                              value={item.category}
+                              onChange={(option) => {
+                                fieldsData.particulars[index].category = option;
+                                if (
+                                  option.value ===
+                                  categories[categories.length - 1].value
+                                ) {
+                                  fieldsData.particulars[
+                                    index
+                                  ].show_other_category = true;
+                                }
+                                setFields(fieldsData);
+                                setNoError("particulars" + index + "category");
+                              }}
+                            />
+                            <Form.Control.Feedback
+                              type="invalid"
+                              className="d-block"
+                            >
+                              {errors["particulars" + index + "category"] || ""}
+                            </Form.Control.Feedback>
+                          </>
                         )}
                       </Col>
-                      <Col md={3} className="p-0">
-                        <FloatingLabel label="Hours Worked">
+                      <Col md={3} className="p-0 ps-2">
+                        <FloatingLabel label="Hours worked">
                           <Form.Control
                             autoComplete="off"
                             row={1}
@@ -294,10 +354,18 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             value={item.hours_worked}
                             onChange={(event) => {
                               fieldsData.particulars[index].hours_worked =
-                                event.target.value;
-                              typeof(item.hours_worked) === 'number' && (fieldsData.particulars[index].amount =
-                                parseInt(record.hourly_rate) *
-                                parseInt(item.hours_worked));
+                                event.target.value.replace(
+                                  /[^0-9.]|(\.(?=.*\.))/g,
+                                  ""
+                                );
+                              fieldsData.particulars[index].amount = "";
+                              if (record.hourly_rate) {
+                                fieldsData.particulars[index].amount =
+                                  Number(record.hourly_rate) *
+                                  Number(
+                                    fieldsData.particulars[index].hours_worked
+                                  );
+                              }
                               setFields(fieldsData);
                               setNoError(
                                 "particulars" + index + "hours_worked"
@@ -323,6 +391,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             onChange={(event) => {
                               fieldsData.particulars[index].amount =
                                 event.target.value.replace(/[^0-9.]/g, "");
+                              fieldsData.particulars[index].hours_worked = "";
                               setFields(fieldsData);
                               setNoError("particulars" + index + "amount");
                             }}

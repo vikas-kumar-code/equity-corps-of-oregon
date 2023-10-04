@@ -105,6 +105,12 @@ model case_invoices {
   case         cases      @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
   user         users      @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
   payments     payments[]
+
+}
+
+model invoice_categories {
+  id   Int    @id @default(autoincrement())
+  name String @db.Text
 }
 
 model payments {

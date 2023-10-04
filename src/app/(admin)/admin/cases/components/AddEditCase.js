@@ -294,7 +294,7 @@ export default function AddEditCase(props) {
                         onChange={(event) =>
                           setFields({
                             ...fields,
-                            hourly_rate: event.target.value,
+                            hourly_rate: event.target.value.replace(/[^0-9.]/,''),
                           })
                         }
                         isInvalid={!!errors.hourly_rate}

@@ -35,7 +35,6 @@ export async function PUT(request, data) {
             case_id: caseId,
           },
         });
-
         // Update case record
         const updateCaseRecord = await tx.cases.update({
           where: {
@@ -43,6 +42,7 @@ export async function PUT(request, data) {
           },
           data: {
             case_number: validated.case_number,
+            hourly_rate: validated?.hourly_rate || null,
             title: validated.title,
             maximum_compensation: validated.maximum_compensation,
             description: validated.description,
