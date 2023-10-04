@@ -35,7 +35,7 @@ const RecentAttorney = ({ records, loader }) => {
                 {(!records.recentAttorney ||
                   records.recentAttorney.length <= 0) && (
                   <tr>
-                    <td colSpan={6}>
+                    <td colSpan={4}>
                       <h6 className="text-gray">No records available</h6>
                     </td>
                   </tr>

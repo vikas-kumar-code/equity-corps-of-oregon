@@ -74,20 +74,20 @@ model roles {
 }
 
 model cases {
-  id                    Int                     @id @default(autoincrement())
-  case_number           String                  @unique @db.VarChar(50)
-  title                 String                  @db.VarChar(255)
-  description           String                  @db.LongText
-  added_by              Int
-  status                Int                     @default(1)
-  maximum_compensation  Decimal                 @db.Decimal(10, 2)
-  user                  users                   @relation(fields: [added_by], references: [id], onUpdate: NoAction, onDelete: NoAction)
-  case_milestones       case_milestones[]
-  case_documents        case_documents[]
-  case_invitations      case_invitations[]
-  created_at            DateTime                @default(now())
-  logs                  logs[]
-  case_invoices         case_invoices[]
+  id                   Int                @id @default(autoincrement())
+  case_number          String             @unique @db.VarChar(50)
+  title                String             @db.VarChar(255)
+  description          String             @db.LongText
+  added_by             Int
+  status               Int                @default(1)
+  maximum_compensation Decimal            @db.Decimal(10, 2)
+  user                 users              @relation(fields: [added_by], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  case_milestones      case_milestones[]
+  case_documents       case_documents[]
+  case_invitations     case_invitations[]
+  created_at           DateTime           @default(now())
+  logs                 logs[]
+  case_invoices        case_invoices[]
 }
 
 model case_invoices {
@@ -104,6 +104,12 @@ model case_invoices {
   case         cases      @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
   user         users      @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
   payments     payments[]
+
+}
+
+model invoice_categories {
+  id   Int    @id @default(autoincrement())
+  name String @db.Text
 }
 
 model payments {
