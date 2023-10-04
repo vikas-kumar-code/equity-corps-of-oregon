@@ -252,7 +252,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                       className="form-control w-100 py-4"
                       placeholderText="Due On"
                       dateFormat={"MM-dd-yyyy"}
-                      // minDate={new Date()}
                     />
                     <Form.Control.Feedback
                       type="invalid"
@@ -312,7 +311,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                         ) : (
                           <>
                             <Select
-                              placeholder="Select"
+                            className="invoice_category"
+                              placeholder="Select Category"
                               defaultOptions={categories.map((item) => {
                                 return { value: item.id, label: item.name };
                               })}

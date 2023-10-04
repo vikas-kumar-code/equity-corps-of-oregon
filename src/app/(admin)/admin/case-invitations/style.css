@@ -86,7 +86,13 @@
 .css-1nmdiq5-menu{
   z-index: 10 !important;
 }
-
+.css-t3ipsp-control{
+  min-height: 3.7rem !important;
+}
+.invoice_category .css-13cymwt-control{
+  min-height: 3.7rem !important;
+  background-color: #f9f9f9;
+}
 @keyframes FieldsetAnimation {
   0% {
     opacity: 0;

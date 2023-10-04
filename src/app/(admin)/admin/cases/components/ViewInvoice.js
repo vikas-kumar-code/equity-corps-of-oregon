@@ -102,6 +102,8 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
                             <tr>
                               <th>#</th>
                               <th>PARTICULAR</th>
+                              <th>HOURLY RATE</th>
+                              <th>HOURS WORKED</th>
                               <th className="text-end">AMOUNT</th>
                             </tr>
                           </thead>
@@ -115,7 +117,13 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
                                         {String(index + 1).padStart(2, 0)}
                                       </td>
                                       <td className="text-left">
-                                        {item.description}
+                                        {item.category.label !== "Other - Describe" ? item.category.label : item.other_category}
+                                      </td>
+                                      <td className="hourly_rate">
+                                        {common.currencyFormat(record.case.hourly_rate)}
+                                      </td>
+                                      <td className="hours_worked">
+                                        {item.hours_worked}
                                       </td>
                                       <td className="total">
                                         {common.currencyFormat(item.amount)}
@@ -127,6 +135,8 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
                           </tbody>
                           <tfoot>
                             <tr>
+                              <td></td>
+                              <td></td>
                               <td></td>
                               <td>GRAND TOTAL</td>
                               <td>
