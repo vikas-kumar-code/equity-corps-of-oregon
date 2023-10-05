@@ -44,7 +44,7 @@ const routeSeeder = async () => {
       },
     },
     {
-      label: "Case Invitations",
+      label: "Cases",
       icon: "mdi mdi-calendar",
       url: "/admin/case-invitations",
       method: "get",

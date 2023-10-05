@@ -404,13 +404,16 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                           />
                           {index < 1 && (
                             <Button
-                            key={index}
-                            variant="success"
-                            size="sm"
-                            className="q-opt-add position-absolute"
-                            onClick={() => addFieldSet(index)}
-                            style={{ right: 9, top: 15 }}
-                          > <span className="fs-4">+</span> </Button>
+                              key={index}
+                              variant="success"
+                              size="sm"
+                              className="q-opt-add position-absolute rounded-circle"
+                              onClick={() => addFieldSet(index)}
+                              style={{ right: 9, top: 15, height:32, width:32 }}
+                            >
+                              {" "}
+                              <span className="fs-4">+</span>{" "}
+                            </Button>
                           )}
                           <Form.Control.Feedback type="invalid">
                             {errors["particulars" + index + "amount"] || ""}
@@ -423,7 +426,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             size="sm"
                             className="q-opt-remove btn-close"
                             onClick={() => removeFieldSet(index)}
-                            style={{ right: 9, top: 17 }}
+                            style={{ right: 10, top: 15, height:18, width:18 }}
                           />
                         )}
                       </Col>
