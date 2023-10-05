@@ -17,7 +17,7 @@ export default function Documents(props) {
         try {
           setLoader(true);
           await fetch(common.apiPath("/upload/delete"), {
-            method: "POST",
+            method: "DELETE",
             body: JSON.stringify({
               file: deleteDoc.file_name,
             }),

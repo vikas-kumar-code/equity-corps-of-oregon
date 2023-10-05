@@ -1,6 +1,5 @@
 // import { invoiceSchema } from "@/joi/casesSchema";
 import common from "@/utils/common";
-import validateAsync from "@/utils/validateAsync";
 import React, { useEffect, useState } from "react";
 import {
   Modal,
@@ -18,10 +17,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ViewInvoice from "../../cases/components/ViewInvoice";
 import Select from "react-select";
-import { FilePond, registerPlugin } from 'react-filepond';
-import 'filepond/dist/filepond.min.css';
+import { FilePond, registerPlugin } from "react-filepond";
+import "filepond/dist/filepond.min.css";
 import invoiceValidation from "@/validators/invoiceValidation";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 
+registerPlugin(FilePondPluginFileValidateType);
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const initialValues = {
     due_on: "",
@@ -34,6 +35,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         amount: "",
       },
     ],
+    files: [],
   };
   const [errors, setErrors] = useState({});
   const [fields, setFields] = useState(initialValues);
@@ -190,13 +192,12 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     });
   };
 
-  // const formValidation = ()=>{
-    
-  // }
-
   useEffect(() => {
     getInvoiceCategories();
   }, []);
+  useEffect(() => {
+    console.log(fields, "Fieldsssssssssssssssss");
+  }, [fields]);
 
   return (
     <>
@@ -259,10 +260,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                       placeholderText="Due On"
                       dateFormat={"MM-dd-yyyy"}
                     />
-                    <Form.Control.Feedback
-                      type="invalid"
-                      className="d-block"
-                    >
+                    <Form.Control.Feedback type="invalid" className="d-block">
                       {errors["due_on"] || ""}
                     </Form.Control.Feedback>
                   </Col>
@@ -424,7 +422,37 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 })}
                 <Row>
                   <Col md={12}>
-                  <FilePond allowMultiple={true} maxFiles={3} server={common.apiPath("/upload")} />
+                    <FilePond
+                      name="files"
+                      acceptedFileTypes={["application/pdf"]}
+                      allowMultiple={true}
+                      allowRemove={true}
+                      server={{
+                        process: {
+                          url: common.apiPath("/upload"),
+                          onload: (response) => {
+                            response = JSON.parse(response);
+                            if (response.success) {
+                              setFields({
+                                ...fields,
+                                files: [...fields.files, ...response.files],
+                              });
+                              return JSON.stringify({
+                                file: response.files[0].fileName,
+                              });
+                            } else if (response.error) {
+                              toast.error(response.message);
+                            }
+                          },
+                        },
+                        revert: {
+                          url: common.apiPath("/upload/delete"),
+                          onload: (response) => {
+                            //console.log(response);
+                          },
+                        },
+                      }}
+                    />
                   </Col>
                 </Row>
                 <div className="text-end">

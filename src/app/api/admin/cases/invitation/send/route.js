@@ -68,7 +68,7 @@ export async function POST(request) {
             })
             // Email will be sent to all requested users
             await createInvUsers.forEach(async (user) => {
-              await sendMail({
+              const mail = await sendMail({
                 to: user.email,
                 templateId: common.params.templateId.sendCaseInvitation,
                 modelsData: {
@@ -76,6 +76,7 @@ export async function POST(request) {
                   cases: caseModel,
                 },
               });
+              console.log(mail,'Mail dataaaaaaaaaaaaaa');
             });
 
             await prisma.cases.update({
