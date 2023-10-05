@@ -18,6 +18,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ViewInvoice from "../../cases/components/ViewInvoice";
 import Select from "react-select";
+import { FilePond, registerPlugin } from 'react-filepond';
+import 'filepond/dist/filepond.min.css';
 
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const initialValues = {
@@ -190,6 +192,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       particulars: fields.particulars.filter((value, i) => i !== index),
     });
   };
+
+  // const formValidation = ()=>{
+    
+  // }
 
   useEffect(() => {
     getInvoiceCategories();
@@ -419,6 +425,11 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                     </Row>
                   );
                 })}
+                <Row>
+                  <Col md={12}>
+                  <FilePond allowMultiple={true} maxFiles={3} server={common.apiPath("/upload")} />
+                  </Col>
+                </Row>
                 <div className="text-end">
                   <Button
                     variant="primary"

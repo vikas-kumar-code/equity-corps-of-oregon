@@ -76,8 +76,12 @@ const invoiceSchema = Joi.object({
   particulars: Joi.array()
     .items(
       Joi.object({
-        category: Joi.object().optional().allow('',null),
-        other_category: Joi.string().optional().allow('',null),
+        // other_category: Joi.string().valid('default', 'Other - Describe'),
+        // category: Joi.object().when('other_category', {
+        //   is: 'Other - Describe',
+        //   then: Joi.required(),
+        //   otherwise: Joi.optional()
+        // }),
         show_other_category: Joi.boolean().required(),
         hours_worked: Joi.number().optional().allow('',null),
         amount: Joi.number().min(0).required().label("Amount"),
