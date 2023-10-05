@@ -18,8 +18,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ViewInvoice from "../../cases/components/ViewInvoice";
 import Select from "react-select";
-import { FilePond, registerPlugin } from 'react-filepond';
-import 'filepond/dist/filepond.min.css';
+import { FilePond, registerPlugin } from "react-filepond";
+import {AiFillPlusCircle} from 'react-icons/ai'
+import "filepond/dist/filepond.min.css";
 import invoiceValidation from "@/validators/invoiceValidation";
 
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
@@ -190,10 +191,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     });
   };
 
-  // const formValidation = ()=>{
-    
-  // }
-
   useEffect(() => {
     getInvoiceCategories();
   }, []);
@@ -259,10 +256,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                       placeholderText="Due On"
                       dateFormat={"MM-dd-yyyy"}
                     />
-                    <Form.Control.Feedback
-                      type="invalid"
-                      className="d-block"
-                    >
+                    <Form.Control.Feedback type="invalid" className="d-block">
                       {errors["due_on"] || ""}
                     </Form.Control.Feedback>
                   </Col>
@@ -404,6 +398,16 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                               setNoError("particulars" + index + "amount");
                             }}
                           />
+                          {index < 1 && (
+                            <Button
+                            key={index}
+                            variant="success"
+                            size="sm"
+                            className="q-opt-add position-absolute"
+                            onClick={() => addFieldSet(index)}
+                            style={{ right: 9, top: 15 }}
+                          > <span className="fs-4">+</span> </Button>
+                          )}
                           <Form.Control.Feedback type="invalid">
                             {errors["particulars" + index + "amount"] || ""}
                           </Form.Control.Feedback>
@@ -424,17 +428,14 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 })}
                 <Row>
                   <Col md={12}>
-                  <FilePond allowMultiple={true} maxFiles={3} server={common.apiPath("/upload")} />
+                    <FilePond
+                      allowMultiple={true}
+                      maxFiles={3}
+                      server={common.apiPath("/upload")}
+                    />
                   </Col>
                 </Row>
                 <div className="text-end">
-                  <Button
-                    variant="primary"
-                    onClick={() => addFieldSet()}
-                    disabled={!!submitted}
-                  >
-                    Add More
-                  </Button>
                   {fields.id && (
                     <Button
                       variant="danger"
