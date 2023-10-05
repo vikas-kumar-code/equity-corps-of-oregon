@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
-import validateAsync from "@/utils/validateAsync";
-import { invoiceSchema } from "@/joi/casesSchema";
 import { getSession } from "@/utils/serverHelpers";
+import invoiceValidation from "@/validators/invoiceValidation";
 
 export async function POST(request) {
   let response = {};
@@ -10,10 +9,11 @@ export async function POST(request) {
     const session = await getSession();
     const user_id = session.user.id;
     let data = await request.json();
-    const validated = await validateAsync(invoiceSchema, data);
-    if (validated.errors) {
+    const caseModel = await prisma.cases.findUnique({where: { id: data.case_id}});
+    const validated = invoiceValidation(data,caseModel.hourly_rate);
+    if (validated.error) {
       response.error = true;
-      response.message = validated.errors;
+      response.message = validated.messages;
     } else {
       const case_id = data.case_id;
       const due_on = data.due_on;
