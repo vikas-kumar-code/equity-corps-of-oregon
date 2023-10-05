@@ -33836,13 +33836,3 @@ div.tagsinput span.tag a {
 .z-value-0 .card {
   position: unset !important;
 }
-.select-height{
-height: 58px !important;
-}
-.select-height .css-13cymwt-control, .select-height .css-t3ipsp-control{
-  height: 100% !important;
-}
-.css-1nmdiq5-menu{
-  position: absolute !important;
-  z-index: 9999999;
-}
