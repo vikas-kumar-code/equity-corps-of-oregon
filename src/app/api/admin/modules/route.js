@@ -21,7 +21,7 @@ export async function GET() {
 
     const ecoProviderModules = [
       "/admin/dashboard",
-      "/admin/case-invitations",
+      "/admin/cases",
       "/admin/settings",
     ];
 

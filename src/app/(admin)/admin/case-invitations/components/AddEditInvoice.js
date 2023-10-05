@@ -402,6 +402,16 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                               setNoError("particulars" + index + "amount");
                             }}
                           />
+                          {index < 1 && (
+                            <Button
+                            key={index}
+                            variant="success"
+                            size="sm"
+                            className="q-opt-add position-absolute"
+                            onClick={() => addFieldSet(index)}
+                            style={{ right: 9, top: 15 }}
+                          > <span className="fs-4">+</span> </Button>
+                          )}
                           <Form.Control.Feedback type="invalid">
                             {errors["particulars" + index + "amount"] || ""}
                           </Form.Control.Feedback>
@@ -456,13 +466,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                   </Col>
                 </Row>
                 <div className="text-end">
-                  <Button
-                    variant="primary"
-                    onClick={() => addFieldSet()}
-                    disabled={!!submitted}
-                  >
-                    Add More
-                  </Button>
                   {fields.id && (
                     <Button
                       variant="danger"
