@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { existsSync, unlinkSync } from "fs";
 import common from "@/utils/common";
 
-export async function POST(request) {
+export async function DELETE(request) {
   const data = await request.json();
   let response = {};
   try {

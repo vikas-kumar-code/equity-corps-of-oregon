@@ -11,7 +11,12 @@ export async function POST(request) {
   let response = {};
 
   try {
-    const files = data.getAll("files");
+    let files = data.getAll("files");
+
+    // filepond issue
+    if(Array.isArray(files)){
+      files = files.filter(item=> item !== '{}');
+    }
 
     if (files.length === 0) {
       response.error = true;

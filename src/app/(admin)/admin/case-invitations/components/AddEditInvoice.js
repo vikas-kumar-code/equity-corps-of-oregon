@@ -1,6 +1,5 @@
 // import { invoiceSchema } from "@/joi/casesSchema";
 import common from "@/utils/common";
-import validateAsync from "@/utils/validateAsync";
 import React, { useEffect, useState } from "react";
 import {
   Modal,
@@ -19,10 +18,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import ViewInvoice from "../../cases/components/ViewInvoice";
 import Select from "react-select";
 import { FilePond, registerPlugin } from "react-filepond";
-import {AiFillPlusCircle} from 'react-icons/ai'
 import "filepond/dist/filepond.min.css";
 import invoiceValidation from "@/validators/invoiceValidation";
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 
+registerPlugin(FilePondPluginFileValidateType);
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const initialValues = {
     due_on: "",
@@ -35,6 +35,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         amount: "",
       },
     ],
+    files: [],
   };
   const [errors, setErrors] = useState({});
   const [fields, setFields] = useState(initialValues);
@@ -194,6 +195,9 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   useEffect(() => {
     getInvoiceCategories();
   }, []);
+  useEffect(() => {
+    console.log(fields, "Fieldsssssssssssssssss");
+  }, [fields]);
 
   return (
     <>
@@ -400,13 +404,16 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                           />
                           {index < 1 && (
                             <Button
-                            key={index}
-                            variant="success"
-                            size="sm"
-                            className="q-opt-add position-absolute"
-                            onClick={() => addFieldSet(index)}
-                            style={{ right: 9, top: 15 }}
-                          > <span className="fs-4">+</span> </Button>
+                              key={index}
+                              variant="success"
+                              size="sm"
+                              className="q-opt-add position-absolute rounded-circle"
+                              onClick={() => addFieldSet(index)}
+                              style={{ right: 9, top: 15, height:32, width:32 }}
+                            >
+                              {" "}
+                              <span className="fs-4">+</span>{" "}
+                            </Button>
                           )}
                           <Form.Control.Feedback type="invalid">
                             {errors["particulars" + index + "amount"] || ""}
@@ -419,7 +426,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             size="sm"
                             className="q-opt-remove btn-close"
                             onClick={() => removeFieldSet(index)}
-                            style={{ right: 9, top: 17 }}
+                            style={{ right: 10, top: 15, height:18, width:18 }}
                           />
                         )}
                       </Col>
@@ -429,9 +436,35 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 <Row>
                   <Col md={12}>
                     <FilePond
+                      name="files"
+                      acceptedFileTypes={["application/pdf"]}
                       allowMultiple={true}
-                      maxFiles={3}
-                      server={common.apiPath("/upload")}
+                      allowRemove={true}
+                      server={{
+                        process: {
+                          url: common.apiPath("/upload"),
+                          onload: (response) => {
+                            response = JSON.parse(response);
+                            if (response.success) {
+                              setFields({
+                                ...fields,
+                                files: [...fields.files, ...response.files],
+                              });
+                              return JSON.stringify({
+                                file: response.files[0].fileName,
+                              });
+                            } else if (response.error) {
+                              toast.error(response.message);
+                            }
+                          },
+                        },
+                        revert: {
+                          url: common.apiPath("/upload/delete"),
+                          onload: (response) => {
+                            //console.log(response);
+                          },
+                        },
+                      }}
                     />
                   </Col>
                 </Row>
