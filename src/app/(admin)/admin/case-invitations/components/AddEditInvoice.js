@@ -312,9 +312,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             />
                           </FloatingLabel>
                         ) : (
-                          <>
+                          <div className="invoice_category">
                             <Select
-                            className="invoice_category"
                               placeholder="Select Category"
                               defaultOptions={categories.map((item) => {
                                 return { value: item.id, label: item.name };
@@ -341,7 +340,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             >
                               {errors["particulars" + index + "category"] || ""}
                             </Form.Control.Feedback>
-                          </>
+                          </div>
                         )}
                       </Col>
                       <Col md={3} className="p-0 ps-2">
