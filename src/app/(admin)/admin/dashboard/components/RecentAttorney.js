@@ -12,8 +12,7 @@ const RecentAttorney = ({ records, loader }) => {
             <table className="table">
               <thead>
                 <tr>
-                  <th> Name </th>
-                  <th> Email </th>
+                  <th> Name/Email </th>
                   <th> Phone </th>
                   <th> Address </th>
                 </tr>
@@ -24,9 +23,9 @@ const RecentAttorney = ({ records, loader }) => {
                   return (
                     <tr key={`attorney-${id}-${i}`}>
                       <td>
-                        <span className="ps-2">{name}</span>
+                        <div>{name}</div>
+                        <div>{email ?? "N/A"} </div>
                       </td>
-                      <td> {email ?? "N/A"} </td>
                       <td> {phone ?? "N/A"} </td>
                       <td> {address ?? "N/A"} </td>
                     </tr>
@@ -35,7 +34,7 @@ const RecentAttorney = ({ records, loader }) => {
                 {(!records.recentAttorney ||
                   records.recentAttorney.length <= 0) && (
                   <tr>
-                    <td colSpan={6}>
+                    <td colSpan={4}>
                       <h6 className="text-gray">No records available</h6>
                     </td>
                   </tr>

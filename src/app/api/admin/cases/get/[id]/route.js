@@ -22,7 +22,8 @@ export async function GET(request, data) {
     response.data = {
       case_number: record.case_number,
       title: record.title,
-      maximum_compensation: record.maximum_compensation,    
+      maximum_compensation: record.maximum_compensation, 
+      hourly_rate: record.hourly_rate,   
       description: record.description,
       milestones:
         record.case_milestones.map((milestone) => {

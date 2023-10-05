@@ -66,7 +66,12 @@ const InvitationDetails = ({
                       {common.currencyFormat(record.case.maximum_compensation)}
                     </td>
                   </tr>
-
+                  <tr>
+                    <th>Hourly Rate</th>
+                    <td>
+                    {common.currencyFormat(record.case.hourly_rate)}
+                    </td>
+                  </tr>
                   <tr>
                     <th>Description</th>
                     <td>{record.case.description}</td>
@@ -122,8 +127,8 @@ const InvitationDetails = ({
               </Row>
             </div>
           </Tab>
+          {record.status === 1 &&
           <Tab eventKey={3} title="Documents">
-            {record.status === 1 ? (
               <Documents
                 reloadRecords={reloadRecords}
                 setDeletedDocument={(doc) => {
@@ -134,33 +139,7 @@ const InvitationDetails = ({
                 setErrors={setErrors}
                 caseId={record.case.id}
               />
-            ) : (
-              <div className="table-responsive min-list-height">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Document Name </th>
-                      <th>Uploaded On</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {record.case.case_documents?.map((record, index) => (
-                      <tr key={`documents-key-${index}`}>
-                        <td>{Number(index + 1)}.</td>
-                        <td>{record.document_name}</td>
-                        <td>
-                          {moment(record?.uploaded_on || new Date()).format(
-                            "MMMM DD, YYYY"
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </Tab>
+          </Tab>}
           <Tab eventKey={4} title="Case Activities">
             <div style={{ maxHeight: "250px", overflowY: "auto" }}>
               <ol className="activity-feed">

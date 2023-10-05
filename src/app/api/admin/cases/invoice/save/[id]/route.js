@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
-import validateAsync from "@/utils/validateAsync";
-import { invoiceSchema } from "@/joi/casesSchema";
 import { getSession } from "@/utils/serverHelpers";
+import invoiceValidation from "@/validators/invoiceValidation";
 
 export async function PUT(request, data) {
   let response = {};
@@ -10,17 +9,18 @@ export async function PUT(request, data) {
     const session = await getSession();
     let req = await request.json();
     const id = parseInt(data.params.id);
-    const validated = await validateAsync(invoiceSchema, req);
-    if (validated.errors) {
+    const caseModel = await prisma.cases.findUnique({
+      where: { id: req.case_id },
+    });
+    const validated = invoiceValidation(req,caseModel.hourly_rate);
+    if (validated.error) {
       response.error = true;
-      response.message = validated.errors;
+      response.message = validated.messages;
     } else {
       const caseInvoice = await prisma.case_invoices.findUnique({
         where: { id, user_id: session.user.id },
       });
-      const caseModel = await prisma.cases.findUnique({
-        where: { id: caseInvoice.case_id },
-      });
+      
       if (caseInvoice && caseModel) {
         if (caseInvoice.status === 0) {
           let total_amount = 0;

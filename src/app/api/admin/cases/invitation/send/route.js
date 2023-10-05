@@ -78,6 +78,15 @@ export async function POST(request) {
               });
             });
 
+            await prisma.cases.update({
+              where: {
+                id: data?.case_id,
+              },
+              data:{
+                status: 1
+              }
+            });
+
             response.success = true;
             response.message = "Invitation has been sent successfully.";
           });

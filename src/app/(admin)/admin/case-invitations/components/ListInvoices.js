@@ -111,12 +111,11 @@ const ListInvoices = ({
   }, [refresh]);
 
   return (
-    <>
+    <div className="z-value-0">
       <LoadingOverlay active={loader} spinner text="Loading...">
         <Card>
           <Card.Body>
             <h4>Invoices</h4>
-
             {records.case && records.case_invoices && (
               <div className="table-responsive">
                 <div className="table-responsive">
@@ -210,7 +209,7 @@ const ListInvoices = ({
           </Card.Body>
         </Card>
       </LoadingOverlay>
-    </>
+    </div>
   );
 };
 

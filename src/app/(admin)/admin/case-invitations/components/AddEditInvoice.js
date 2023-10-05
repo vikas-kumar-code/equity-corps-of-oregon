@@ -1,7 +1,7 @@
-import { invoiceSchema } from "@/joi/casesSchema";
+// import { invoiceSchema } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import validateAsync from "@/utils/validateAsync";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Button,
@@ -17,11 +17,24 @@ import ListInvoices from "./ListInvoices";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ViewInvoice from "../../cases/components/ViewInvoice";
+import Select from "react-select";
+import { FilePond, registerPlugin } from "react-filepond";
+import {AiFillPlusCircle} from 'react-icons/ai'
+import "filepond/dist/filepond.min.css";
+import invoiceValidation from "@/validators/invoiceValidation";
 
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const initialValues = {
     due_on: "",
-    particulars: [{ description: "", amount: "" }],
+    particulars: [
+      {
+        category: null,
+        other_category: "",
+        show_other_category: false,
+        hours_worked: "",
+        amount: "",
+      },
+    ],
   };
   const [errors, setErrors] = useState({});
   const [fields, setFields] = useState(initialValues);
@@ -30,6 +43,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const [submitted, setSubmitted] = useState(false);
   const [showInvoice, setShowInvoice] = useState(null);
   const [refreshInvoices, setRefreshInvoices] = useState(true);
+  const [categories, setCategories] = useState([]);
 
   const refreshListInvoices = () => {
     setRefreshInvoices(!refreshInvoices);
@@ -75,11 +89,9 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const handleSubmit = async (e = null, send_invoice = false) => {
     e?.preventDefault();
     setErrors({});
-    const validated = await validateAsync(invoiceSchema, fields, {
-      removeString: "particulars",
-    });
-    if (validated.errors) {
-      handleErrors(validated.errors);
+    const validate = invoiceValidation(fields, record.hourly_rate);
+    if (validate.error) {
+      setErrors(validate.messages);
     } else {
       setSubmitted(send_invoice ? 2 : 1);
       let REQUEST_URI = common.apiPath("/admin/cases/invoice/save");
@@ -105,16 +117,17 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
               setFields(initialValues);
               refreshListInvoices();
               reloadRecords();
-              setSubmitted(false)
+              setSubmitted(false);
             }
           } else if (response.error) {
             handleErrors(response.message);
+            setSubmitted(false);
           }
         })
         .catch((error) => {
           setSubmitted(false);
           toast.error(error.message);
-        })      
+        });
     }
   };
 
@@ -127,6 +140,32 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         .then((response) => {
           if (response.success) {
             setFields(response.record.case_invoice);
+          } else if (response.error) {
+            toast.error(response.message);
+          }
+        });
+    } catch (e) {
+      toast.error(e.message);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const getInvoiceCategories = async () => {
+    setLoader(true);
+    try {
+      await fetch(common.apiPath(`/admin/cases/invoice/categories`))
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            setCategories(
+              response.records.map((item) => {
+                return {
+                  value: item.id,
+                  label: item.name,
+                };
+              })
+            );
           } else if (response.error) {
             toast.error(response.message);
           }
@@ -152,6 +191,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     });
   };
 
+  useEffect(() => {
+    getInvoiceCategories();
+  }, []);
+
   return (
     <>
       <Modal
@@ -170,14 +213,22 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
           <LoadingOverlay active={loader} spinner text="Loading...">
             <div className="invoice-container">
               <Row className="mb-2">
-                <Col>
+                <Col md={4}>
                   {fields.id ? (
                     <h4 className="mb-2">Update Invoice</h4>
                   ) : (
                     <h4 className="mb-2">Create Invoice</h4>
                   )}
                 </Col>
-                <Col>
+                <Col md={3}>
+                  <h4 className="text-end">
+                    Hourly rate :{" "}
+                    {record.hourly_rate
+                      ? common.currencyFormat(record.hourly_rate, 2)
+                      : "N/A"}
+                  </h4>
+                </Col>
+                <Col md={5}>
                   <h4 className="text-end">
                     Max Compensation :{" "}
                     {common.currencyFormat(record.maximum_compensation, 2)}
@@ -204,12 +255,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                       className="form-control w-100 py-4"
                       placeholderText="Due On"
                       dateFormat={"MM-dd-yyyy"}
-                      // minDate={new Date()}
                     />
-                    <Form.Control.Feedback
-                      type="invalid"
-                      className="d-block text-center"
-                    >
+                    <Form.Control.Feedback type="invalid" className="d-block">
                       {errors["due_on"] || ""}
                     </Form.Control.Feedback>
                   </Col>
@@ -217,26 +264,115 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 {fields.particulars?.map((item, index) => {
                   return (
                     <Row className="invoice-fieldset">
-                      <Col md={8} className="p-0">
-                        <FloatingLabel label="Particular">
+                      <Col md={5} className="p-0 invoice_drop_down">
+                        {item.show_other_category ? (
+                          <FloatingLabel label="Desribe your category">
+                            <Form.Control
+                              autoComplete="off"
+                              row={1}
+                              placeholder="Category"
+                              isInvalid={
+                                !!errors[
+                                  "particulars" + index + "other_category"
+                                ]
+                              }
+                              value={item.other_category}
+                              onChange={(event) => {
+                                fieldsData.particulars[index].other_category =
+                                  event.target.value;
+                                setFields(fieldsData);
+                                setNoError(
+                                  "particulars" + index + "other_category"
+                                );
+                              }}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors[
+                                "particulars" + index + "other_category"
+                              ] || ""}
+                            </Form.Control.Feedback>
+                            <Button
+                              key={index}
+                              variant="secondary"
+                              size="sm"
+                              className="q-opt-remove btn-close"
+                              onClick={() => {
+                                fieldsData.particulars[index].other_category =
+                                  "";
+                                fieldsData.particulars[
+                                  index
+                                ].show_other_category = false;
+                                fieldsData.particulars[index].category = null;
+                                setFields(fieldsData);
+                              }}
+                              style={{ right: 9, top: 17 }}
+                            />
+                          </FloatingLabel>
+                        ) : (
+                          <div className="invoice_category">
+                            <Select
+                              placeholder="Select Category"
+                              defaultOptions={categories.map((item) => {
+                                return { value: item.id, label: item.name };
+                              })}
+                              options={categories}
+                              value={item.category}
+                              onChange={(option) => {
+                                fieldsData.particulars[index].category = option;
+                                if (
+                                  option.value ===
+                                  categories[categories.length - 1].value
+                                ) {
+                                  fieldsData.particulars[
+                                    index
+                                  ].show_other_category = true;
+                                }
+                                setFields(fieldsData);
+                                setNoError("particulars" + index + "category");
+                              }}
+                            />
+                            <Form.Control.Feedback
+                              type="invalid"
+                              className="d-block"
+                            >
+                              {errors["particulars" + index + "category"] || ""}
+                            </Form.Control.Feedback>
+                          </div>
+                        )}
+                      </Col>
+                      <Col md={3} className="p-0 ps-2">
+                        <FloatingLabel label="Hours worked">
                           <Form.Control
                             autoComplete="off"
                             row={1}
-                            name="description"
-                            placeholder="Particular"
+                            name="hours_worked"
+                            placeholder="Hours Worked"
                             isInvalid={
-                              !!errors["particulars" + index + "description"]
+                              !!errors["particulars" + index + "hours_worked"]
                             }
-                            value={item.description}
+                            value={item.hours_worked}
                             onChange={(event) => {
-                              fieldsData.particulars[index].description =
-                                event.target.value;
+                              fieldsData.particulars[index].hours_worked =
+                                event.target.value.replace(
+                                  /[^0-9.]|(\.(?=.*\.))/g,
+                                  ""
+                                );
+                              if (record.hourly_rate) {
+                                fieldsData.particulars[index].amount = "";
+                                fieldsData.particulars[index].amount =
+                                  Number(record.hourly_rate) *
+                                  Number(
+                                    fieldsData.particulars[index].hours_worked
+                                  );
+                              }
                               setFields(fieldsData);
-                              setNoError("particulars" + index + "description");
+                              setNoError(
+                                "particulars" + index + "hours_worked"
+                              );
                             }}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors["particulars" + index + "description"] ||
+                            {errors["particulars" + index + "hours_worked"] ||
                               ""}
                           </Form.Control.Feedback>
                         </FloatingLabel>
@@ -244,6 +380,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                       <Col md={4} className="position-relative pe-0">
                         <FloatingLabel label="Amount">
                           <Form.Control
+                            disabled={record.hourly_rate ? true : false}
                             autoComplete="off"
                             name="amount"
                             placeholder="Amount"
@@ -254,10 +391,23 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             onChange={(event) => {
                               fieldsData.particulars[index].amount =
                                 event.target.value.replace(/[^0-9.]/g, "");
+                              if (record.hourly_rate) {
+                                fieldsData.particulars[index].hours_worked = "";
+                              }
                               setFields(fieldsData);
                               setNoError("particulars" + index + "amount");
                             }}
                           />
+                          {index < 1 && (
+                            <Button
+                            key={index}
+                            variant="success"
+                            size="sm"
+                            className="q-opt-add position-absolute"
+                            onClick={() => addFieldSet(index)}
+                            style={{ right: 9, top: 15 }}
+                          > <span className="fs-4">+</span> </Button>
+                          )}
                           <Form.Control.Feedback type="invalid">
                             {errors["particulars" + index + "amount"] || ""}
                           </Form.Control.Feedback>
@@ -276,14 +426,16 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                     </Row>
                   );
                 })}
+                <Row>
+                  <Col md={12}>
+                    <FilePond
+                      allowMultiple={true}
+                      maxFiles={3}
+                      server={common.apiPath("/upload")}
+                    />
+                  </Col>
+                </Row>
                 <div className="text-end">
-                  <Button
-                    variant="primary"
-                    onClick={() => addFieldSet()}
-                    disabled={!!submitted}
-                  >
-                    Add More
-                  </Button>
                   {fields.id && (
                     <Button
                       variant="danger"

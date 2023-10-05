@@ -11518,7 +11518,7 @@ progress {
 
 .table-responsive {
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;  
+  -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 575.98px) {
@@ -24563,35 +24563,6 @@ input:focus {
   outline: none;
 }
 
-/* Fonts */
-@font-face {
-  font-family: "Rubik";
-  font-weight: 300;
-  src: url("/fonts/Rubik/Rubik-Light.ttf");
-  /* IE9 Compat Modes */
-}
-
-@font-face {
-  font-family: "Rubik";
-  font-weight: 400;
-  src: url("/fonts/Rubik/Rubik-Regular.ttf");
-  /* IE9 Compat Modes */
-}
-
-@font-face {
-  font-family: "Rubik";
-  font-weight: 500;
-  src: url("/fonts/Rubik/Rubik-Medium.ttf");
-  /* IE9 Compat Modes */
-}
-
-@font-face {
-  font-family: "Rubik";
-  font-weight: 700;
-  src: url("/fonts/Rubik/Rubik-Bold.ttf");
-  /* IE9 Compat Modes */
-}
-
 /* Backgrounds  */
 .bg-gradient-primary {
   background: theme-color(primary);
@@ -33776,11 +33747,11 @@ div.tagsinput span.tag a {
 
 /* button close */
 .btn-close {
-    background-color: #fff;
-    opacity: 1;
-    background-size: 44%;
-    padding: 6px !important;
-    margin-right: -2px !important;
+  background-color: #fff;
+  opacity: 1;
+  background-size: 44%;
+  padding: 6px !important;
+  margin-right: -2px !important;
 }
 
 /* button close */
@@ -33847,7 +33818,7 @@ div.tagsinput span.tag a {
 }
 
 .min-list-height {
-  min-height: 400px;  
+  min-height: 400px;
 }
 
 .modal-body-scroll {
@@ -33857,4 +33828,11 @@ div.tagsinput span.tag a {
 
 .role_permission .card .card-body {
   padding: 0.75rem 1.5625rem !important;
+}
+
+.z-value-0 ._loading_overlay_wrapper {
+  position: unset !important;
+}
+.z-value-0 .card {
+  position: unset !important;
 }
