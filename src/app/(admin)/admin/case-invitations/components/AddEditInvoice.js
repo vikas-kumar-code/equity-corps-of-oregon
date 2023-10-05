@@ -20,6 +20,7 @@ import ViewInvoice from "../../cases/components/ViewInvoice";
 import Select from "react-select";
 import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
+import invoiceValidation from "@/validators/invoiceValidation";
 
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const initialValues = {
