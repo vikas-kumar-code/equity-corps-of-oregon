@@ -6,7 +6,7 @@ import common from "@/utils/common";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 
-const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
+const ViewInvoice = ({ showModal, closeModal, invoiceId, fields }) => {
   const [loader, setLoader] = useState(true);
   const [record, setRecord] = useState({});
 
@@ -29,8 +29,11 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
     }
   };
 
+  const invoiceData = invoiceId ? record : fields;
   useEffect(() => {
-    getRecord();
+    if(invoiceId){
+      getRecord();
+    }
   }, []);
 
   return (
@@ -100,7 +103,7 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
                         <table>
                           <thead>
                             <tr>
-                            <th>#</th>
+                              <th>#</th>
                               <th className="col-md-6">PARTICULAR</th>
                               <th className="col-md-1">HOURLY RATE</th>
                               <th className="col-md-1">HOURS</th>
@@ -108,8 +111,8 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
                             </tr>
                           </thead>
                           <tbody>
-                          {record.case_invoice.particulars &&
-                              record.case_invoice.particulars.map(
+                            {invoiceData.case_invoice.particulars &&
+                              invoiceData.case_invoice.particulars.map(
                                 (item, index) => {
                                   return (
                                     <tr>
@@ -117,15 +120,23 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
                                         {String(index + 1).padStart(2, 0)}
                                       </td>
                                       <td>
-                                        {item.category.label !== "Other - Describe" ? item.category.label : item.other_category}
+                                        {item.category.label !==
+                                        "Other - Describe"
+                                          ? item.category.label
+                                          : item.other_category}
                                       </td>
-                                      <td className="text-end" style={{backgroundColor: "#ddd"}}>
-                                        {common.currencyFormat(record.case.hourly_rate)}
+                                      <td
+                                        className="text-end"
+                                        style={{ backgroundColor: "#ddd" }}
+                                      >
+                                        {common.currencyFormat(
+                                          record.case.hourly_rate
+                                        )}
                                       </td>
                                       <td className="text-end">
                                         {item.hours_worked}
                                       </td>
-                                      <td  className="total">
+                                      <td className="total">
                                         {common.currencyFormat(item.amount)}
                                       </td>
                                     </tr>
@@ -135,10 +146,10 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
                           </tbody>
                           <tfoot>
                             <tr>
-                            <td></td>
+                              <td></td>
                               <td>GRAND TOTAL</td>
-                            <td></td>
-                            <td></td>
+                              <td></td>
+                              <td></td>
                               <td>
                                 {common.currencyFormat(
                                   record.case_invoice.total_amount

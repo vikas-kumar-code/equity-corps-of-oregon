@@ -451,9 +451,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
 
                   <Button
                     variant="warning"
-                    type="submit"
+                    type="button"
                     className="ms-2"
                     disabled={!!submitted}
+                    onClick={()=>setShowInvoice(true)}
                   >
                     {submitted === 1 && (
                       <Spinner className="me-1" color="light" size="sm" />
@@ -483,6 +484,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
               refresh={refreshInvoices}
             />
           </LoadingOverlay>
+
         </Modal.Body>
       </Modal>
 
@@ -491,6 +493,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
           showModal={showInvoice ? true : false}
           closeModal={() => setShowInvoice(null)}
           invoiceId={showInvoice}
+          fields={fields}
         />
       )}
     </>
