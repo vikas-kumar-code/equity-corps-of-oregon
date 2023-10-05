@@ -1,4 +1,4 @@
-import { invoiceSchema } from "@/joi/casesSchema";
+// import { invoiceSchema } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import validateAsync from "@/utils/validateAsync";
 import React, { useEffect, useState } from "react";
@@ -87,13 +87,9 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const handleSubmit = async (e = null, send_invoice = false) => {
     e?.preventDefault();
     setErrors({});
-    console.log("fieldsssssssss", fields);
-    const validated = await validateAsync(invoiceSchema, fields, {
-      removeString: "particulars",
-    });
-    console.log(validated, "xxxxxxxxxxxxxxxxxxx");
-    if (validated.errors) {
-      handleErrors(validated.errors);
+    const validate = invoiceValidation(fields, record.hourly_rate);
+    if (validate.error) {
+      setErrors(validate.messages);
     } else {
       setSubmitted(send_invoice ? 2 : 1);
       let REQUEST_URI = common.apiPath("/admin/cases/invoice/save");
@@ -264,7 +260,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                     />
                     <Form.Control.Feedback
                       type="invalid"
-                      className="d-block text-center"
+                      className="d-block"
                     >
                       {errors["due_on"] || ""}
                     </Form.Control.Feedback>
