@@ -1,5 +1,6 @@
 import { Card, Row, Col } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
+import Link from "next/link";
 
 const RecentCaseInvitations = ({ records, loader }) => {
   return (
@@ -8,7 +9,7 @@ const RecentCaseInvitations = ({ records, loader }) => {
         <Card.Body>
           <Row>
             <Col><h4 className="card-title">Recent Invitations</h4></Col>
-            <Col className="text-end text-primary">View All</Col>
+            <Col className="text-end text-primary"><Link href="/admin/case-invitations">View All</Link></Col>
           </Row>
           <div className="table-responsive">
             <table className="table">
