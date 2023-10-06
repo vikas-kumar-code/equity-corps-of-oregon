@@ -105,13 +105,14 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
     getRecords();
   }, [refresh]);
 
+  console.log(records);
   return (
     <div className="z-value-0">
       <LoadingOverlay active={loader} spinner text="Loading...">
         <Card>
           <Card.Body>
             <h4>Invoices</h4>
-            {records.case && records.case_invoices && (
+            {records?.case && records?.case_invoices && (
               <div className="table-responsive">
                 <div className="table-responsive">
                   <table className="table">
@@ -131,7 +132,11 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
                           <td>{index + 1}</td>
                           <td>
                             {item.name}
-                            <a href="#" className="d-block text-primary">View files</a>
+                            {item.files != null && item.files.length > 0 && (
+                              <a href="#" className="d-block text-primary">
+                                View files
+                              </a>
+                            )}
                           </td>
                           <td>{common.currencyFormat(item.total_amount, 2)}</td>
                           <td>{moment(item.added_on).format("D MMM, YYYY")}</td>
