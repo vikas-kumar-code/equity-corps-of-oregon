@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
-import { getSession } from "@/utils/serverHelpers";
+import { getSession, moveFile } from "@/utils/serverHelpers";
 import invoiceValidation from "@/validators/invoiceValidation";
+import common from "@/utils/common";
 
 export async function POST(request) {
   let response = {};
@@ -9,8 +10,10 @@ export async function POST(request) {
     const session = await getSession();
     const user_id = session.user.id;
     let data = await request.json();
-    const caseModel = await prisma.cases.findUnique({where: { id: data.case_id}});
-    const validated = invoiceValidation(data,caseModel.hourly_rate);
+    const caseModel = await prisma.cases.findUnique({
+      where: { id: data.case_id },
+    });
+    const validated = invoiceValidation(data, caseModel.hourly_rate);
     if (validated.error) {
       response.error = true;
       response.message = validated.messages;
@@ -18,12 +21,19 @@ export async function POST(request) {
       const case_id = data.case_id;
       const due_on = data.due_on;
       let total_amount = 0;
+
+      // convert amount in correct format
+      // calculate total amount
       validated.particulars.forEach((item, index) => {
         total_amount += Number(item.amount);
         validated.particulars[index].amount = Number(item.amount.toFixed(2));
       });
       total_amount = Number(total_amount.toFixed(2));
+
       let particulars = JSON.stringify(validated.particulars);
+      let uploadedFiles = data?.temp_files
+        ? JSON.stringify(data.temp_files)
+        : null;
 
       await prisma.$transaction(async (tx) => {
         const caseModel = await tx.cases.findUnique({
@@ -53,6 +63,7 @@ export async function POST(request) {
                 particulars,
                 total_amount,
                 due_on,
+                files: uploadedFiles,
               },
             });
             if (caseInvoiceModel) {
@@ -73,6 +84,19 @@ export async function POST(request) {
                     invoice.name + " added by " + session.user.name + ".",
                 },
               });
+
+              // Move uploaded files from temp to destination directory
+              if (data?.temp_files && Array.isArray(data.temp_files)) {
+                data.temp_files.forEach((doc) => {
+                  moveFile(
+                    common.publicPath("temp/" + doc.fileName), // source path
+                    common.publicPath(
+                      "uploads/invoice_documents/" + doc.fileName // destination path
+                    )
+                  );
+                });
+              }
+
               response.success = true;
               response.message = "Invoice added successfully.";
               response.id = caseInvoiceModel.id;

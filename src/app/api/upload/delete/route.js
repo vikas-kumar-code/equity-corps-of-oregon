@@ -16,6 +16,7 @@ export async function DELETE(request) {
     }
     response.success = true;
     response.message = "File deleted successfully.";
+    response.fileName = data?.file;
   } catch (err) {
     response.error = true;
     response.message = err.message;

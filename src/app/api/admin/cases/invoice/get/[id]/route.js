@@ -39,8 +39,12 @@ export async function GET(request, data) {
 
     if (record.case_invoice && record.case && record.admin) {
       record.case_invoice = {
-        ...record.case_invoice,        
+        ...record.case_invoice,
         particulars: JSON.parse(record.case_invoice.particulars),
+        files: record.case_invoice.files
+          ? JSON.parse(record.case_invoice.files)
+          : [],
+        temp_files: [],
       };
       response.success = true;
       response.record = record;

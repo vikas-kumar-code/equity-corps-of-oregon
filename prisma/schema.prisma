@@ -97,6 +97,7 @@ model case_invoices {
   user_id      Int
   name         String?
   particulars  String     @db.LongText
+  files        String?    @db.LongText
   total_amount Decimal    @db.Decimal(10, 2)
   added_on     DateTime   @default(now())
   due_on       DateTime   @db.Date
@@ -105,7 +106,6 @@ model case_invoices {
   case         cases      @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
   user         users      @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
   payments     payments[]
-
 }
 
 model invoice_categories {

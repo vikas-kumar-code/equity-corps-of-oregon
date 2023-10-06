@@ -131,7 +131,7 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                                 className="text-truncate"
                                 style={{ maxWidth: 200 }}
                               >
-                                {item.name}
+                                {item.name}                                
                               </div>
                             </td>
                             <td>

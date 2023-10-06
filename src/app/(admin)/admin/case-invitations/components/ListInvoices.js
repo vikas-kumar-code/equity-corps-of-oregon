@@ -15,12 +15,7 @@ import LoadingOverlay from "react-loading-overlay";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 
-const ListInvoices = ({
-  caseId,
-  getRecord,
-  setShowInvoice,
-  refresh,
-}) => {
+const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
   const [records, setRecords] = useState({});
   const [loader, setLoader] = useState(true);
 
@@ -134,7 +129,10 @@ const ListInvoices = ({
                       {records.case_invoices.map((item, index) => (
                         <tr>
                           <td>{index + 1}</td>
-                          <td>{item.name}</td>
+                          <td>
+                            {item.name}
+                            <a href="#" className="d-block text-primary">View files</a>
+                          </td>
                           <td>{common.currencyFormat(item.total_amount, 2)}</td>
                           <td>{moment(item.added_on).format("D MMM, YYYY")}</td>
                           <td>
