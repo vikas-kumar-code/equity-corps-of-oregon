@@ -22,13 +22,13 @@ export async function POST(request) {
       const due_on = data.due_on;
       let total_amount = 0;
 
-      // convert amount in correct format
-      // calculate total amount
+      // Convert amount in correct format
+      // Calculate total amount
       validated.particulars.forEach((item, index) => {
         total_amount += Number(item.amount);
-        validated.particulars[index].amount = Number(item.amount.toFixed(2));
+        validated.particulars[index].amount = Number(item.amount);
       });
-      total_amount = Number(total_amount.toFixed(2));
+      total_amount = Number(total_amount);
 
       let particulars = JSON.stringify(validated.particulars);
       let uploadedFiles = data?.temp_files

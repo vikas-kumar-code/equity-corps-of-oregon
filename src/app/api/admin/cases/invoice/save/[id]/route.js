@@ -12,7 +12,7 @@ export async function PUT(request, data) {
     const caseModel = await prisma.cases.findUnique({
       where: { id: req.case_id },
     });
-    const validated = invoiceValidation(req,caseModel.hourly_rate);
+    const validated = invoiceValidation(req, caseModel.hourly_rate);
     if (validated.error) {
       response.error = true;
       response.message = validated.messages;
@@ -20,17 +20,15 @@ export async function PUT(request, data) {
       const caseInvoice = await prisma.case_invoices.findUnique({
         where: { id, user_id: session.user.id },
       });
-      
+
       if (caseInvoice && caseModel) {
         if (caseInvoice.status === 0) {
           let total_amount = 0;
           validated.particulars.forEach((item, index) => {
             total_amount += Number(item.amount);
-            validated.particulars[index].amount = Number(
-              item.amount.toFixed(2)
-            );
+            validated.particulars[index].amount = Number(item.amount);
           });
-          total_amount = Number(total_amount.toFixed(2));
+          total_amount = Number(total_amount);
           let particulars = JSON.stringify(validated.particulars);
 
           const caseInvoices = await prisma.case_invoices.findMany({
@@ -43,12 +41,11 @@ export async function PUT(request, data) {
             },
           });
 
-             
           let allInvoiceAmout = total_amount;
           if (caseInvoices) {
             caseInvoices.forEach((item) => {
               allInvoiceAmout += Number(item.total_amount);
-            });            
+            });
           }
 
           if (allInvoiceAmout <= caseModel.maximum_compensation) {
@@ -81,7 +78,7 @@ export async function PUT(request, data) {
           } else {
             response.error = true;
             response.message =
-              "The total amount of all invoices cannot exceed the maximum compensation amount."
+              "The total amount of all invoices cannot exceed the maximum compensation amount.";
           }
         } else {
           response.error = true;
