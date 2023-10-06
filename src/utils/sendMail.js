@@ -21,12 +21,23 @@ const sendMail = async (
         pass: process.env.MAIL_PASSWORD,
       },
     });
+    // const transporter = nodemailer.createTransport({
+    //   host: process.env.MAIL_HOST,      
+    //   secure: true, // upgrade later with STARTTLS
+    //   auth: {
+    //     user: process.env.MAIL_USERNAME,
+    //     pass: process.env.MAIL_PASSWORD,
+    //   },
+    // });
     const mailData = await createMailData(
       options.templateId,
       options.modelsData
     );
     const info = await transporter.sendMail({
-      to: process.env.TEST_USER_EMAIL.length > 5 ? process.env.TEST_USER_EMAIL : options.to,
+      to:
+        process.env.TEST_USER_EMAIL.length > 5
+          ? process.env.TEST_USER_EMAIL
+          : options.to,
       ...mailData,
     });
     return info?.accepted && info?.accepted.length > 0 ? true : false;
