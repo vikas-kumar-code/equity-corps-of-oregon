@@ -101,6 +101,7 @@ export default function Case({
       {invoiceModal && (
         <AddEditInvoice
           showModal={invoiceModal}
+          setShowModal={setInvoiceModal}
           closeModal={() => {
             setInvoiceModal(false);
           }}

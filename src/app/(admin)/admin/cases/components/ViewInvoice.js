@@ -41,8 +41,6 @@ const ViewInvoice = ({
   const invoiceData = invoiceId == 0 ? fields : record?.case_invoice;
   const submission = submissionAction == 1 ? false : true;
   const totalAmount = invoiceData?.particulars.reduce((acc, item) => acc + item.amount , 0);
-  // console.log(totalAmount);
-
 
   useEffect(() => {
     getRecord();
@@ -102,7 +100,7 @@ const ViewInvoice = ({
                           </div>
                         </div>
                         <div className="col invoice-details">
-                          {/* <h1 className="invoice-id">INVOICE {record.id}</h1> */}
+                          <h1 className="invoice-id">INVOICE {record.id}</h1>
                           <div className="date">
                             Date of Invoice:{" "}
                             {moment(invoiceData.added_on).format("DD/MM/YYYY")}
@@ -178,6 +176,7 @@ const ViewInvoice = ({
                 </div>
               </div>
               <div className="w-100 text-center no-print">
+              {record?.case_invoice?.status == undefined ?  
                 <Button
                   variant="success"
                   type="button"
@@ -185,12 +184,12 @@ const ViewInvoice = ({
                   disabled={!!submitted}
                   onClick={()=>handleSubmit(null, submission)}
                 >
-                  {submitted === 1 && (
+                  {submitted === 1 ? (
                     <Spinner className="me-1" color="light" size="sm" />
-                  )}
-                  <span class="mdi mdi-send me-1"></span>
+                  ): <span class="mdi mdi-send me-1"></span>}
+                  
                   Submit
-                </Button>
+                </Button>:
                 <Button
                   id="printInvoice"
                   className="btn btn-primary"
@@ -198,7 +197,7 @@ const ViewInvoice = ({
                 >
                   <span className="mdi mdi-printer me-1"></span>
                   Print
-                </Button>
+                </Button>}
               </div>
             </div>
           )}

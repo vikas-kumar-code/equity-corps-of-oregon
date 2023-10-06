@@ -139,8 +139,8 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
                           <td>{index + 1}</td>
                           <td>
                             {item.name}
-                            {console.log(item.files)}
-                            {item.files != null && item.files.length > 0 && (
+                            {console.log(Array.isArray(JSON.parse(item?.files)), JSON.parse(item?.files)?.length)}
+                            {(JSON.parse(item?.files)?.length > 0) && (
                               <a
                                 href="#"
                                 className="d-block text-primary"

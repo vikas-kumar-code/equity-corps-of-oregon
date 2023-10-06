@@ -211,7 +211,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       particulars: fields.particulars.filter((value, i) => i !== index),
     });
   };
-  console.log("sdfasdf", showInvoice);
 
   useEffect(() => {
     getInvoiceCategories();
@@ -285,7 +284,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 </Row>
                 {fields.particulars?.map((item, index) => {
                   return (
-                    <Row className="invoice-fieldset" key={index}>
+                    <Row className="invoice-fieldset" key={`particulars-${index}`}>
                       <Col md={5} className="p-0 invoice_drop_down">
                         {item.show_other_category ? (
                           <FloatingLabel label="Desribe your category">
