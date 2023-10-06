@@ -36,6 +36,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       },
     ],
     files: [],
+    temp_files: [],
+    deleted_files: [],
   };
   const [errors, setErrors] = useState({});
   const [fields, setFields] = useState(initialValues);
@@ -89,56 +91,56 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   };
 
   // To preview invoice before submission
-  const handlePreview = (id, action)=>{
-    setErrors({})
+  const handlePreview = (id, action) => {
+    setErrors({});
     const validate = invoiceValidation(fields, record.hourly_rate);
     if (validate.error) {
       setErrors(validate.messages);
-    }else{
-      setShowInvoice(id)
-      setSubmissionAction(action)
+    } else {
+      setShowInvoice(id);
+      setSubmissionAction(action);
     }
-  }
+  };
 
   const handleSubmit = async (e = null, send_invoice = false) => {
     e?.preventDefault();
     setErrors({});
-      setSubmitted(send_invoice ? 2 : 1);
-      let REQUEST_URI = common.apiPath("/admin/cases/invoice/save");
-      let REQUEST_METHOD = "POST";
-      if (fields.id) {
-        REQUEST_URI = common.apiPath(`/admin/cases/invoice/save/${fields.id}`);
-        REQUEST_METHOD = "PUT";
-      }
-      fetch(REQUEST_URI, {
-        method: REQUEST_METHOD,
-        body: JSON.stringify({
-          case_id: record.id,
-          ...fields,
-        }),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            if (send_invoice && response?.id) {
-              sendInvoice(response.id);
-            } else {
-              toast.success(response.message);
-              setFields(initialValues);
-              refreshListInvoices();
-              reloadRecords();
-              setSubmitted(false);
-            }
-            setShowInvoice(null)
-          } else if (response.error) {
-            handleErrors(response.message);
+    setSubmitted(send_invoice ? 2 : 1);
+    let REQUEST_URI = common.apiPath("/admin/cases/invoice/save");
+    let REQUEST_METHOD = "POST";
+    if (fields.id) {
+      REQUEST_URI = common.apiPath(`/admin/cases/invoice/save/${fields.id}`);
+      REQUEST_METHOD = "PUT";
+    }
+    fetch(REQUEST_URI, {
+      method: REQUEST_METHOD,
+      body: JSON.stringify({
+        case_id: record.id,
+        ...fields,
+      }),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          if (send_invoice && response?.id) {
+            sendInvoice(response.id);
+          } else {
+            toast.success(response.message);
+            setFields(initialValues);
+            refreshListInvoices();
+            reloadRecords();
             setSubmitted(false);
           }
-        })
-        .catch((error) => {
+          setShowInvoice(null);
+        } else if (response.error) {
+          handleErrors(response.message);
           setSubmitted(false);
-          toast.error(error.message);
-        });
+        }
+      })
+      .catch((error) => {
+        setSubmitted(false);
+        toast.error(error.message);
+      });
   };
 
   const getRecord = async (id) => {
