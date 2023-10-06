@@ -21,7 +21,6 @@ import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import invoiceValidation from "@/validators/invoiceValidation";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-import { useRef } from "react";
 
 registerPlugin(FilePondPluginFileValidateType);
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
@@ -37,8 +36,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       },
     ],
     files: [],
-    temp_files: [],
-    deleted_files: [],
   };
   const [errors, setErrors] = useState({});
   const [fields, setFields] = useState(initialValues);
@@ -49,13 +46,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const [refreshInvoices, setRefreshInvoices] = useState(true);
   const [submissionAction, setSubmissionAction] = useState(0);
   const [categories, setCategories] = useState([]);
-  const filePondRef = useRef(null);
-
-  const resetFilepond = () => {
-    if (filePondRef.current) {
-      filePondRef.current.removeFiles({ revert: false });
-    }
-  };
 
   const refreshListInvoices = () => {
     setRefreshInvoices(!refreshInvoices);
@@ -99,57 +89,56 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   };
 
   // To preview invoice before submission
-  const handlePreview = (id, action) => {
-    setErrors({});
+  const handlePreview = (id, action)=>{
+    setErrors({})
     const validate = invoiceValidation(fields, record.hourly_rate);
     if (validate.error) {
       setErrors(validate.messages);
-    } else {
-      setShowInvoice(id);
-      setSubmissionAction(action);
+    }else{
+      setShowInvoice(id)
+      setSubmissionAction(action)
     }
-  };
+  }
 
   const handleSubmit = async (e = null, send_invoice = false) => {
     e?.preventDefault();
     setErrors({});
-    setSubmitted(send_invoice ? 2 : 1);
-    let REQUEST_URI = common.apiPath("/admin/cases/invoice/save");
-    let REQUEST_METHOD = "POST";
-    if (fields.id) {
-      REQUEST_URI = common.apiPath(`/admin/cases/invoice/save/${fields.id}`);
-      REQUEST_METHOD = "PUT";
-    }
-    fetch(REQUEST_URI, {
-      method: REQUEST_METHOD,
-      body: JSON.stringify({
-        case_id: record.id,
-        ...fields,
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.success) {
-          if (send_invoice && response?.id) {
-            sendInvoice(response.id);
-          } else {
-            toast.success(response.message);
-            setFields(initialValues);
-            refreshListInvoices();
-            reloadRecords();
+      setSubmitted(send_invoice ? 2 : 1);
+      let REQUEST_URI = common.apiPath("/admin/cases/invoice/save");
+      let REQUEST_METHOD = "POST";
+      if (fields.id) {
+        REQUEST_URI = common.apiPath(`/admin/cases/invoice/save/${fields.id}`);
+        REQUEST_METHOD = "PUT";
+      }
+      fetch(REQUEST_URI, {
+        method: REQUEST_METHOD,
+        body: JSON.stringify({
+          case_id: record.id,
+          ...fields,
+        }),
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            if (send_invoice && response?.id) {
+              sendInvoice(response.id);
+            } else {
+              toast.success(response.message);
+              setFields(initialValues);
+              refreshListInvoices();
+              reloadRecords();
+              setSubmitted(false);
+            }
+            setShowInvoice(null)
+          } else if (response.error) {
+            handleErrors(response.message);
             setSubmitted(false);
           }
-          setShowInvoice(null);
-          resetFilepond();
-        } else if (response.error) {
-          handleErrors(response.message);
+        })
+        .catch((error) => {
           setSubmitted(false);
-        }
-      })
-      .catch((error) => {
-        setSubmitted(false);
-        toast.error(error.message);
-      });
+          toast.error(error.message);
+        });
   };
 
   const getRecord = async (id) => {
@@ -211,7 +200,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       particulars: fields.particulars.filter((value, i) => i !== index),
     });
   };
-  console.log("sdfasdf", showInvoice);
 
   useEffect(() => {
     getInvoiceCategories();
@@ -333,12 +321,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                         ) : (
                           <div className="invoice_category">
                             <Select
-                              styles={{
-                                menuPortal: (base) => ({
-                                  ...base,
-                                  zIndex: 9999,
-                                }),
-                              }}
                               placeholder="Select Category"
                               defaultOptions={categories.map((item) => {
                                 return { value: item.id, label: item.name };
@@ -467,32 +449,9 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                     </Row>
                   );
                 })}
-                {fields.files &&
-                  Array.isArray(fields.files) &&
-                  fields.files.length > 0 && (
-                    <Row>
-                      <div className="files-container">
-                        <h4>Attached Files</h4>
-                        <ul className="files-list">
-                          {fields.files.map((item) => {
-                            return (
-                              <li>
-                                <span className="mdi mdi-file-pdf inv-file-icon"></span>
-                                <a href="#" className="text-truncate">
-                                  {item.originalFileName}
-                                </a>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                    </Row>
-                  )}
-
                 <Row>
                   <Col md={12}>
                     <FilePond
-                      ref={filePondRef}
                       name="files"
                       acceptedFileTypes={["application/pdf"]}
                       allowMultiple={true}
@@ -505,10 +464,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             if (response.success) {
                               setFields({
                                 ...fields,
-                                temp_files: [
-                                  ...fields.temp_files,
-                                  ...response.files,
-                                ],
+                                files: [...fields.files, ...response.files],
                               });
                               return JSON.stringify({
                                 file: response.files[0].fileName,
@@ -521,15 +477,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                         revert: {
                           url: common.apiPath("/upload/delete"),
                           onload: (response) => {
-                            response = JSON.parse(response);
-                            let copyFields = JSON.parse(JSON.stringify(fields));
-                            copyFields = {
-                              ...copyFields,
-                              temp_files: copyFields.temp_files.filter(
-                                (item) => item.fileName !== response?.fileName
-                              ),
-                            };
-                            setFields(copyFields);
+                            //console.log(response);
                           },
                         },
                       }}
@@ -541,10 +489,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                     <Button
                       variant="danger"
                       className="ms-2"
-                      onClick={() => {
-                        setFields(initialValues);
-                        resetFilepond();
-                      }}
+                      onClick={() => setFields(initialValues)}
                       disabled={!!submitted}
                     >
                       Cancel
