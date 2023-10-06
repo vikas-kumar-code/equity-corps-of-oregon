@@ -23,18 +23,11 @@ const DownloadButton = ({ path = "", fileName = "" }) => {
     }
   };
 
-<<<<<<< HEAD
-  return (
-    <Button variant="none" size="sm" onClick={downloadFile} className="d-flex">
-      <span className="mdi mdi-folder-download text-success fs-4"></span>
-      {loader && <Spinner size="sm" variant="primary" className="ms-1 p-0" />}
-=======
   return loader ? (
     <Spinner size="sm" variant="primary" />
   ) : (
     <Button variant="none" size="sm" onClick={downloadFile}>
       <span className="mdi mdi-folder-download text-success fs-4"></span>
->>>>>>> 227e7da595f1e61849f8fe228956b10d35dd4be7
     </Button>
   );
 };

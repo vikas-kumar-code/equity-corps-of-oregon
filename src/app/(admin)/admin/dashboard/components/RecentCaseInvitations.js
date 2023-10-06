@@ -1,4 +1,4 @@
-import { Card } from "react-bootstrap";
+import { Card, Row, Col } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 
 const RecentCaseInvitations = ({ records, loader }) => {
@@ -6,7 +6,10 @@ const RecentCaseInvitations = ({ records, loader }) => {
     <LoadingOverlay active={loader} spinner>
       <Card>
         <Card.Body>
-          <h4 className="card-title">Recent Case Invitations</h4>
+          <Row>
+            <Col><h4 className="card-title">Recent Invitations</h4></Col>
+            <Col className="text-end text-primary">View All</Col>
+          </Row>
           <div className="table-responsive">
             <table className="table">
               <thead>
@@ -24,19 +27,18 @@ const RecentCaseInvitations = ({ records, loader }) => {
                       <td> {caseInvitations.case.title ?? "N/A"} </td>
                       <td>
                         <div
-                          className={`badge ${
-                            caseInvitations.case.status === 1
-                              ? "badge-dark rounded-pill"
-                              : caseInvitations.case.status === 2
+                          className={`badge ${caseInvitations.case.status === 1
+                            ? "badge-dark rounded-pill"
+                            : caseInvitations.case.status === 2
                               ? "badge-success rounded-pill"
                               : "badge-secondary rounded-pill"
-                          }`}
+                            }`}
                         >
                           {caseInvitations.case.status === 1
                             ? "Sent"
                             : caseInvitations.case.status === 2
-                            ? "Accepted"
-                            : "Expired"}
+                              ? "Accepted"
+                              : "Expired"}
                         </div>
                       </td>
                     </tr>
@@ -44,12 +46,12 @@ const RecentCaseInvitations = ({ records, loader }) => {
                 })}
                 {(!records.recentCaseInvitations ||
                   records.recentCaseInvitations.length <= 0) && (
-                  <tr>
-                    <td colSpan={3}>
-                      <h6 className="text-gray">No records available</h6>
-                    </td>
-                  </tr>
-                )}
+                    <tr>
+                      <td colSpan={3}>
+                        <h6 className="text-gray">No records available</h6>
+                      </td>
+                    </tr>
+                  )}
               </tbody>
             </table>
           </div>
