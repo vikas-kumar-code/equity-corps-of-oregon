@@ -21,6 +21,7 @@ import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import invoiceValidation from "@/validators/invoiceValidation";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import { useRef } from "react";
 
 registerPlugin(FilePondPluginFileValidateType);
 const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
@@ -48,6 +49,13 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const [refreshInvoices, setRefreshInvoices] = useState(true);
   const [submissionAction, setSubmissionAction] = useState(0);
   const [categories, setCategories] = useState([]);
+  const filePondRef = useRef(null);
+
+  const resetFilepond = () => {
+    if (filePondRef.current) {
+      filePondRef.current.removeFiles({ revert: false });
+    }
+  };
 
   const refreshListInvoices = () => {
     setRefreshInvoices(!refreshInvoices);
@@ -132,6 +140,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
             setSubmitted(false);
           }
           setShowInvoice(null);
+          resetFilepond();
         } else if (response.error) {
           handleErrors(response.message);
           setSubmitted(false);
@@ -202,6 +211,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       particulars: fields.particulars.filter((value, i) => i !== index),
     });
   };
+  console.log("sdfasdf", showInvoice);
 
   useEffect(() => {
     getInvoiceCategories();
@@ -323,6 +333,12 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                         ) : (
                           <div className="invoice_category">
                             <Select
+                              styles={{
+                                menuPortal: (base) => ({
+                                  ...base,
+                                  zIndex: 9999,
+                                }),
+                              }}
                               placeholder="Select Category"
                               defaultOptions={categories.map((item) => {
                                 return { value: item.id, label: item.name };
@@ -451,9 +467,32 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                     </Row>
                   );
                 })}
+                {fields.files &&
+                  Array.isArray(fields.files) &&
+                  fields.files.length > 0 && (
+                    <Row>
+                      <div className="files-container">
+                        <h4>Attached Files</h4>
+                        <ul className="files-list">
+                          {fields.files.map((item) => {
+                            return (
+                              <li>
+                                <span className="mdi mdi-file-pdf inv-file-icon"></span>
+                                <a href="#" className="text-truncate">
+                                  {item.originalFileName}
+                                </a>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    </Row>
+                  )}
+
                 <Row>
                   <Col md={12}>
                     <FilePond
+                      ref={filePondRef}
                       name="files"
                       acceptedFileTypes={["application/pdf"]}
                       allowMultiple={true}
@@ -466,7 +505,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             if (response.success) {
                               setFields({
                                 ...fields,
-                                files: [...fields.files, ...response.files],
+                                temp_files: [
+                                  ...fields.temp_files,
+                                  ...response.files,
+                                ],
                               });
                               return JSON.stringify({
                                 file: response.files[0].fileName,
@@ -479,7 +521,15 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                         revert: {
                           url: common.apiPath("/upload/delete"),
                           onload: (response) => {
-                            //console.log(response);
+                            response = JSON.parse(response);
+                            let copyFields = JSON.parse(JSON.stringify(fields));
+                            copyFields = {
+                              ...copyFields,
+                              temp_files: copyFields.temp_files.filter(
+                                (item) => item.fileName !== response?.fileName
+                              ),
+                            };
+                            setFields(copyFields);
                           },
                         },
                       }}
@@ -491,7 +541,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                     <Button
                       variant="danger"
                       className="ms-2"
-                      onClick={() => setFields(initialValues)}
+                      onClick={() => {
+                        setFields(initialValues);
+                        resetFilepond();
+                      }}
                       disabled={!!submitted}
                     >
                       Cancel

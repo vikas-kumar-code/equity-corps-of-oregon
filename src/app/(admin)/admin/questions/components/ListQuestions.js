@@ -203,22 +203,14 @@ export default function ListQuestions() {
                                           eventKey="1"
                                           onClick={() => getRecord(record.id)}
                                         >
-<<<<<<< HEAD
-                                          <span className="mdi mdi-pencil"></span>
-=======
                                         <span className="mdi mdi-pencil"></span>
->>>>>>> 227e7da595f1e61849f8fe228956b10d35dd4be7
                                           Edit
                                         </Dropdown.Item>
                                         <Dropdown.Item
                                           eventKey="2"
                                           onClick={() => deleteRecord(record.id)}
                                         >
-<<<<<<< HEAD
-                                          <span className="mdi mdi-delete"></span>
-=======
                                         <span className="mdi mdi-delete"></span>
->>>>>>> 227e7da595f1e61849f8fe228956b10d35dd4be7
                                           Delete
                                         </Dropdown.Item>
                                       </DropdownButton>
