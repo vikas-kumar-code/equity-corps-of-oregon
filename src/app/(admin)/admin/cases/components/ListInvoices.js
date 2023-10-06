@@ -109,6 +109,95 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
               </Row>
               {records.case && records.case_invoices && (
                 <div className="table-responsive">
+<<<<<<< HEAD
+                  <div className="table-responsive">
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Invoice</th>
+                          <th>Total Amount</th>
+                          <th>Paid Amount</th>
+                          <th>Added On</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {records.case_invoices.map((item, index) => (
+                          <>
+                            <tr>
+                              <td>{index + 1}</td>
+                              <td>{item.name}</td>
+                              <td>
+                                {common.currencyFormat(item.total_amount, 2)}
+                              </td>
+                              <td>
+                                {common.currencyFormat(item.total_amount, 2)}
+                              </td>
+                              <td>
+                                {moment(item.added_on).format("D MMM, YYYY")}
+                              </td>
+                              <td>
+                                <Badge
+                                  pill
+                                  bg={btnStatus[item.status].bg || "info"}
+                                  size="sm"
+                                >
+                                  {btnStatus[item.status].label || "N/A"}
+                                </Badge>
+                              </td>
+                              <td>
+                                <DropdownButton
+                                  as={ButtonGroup}
+                                  key="action-1"
+                                  id={`action-btn-1`}
+                                  variant="primary"
+                                  title="Action"
+                                  align="end"
+                                >
+                                  <Dropdown.Item
+                                    eventKey="1"
+                                    onClick={() => setShowInvoice(item.id)}
+                                  >
+                                    <span className="mdi mdi-eye"></span>
+                                    View
+                                  </Dropdown.Item>
+                                  {item.status <= 2 && (
+                                    <Dropdown.Item
+                                      eventKey="2"
+                                      onClick={() => setInvoicePayment(item)}
+                                    >
+                                      <span className="mdi mdi-currency-usd"></span>
+                                      Pay
+                                    </Dropdown.Item>
+                                  )}
+                                </DropdownButton>
+                              </td>
+                            </tr>
+                            {item.status === 2 && (
+                              <tr>
+                                <td colSpan={4}>Payments</td>
+                                <td>$200</td>
+                                <td>$300</td>
+                              </tr>
+                            )}
+                          </>
+                        ))}
+                        {(!records.case_invoices ||
+                          records.case_invoices.length <= 0) && (
+                            <tr>
+                              <td colSpan={6}>
+                                <h6 className="text-gray">
+                                  No records available
+                                </h6>
+                              </td>
+                            </tr>
+                          )}
+                      </tbody>
+                    </table>
+                  </div>
+=======
                   <table className="table">
                     <thead>
                       <tr>
@@ -213,6 +302,7 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                       )}
                     </tbody>
                   </table>
+>>>>>>> 227e7da595f1e61849f8fe228956b10d35dd4be7
                 </div>
               )}
             </div>

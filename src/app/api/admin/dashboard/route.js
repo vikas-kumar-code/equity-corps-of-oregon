@@ -105,5 +105,16 @@ export async function GET(request) {
       error: true,
       message: err.message,
     });
+    counts = [
+      ...counts,
+      { count: totalInvitations, label: 'Total Case Invitations', icon: 'mdi mdi-alpha-c-circle' },
+    ]
   }
+
+  return NextResponse.json({
+    success: true,
+    records: {
+      counts: counts
+    }
+  });
 }
