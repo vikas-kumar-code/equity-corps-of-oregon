@@ -23,6 +23,18 @@ export async function GET(request, data) {
           law_firm_name: true,
         },
       });
+
+      // record.case_invoice = await prisma.case_invoices.findUnique({
+      //   where:{
+      //     user_id: session.user.id
+      //   }
+      // });
+      // record.case = await prisma.cases.findUnique({
+      //   where: {
+      //     id: record.case_invoice.case_id,
+      //   },
+      // });
+
       response.success = true;
       response.record = record;
     } else {

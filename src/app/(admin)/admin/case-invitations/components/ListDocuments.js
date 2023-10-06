@@ -37,7 +37,6 @@ const ListDocuments = ({
             <tbody>
               {files?.length > 0 &&
                 files?.map((file, i) => {
-                  console.log(file);
                   return (
                     <tr key={`documents-${i}`}>
                       <td>{i+1}</td>

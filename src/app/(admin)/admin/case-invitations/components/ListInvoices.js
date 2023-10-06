@@ -87,9 +87,10 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
 
   const handleShowDoc = (index)=>{
     setCaseInvitationIndex(index)
+    console.log(index);
     setShowDocList(true)
   }
-
+console.log(records);
   const btnStatus = {
     0: {
       label: "Draft",
