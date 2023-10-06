@@ -44,8 +44,7 @@ export default function ListCaseInvitations() {
       })
       .finally(() => setLoader(false));
   };
-  console.log(records);
-
+  
   useEffect(() => {
     getRecords();
   }, [searchParams]);

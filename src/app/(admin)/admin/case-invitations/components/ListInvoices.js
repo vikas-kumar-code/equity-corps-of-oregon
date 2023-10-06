@@ -14,10 +14,13 @@ import { useState } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import ListDocuments from "./ListDocuments";
 
 const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
   const [records, setRecords] = useState({});
   const [loader, setLoader] = useState(true);
+  const [caseInvitationIndex, setCaseInvitationIndex] = useState(0);
+  const [showDocList, setShowDocList] = useState(false);
 
   const getRecords = async () => {
     setLoader(true);
@@ -82,6 +85,11 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
     }
   };
 
+  const handleShowDoc = (index)=>{
+    setCaseInvitationIndex(index)
+    setShowDocList(true)
+  }
+
   const btnStatus = {
     0: {
       label: "Draft",
@@ -111,7 +119,7 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
         <Card>
           <Card.Body>
             <h4>Invoices</h4>
-            {records.case && records.case_invoices && (
+            {records?.case && records?.case_invoices && (
               <div className="table-responsive">
                 <div className="table-responsive">
                   <table className="table">
@@ -131,7 +139,15 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
                           <td>{index + 1}</td>
                           <td>
                             {item.name}
-                            <a href="#" className="d-block text-primary">View files</a>
+                            {item.files != null && item.files.length > 0 && (
+                              <a
+                                href="#"
+                                className="d-block text-primary"
+                                onClick={() => handleShowDoc(index)}
+                              >
+                                View files
+                              </a>
+                            )}
                           </td>
                           <td>{common.currencyFormat(item.total_amount, 2)}</td>
                           <td>{moment(item.added_on).format("D MMM, YYYY")}</td>
@@ -207,6 +223,12 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
           </Card.Body>
         </Card>
       </LoadingOverlay>
+      <ListDocuments
+        showDocList={showDocList}
+        closeModal={() => setShowDocList(false)}
+        records={records}
+        caseInvitationIndex={caseInvitationIndex}
+      />
     </div>
   );
 };
