@@ -14,10 +14,13 @@ import { useState } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import ListDocuments from "./ListDocuments";
 
 const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
   const [records, setRecords] = useState({});
   const [loader, setLoader] = useState(true);
+  const [caseInvitationIndex, setCaseInvitationIndex] = useState(null);
+  const [showDocList, setShowDocList] = useState(false);
 
   const getRecords = async () => {
     setLoader(true);
@@ -82,6 +85,11 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
     }
   };
 
+  const handleShowDoc = (index)=>{
+    setCaseInvitationIndex(index)
+    setShowDocList(true)
+  }
+
   const btnStatus = {
     0: {
       label: "Draft",
@@ -105,7 +113,6 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
     getRecords();
   }, [refresh]);
 
-  console.log(records);
   return (
     <div className="z-value-0">
       <LoadingOverlay active={loader} spinner text="Loading...">
@@ -132,8 +139,13 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
                           <td>{index + 1}</td>
                           <td>
                             {item.name}
+                            {console.log(item.files)}
                             {item.files != null && item.files.length > 0 && (
-                              <a href="#" className="d-block text-primary">
+                              <a
+                                href="#"
+                                className="d-block text-primary"
+                                onClick={() => handleShowDoc(index)}
+                              >
                                 View files
                               </a>
                             )}
@@ -212,6 +224,12 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
           </Card.Body>
         </Card>
       </LoadingOverlay>
+      <ListDocuments
+        showDocList={showDocList}
+        closeModal={() => setShowDocList(false)}
+        records={records}
+        caseInvitationIndex={caseInvitationIndex}
+      />
     </div>
   );
 };
