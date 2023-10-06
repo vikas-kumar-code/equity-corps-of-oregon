@@ -46,6 +46,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const [submitted, setSubmitted] = useState(false);
   const [showInvoice, setShowInvoice] = useState(null);
   const [refreshInvoices, setRefreshInvoices] = useState(true);
+  const [submissionAction, setSubmissionAction] = useState(0);
   const [categories, setCategories] = useState([]);
   const filePondRef = useRef(null);
 
@@ -96,13 +97,21 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       .finally(() => setSubmitted(false));
   };
 
-  const handleSubmit = async (e = null, send_invoice = false) => {
-    e?.preventDefault();
-    setErrors({});
+  // To preview invoice before submission
+  const handlePreview = (id, action)=>{
+    setErrors({})
     const validate = invoiceValidation(fields, record.hourly_rate);
     if (validate.error) {
       setErrors(validate.messages);
-    } else {
+    }else{
+      setShowInvoice(id)
+      setSubmissionAction(action)
+    }
+  }
+
+  const handleSubmit = async (e = null, send_invoice = false) => {
+    e?.preventDefault();
+    setErrors({});
       setSubmitted(send_invoice ? 2 : 1);
       let REQUEST_URI = common.apiPath("/admin/cases/invoice/save");
       let REQUEST_METHOD = "POST";
@@ -129,7 +138,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
               reloadRecords();
               setSubmitted(false);
             }
-            resetFilepond();
+            resetFilepond();           
           } else if (response.error) {
             handleErrors(response.message);
             setSubmitted(false);
@@ -139,7 +148,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
           setSubmitted(false);
           toast.error(error.message);
         });
-    }
   };
 
   const getRecord = async (id) => {
@@ -201,13 +209,11 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       particulars: fields.particulars.filter((value, i) => i !== index),
     });
   };
+  console.log("sdfasdf", showInvoice);
 
   useEffect(() => {
     getInvoiceCategories();
   }, []);
-  useEffect(() => {
-    console.log(fields, "Fieldsssssssssssssssss");
-  }, [fields]);
 
   return (
     <>
@@ -277,7 +283,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 </Row>
                 {fields.particulars?.map((item, index) => {
                   return (
-                    <Row className="invoice-fieldset">
+                    <Row className="invoice-fieldset" key={index}>
                       <Col md={5} className="p-0 invoice_drop_down">
                         {item.show_other_category ? (
                           <FloatingLabel label="Desribe your category">
@@ -545,13 +551,15 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
 
                   <Button
                     variant="warning"
-                    type="submit"
+                    type="button"
                     className="ms-2"
                     disabled={!!submitted}
+                    onClick={() => handlePreview("0", 1)}
                   >
                     {submitted === 1 && (
                       <Spinner className="me-1" color="light" size="sm" />
                     )}
+                    <span class="mdi mdi-content-save me-1"></span>
                     Save as draft
                   </Button>
 
@@ -560,11 +568,12 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                     type="button"
                     className="ms-2"
                     disabled={!!submitted}
-                    onClick={() => handleSubmit(null, true)}
+                    onClick={() => handlePreview("0", 2)}
                   >
                     {submitted === 2 && (
                       <Spinner className="me-1" color="light" size="sm" />
                     )}
+                    <span class="mdi mdi-file-send me-1"></span>
                     Save & Send
                   </Button>
                 </div>
@@ -585,6 +594,11 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
           showModal={showInvoice ? true : false}
           closeModal={() => setShowInvoice(null)}
           invoiceId={showInvoice}
+          fields={fields}
+          caseData={record}
+          submitted={submitted}
+          handleSubmit={handleSubmit}
+          submissionAction={submissionAction}
         />
       )}
     </>

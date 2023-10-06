@@ -113,22 +113,24 @@ export default function ListCases() {
         <Col md={6} sm={12}>
           <h3>Cases</h3>
         </Col>
-        <Col md={6} sm={12} className="text-end">
+        <Col md={2} sm={12} className="d-grid mb-2">
           <Button
             variant="warning"
-            className="me-2"
             onClick={() => setShowSearchBox(!showSearchBox)}
           >
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
           </Button>
+        </Col>
+        <Col md={2} sm={12} className="d-grid mb-2">
           <Button
             variant="dark"
-            className="me-2"
             type="button"
             onClick={() => setUpdateContractModal(true)}
           >
             Update Contract
           </Button>
+        </Col>
+        <Col md={2} sm={12} className="d-grid mb-2">
           <Button variant="success" type="button" onClick={() => setShowModal(true)}>
             Add New Case
           </Button>

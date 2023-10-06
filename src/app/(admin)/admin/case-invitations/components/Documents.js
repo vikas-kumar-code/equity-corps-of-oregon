@@ -41,8 +41,8 @@ export default function Documents(props) {
     if (window.confirm("Are you sure to delete?")) {
       try {
         setLoader(true);
-        await fetch(common.apiPath("/admin/cases/invitation/document/delete/"+document_id), {
-          method: "DELETE",          
+        await fetch(common.apiPath("/admin/cases/invitation/document/delete/" + document_id), {
+          method: "DELETE",
         })
           .then((response) => response.json())
           .then((response) => {

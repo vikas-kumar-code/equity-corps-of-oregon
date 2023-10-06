@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Modal } from "react-bootstrap";
+import { Button, Modal, Spinner } from "react-bootstrap";
 import "../../../../styles/invoice.css";
 import moment from "moment";
 import common from "@/utils/common";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 
-const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
+const ViewInvoice = ({
+  showModal,
+  closeModal,
+  invoiceId,
+  fields,
+  caseData,
+  submitted,
+  handleSubmit,
+  submissionAction
+}) => {
   const [loader, setLoader] = useState(true);
   const [record, setRecord] = useState({});
 
@@ -29,6 +38,12 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
     }
   };
 
+  const invoiceData = invoiceId == 0 ? fields : record?.case_invoice;
+  const submission = submissionAction == 1 ? false : true;
+  const totalAmount = invoiceData?.particulars.reduce((acc, item) => acc + item.amount , 0);
+  // console.log(totalAmount);
+
+
   useEffect(() => {
     getRecord();
   }, []);
@@ -47,7 +62,7 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
       </Modal.Header>
       <LoadingOverlay active={loader} spinner text="Loading...">
         <Modal.Body className="pt-0" style={{ minHeight: 200 }}>
-          {record.case_invoice && record.admin && (
+          {record.admin && (
             <div className="print-content">
               <div id="invoice">
                 <div className="invoice overflow-auto">
@@ -74,25 +89,27 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
                         <div className="col invoice-to">
                           <div className="text-gray-light">INVOICE TO:</div>
                           <h6 className="mt-1">
-                            Case Number - <b>{record.case.case_number}</b>
+                            Case Number - <b>{caseData?.case_number}</b>
                           </h6>
-                          <h2 className="to">{record.admin.name}</h2>
-                          <div className="address">{record.admin.address}</div>
+                          <h2 className="to">{record?.admin?.name}</h2>
+                          <div className="address">
+                            {record?.admin?.address}
+                          </div>
                           <div className="email">
-                            <a href={"mailto:" + record.admin.email}>
+                            <a href={"mailto:" + record?.admin?.email}>
                               {record.admin.email}
                             </a>
                           </div>
                         </div>
                         <div className="col invoice-details">
-                          <h1 className="invoice-id">INVOICE {record.id}</h1>
+                          {/* <h1 className="invoice-id">INVOICE {record.id}</h1> */}
                           <div className="date">
                             Date of Invoice:{" "}
-                            {moment(record.added_on).format("DD/MM/YYYY")}
+                            {moment(invoiceData.added_on).format("DD/MM/YYYY")}
                           </div>
                           <div className="date">
                             Due Date:{" "}
-                            {moment(record.due_on).format("DD/MM/YYYY")}
+                            {moment(invoiceData.due_on).format("DD/MM/YYYY")}
                           </div>
                         </div>
                       </div>
@@ -100,7 +117,7 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
                         <table>
                           <thead>
                             <tr>
-                            <th>#</th>
+                              <th>#</th>
                               <th className="col-md-6">PARTICULAR</th>
                               <th className="col-md-1">HOURLY RATE</th>
                               <th className="col-md-1">HOURS</th>
@@ -108,40 +125,46 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
                             </tr>
                           </thead>
                           <tbody>
-                          {record.case_invoice.particulars &&
-                              record.case_invoice.particulars.map(
-                                (item, index) => {
-                                  return (
-                                    <tr>
-                                      <td className="no">
-                                        {String(index + 1).padStart(2, 0)}
-                                      </td>
-                                      <td>
-                                        {item.category.label !== "Other - Describe" ? item.category.label : item.other_category}
-                                      </td>
-                                      <td className="text-end" style={{backgroundColor: "#ddd"}}>
-                                        {common.currencyFormat(record.case.hourly_rate)}
-                                      </td>
-                                      <td className="text-end">
-                                        {item.hours_worked}
-                                      </td>
-                                      <td  className="total">
-                                        {common.currencyFormat(item.amount)}
-                                      </td>
-                                    </tr>
-                                  );
-                                }
-                              )}
+                            {invoiceData?.particulars &&
+                              invoiceData?.particulars.map((item, index) => {
+                                return (
+                                  <tr>
+                                    <td className="no">
+                                      {String(index + 1).padStart(2, 0)}
+                                    </td>
+                                    <td>
+                                      {item?.category?.label !==
+                                      "Other - Describe"
+                                        ? item?.category?.label
+                                        : item?.other_category}
+                                    </td>
+                                    <td
+                                      className="text-end"
+                                      style={{ backgroundColor: "#ddd" }}
+                                    >
+                                      {common.currencyFormat(
+                                        caseData?.hourly_rate
+                                      )}
+                                    </td>
+                                    <td className="text-end">
+                                      {item?.hours_worked}
+                                    </td>
+                                    <td className="total">
+                                      {common.currencyFormat(item?.amount)}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
                           </tbody>
                           <tfoot>
                             <tr>
-                            <td></td>
+                              <td></td>
                               <td>GRAND TOTAL</td>
-                            <td></td>
-                            <td></td>
+                              <td></td>
+                              <td></td>
                               <td>
                                 {common.currencyFormat(
-                                  record.case_invoice.total_amount
+                                  totalAmount
                                 )}
                               </td>
                             </tr>
@@ -158,14 +181,27 @@ const ViewInvoice = ({ showModal, closeModal, invoiceId }) => {
                 </div>
               </div>
               <div className="w-100 text-center no-print">
-                <button
+                <Button
+                  variant="success"
+                  type="button"
+                  className="ms-2 me-1"
+                  disabled={!!submitted}
+                  onClick={()=>handleSubmit(null, submission)}
+                >
+                  {submitted === 1 && (
+                    <Spinner className="me-1" color="light" size="sm" />
+                  )}
+                  <span class="mdi mdi-send me-1"></span>
+                  Submit
+                </Button>
+                <Button
                   id="printInvoice"
                   className="btn btn-primary"
                   onClick={() => window.print()}
                 >
                   <span className="mdi mdi-printer me-1"></span>
                   Print
-                </button>
+                </Button>
               </div>
             </div>
           )}

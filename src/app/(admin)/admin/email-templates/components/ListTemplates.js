@@ -146,14 +146,14 @@ export default function ListTemplates() {
                                 eventKey="1"
                                 onClick={() => getRecord(record.id)}
                               >
-                              <span className="mdi mdi-pencil"></span>
+                                <span className="mdi mdi-pencil"></span>
                                 Edit
                               </Dropdown.Item>
                               <Dropdown.Item
                                 eventKey="2"
                                 onClick={() => deleteRecord(record.id)}
                               >
-                              <span className="mdi mdi-delete"></span>
+                                <span className="mdi mdi-delete"></span>
                                 Delete
                               </Dropdown.Item>
                             </DropdownButton>

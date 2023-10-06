@@ -89,8 +89,8 @@ export default function Documents(props) {
                                 fileName={record.document_name}
                                 path={common.downloadLink(
                                   "uploads/case_documents/" +
-                                    record.file_name +
-                                    "?temp=true"
+                                  record.file_name +
+                                  "?temp=true"
                                 )}
                               />
                             </div>
