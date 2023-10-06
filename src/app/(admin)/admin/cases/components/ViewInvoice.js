@@ -158,10 +158,7 @@ const ViewInvoice = ({
                           </tbody>
                           <tfoot>
                             <tr>
-                              <td></td>
-                              <td>GRAND TOTAL</td>
-                              <td></td>
-                              <td></td>
+                              <td colSpan={4} className="text-end">GRAND TOTAL</td>
                               <td>
                                 {common.currencyFormat(
                                   totalAmount
