@@ -17,7 +17,7 @@ const ListDocuments = ({
       backdrop="static"
       keyboard={false}
       centered
-      size="lg"
+      size="md"
     >
       <Modal.Header closeButton className="border-bottom-0">
         <h3> Case Invoice Documents</h3>

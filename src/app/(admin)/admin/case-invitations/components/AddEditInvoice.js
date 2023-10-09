@@ -29,7 +29,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     due_on: "",
     particulars: [
       {
-        category: null,
+        category: {
+          label: "Select Category",
+          value: "",
+        },
         other_category: "",
         show_other_category: false,
         hours_worked: "",
@@ -179,14 +182,15 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
-            setCategories(
-              response.records.map((item) => {
+            setCategories([
+              initialValues.particulars[0].category,
+              ...response.records.map((item) => {
                 return {
                   value: item.id,
                   label: item.name,
                 };
-              })
-            );
+              }),
+            ]);
           } else if (response.error) {
             toast.error(response.message);
           }
@@ -198,7 +202,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     }
   };
 
-  console.log(categories);
   const addFieldSet = () => {
     setFields({
       ...fields,
@@ -218,7 +221,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     let filteredFiles = newFiles.filter((file, i) => {
       return i !== index;
     });
-    setFields({ files: filteredFiles });
+    setFields({...fields, files: filteredFiles });
   };
 
   useEffect(() => {
@@ -349,10 +352,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                                 onChange={(e) => {
                                   fieldsData.particulars[index].category =
                                     e.target.value;
-                                  console.log(
-                                    e.target.value,
-                                    categories[categories.length - 1].value
-                                  );
                                   if (
                                     e.target.value ==
                                     categories[categories.length - 1].value
@@ -367,13 +366,16 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                                   );
                                 }}
                               >
-                              <option style={{display:"none"}}></option>
                                 {categories.map((category, i) => {
                                   return (
                                     <option
                                       value={category.value}
                                       key={`particular-${i}`}
                                       className="p-2"
+                                      selected={
+                                        fields.particulars[index].category
+                                          .value === category.value
+                                      }
                                     >
                                       {category.label}
                                     </option>
@@ -499,12 +501,12 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                         <ul className="files-list">
                           {fields.files.map((item, i) => {
                             return (
-                              <li key={`file-${i}`}>
+                              <li key={`file-${i}`} className="position-relative">
                                 <span
-                                  className="mdi mdi-delete-circle d-flex justify-content-end me-1 text-danger fs-5"
+                                  className="mdi mdi-delete-circle fs-4 position-absolute end-0 me-1 text-danger"
                                   onClick={() => handleDelFile(i)}
                                 ></span>
-                                <span className="mdi mdi-file-pdf inv-file-icon"></span>
+                                <span className="mdi mdi-file-pdf inv-file-icon mt-2"></span>
                                 <a href="#" className="text-truncate">
                                   {item.originalFileName}
                                 </a>
@@ -585,10 +587,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                     disabled={!!submitted}
                     onClick={() => handlePreview("0", 1)}
                   >
-                    {submitted === 1 && (
+                    {/* {submitted === 1 && (
                       <Spinner className="me-1" color="light" size="sm" />
                     )}
-                    <span class="mdi mdi-content-save me-1"></span>
+                    <span class="mdi mdi-content-save me-1"></span> */}
                     Save as draft
                   </Button>
 
@@ -599,10 +601,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                     disabled={!!submitted}
                     onClick={() => handlePreview("0", 2)}
                   >
-                    {submitted === 2 && (
+                    {/* {submitted === 2 && (
                       <Spinner className="me-1" color="light" size="sm" />
                     )}
-                    <span class="mdi mdi-file-send me-1"></span>
+                    <span class="mdi mdi-file-send me-1"></span> */}
                     Save & Send
                   </Button>
                 </div>
