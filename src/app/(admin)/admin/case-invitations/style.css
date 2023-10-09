@@ -116,18 +116,6 @@
   display: none !important;
 }
 
-/* .filepond--root .filepond--drop-label {
-  width: 96%;
-  margin: auto;
-  margin-top: 1em;
-  background-color: #e8e9e9;
-  border-radius: 6px;
-}
-
-.filepond--root .filepond--list-scroller {
-  margin-top: 2.6em !important;
-} */
-
 .files-list {
   margin: 0;
   padding: 0;
@@ -164,7 +152,11 @@
 }
 
 .files-list li:hover {
-  box-shadow: 0px 2px 5px rgba(0,0,0,0.4);
-  
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.4);  
 }
 
+.invoice-item{
+  height: 58px;
+  background-color: #f9f9f9;
+  border-radius: 0;
+}

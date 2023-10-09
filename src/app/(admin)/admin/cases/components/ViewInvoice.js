@@ -186,7 +186,7 @@ const ViewInvoice = ({
                 >
                   {submitted === 1 ? (
                     <Spinner className="me-1" color="light" size="sm" />
-                  ): <span class="mdi mdi-send me-1"></span>}
+                  ): <span className="mdi mdi-send me-1"></span>}
                   
                   Submit
                 </Button>:

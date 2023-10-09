@@ -198,6 +198,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     }
   };
 
+  console.log(categories);
   const addFieldSet = () => {
     setFields({
       ...fields,
@@ -210,6 +211,14 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       ...fields,
       particulars: fields.particulars.filter((value, i) => i !== index),
     });
+  };
+
+  const handleDelFile = (index) => {
+    let newFiles = [...fields.files];
+    let filteredFiles = newFiles.filter((file, i) => {
+      return i !== index;
+    });
+    setFields({ files: filteredFiles });
   };
 
   useEffect(() => {
@@ -284,7 +293,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                 </Row>
                 {fields.particulars?.map((item, index) => {
                   return (
-                    <Row className="invoice-fieldset" key={`particulars-${index}`}>
+                    <Row
+                      className="invoice-fieldset"
+                      key={`particulars-${index}`}
+                    >
                       <Col md={5} className="p-0 invoice_drop_down">
                         {item.show_other_category ? (
                           <FloatingLabel label="Desribe your category">
@@ -331,39 +343,51 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                           </FloatingLabel>
                         ) : (
                           <div className="invoice_category">
-                            <Select
-                              styles={{
-                                menuPortal: (base) => ({
-                                  ...base,
-                                  zIndex: 9999,
-                                }),
-                              }}
-                              placeholder="Select Category"
-                              defaultOptions={categories.map((item) => {
-                                return { value: item.id, label: item.name };
-                              })}
-                              options={categories}
-                              value={item.category}
-                              onChange={(option) => {
-                                fieldsData.particulars[index].category = option;
-                                if (
-                                  option.value ===
-                                  categories[categories.length - 1].value
-                                ) {
-                                  fieldsData.particulars[
-                                    index
-                                  ].show_other_category = true;
-                                }
-                                setFields(fieldsData);
-                                setNoError("particulars" + index + "category");
-                              }}
-                            />
-                            <Form.Control.Feedback
-                              type="invalid"
-                              className="d-block"
-                            >
-                              {errors["particulars" + index + "category"] || ""}
-                            </Form.Control.Feedback>
+                            <FloatingLabel label="Select">
+                              <Form.Select
+                                className="invoice-item"
+                                onChange={(e) => {
+                                  fieldsData.particulars[index].category =
+                                    e.target.value;
+                                  console.log(
+                                    e.target.value,
+                                    categories[categories.length - 1].value
+                                  );
+                                  if (
+                                    e.target.value ==
+                                    categories[categories.length - 1].value
+                                  ) {
+                                    fieldsData.particulars[
+                                      index
+                                    ].show_other_category = true;
+                                  }
+                                  setFields(fieldsData);
+                                  setNoError(
+                                    "particulars" + index + "category"
+                                  );
+                                }}
+                              >
+                              <option style={{display:"none"}}></option>
+                                {categories.map((category, i) => {
+                                  return (
+                                    <option
+                                      value={category.value}
+                                      key={`particular-${i}`}
+                                      className="p-2"
+                                    >
+                                      {category.label}
+                                    </option>
+                                  );
+                                })}
+                              </Form.Select>
+                              <Form.Control.Feedback
+                                type="invalid"
+                                className="d-block"
+                              >
+                                {errors["particulars" + index + "category"] ||
+                                  ""}
+                              </Form.Control.Feedback>
+                            </FloatingLabel>
                           </div>
                         )}
                       </Col>
@@ -473,9 +497,13 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                       <div className="files-container">
                         <h4>Attached Files</h4>
                         <ul className="files-list">
-                          {fields.files.map((item) => {
+                          {fields.files.map((item, i) => {
                             return (
-                              <li>
+                              <li key={`file-${i}`}>
+                                <span
+                                  className="mdi mdi-delete-circle d-flex justify-content-end me-1 text-danger fs-5"
+                                  onClick={() => handleDelFile(i)}
+                                ></span>
                                 <span className="mdi mdi-file-pdf inv-file-icon"></span>
                                 <a href="#" className="text-truncate">
                                   {item.originalFileName}

@@ -135,11 +135,10 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
                     </thead>
                     <tbody>
                       {records.case_invoices.map((item, index) => (
-                        <tr>
+                        <tr key={`invoice-${index}`}>
                           <td>{index + 1}</td>
                           <td>
                             {item.name}
-                            {console.log(Array.isArray(JSON.parse(item?.files)), JSON.parse(item?.files)?.length)}
                             {(JSON.parse(item?.files)?.length > 0) && (
                               <a
                                 href="#"

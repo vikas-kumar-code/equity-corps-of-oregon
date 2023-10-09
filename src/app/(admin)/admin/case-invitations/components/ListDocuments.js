@@ -1,6 +1,4 @@
-import moment from "moment";
-import React, { useState } from "react";
-import { Modal, Badge, Tabs, Tab, Button, Row, Col } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 import common from "@/utils/common";
 import DownloadButton from "../../cases/components/DownloadButton";
 
