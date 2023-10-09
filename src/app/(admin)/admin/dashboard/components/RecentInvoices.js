@@ -6,13 +6,9 @@ import LoadingOverlay from "react-loading-overlay";
 
 const RecentInvoices = ({ records, loader }) => {
   const btnStatus = {
-    0: {
-      label: "Draft",
-      bg: "secondary",
-    },
     1: {
-      label: "Sent",
-      bg: "dark",
+      label: "Pending",
+      bg: "warning",
     },
     2: {
       label: "Partially Paid",

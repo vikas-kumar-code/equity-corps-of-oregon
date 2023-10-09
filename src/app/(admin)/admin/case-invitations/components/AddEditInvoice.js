@@ -31,7 +31,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       {
         category: {
           label: "Select Category",
-          value: "",
+          value: null,
         },
         other_category: "",
         show_other_category: false,
@@ -164,6 +164,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         .then((response) => {
           if (response.success) {
             setFields(response.record.case_invoice);
+            console.log();
           } else if (response.error) {
             toast.error(response.message);
           }
@@ -350,8 +351,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                               <Form.Select
                                 className="invoice-item"
                                 onChange={(e) => {
-                                  fieldsData.particulars[index].category =
-                                    e.target.value;
+                                  fieldsData.particulars[index].category.value =
+                                    Number(e.target.value);
                                   if (
                                     e.target.value ==
                                     categories[categories.length - 1].value
@@ -367,9 +368,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                                 }}
                               >
                                 {categories.map((category, i) => {
+                                  console.log(fieldsData.particulars[index].category.value)
                                   return (
                                     <option
-                                      value={category.value}
+                                      value={Number(category.value)}
                                       key={`particular-${i}`}
                                       className="p-2"
                                       selected={

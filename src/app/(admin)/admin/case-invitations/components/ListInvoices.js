@@ -15,6 +15,7 @@ import LoadingOverlay from "react-loading-overlay";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import ListDocuments from "./ListDocuments";
+import PaymentButtons from "../../cases/components/PaymentButtons";
 
 const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
   const [records, setRecords] = useState({});
@@ -135,6 +136,7 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
                     </thead>
                     <tbody>
                       {records.case_invoices.map((item, index) => (
+                        <>
                         <tr key={`invoice-${index}`}>
                           <td>{index + 1}</td>
                           <td>
@@ -207,6 +209,22 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
                             </DropdownButton>
                           </td>
                         </tr>
+                        {item.status === 2 && (
+                            <tr style={{ backgroundColor: "#009c0014" }}>
+                              <td className="py-2"></td>
+                              <td
+                                colSpan={6}
+                                className="text-start py-2"
+                                style={{ color: "#434343" }}
+                              >
+                                <strong>
+                                  Payments -
+                                  <PaymentButtons item={item} />
+                                </strong>
+                              </td>
+                            </tr>
+                          )}
+                          </>
                       ))}
                       {records.case_invoices.length <= 0 && (
                         <tr>
