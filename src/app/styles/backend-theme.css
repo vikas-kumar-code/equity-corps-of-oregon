@@ -11519,6 +11519,7 @@ progress {
 .table-responsive {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  min-height: 40vh;
 }
 
 @media (max-width: 575.98px) {
@@ -33822,7 +33823,6 @@ div.tagsinput span.tag a {
 }
 
 .modal-body-scroll {
-  height: 70vh;
   overflow-y: auto;
 }
 

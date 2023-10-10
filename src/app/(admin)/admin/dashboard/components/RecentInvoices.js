@@ -1,11 +1,14 @@
 import common from "@/utils/common";
-import moment from "moment";
 import React from "react";
-import { Badge, Card, Col, Row } from "react-bootstrap";
+import { Badge, Card } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 
 const RecentInvoices = ({ records, loader }) => {
   const btnStatus = {
+    0: {
+      label: "Draft",
+      bg: "secondary",
+    },
     1: {
       label: "Pending",
       bg: "warning",
@@ -51,10 +54,10 @@ const RecentInvoices = ({ records, loader }) => {
                       <td>
                         <Badge
                           pill
-                          bg={btnStatus[invoice.status].bg || "info"}
+                          bg={btnStatus[invoice.status]?.bg || "info"}
                           size="sm"
                         >
-                          {btnStatus[invoice.status].label || "N/A"}
+                          {btnStatus[invoice.status]?.label || "N/A"}
                         </Badge>
                       </td>
                     </tr>

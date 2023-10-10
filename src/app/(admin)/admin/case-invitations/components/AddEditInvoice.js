@@ -8,7 +8,6 @@ import {
   Col,
   Form,
   FloatingLabel,
-  Spinner,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
@@ -16,7 +15,6 @@ import ListInvoices from "./ListInvoices";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ViewInvoice from "../../cases/components/ViewInvoice";
-import Select from "react-select";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import invoiceValidation from "@/validators/invoiceValidation";
@@ -368,7 +366,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                                 }}
                               >
                                 {categories.map((category, i) => {
-                                  console.log(fieldsData.particulars[index].category.value)
                                   return (
                                     <option
                                       value={Number(category.value)}
@@ -591,8 +588,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                   >
                     {/* {submitted === 1 && (
                       <Spinner className="me-1" color="light" size="sm" />
-                    )}
-                    <span class="mdi mdi-content-save me-1"></span> */}
+                    )} */}
+                    <span class="mdi mdi-content-save me-1"></span>
                     Save as draft
                   </Button>
 
@@ -605,8 +602,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                   >
                     {/* {submitted === 2 && (
                       <Spinner className="me-1" color="light" size="sm" />
-                    )}
-                    <span class="mdi mdi-file-send me-1"></span> */}
+                    )} */}
+                    <span class="mdi mdi-file-send me-1"></span>
                     Save & Send
                   </Button>
                 </div>
