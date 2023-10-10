@@ -106,18 +106,20 @@ const ViewCaseDetails = ({
                 <Col md={12} sm={12}>
                   <div className="table-responsive" style={{ maxHeight: 200 }}>
                     <table className="table table-borderless">
-                      <tbody>
+                      <thead>
                         <tr className="mx-5">
                           <th>#</th>
                           <th>Comment</th>
                           <th>Updated On</th>
                         </tr>
+                      </thead>
+                      <tbody>
                         {record.case_milestones.map((mile, i) => {
                           return (
                             <tr key={i}>
                               <td>{mile.id}</td>
                               <td>{mile.comment}</td>
-                              <td className="text-start">
+                              <td className="text-center">
                                 {moment(mile.milestone_date).format(
                                   "D MMM,  YYYY"
                                 )}

@@ -112,7 +112,7 @@ const InvitationDetails = ({
                             <tr key={i}>
                               <td>{mile.id}</td>
                               <td>{mile.comment}</td>
-                              <td className="text-start">
+                              <td className="text-center">
                                 {moment(mile.milestone_date).format(
                                   "D MMM,  YYYY"
                                 )}
