@@ -121,7 +121,7 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
           <Card.Body>
             <h4>Invoices</h4>
             {records?.case && records?.case_invoices && (
-              <div className="table-responsive">
+              <div className="table-responsive" style={{maxHeight:300}}>
                 <table className="table">
                   <thead>
                     <tr>
