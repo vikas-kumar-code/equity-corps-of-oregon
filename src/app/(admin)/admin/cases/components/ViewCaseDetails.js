@@ -56,7 +56,7 @@ const ViewCaseDetails = ({
               <table className="table table-borderless table-striped">
                 <tbody>
                   <tr>
-                    <td><strong>Title</strong></td>
+                    <td width="30%"><strong>Title</strong></td>
                     <td>{record.title}</td>
                   </tr>
                   <tr>
