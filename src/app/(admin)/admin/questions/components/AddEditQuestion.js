@@ -13,7 +13,7 @@ import {
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
-LoadingOverlay.propTypes = undefined
+LoadingOverlay.propTypes = undefined;
 
 export default function AddEditQuestion(props) {
   const [loader, setLoader] = useState(false);
@@ -126,7 +126,11 @@ export default function AddEditQuestion(props) {
               </Form.Control.Feedback>
             </FloatingLabel>
             {fields.options.map((value, index) => (
-              <FloatingLabel key={index} label={`Option ${index + 1}`} className="mb-3">
+              <FloatingLabel
+                key={index}
+                label={`Option ${index + 1}`}
+                className="mb-3"
+              >
                 <Form.Control
                   type="text"
                   name="option"
@@ -148,6 +152,7 @@ export default function AddEditQuestion(props) {
                     size="sm"
                     className="q-opt-remove btn-close"
                     onClick={() => removeOption(index)}
+                    style={{ top: 17 }}
                   />
                 )}
               </FloatingLabel>

@@ -25,7 +25,7 @@ export default function ListCases() {
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [updateContractModal, setUpdateContractModal] = useState(false);
-  
+
   const searchFields = [
     { label: "Case Number", type: "text", name: "case_number" },
     { label: "Case Title", type: "text", name: "title" },
@@ -57,7 +57,11 @@ export default function ListCases() {
   };
 
   const deleteRecord = async (id) => {
-    if (window.confirm("Are you sure to delete this question?")) {
+    if (
+      window.confirm(
+        "Do you want to DELETE this invoice? This action is permanent and cannot be undone."
+      )
+    ) {
       setLoader(true);
       fetch(common.apiPath(`/admin/cases/delete/${id}`), { method: "DELETE" })
         .then((response) => response.json())
@@ -131,7 +135,11 @@ export default function ListCases() {
           </Button>
         </Col>
         <Col md={2} sm={12} className="d-grid mb-2">
-          <Button variant="success" type="button" onClick={() => setShowModal(true)}>
+          <Button
+            variant="success"
+            type="button"
+            onClick={() => setShowModal(true)}
+          >
             Add New Case
           </Button>
         </Col>

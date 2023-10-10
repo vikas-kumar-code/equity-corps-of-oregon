@@ -7,9 +7,12 @@ import SendInvitation from "./SendInvitation";
 import AddEditCase from "./AddEditCase";
 import ListInvoices from "./ListInvoices";
 import EcoProviders from "./EcoProviders";
+import ViewCase from "./ViewCaseDetails";
+import ViewCaseDetails from "./ViewCaseDetails";
 
 export default function Case({ record, getRecords, deleteRecord, sn }) {
   const [showModal, setShowModal] = useState(false);
+  const [showCaseModal, setShowCaseModal] = useState(false);
   const [showSendInvitationModal, setShowSendInvitationModal] = useState(false);
   const [showListInvoices, setShowListInvoices] = useState(false);
 
@@ -52,6 +55,10 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
             title="Action"
             align="end"
           >
+            <Dropdown.Item eventKey="1" onClick={() => setShowCaseModal(true)}>
+              <span className="mdi mdi-eye"></span>
+              View
+            </Dropdown.Item>
             <Dropdown.Item
               eventKey="1"
               onClick={() => setShowSendInvitationModal(true)}
@@ -77,6 +84,20 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
           </DropdownButton>
         </td>
       </tr>
+
+      {showCaseModal && (
+        <ViewCaseDetails
+          showModal={showCaseModal}
+          closeModal={() => {
+            setShowCaseModal(false);
+          }}
+          record={record}
+          showEditModal={() => setShowModal(true)}
+          showListInvoices={() => setShowListInvoices(true)}
+          deleteRecord={deleteRecord}
+        />
+      )}
+
       {showModal && (
         <AddEditCase
           showModal={showModal}

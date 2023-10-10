@@ -32,6 +32,7 @@ export default function Case({
       bg: "danger",
     },
   };
+  
 
   return (
     <>

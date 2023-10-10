@@ -53,7 +53,11 @@ const redirectToDashboard = async () => {
   const WEB_URL = process.env.NEXT_PUBLIC_API_URL;
   if (session?.user) {
     if (session.user.role_id === 1 || session.user.role_id === 3) {
-      redirect(WEB_URL + "/admin" + "/dashboard");
+      if (Number(session.user.is_first_login) === 1 && session.user.role_id !== 1) {
+        redirect(WEB_URL + "/admin" + "/settings?is_first_login=1");
+      } else {
+        redirect(WEB_URL + "/admin" + "/dashboard");
+      }
     } else if (session.user.role_id === 2) {
       redirect(WEB_URL + "/account");
     }

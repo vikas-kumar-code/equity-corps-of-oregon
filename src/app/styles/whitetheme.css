@@ -1,6 +1,7 @@
 .whitetheme {
   background-color: #fff;
 }
+
 .whitetheme .navbar,
 .whitetheme .sidebar .sidebar-brand-wrapper,
 .whitetheme .sidebar {
@@ -24,7 +25,8 @@
   background: #e8e8e8;
 }
 
-.whitetheme .sidebar .nav .nav-item.active>.nav-link span.menu-icon, .whitetheme .sidebar .nav .nav-item.active>.nav-link span.menu-icon:hover {
+.whitetheme .sidebar .nav .nav-item.active>.nav-link span.menu-icon,
+.whitetheme .sidebar .nav .nav-item.active>.nav-link span.menu-icon:hover {
   background-color: rgba(108, 114, 147, 0.2);
 }
 
@@ -101,9 +103,9 @@
   border-bottom: none;
 }
 
-.whitetheme .table-responsive .table tbody tr td:last-child {
+/* .whitetheme .table-responsive .table tbody tr td:last-child {
   text-align: center;
-}
+} */
 
 /* Table */
 

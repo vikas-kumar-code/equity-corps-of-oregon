@@ -50,6 +50,7 @@ model users {
   created_at                 DateTime?          @default(now())
   updated_at                 DateTime?          @db.Timestamp(0)
   status                     Int                @default(1)
+  is_first_login             Int                @default(1)
   /// On boarding process status [0 => Not Sent, 1 => Sent, 2 => Completed]
   on_board_status            Int                @default(0)
   verified                   Int                @default(0)
