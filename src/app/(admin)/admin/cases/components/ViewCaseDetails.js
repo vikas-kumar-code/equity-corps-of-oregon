@@ -56,21 +56,21 @@ const ViewCaseDetails = ({
               <table className="table table-borderless table-striped">
                 <tbody>
                   <tr>
-                    <th>Title</th>
+                    <td width="30%"><strong>Title</strong></td>
                     <td>{record.title}</td>
                   </tr>
                   <tr>
-                    <th>Case Number</th>
+                    <td><strong>Case Number</strong></td>
                     <td>{record.case_number}</td>
                   </tr>
                   <tr>
-                    <th>Maximum Compensation</th>
+                    <td><strong>Maximum Compensation</strong></td>
                     <td>
                       {common.currencyFormat(record.maximum_compensation, 2)}
                     </td>
                   </tr>
                   <tr>
-                    <th>Hourly Rate</th>
+                    <td><strong>Hourly Rate</strong></td>
                     <td>
                       {record.hourly_rate
                         ? common.currencyFormat(record.hourly_rate)
@@ -78,11 +78,11 @@ const ViewCaseDetails = ({
                     </td>
                   </tr>
                   <tr>
-                    <th>Description</th>
+                    <td><strong>Description</strong></td>
                     <td>{record.description}</td>
                   </tr>
                   <tr>
-                    <th>Status</th>
+                    <td><strong>Status</strong></td>
                     <td>
                       <Badge pill bg={btnStatus[record.status].bg || "info"}>
                         {btnStatus[record.status].label || "N/A"}
@@ -90,7 +90,7 @@ const ViewCaseDetails = ({
                     </td>
                   </tr>
                   <tr>
-                    <th>Added On</th>
+                    <td><strong>Added On</strong></td>
                     <td>{moment(record.sent_on).format("D MMM, YYYY")}</td>
                   </tr>
                 </tbody>
