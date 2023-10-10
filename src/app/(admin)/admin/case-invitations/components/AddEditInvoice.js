@@ -332,12 +332,9 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                               size="sm"
                               className="q-opt-remove btn-close"
                               onClick={() => {
-                                fieldsData.particulars[index].other_category =
-                                  "";
-                                fieldsData.particulars[
-                                  index
-                                ].show_other_category = false;
-                                fieldsData.particulars[index].category = null;
+                                fieldsData.particulars[index].other_category = "";
+                                fieldsData.particulars[index].show_other_category = false;
+                                fieldsData.particulars[index].category = initialValues.particulars[0].category;
                                 setFields(fieldsData);
                               }}
                               style={{ right: 9, top: 17 }}
@@ -349,8 +346,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                               <Form.Select
                                 className="invoice-item"
                                 onChange={(e) => {
-                                  fieldsData.particulars[index].category.value =
-                                    Number(e.target.value);
+                                  fieldsData.particulars[index].category.value = Number(e.target.value);
                                   if (
                                     e.target.value ==
                                     categories[categories.length - 1].value
@@ -372,8 +368,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                                       key={`particular-${i}`}
                                       className="p-2"
                                       selected={
-                                        fields.particulars[index].category
-                                          .value === category.value
+                                        fields.particulars[index].category.value === category.value
                                       }
                                     >
                                       {category.label}
