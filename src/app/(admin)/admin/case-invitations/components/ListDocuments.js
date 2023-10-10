@@ -23,7 +23,7 @@ const ListDocuments = ({
         <h3> Case Invoice Documents</h3>
       </Modal.Header>
       <Modal.Body>
-        <div className="table-responsive min-list-height">
+        <div className="table-responsive" style={{maxHeight:200}}>
           <table className="table table-borderless table-striped">
             <thead>
               <tr>

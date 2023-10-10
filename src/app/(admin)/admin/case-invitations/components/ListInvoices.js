@@ -86,10 +86,10 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
     }
   };
 
-  const handleShowDoc = (index)=>{
-    setCaseInvitationIndex(index)
-    setShowDocList(true)
-  }
+  const handleShowDoc = (index) => {
+    setCaseInvitationIndex(index);
+    setShowDocList(true);
+  };
 
   const btnStatus = {
     0: {
@@ -122,26 +122,25 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
             <h4>Invoices</h4>
             {records?.case && records?.case_invoices && (
               <div className="table-responsive">
-                <div className="table-responsive">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Invoice</th>
-                        <th>Total Amount</th>
-                        <th>Added On</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {records.case_invoices.map((item, index) => (
-                        <>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Invoice</th>
+                      <th>Total Amount</th>
+                      <th>Added On</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {records.case_invoices.map((item, index) => (
+                      <>
                         <tr key={`invoice-${index}`}>
                           <td>{index + 1}</td>
                           <td>
                             {item.name}
-                            {(JSON.parse(item?.files)?.length > 0) && (
+                            {JSON.parse(item?.files)?.length > 0 && (
                               <a
                                 href="#"
                                 className="d-block text-primary"
@@ -210,32 +209,31 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
                           </td>
                         </tr>
                         {item.status === 2 && (
-                            <tr style={{ backgroundColor: "#009c0014" }}>
-                              <td className="py-2"></td>
-                              <td
-                                colSpan={6}
-                                className="text-start py-2"
-                                style={{ color: "#434343" }}
-                              >
-                                <strong>
-                                  Payments -
-                                  <PaymentButtons item={item} />
-                                </strong>
-                              </td>
-                            </tr>
-                          )}
-                          </>
-                      ))}
-                      {records.case_invoices.length <= 0 && (
-                        <tr>
-                          <td colSpan={6}>
-                            <h6 className="text-gray">No records available</h6>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                          <tr style={{ backgroundColor: "#009c0014" }}>
+                            <td className="py-2"></td>
+                            <td
+                              colSpan={6}
+                              className="text-start py-2"
+                              style={{ color: "#434343" }}
+                            >
+                              <strong>
+                                Payments -
+                                <PaymentButtons item={item} />
+                              </strong>
+                            </td>
+                          </tr>
+                        )}
+                      </>
+                    ))}
+                    {records.case_invoices.length <= 0 && (
+                      <tr>
+                        <td colSpan={6}>
+                          <h6 className="text-gray">No records available</h6>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             )}
           </Card.Body>

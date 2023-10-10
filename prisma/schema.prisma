@@ -50,6 +50,7 @@ model users {
   created_at                 DateTime?          @default(now())
   updated_at                 DateTime?          @db.Timestamp(0)
   status                     Int                @default(1)
+  is_first_login             Int                @default(1)
   /// On boarding process status [0 => Not Sent, 1 => Sent, 2 => Completed]
   on_board_status            Int                @default(0)
   verified                   Int                @default(0)
@@ -100,7 +101,7 @@ model case_invoices {
   files        String?    @db.LongText
   total_amount Decimal    @db.Decimal(10, 2)
   added_on     DateTime   @default(now())
-  due_on       DateTime   @db.Date
+  due_on       DateTime   @db.Date  
   /// Invoice Status [0 => draft, 1 => sent, 2 => partially paid, 3 => full paid]
   status       Int        @default(0)
   case         cases      @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)

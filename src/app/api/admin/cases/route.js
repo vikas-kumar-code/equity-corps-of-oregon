@@ -70,6 +70,9 @@ export async function GET(request) {
             },
           },
         },
+        case_milestones: true,
+        logs: true,
+        case_documents: true,
       },
     });
     totalRecords = await prisma.cases.count({ where });
