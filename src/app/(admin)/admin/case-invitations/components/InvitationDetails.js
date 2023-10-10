@@ -53,29 +53,29 @@ const InvitationDetails = ({
               <table className="table table-borderless table-striped">
                 <tbody>
                   <tr>
-                    <th>Title</th>
+                    <td width="30%"><strong>Title</strong></td>
                     <td>{record.case.title}</td>
                   </tr>
                   <tr>
-                    <th>Case Number</th>
+                    <td><strong>Case Number</strong></td>
                     <td>{record.case.case_number}</td>
                   </tr>
                   <tr>
-                    <th>Maximum Compensation</th>
+                    <td><strong>Maximum Compensation</strong></td>
                     <td>
                       {common.currencyFormat(record.case.maximum_compensation)}
                     </td>
                   </tr>
                   <tr>
-                    <th>Hourly Rate</th>
+                    <td><strong>Hourly Rate</strong></td>
                     <td>{common.currencyFormat(record.case.hourly_rate)}</td>
                   </tr>
                   <tr>
-                    <th>Description</th>
+                    <td><strong>Description</strong></td>
                     <td>{record.case.description}</td>
                   </tr>
                   <tr>
-                    <th>Status</th>
+                    <td><strong>Status</strong></td>
                     <td>
                       <Badge pill bg={btnStatus[record.status].bg || "info"}>
                         {btnStatus[record.status].label || "N/A"}
