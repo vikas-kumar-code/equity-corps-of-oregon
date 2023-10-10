@@ -17,18 +17,18 @@ const ViewCaseDetails = ({
   const [errors, setErrors] = useState({});
   const [deletedDocuments, setDeletedDocuments] = useState([]);
 
-  const iStatus = {
+  const btnStatus = {
     0: {
-      label: "Pending",
-      bg: "warning",
+      label: "New Case",
+      bg: "info",
     },
     1: {
-      label: "Accepted",
-      bg: "success",
+      label: "Invitation Sent",
+      bg: "dark",
     },
     2: {
-      label: "Expired",
-      bg: "danger",
+      label: "Accepted",
+      bg: "success",
     },
   };
 
@@ -42,47 +42,7 @@ const ViewCaseDetails = ({
       size="lg"
     >
       <Modal.Header closeButton className="border-bottom-0">
-        <div className="d-flex justify-content-between align-items-center w-100 pe-4">
-          <h3> Case Details</h3>
-          <div>
-            <Button
-              variant="primary"
-              size="sm"
-              style={{ height: 25 }}
-              onClick={() => {
-                closeModal();
-                showEditModal();
-              }}
-            >
-              Edit
-            </Button>
-            <Button
-              variant="danger"
-              size="sm"
-              className="ms-1"
-              style={{ height: 25 }}
-              onClick={() => {
-                closeModal();
-                deleteRecord(record.id);
-              }}
-            >
-              delete
-            </Button>
-
-            <Button
-              variant="info"
-              size="sm"
-              className="ms-1"
-              style={{ height: 25 }}
-              onClick={() => {
-                closeModal();
-                showListInvoices();
-              }}
-            >
-              Invoices
-            </Button>
-          </div>
-        </div>
+        <h3> Case Details</h3>
       </Modal.Header>
       <Modal.Body className="pt-0">
         <Tabs
@@ -124,8 +84,8 @@ const ViewCaseDetails = ({
                   <tr>
                     <th>Status</th>
                     <td>
-                      <Badge pill bg={iStatus[record.status].bg || "info"}>
-                        {iStatus[record.status].label || "N/A"}
+                      <Badge pill bg={btnStatus[record.status].bg || "info"}>
+                        {btnStatus[record.status].label || "N/A"}
                       </Badge>
                     </td>
                   </tr>
@@ -222,6 +182,39 @@ const ViewCaseDetails = ({
         </Tabs>
       </Modal.Body>
       <Modal.Footer>
+        <Button
+          variant="primary"
+          size="lg"
+          onClick={() => {
+            closeModal();
+            showEditModal();
+          }}
+        >
+          Edit
+        </Button>
+        <Button
+          variant="danger"
+          size="lg"
+          className="ms-1"
+          onClick={() => {
+            closeModal();
+            deleteRecord(record.id);
+          }}
+        >
+          delete
+        </Button>
+
+        <Button
+          variant="info"
+          size="lg"
+          className="ms-1"
+          onClick={() => {
+            closeModal();
+            showListInvoices();
+          }}
+        >
+          Invoices
+        </Button>
         <Button
           size="lg"
           type="submit"

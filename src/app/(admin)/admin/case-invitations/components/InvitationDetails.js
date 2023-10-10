@@ -14,7 +14,7 @@ const InvitationDetails = ({
   const [errors, setErrors] = useState({});
   const [deletedDocuments, setDeletedDocuments] = useState([]);
 
-  const iStatus = {
+  const btnStatus = {
     0: {
       label: "Pending",
       bg: "warning",
@@ -68,9 +68,7 @@ const InvitationDetails = ({
                   </tr>
                   <tr>
                     <th>Hourly Rate</th>
-                    <td>
-                    {common.currencyFormat(record.case.hourly_rate)}
-                    </td>
+                    <td>{common.currencyFormat(record.case.hourly_rate)}</td>
                   </tr>
                   <tr>
                     <th>Description</th>
@@ -79,8 +77,8 @@ const InvitationDetails = ({
                   <tr>
                     <th>Status</th>
                     <td>
-                      <Badge pill bg={iStatus[record.status].bg || "info"}>
-                        {iStatus[record.status].label || "N/A"}
+                      <Badge pill bg={btnStatus[record.status].bg || "info"}>
+                        {btnStatus[record.status].label || "N/A"}
                       </Badge>
                     </td>
                   </tr>
@@ -99,14 +97,16 @@ const InvitationDetails = ({
               </Row>
               <Row>
                 <Col md={12} sm={12}>
-                  <div className="table-responsive min-list-height">
-                    <table className="table table-borderless">
-                      <tbody>
+                  <div className="table-responsive" style={{ maxHeight: 200 }}>
+                    <table className="table">
+                      <thead>
                         <tr className="mx-5">
                           <th>#</th>
                           <th>Comment</th>
                           <th>Updated On</th>
                         </tr>
+                      </thead>
+                      <tbody>
                         {record.case.case_milestones.map((mile, i) => {
                           return (
                             <tr key={i}>
@@ -127,8 +127,8 @@ const InvitationDetails = ({
               </Row>
             </div>
           </Tab>
-          {record.status === 1 &&
-          <Tab eventKey={3} title="Documents">
+          {record.status === 1 && (
+            <Tab eventKey={3} title="Documents">
               <Documents
                 reloadRecords={reloadRecords}
                 setDeletedDocument={(doc) => {
@@ -139,7 +139,8 @@ const InvitationDetails = ({
                 setErrors={setErrors}
                 caseId={record.case.id}
               />
-          </Tab>}
+            </Tab>
+          )}
           <Tab eventKey={4} title="Case Activities">
             <div style={{ maxHeight: "250px", overflowY: "auto" }}>
               <ol className="activity-feed">
