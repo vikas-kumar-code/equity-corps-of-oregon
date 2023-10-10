@@ -203,7 +203,7 @@ const ViewCaseDetails = ({
             deleteRecord(record.id);
           }}
         >
-          delete
+          Delete
         </Button>
 
         <Button

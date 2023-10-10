@@ -4,7 +4,7 @@ export default function invoiceValidation(fields, hourly_rate = false) {
     errs.due_on = "Due on is required.";
   }
   fields.particulars.forEach((item, index) => {
-    if (!item?.show_other_category && !item?.category) {
+    if (!item?.show_other_category && !item?.category?.value) {
       errs["particulars" + index + "category"] = "Select a valid category.";
     }
     if (item?.show_other_category && !item?.other_category) {

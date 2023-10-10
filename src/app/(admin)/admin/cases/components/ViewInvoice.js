@@ -44,6 +44,7 @@ const ViewInvoice = ({
 
   useEffect(() => {
     getRecord();
+    console.log(fields);
   }, []);
 
   return (

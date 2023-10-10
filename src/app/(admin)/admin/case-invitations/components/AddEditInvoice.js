@@ -345,8 +345,9 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             <FloatingLabel label="Select">
                               <Form.Select
                                 className="invoice-item"
-                                onChange={(e) => {
+                                onChange={(e) => {                                  
                                   fieldsData.particulars[index].category.value = Number(e.target.value);
+                                  fieldsData.particulars[index].category.label = categories[e.target.value].label;
                                   if (
                                     e.target.value ==
                                     categories[categories.length - 1].value
@@ -624,6 +625,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
           submitted={submitted}
           handleSubmit={handleSubmit}
           submissionAction={submissionAction}
+          categories={categories}
         />
       )}
     </>
