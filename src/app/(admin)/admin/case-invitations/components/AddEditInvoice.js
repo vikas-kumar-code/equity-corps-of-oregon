@@ -337,7 +337,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                                 fieldsData.particulars[
                                   index
                                 ].show_other_category = false;
-                                fieldsData.particulars[index].category = null;
+                                fieldsData.particulars[index].category.value = null;
                                 setFields(fieldsData);
                               }}
                               style={{ right: 9, top: 17 }}
@@ -349,8 +349,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                               <Form.Select
                                 className="invoice-item"
                                 onChange={(e) => {
-                                  fieldsData.particulars[index].category.value =
-                                    Number(e.target.value);
+                                  console.log(e.target.options[e.target.selectedIndex], e.target.selectedIndex)
+                                  fieldsData.particulars[index].category.value = e.target.value;
                                   if (
                                     e.target.value ==
                                     categories[categories.length - 1].value
@@ -368,12 +368,11 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                                 {categories.map((category, i) => {
                                   return (
                                     <option
-                                      value={Number(category.value)}
+                                      value={category.value}
                                       key={`particular-${i}`}
                                       className="p-2"
                                       selected={
-                                        fields.particulars[index].category
-                                          .value === category.value
+                                        fields.particulars[index].category?.value == category.value
                                       }
                                     >
                                       {category.label}

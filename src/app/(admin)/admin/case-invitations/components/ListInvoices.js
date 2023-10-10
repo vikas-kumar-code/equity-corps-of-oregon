@@ -16,12 +16,16 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import ListDocuments from "./ListDocuments";
 import PaymentButtons from "../../cases/components/PaymentButtons";
+import WithdrawInvoice from "./WithdrawInvoice";
 
 const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
   const [records, setRecords] = useState({});
+  const [errors, setErrors] = useState("");
+  const [withdraw, setWithdraw] = useState("")
   const [loader, setLoader] = useState(true);
   const [caseInvitationIndex, setCaseInvitationIndex] = useState(null);
   const [showDocList, setShowDocList] = useState(false);
+  const [withdrawInvoice, setWithdrawInvoice] = useState([false, 0, 0]);
 
   const getRecords = async () => {
     setLoader(true);
@@ -64,32 +68,45 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
     }
   };
 
-  const sendInvoice = async (id) => {
-    if (window.confirm("Are you sure to send this invoice for approval?")) {
-      setLoader(true);
-      fetch(common.apiPath(`/admin/cases/invoice/send/${id}`), {
-        method: "POST",
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            toast.success(response.message);
-            getRecords();
-          } else if (response.error) {
-            toast.error(response.message);
-          }
+  const sendInvoice = async (id, status) => {
+    if(withdraw === "" && status === 1){
+      setErrors("Withdraw remarks cannot be empty.");
+    }else{
+      if (
+        status === 0
+          ? window.confirm("Are you sure to send this invoice for approval?")
+          : status === 1 &&
+            window.confirm("Are you sure to withdraw this invoice?")
+      ) {
+        setLoader(true);
+        fetch(common.apiPath(`/admin/cases/invoice/send/${id}`), {
+          method: "POST",
+          body: JSON.stringify({withdraw_remarks: withdraw})
         })
-        .catch((error) => {
-          toast.error(error.message);
-        })
-        .finally(() => setLoader(false));
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.success) {
+              toast.success(response.message);
+              getRecords();
+              setWithdrawInvoice(false);
+              setWithdraw("")
+              setErrors("")
+            } else if (response.error) {
+              toast.error(response.message);
+            }
+          })
+          .catch((error) => {
+            toast.error(error.message);
+          })
+          .finally(() => setLoader(false));
+      }
     }
   };
 
-  const handleShowDoc = (index)=>{
-    setCaseInvitationIndex(index)
-    setShowDocList(true)
-  }
+  const handleShowDoc = (index) => {
+    setCaseInvitationIndex(index);
+    setShowDocList(true);
+  };
 
   const btnStatus = {
     0: {
@@ -137,79 +154,98 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
                     <tbody>
                       {records.case_invoices.map((item, index) => (
                         <>
-                        <tr key={`invoice-${index}`}>
-                          <td>{index + 1}</td>
-                          <td>
-                            {item.name}
-                            {(JSON.parse(item?.files)?.length > 0) && (
-                              <a
-                                href="#"
-                                className="d-block text-primary"
-                                onClick={() => handleShowDoc(index)}
-                              >
-                                View files
-                              </a>
-                            )}
-                          </td>
-                          <td>{common.currencyFormat(item.total_amount, 2)}</td>
-                          <td>{moment(item.added_on).format("D MMM, YYYY")}</td>
-                          <td>
-                            <Badge
-                              pill
-                              bg={btnStatus[item.status].bg || "info"}
-                              size="sm"
-                            >
-                              {btnStatus[item.status].label || "N/A"}
-                            </Badge>
-                          </td>
-                          <td>
-                            <DropdownButton
-                              as={ButtonGroup}
-                              key="action-1"
-                              id={`action-btn-1`}
-                              variant="primary"
-                              title="Action"
-                              align="end"
-                            >
-                              {item.status === 0 && (
-                                <Dropdown.Item
-                                  eventKey="4"
-                                  onClick={() => sendInvoice(item.id)}
+                          <tr key={`invoice-${index}`}>
+                            <td>{index + 1}</td>
+                            <td>
+                              {item.name}
+                              {JSON.parse(item?.files)?.length > 0 && (
+                                <a
+                                  href="#"
+                                  className="d-block text-primary"
+                                  onClick={() => handleShowDoc(index)}
                                 >
-                                  <span className="mdi mdi-send"></span>
-                                  Send
-                                </Dropdown.Item>
+                                  View files
+                                </a>
                               )}
+                            </td>
+                            <td>
+                              {common.currencyFormat(item.total_amount, 2)}
+                            </td>
+                            <td>
+                              {moment(item.added_on).format("D MMM, YYYY")}
+                            </td>
+                            <td>
+                              <Badge
+                                pill
+                                bg={btnStatus[item.status].bg || "info"}
+                                size="sm"
+                              >
+                                {btnStatus[item.status].label || "N/A"}
+                              </Badge>
+                            </td>
+                            <td>
+                              <DropdownButton
+                                as={ButtonGroup}
+                                key="action-1"
+                                id={`action-btn-1`}
+                                variant="primary"
+                                title="Action"
+                                align="end"
+                              >
+                                {item.status === 0 && (
+                                  <Dropdown.Item
+                                    eventKey="4"
+                                    onClick={() => sendInvoice(item.id, item.status)}
+                                  >
+                                    <span className="mdi mdi-send"></span>
+                                    Send
+                                  </Dropdown.Item>
+                                )}
 
-                              <Dropdown.Item
-                                eventKey="1"
-                                onClick={() => setShowInvoice(item.id)}
-                              >
-                                <span className="mdi mdi-eye"></span>
-                                View
-                              </Dropdown.Item>
-                              {item.status === 0 && (
                                 <Dropdown.Item
-                                  eventKey="2"
-                                  onClick={() => getRecord(item.id)}
+                                  eventKey="1"
+                                  onClick={() => setShowInvoice(item.id)}
                                 >
-                                  <span className="mdi mdi-pencil"></span>
-                                  Edit
+                                  <span className="mdi mdi-eye"></span>
+                                  View
                                 </Dropdown.Item>
-                              )}
-                              {item.status == 0 && (
-                                <Dropdown.Item
-                                  eventKey="3"
-                                  onClick={() => deleteRecord(item.id)}
-                                >
-                                  <span className="mdi mdi-delete"></span>
-                                  Delete
-                                </Dropdown.Item>
-                              )}
-                            </DropdownButton>
-                          </td>
-                        </tr>
-                        {item.status === 2 && (
+                                {item.status === 1 && (
+                                  <Dropdown.Item
+                                    eventKey="2"
+                                    onClick={() =>
+                                      setWithdrawInvoice([
+                                        true,
+                                        item.id,
+                                        item.status,
+                                      ])
+                                    }
+                                  >
+                                    <span className="mdi mdi-pencil"></span>
+                                    Withdraw
+                                  </Dropdown.Item>
+                                )}
+                                {item.status === 0 && (
+                                  <Dropdown.Item
+                                    eventKey="2"
+                                    onClick={() => getRecord(item.id)}
+                                  >
+                                    <span className="mdi mdi-pencil"></span>
+                                    Edit
+                                  </Dropdown.Item>
+                                )}
+                                {item.status == 0 && (
+                                  <Dropdown.Item
+                                    eventKey="3"
+                                    onClick={() => deleteRecord(item.id)}
+                                  >
+                                    <span className="mdi mdi-delete"></span>
+                                    Delete
+                                  </Dropdown.Item>
+                                )}
+                              </DropdownButton>
+                            </td>
+                          </tr>
+                          {item.status === 2 && (
                             <tr style={{ backgroundColor: "#009c0014" }}>
                               <td className="py-2"></td>
                               <td
@@ -224,7 +260,7 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
                               </td>
                             </tr>
                           )}
-                          </>
+                        </>
                       ))}
                       {records.case_invoices.length <= 0 && (
                         <tr>
@@ -241,6 +277,17 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
           </Card.Body>
         </Card>
       </LoadingOverlay>
+      <WithdrawInvoice
+        showWithdrawModal={withdrawInvoice}
+        sendInvoice={sendInvoice}
+        withdraw={withdraw}
+        errors={errors}
+         setWithdraw={setWithdraw}
+        closeModal={() => {
+          setWithdrawInvoice([false, 0, 0])
+          setErrors("")
+        }}
+      />
       <ListDocuments
         showDocList={showDocList}
         closeModal={() => setShowDocList(false)}

@@ -92,20 +92,21 @@ model cases {
 }
 
 model case_invoices {
-  id           Int        @id @default(autoincrement())
-  case_id      Int
-  user_id      Int
-  name         String?
-  particulars  String     @db.LongText
-  files        String?    @db.LongText
-  total_amount Decimal    @db.Decimal(10, 2)
-  added_on     DateTime   @default(now())
-  due_on       DateTime   @db.Date
+  id               Int        @id @default(autoincrement())
+  case_id          Int
+  user_id          Int
+  name             String?
+  particulars      String     @db.LongText
+  files            String?    @db.LongText
+  total_amount     Decimal    @db.Decimal(10, 2)
+  added_on         DateTime   @default(now())
+  due_on           DateTime   @db.Date
+  withdraw_remarks String?     @db.LongText
   /// Invoice Status [0 => draft, 1 => sent, 2 => partially paid, 3 => full paid]
-  status       Int        @default(0)
-  case         cases      @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
-  user         users      @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
-  payments     payments[]
+  status           Int        @default(0)
+  case             cases      @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  user             users      @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  payments         payments[]
 }
 
 model invoice_categories {

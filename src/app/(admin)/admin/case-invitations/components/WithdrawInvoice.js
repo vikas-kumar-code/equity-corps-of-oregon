@@ -1,0 +1,63 @@
+import { Modal, Button, Form } from "react-bootstrap";
+
+const WithdrawInvoice = ({
+  closeModal,
+  showWithdrawModal,
+  sendInvoice,
+  setWithdraw,
+  withdraw,
+  errors
+}) => {
+  return (
+    <Modal
+      show={showWithdrawModal[0]}
+      onHide={closeModal}
+      backdrop="static"
+      keyboard={false}
+      centered
+      size="md"
+    >
+      <Modal.Header closeButton className="border-bottom-0">
+        <h3> Withdraw Invoice</h3>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+            <Form.Label>Reason for withdraw</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={withdraw}
+              onChange={(e) => setWithdraw(e.target.value)}
+            />
+            <Form.Control.Feedback type="invalid" className="d-block">
+              {errors || ""}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          size="md"
+          type="submit"
+          variant="secondary"
+          onClick={closeModal}
+        >
+          Cancel
+        </Button>
+        <Button
+          size="md"
+          type="submit"
+          variant="success"
+          onClick={() =>
+            sendInvoice(showWithdrawModal[1], showWithdrawModal[2])
+          }
+        >
+          Submit
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
+
+export default WithdrawInvoice;
