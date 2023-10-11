@@ -190,7 +190,7 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
                               {item.status === 0 && (
                                 <Dropdown.Item
                                   eventKey="4"
-                                  onClick={() => sendInvoice(item.id)}
+                                  onClick={() => sendInvoice(item.id, item.status)}
                                 >
                                   <span className="mdi mdi-send"></span>
                                   Send

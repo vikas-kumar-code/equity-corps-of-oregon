@@ -77,7 +77,7 @@ export default function Documents(props) {
             <Card>
               <Card.Body style={{ maxHeight: "326px", overflowY: "auto" }}>
                 <Card.Title>Documents</Card.Title>
-                <div className="table-responsive min-list-height">
+                <div className="table-responsive">
                   <table className="table">
                     <thead>
                       <tr>

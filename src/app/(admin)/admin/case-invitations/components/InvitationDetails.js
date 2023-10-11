@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Modal, Badge, Tabs, Tab, Button, Row, Col } from "react-bootstrap";
 import Documents from "./Documents";
 import common from "@/utils/common";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const InvitationDetails = ({
   showModal,
@@ -12,9 +14,58 @@ const InvitationDetails = ({
 }) => {
   const [activeTab, setActiveTab] = useState(1);
   const [errors, setErrors] = useState({});
+  const [records, setRecords] = useState([]);
   const [deletedDocuments, setDeletedDocuments] = useState([]);
+  const [amountDetails, setAmountDetails] = useState({
+    maxComp: 0,
+    totalInvoiced: 0,
+    totalPaid: 0,
+    available: 0,
+  });
 
-  const btnStatus = {
+  const getRecords = async () => {
+    try {
+      await fetch(common.apiPath(`/admin/cases/invoice/list/${record.case_id}`))
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            setRecords(response.records);
+            if (response.records) {
+              let amounts = {
+                maxComp: 0,
+                totalInvoiced: 0,
+                totalPaid: 0,
+                available: 0,
+              };
+              console.log(response.records?.case_invoices[0].status);
+              amounts.maxComp =
+                response.records?.case?.maximum_compensation || 0;
+              Array.isArray(response.records?.case_invoices) &&
+                response.records?.case_invoices?.forEach((item) => {
+                  if (item.status >= 1) {
+                    amounts.totalInvoiced += Number(item.total_amount);
+                  }
+                  amounts.totalPaid += item.payments.reduce(
+                    (total, pay) => total + Number(pay.amount),
+                    0
+                  );
+                });
+              amounts.available = amounts.maxComp - amounts.totalPaid;
+              setAmountDetails(amounts);
+              // response.records.forEach(item => {
+              // item.
+              // });
+            }
+          } else if (response.error) {
+            toast.error(response.message);
+          }
+        });
+    } catch (e) {
+      toast.error(e.message);
+    }
+  };
+
+  const iStatus = {
     0: {
       label: "Pending",
       bg: "warning",
@@ -28,6 +79,10 @@ const InvitationDetails = ({
       bg: "danger",
     },
   };
+
+  useEffect(() => {
+    getRecords();
+  }, []);
 
   return (
     <Modal
@@ -49,36 +104,26 @@ const InvitationDetails = ({
           onSelect={(k) => setActiveTab(parseInt(k))}
         >
           <Tab eventKey={1} title="Basic Details">
-            <div className="table-responsive min-list-height">
+            <div className="table-responsive">
               <table className="table table-borderless table-striped">
                 <tbody>
                   <tr>
-                    <td width="30%"><strong>Title</strong></td>
+                    <th>Title</th>
                     <td>{record.case.title}</td>
                   </tr>
                   <tr>
-                    <td><strong>Case Number</strong></td>
+                    <th>Case Number</th>
                     <td>{record.case.case_number}</td>
                   </tr>
                   <tr>
-                    <td><strong>Maximum Compensation</strong></td>
-                    <td>
-                      {common.currencyFormat(record.case.maximum_compensation)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><strong>Hourly Rate</strong></td>
-                    <td>{common.currencyFormat(record.case.hourly_rate)}</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Description</strong></td>
+                    <th>Description</th>
                     <td>{record.case.description}</td>
                   </tr>
                   <tr>
-                    <td><strong>Status</strong></td>
+                    <th>Status</th>
                     <td>
-                      <Badge pill bg={btnStatus[record.status].bg || "info"}>
-                        {btnStatus[record.status].label || "N/A"}
+                      <Badge pill bg={iStatus[record.status].bg || "info"}>
+                        {iStatus[record.status].label || "N/A"}
                       </Badge>
                     </td>
                   </tr>
@@ -90,17 +135,49 @@ const InvitationDetails = ({
               </table>
             </div>
           </Tab>
-          <Tab eventKey={2} title="Milestones">
-            <div className="p-3">
+          {record.status >= 1 && (
+            <Tab eventKey={2} title="Invoice Details">
+              <div className="table-responsive">
+                <table className="table table-borderless table-striped">
+                  <tbody>
+                    <tr>
+                      <th>Max Comp:</th>
+                      <td>{common.currencyFormat(amountDetails.maxComp, 2)}</td>
+                    </tr>
+                    <tr>
+                      <th>Total Invoiced:</th>
+                      <td>
+                        {common.currencyFormat(amountDetails.totalInvoiced, 2)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Total Paid:</th>
+                      <td>
+                        {common.currencyFormat(amountDetails.totalPaid, 2)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Available:</th>
+                      <td>
+                        {common.currencyFormat(amountDetails.available, 2)}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </Tab>
+          )}
+          <Tab eventKey={3} title="Milestones">
+            <div>
               <Row>
                 <Col className="">Milestones</Col>
               </Row>
               <Row>
                 <Col md={12} sm={12}>
-                  <div className="table-responsive" style={{ maxHeight: 200 }}>
-                    <table className="table">
+                  <div className="table-responsive">
+                    <table className="table table-borderless">
                       <thead>
-                        <tr className="mx-5">
+                        <tr>
                           <th>#</th>
                           <th>Comment</th>
                           <th>Updated On</th>
@@ -112,7 +189,7 @@ const InvitationDetails = ({
                             <tr key={i}>
                               <td>{mile.id}</td>
                               <td>{mile.comment}</td>
-                              <td className="text-center">
+                              <td>
                                 {moment(mile.milestone_date).format(
                                   "D MMM,  YYYY"
                                 )}
@@ -127,8 +204,8 @@ const InvitationDetails = ({
               </Row>
             </div>
           </Tab>
-          {record.status === 1 && (
-            <Tab eventKey={3} title="Documents">
+          {record.status >= 1 && (
+            <Tab eventKey={4} title="Documents">
               <Documents
                 reloadRecords={reloadRecords}
                 setDeletedDocument={(doc) => {
@@ -141,7 +218,7 @@ const InvitationDetails = ({
               />
             </Tab>
           )}
-          <Tab eventKey={4} title="Case Activities">
+          <Tab eventKey={5} title="Case Activities">
             <div style={{ maxHeight: "250px", overflowY: "auto" }}>
               <ol className="activity-feed">
                 {record.case.logs.map((log, i) => {

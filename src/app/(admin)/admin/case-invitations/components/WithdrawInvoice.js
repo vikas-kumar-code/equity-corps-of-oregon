@@ -22,10 +22,11 @@ const WithdrawInvoice = ({
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+          <Form.Group>
             <Form.Label>Reason for withdraw</Form.Label>
             <Form.Control
               as="textarea"
+              style={{height: "calc(4.25rem + 2px)"}}
               rows={3}
               value={withdraw}
               onChange={(e) => setWithdraw(e.target.value)}
