@@ -59,7 +59,7 @@ const redirectToDashboard = async () => {
       ) {
         redirect(WEB_URL + "/admin" + "/settings?is_first_login=1");
       } else if (session.user.role_id === 3) {
-        redirect(WEB_URL + "/admin" + "/cases");
+        redirect(WEB_URL + "/admin" + "/case-invitations");
       } else {
         redirect(WEB_URL + "/admin" + "/dashboard");
       }
