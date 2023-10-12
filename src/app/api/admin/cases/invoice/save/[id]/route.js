@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
-import { getSession } from "@/utils/serverHelpers";
+import { getSession, moveFile } from "@/utils/serverHelpers";
 import invoiceValidation from "@/validators/invoiceValidation";
 import fs from "fs";
 import path from "path";
+import common from "@/utils/common";
 
 export async function PUT(request, data) {
   let response = {};
@@ -33,7 +34,7 @@ export async function PUT(request, data) {
           total_amount = Number(total_amount);
           let particulars = JSON.stringify(validated.particulars);
           let uploadedFiles = validated?.temp_files
-            ? JSON.stringify([...validated.files, ...validated.temp_files])
+            ? JSON.stringify([...validated.temp_files, ...validated.files])
             : null;
 
           const caseInvoices = await prisma.case_invoices.findMany({
@@ -76,7 +77,21 @@ export async function PUT(request, data) {
                 },
               });
 
-              if(Array.isArray(validated.deletedFiles) && validated.deletedFiles.length > 0){
+              if (validated.temp_files && Array.isArray(validated.temp_files)) {
+                validated.temp_files.forEach((doc) => {
+                  moveFile(
+                    common.publicPath("temp/" + doc.fileName), // source path
+                    common.publicPath(
+                      "uploads/invoice_documents/" + doc.fileName // destination path
+                    )
+                  );
+                });
+              }
+
+              if (
+                Array.isArray(validated.deletedFiles) &&
+                validated.deletedFiles.length > 0
+              ) {
                 validated.deletedFiles.forEach((doc) => {
                   const filePath = path.join(
                     process.cwd(),
