@@ -43,7 +43,7 @@ const ListDocuments = ({
                         <DownloadButton
                           fileName={file.originalFileName}
                           path={common.downloadLink(
-                            "uploads/case_documents/" + file.fileName
+                            "uploads/invoice_documents/" + file.fileName
                           )}
                         />
                       </td>
