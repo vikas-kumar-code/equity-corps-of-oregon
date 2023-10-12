@@ -50,6 +50,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const [refreshInvoices, setRefreshInvoices] = useState(true);
   const [submissionAction, setSubmissionAction] = useState(0);
   const [categories, setCategories] = useState([]);
+  const [deletedFiles, setDeletedFiles] = useState([]); 
   const filePondRef = useRef(null);
 
   const resetFilepond = () => {
@@ -126,6 +127,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       body: JSON.stringify({
         case_id: record.id,
         ...fields,
+        deletedFiles : [...deletedFiles]
       }),
     })
       .then((response) => response.json())
@@ -140,6 +142,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
             reloadRecords();
             setSubmitted(false);
           }
+          setDeletedFiles([])
           setShowInvoice(null);
           resetFilepond();
         } else if (response.error) {
@@ -162,7 +165,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         .then((response) => {
           if (response.success) {
             setFields(response.record.case_invoice);
-            console.log();
           } else if (response.error) {
             toast.error(response.message);
           }
@@ -217,12 +219,16 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
 
   const handleDelFile = (index) => {
     let newFiles = [...fields.files];
+    let deletedFile =  newFiles[index].fileName;
     let filteredFiles = newFiles.filter((file, i) => {
       return i !== index;
     });
-    setFields({...fields, files: filteredFiles });
+    setDeletedFiles((prevDeletedFiles) => [...prevDeletedFiles, deletedFile]);
+    setFields({...fields, files: [...filteredFiles], deleted_files: deletedFiles });
   };
 
+  console.log(fields.files);
+  
   useEffect(() => {
     getInvoiceCategories();
   }, []);

@@ -37,10 +37,11 @@ const InvitationDetails = ({
                 totalPaid: 0,
                 available: 0,
               };
-              console.log(response.records?.case_invoices[0].status);
+
               amounts.maxComp =
                 response.records?.case?.maximum_compensation || 0;
               Array.isArray(response.records?.case_invoices) &&
+                response.records?.case_invoices.length > 0 &&
                 response.records?.case_invoices?.forEach((item) => {
                   if (item.status >= 1) {
                     amounts.totalInvoiced += Number(item.total_amount);
@@ -52,9 +53,6 @@ const InvitationDetails = ({
                 });
               amounts.available = amounts.maxComp - amounts.totalPaid;
               setAmountDetails(amounts);
-              // response.records.forEach(item => {
-              // item.
-              // });
             }
           } else if (response.error) {
             toast.error(response.message);
@@ -108,58 +106,92 @@ const InvitationDetails = ({
               <table className="table table-borderless table-striped">
                 <tbody>
                   <tr>
-                    <th>Title</th>
-                    <td>{record.case.title}</td>
+                    <td width="30%">
+                      <strong>Title</strong>
+                    </td>
+                    <td>{record?.case?.title}</td>
                   </tr>
                   <tr>
-                    <th>Case Number</th>
-                    <td>{record.case.case_number}</td>
-                  </tr>
-                  <tr>
-                    <th>Description</th>
-                    <td>{record.case.description}</td>
-                  </tr>
-                  <tr>
-                    <th>Status</th>
                     <td>
-                      <Badge pill bg={iStatus[record.status].bg || "info"}>
-                        {iStatus[record.status].label || "N/A"}
+                      <strong>Case Number</strong>
+                    </td>
+                    <td>{record?.case?.case_number}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Description</strong>
+                    </td>
+                    <td>{record?.case?.description}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Status</strong>
+                    </td>
+                    <td>
+                      <Badge pill bg={iStatus[record?.status].bg || "info"}>
+                        {iStatus[record?.status].label || "N/A"}
                       </Badge>
                     </td>
                   </tr>
                   <tr>
-                    <th>Added On</th>
-                    <td>{moment(record.sent_on).format("D MMM, YYYY")}</td>
+                    <td>
+                      <strong>Added On</strong>
+                    </td>
+                    <td>{moment(record?.sent_on).format("D MMM, YYYY")}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </Tab>
-          {record.status >= 1 && (
+          {record?.status >= 1 && (
             <Tab eventKey={2} title="Invoice Details">
               <div className="table-responsive">
                 <table className="table table-borderless table-striped">
                   <tbody>
                     <tr>
-                      <th>Max Comp:</th>
-                      <td>{common.currencyFormat(amountDetails.maxComp, 2)}</td>
-                    </tr>
-                    <tr>
-                      <th>Total Invoiced:</th>
+                      <td  width="30%">
+                        <strong>Max Comp:</strong>
+                      </td>
                       <td>
-                        {common.currencyFormat(amountDetails.totalInvoiced, 2)}
+                        <strong>
+                          {common.currencyFormat(amountDetails?.maxComp, 2) ??
+                            "N/A"}
+                        </strong>
                       </td>
                     </tr>
                     <tr>
-                      <th>Total Paid:</th>
                       <td>
-                        {common.currencyFormat(amountDetails.totalPaid, 2)}
+                        <strong>Total Invoiced:</strong>
+                      </td>
+                      <td>
+                        <strong>
+                          {common.currencyFormat(
+                            amountDetails?.totalInvoiced,
+                            2
+                          ) ?? "N/A"}
+                        </strong>
                       </td>
                     </tr>
                     <tr>
-                      <th>Available:</th>
                       <td>
-                        {common.currencyFormat(amountDetails.available, 2)}
+                        <strong>Total Paid:</strong>
+                      </td>
+                      <td>
+                        <strong>
+                          {common.currencyFormat(amountDetails?.totalPaid, 2) ??
+                            "N/A"}
+                        </strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Available:</strong>
+                      </td>
+                      <td>
+                        <strong>
+                          {common.currencyFormat(amountDetails?.available, 2) ??
+                            "N/A"}
+                        </strong>
                       </td>
                     </tr>
                   </tbody>
@@ -170,27 +202,24 @@ const InvitationDetails = ({
           <Tab eventKey={3} title="Milestones">
             <div>
               <Row>
-                <Col className="">Milestones</Col>
-              </Row>
-              <Row>
                 <Col md={12} sm={12}>
-                  <div className="table-responsive">
-                    <table className="table table-borderless">
+                  <div className="table-responsive" style={{ maxHeight: 200 }}>
+                    <table className="table">
                       <thead>
-                        <tr>
+                        <tr className="mx-5">
                           <th>#</th>
                           <th>Comment</th>
                           <th>Updated On</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {record.case.case_milestones.map((mile, i) => {
+                        {record?.case?.case_milestones?.map((mile, i) => {
                           return (
                             <tr key={i}>
-                              <td>{mile.id}</td>
-                              <td>{mile.comment}</td>
-                              <td>
-                                {moment(mile.milestone_date).format(
+                              <td>{mile?.id}</td>
+                              <td>{mile?.comment}</td>
+                              <td className="text-center">
+                                {moment(mile?.milestone_date).format(
                                   "D MMM,  YYYY"
                                 )}
                               </td>
@@ -204,14 +233,14 @@ const InvitationDetails = ({
               </Row>
             </div>
           </Tab>
-          {record.status >= 1 && (
+          {record?.status >= 1 && (
             <Tab eventKey={4} title="Documents">
               <Documents
                 reloadRecords={reloadRecords}
                 setDeletedDocument={(doc) => {
                   setDeletedDocuments([...deletedDocuments, doc]);
                 }}
-                documents={record.case.case_documents}
+                documents={record?.case?.case_documents}
                 errors={errors}
                 setErrors={setErrors}
                 caseId={record.case.id}
@@ -221,7 +250,7 @@ const InvitationDetails = ({
           <Tab eventKey={5} title="Case Activities">
             <div style={{ maxHeight: "250px", overflowY: "auto" }}>
               <ol className="activity-feed">
-                {record.case.logs.map((log, i) => {
+                {record?.case?.logs.map((log, i) => {
                   return (
                     <li className="feed-item">
                       <time className="date">
