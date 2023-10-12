@@ -11,7 +11,7 @@ const permissionSeeder = async () => {
 
   // Eco provider permissions
   const ecoProviderPermissions = [
-    "/admin/dashboard",
+    // "/admin/dashboard",
     "/admin/case-invitations",
     "/api/admin/cases/invitation",
     "/api/admin/cases/invitation/accept",
