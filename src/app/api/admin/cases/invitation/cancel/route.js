@@ -11,8 +11,9 @@ export async function POST(request) {
           id: parseInt(data?.id),
         },
       });
-      
-      if(caseInvitation){
+
+      console.log(caseInvitation);
+      if(data.invitedUsers.length <= 1){
         await prisma.cases.update({
           where: {
             id: parseInt(data?.case_id),

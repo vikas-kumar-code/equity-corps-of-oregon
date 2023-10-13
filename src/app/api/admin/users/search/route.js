@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
 export async function GET(request) {
   let where = {};
-  console.log(request.nextUrl.searchParams.get("role_id") );
   if (request.nextUrl.searchParams.get("keyword")) {
     where = {
       ...where,
