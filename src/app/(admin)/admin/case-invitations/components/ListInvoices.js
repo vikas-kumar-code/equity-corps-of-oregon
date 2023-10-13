@@ -18,10 +18,9 @@ import ListDocuments from "./ListDocuments";
 import PaymentButtons from "../../cases/components/PaymentButtons";
 import WithdrawInvoice from "./WithdrawInvoice";
 
-const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
+const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh, withdraw, setWithdraw }) => {
   const [records, setRecords] = useState({});
   const [errors, setErrors] = useState("");
-  const [withdraw, setWithdraw] = useState("");
   const [loader, setLoader] = useState(true);
   const [caseInvitationIndex, setCaseInvitationIndex] = useState(null);
   const [showDocList, setShowDocList] = useState(false);
@@ -86,6 +85,7 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
           .then((response) => response.json())
           .then((response) => {
             if (response.success) {
+              console.log(response.message);
               toast.success(response.message);
               getRecords();
               setWithdrawInvoice(false);
@@ -157,7 +157,7 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
                           <td>{index + 1}</td>
                           <td>
                             {item.name}
-                            {JSON.parse(item?.files)?.length > 0 && (
+                            {item?.files && JSON.parse(item?.files)?.length > 0 && (
                               <a
                                 href="#"
                                 className="d-block text-primary"
