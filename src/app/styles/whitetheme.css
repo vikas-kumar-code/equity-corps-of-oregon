@@ -17,7 +17,6 @@
   padding-top: 100px;
   height: 100%;
   margin-bottom: 0px;
-
 }
 
 .whitetheme .sidebar .nav:not(.sub-menu)>.nav-item:hover:not(.nav-category):not(.account-dropdown)>.nav-link,
@@ -91,9 +90,9 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.125) !important;
 }
 
-.whitetheme .table-responsive .table thead tr th:last-child {
+/* .whitetheme .table-responsive .table thead tr th:last-child {
   text-align: center;
-}
+} */
 
 .whitetheme .table-responsive .table tbody tr td {
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);

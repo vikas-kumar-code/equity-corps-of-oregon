@@ -8,7 +8,11 @@ export async function POST(request, data) {
   let response = {};
   const id = parseInt(data.params.id);
   const session = await getSession();
-  let req = await request.json();
+  let req = {};
+  try {
+    req = await request.json();
+  } catch {}
+
   try {
     const invoice = await prisma.case_invoices.findUnique({
       where: { id, user_id: session.user.id },
@@ -55,7 +59,7 @@ export async function POST(request, data) {
           },
           data: {
             status: 0,
-            withdraw_remarks: req.withdraw_remarks,
+            withdraw_remarks: req?.withdraw_remarks || "",
           },
         });
         if (withdrawInvoice) {

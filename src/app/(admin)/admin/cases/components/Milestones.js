@@ -35,7 +35,7 @@ function Milestones(props) {
                   <th>#</th>
                   <th>Date </th>
                   <th>Comment</th>
-                  <th className="text-end">Action</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -48,7 +48,7 @@ function Milestones(props) {
                       )}
                     </td>
                     <td>{record.comment}</td>
-                    <td className="text-end">
+                    <td>
                       {record.case_id !== undefined && (
                         <Button variant="primary" className="me-2">
                           Edit
