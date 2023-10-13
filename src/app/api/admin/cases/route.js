@@ -47,6 +47,21 @@ export async function GET(request) {
         },
       };
     }
+
+    // if (request.get("reviewer")) {
+    //   where = {
+    //     ...where,
+    //     case_invitations: {
+    //       some: {
+    //         user: {
+    //           is: {
+    //             id: parseInt(request.get("reviewer")),
+    //           },
+    //         },
+    //       },
+    //     },
+    //   };
+    // }
     records = await prisma.cases.findMany({
       where,
       ...paginate,

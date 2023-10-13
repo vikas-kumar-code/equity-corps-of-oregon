@@ -37,6 +37,7 @@ export default function AddEditCase(props) {
     milestones: [],
     documents: [],
     logs: [],
+    clients: [],
   };
   const [fields, setFields] = useState(initialValues);
   const [errors, setErrors] = useState({});
@@ -351,6 +352,23 @@ export default function AddEditCase(props) {
                   </Form.Group>
                 </Row>
               </Tab>
+              {/* <Tab
+                eventKey={2}
+                title="Milestones"
+                disabled={activated < 2 && !props.recordId}
+              >
+                <Milestones
+                  errors={errors}
+                  setErrors={setErrors}
+                  milestones={fields?.milestones || []}
+                  updateMilestones={(milestones) =>
+                    setFields({
+                      ...fields,
+                      milestones: milestones,
+                    })
+                  }
+                />
+              </Tab> */}
               <Tab
                 eventKey={2}
                 title="Milestones"

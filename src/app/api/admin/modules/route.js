@@ -25,11 +25,19 @@ export async function GET() {
       "/admin/settings",
     ];
 
+    const reviewerModules = [
+      // "/admin/dashboard",
+      "/admin/case-invitations",
+      "/admin/settings",
+    ];
+
     // Exclude routes for Admin
     if (parseInt(session.user.role_id) === 1) {
       modules = adminModules;
     } else if (parseInt(session.user.role_id) === 3) {
       modules = ecoProviderModules;
+    }else if (parseInt(session.user.role_id) === 4) {
+      modules = reviewerModules;
     }
 
     if (modules) {

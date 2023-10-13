@@ -260,7 +260,7 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh, withdraw, se
                     {records.case_invoices.length <= 0 && (
                       <tr>
                         <td colSpan={6}>
-                          <h6 className="text-gray">No records available</h6>
+                          <h6 className="text-gray text-center m-5">No records available</h6>
                         </td>
                       </tr>
                     )}

@@ -50,7 +50,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const [refreshInvoices, setRefreshInvoices] = useState(true);
   const [submissionAction, setSubmissionAction] = useState(0);
   const [categories, setCategories] = useState([]);
-  const [deletedFiles, setDeletedFiles] = useState([]); 
+  const [deletedFiles, setDeletedFiles] = useState([]);
+  const [withdraw, setWithdraw] = useState("") 
   const filePondRef = useRef(null);
 
   const resetFilepond = () => {
@@ -615,6 +616,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
               caseId={record.id}
               setShowInvoice={setShowInvoice}
               getRecord={getRecord}
+              withdraw={withdraw} 
+              setWithdraw={setWithdraw}
               refresh={refreshInvoices}
             />
           </LoadingOverlay>

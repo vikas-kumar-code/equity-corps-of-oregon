@@ -43,7 +43,43 @@ const SendInvitation = (props) => {
   const loadUsers = async () => {
     setErrors(null);
     try {
-      await fetch(common.apiPath(`/admin/users/search/?role_id=3`))
+      await fetch(common.apiPath(`/admin/users/search/?role_id=[3,4]`))
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            let userResponse = JSON.parse(response.records);
+            const excludeUsers = [];
+            // Exclude invited users
+            if (props?.invitedUsers) {
+              props?.invitedUsers.forEach((item) => {
+                if (item?.user?.id) {
+                  excludeUsers.push(item?.user?.id);
+                }
+              });
+            }
+            let users = userResponse.filter(
+              (user) => !excludeUsers.includes(user.id)
+            );
+            users = users.map((user) => ({
+              label: user.name,
+              value: user.id,
+            }));
+            setUsers(users);
+          } else if (response.error) {
+            toast.error(response.message);
+          }
+        });
+    } catch (e) {
+      toast.error(e.message);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const loadreviewers = async () => {
+    setErrors(null);
+    try {
+      await fetch(common.apiPath(`/admin/users/search/?role_id=4`))
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
@@ -122,7 +158,7 @@ const SendInvitation = (props) => {
       try {
         await fetch(common.apiPath(`/admin/cases/invitation/cancel`), {
           method: "POST",
-          body: JSON.stringify({ id: id }),
+          body: JSON.stringify({ id: id, case_id: props.recordId }),
         })
           .then((response) => response.json())
           .then((response) => {
@@ -158,8 +194,10 @@ const SendInvitation = (props) => {
 
   useEffect(() => {
     loadUsers();
+    // loadreviewers()
   }, []);
 
+  console.log(props.invitedUsers);
   return (
     <Modal
       show={props.showModal}

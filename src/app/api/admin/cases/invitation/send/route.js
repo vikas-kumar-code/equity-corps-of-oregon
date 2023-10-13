@@ -17,12 +17,24 @@ export async function POST(request) {
         case_invitations: true,
       },
     });
+
+    const caseData = await prisma.cases.findUnique({
+      where: {
+        id: data?.case_id,
+      },
+      select: {
+        status: true,
+      }
+    });
+
     const usersModel = await prisma.users.findMany({
       where: {
         id: {
           in: data?.users,
         },
-        role_id: 3, // Eco providers
+        role_id: {
+          in:  [3,4],
+        }, // Eco providers
       },
     });
 
@@ -79,14 +91,16 @@ export async function POST(request) {
               console.log(mail,'Mail dataaaaaaaaaaaaaa');
             });
 
-            await prisma.cases.update({
-              where: {
-                id: data?.case_id,
-              },
-              data:{
-                status: 1
-              }
-            });
+            if(caseData.status < 2){
+              await prisma.cases.update({
+                where: {
+                  id: data?.case_id,
+                },
+                data:{
+                  status: 1
+                }
+              });
+            }
 
             response.success = true;
             response.message = "Invitation has been sent successfully.";

@@ -52,13 +52,15 @@ const redirectToDashboard = async () => {
   const session = await getSession();
   const WEB_URL = process.env.NEXT_PUBLIC_API_URL;
   if (session?.user) {
-    if (session.user.role_id === 1 || session.user.role_id === 3) {
+    if (session.user.role_id === 1 || session.user.role_id === 3 || session.user.role_id === 4) {
       if (
         Number(session.user.is_first_login) === 1 &&
         session.user.role_id !== 1
       ) {
         redirect(WEB_URL + "/admin" + "/settings?is_first_login=1");
       } else if (session.user.role_id === 3) {
+        redirect(WEB_URL + "/admin" + "/case-invitations");
+      }else if (session.user.role_id === 4) {
         redirect(WEB_URL + "/admin" + "/case-invitations");
       } else {
         redirect(WEB_URL + "/admin" + "/dashboard");
