@@ -12,7 +12,6 @@ export async function POST(request) {
         },
       });
 
-      console.log(caseInvitation);
       if(data.invitedUsers.length <= 1){
         await prisma.cases.update({
           where: {

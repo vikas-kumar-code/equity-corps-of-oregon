@@ -227,8 +227,6 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
     setDeletedFiles((prevDeletedFiles) => [...prevDeletedFiles, deletedFile]);
     setFields({...fields, files: [...filteredFiles], deleted_files: deletedFiles });
   };
-
-  console.log(fields.files);
   
   useEffect(() => {
     getInvoiceCategories();
@@ -467,8 +465,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                                 width: 32,
                               }}
                             >
-                              {" "}
-                              <span className="fs-4">+</span>{" "}
+                              <span className="fs-4">+</span>
                             </Button>
                           )}
                           <Form.Control.Feedback type="invalid">

@@ -1,4 +1,4 @@
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Spinner } from "react-bootstrap";
 
 const WithdrawInvoice = ({
   closeModal,
@@ -6,7 +6,8 @@ const WithdrawInvoice = ({
   sendInvoice,
   setWithdraw,
   withdraw,
-  errors
+  errors,
+  submitted,
 }) => {
   return (
     <Modal
@@ -26,7 +27,7 @@ const WithdrawInvoice = ({
             <Form.Label>Reason for withdraw</Form.Label>
             <Form.Control
               as="textarea"
-              style={{height: "calc(4.25rem + 2px)"}}
+              style={{ height: "calc(4.25rem + 2px)" }}
               rows={3}
               value={withdraw}
               onChange={(e) => setWithdraw(e.target.value)}
@@ -54,6 +55,7 @@ const WithdrawInvoice = ({
             sendInvoice(showWithdrawModal[1], showWithdrawModal[2])
           }
         >
+          {submitted && <Spinner size="sm" variant="light" className="me-1" />}
           Submit
         </Button>
       </Modal.Footer>

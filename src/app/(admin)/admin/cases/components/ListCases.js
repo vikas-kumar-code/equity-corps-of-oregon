@@ -42,7 +42,6 @@ export default function ListCases() {
     fetch(common.apiPath(`/admin/cases?${searchParams.toString()}`))
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         if (response.success) {
           setRecords(response.records);
           setTotalRecords(response.totalRecords);

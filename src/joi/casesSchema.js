@@ -71,6 +71,30 @@ const casesSchemaForm3 = Joi.object({
     .required(),
 });
 
+function caseClientsValidation(fields) {
+  let errs = {};
+  fields?.clients?.forEach((item, index) => {
+    if (!item?.first_name) {
+      errs["clients" + index + "first_name"] =
+        "First Name is not allowed to be empty.";
+    }
+    if (!item?.last_name) {
+      errs["clients" + index + "last_name"] =
+        "Last Name is not allowed to be empty.";
+    }
+    if (!item?.dob) {
+      errs["clients" + index + "dob"] = "DOB can not be blank.";
+    }
+  });
+  if (Object.entries(errs).length > 0) {
+    return {
+      error: Object.entries(errs).length > 0,
+      messages: errs,
+    };
+  } else {
+    return fields;
+  }
+}
 
 const invoicePaymentSchema = Joi.object({
   total_amount: Joi.number().min(0).required().label("amount"),
@@ -82,5 +106,6 @@ export {
   casesSchemaForm1,
   casesSchemaForm2,
   casesSchemaForm3,
+  caseClientsValidation,
   invoicePaymentSchema,
 };

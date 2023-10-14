@@ -18,13 +18,21 @@ import ListDocuments from "./ListDocuments";
 import PaymentButtons from "../../cases/components/PaymentButtons";
 import WithdrawInvoice from "./WithdrawInvoice";
 
-const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh, withdraw, setWithdraw }) => {
+const ListInvoices = ({
+  caseId,
+  getRecord,
+  setShowInvoice,
+  refresh,
+  withdraw,
+  setWithdraw,
+}) => {
   const [records, setRecords] = useState({});
   const [errors, setErrors] = useState("");
   const [loader, setLoader] = useState(true);
   const [caseInvitationIndex, setCaseInvitationIndex] = useState(null);
   const [showDocList, setShowDocList] = useState(false);
   const [withdrawInvoice, setWithdrawInvoice] = useState([false, 0, 0]);
+  const [submitted, setSubmitted] = useState(false);
 
   const getRecords = async () => {
     setLoader(true);
@@ -77,6 +85,7 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh, withdraw, se
           : status === 1 &&
             window.confirm("Are you sure to withdraw this invoice?")
       ) {
+        setSubmitted(true);
         setLoader(true);
         fetch(common.apiPath(`/admin/cases/invoice/send/${id}`), {
           method: "POST",
@@ -98,7 +107,10 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh, withdraw, se
           .catch((error) => {
             toast.error(error.message);
           })
-          .finally(() => setLoader(false));
+          .finally(() => {
+            setLoader(false);
+            setSubmitted(false);
+          });
       }
     }
   };
@@ -157,15 +169,16 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh, withdraw, se
                           <td>{index + 1}</td>
                           <td>
                             {item.name}
-                            {item?.files && JSON.parse(item?.files)?.length > 0 && (
-                              <a
-                                href="#"
-                                className="d-block text-primary"
-                                onClick={() => handleShowDoc(index)}
-                              >
-                                View files
-                              </a>
-                            )}
+                            {item?.files &&
+                              JSON.parse(item?.files)?.length > 0 && (
+                                <a
+                                  href="#"
+                                  className="d-block text-primary"
+                                  onClick={() => handleShowDoc(index)}
+                                >
+                                  View files
+                                </a>
+                              )}
                           </td>
                           <td>{common.currencyFormat(item.total_amount, 2)}</td>
                           <td>{moment(item.added_on).format("D MMM, YYYY")}</td>
@@ -190,7 +203,9 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh, withdraw, se
                               {item.status === 0 && (
                                 <Dropdown.Item
                                   eventKey="4"
-                                  onClick={() => sendInvoice(item.id, item.status)}
+                                  onClick={() =>
+                                    sendInvoice(item.id, item.status)
+                                  }
                                 >
                                   <span className="mdi mdi-send"></span>
                                   Send
@@ -215,7 +230,7 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh, withdraw, se
                                     ])
                                   }
                                 >
-                                  <span className="mdi mdi-pencil"></span>
+                                  <span class="mdi mdi-comment-remove-outline"></span>
                                   Withdraw
                                 </Dropdown.Item>
                               )}
@@ -260,7 +275,9 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh, withdraw, se
                     {records.case_invoices.length <= 0 && (
                       <tr>
                         <td colSpan={6}>
-                          <h6 className="text-gray text-center m-5">No records available</h6>
+                          <h6 className="text-gray text-center m-5">
+                            No records available
+                          </h6>
                         </td>
                       </tr>
                     )}
@@ -277,6 +294,7 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh, withdraw, se
         withdraw={withdraw}
         errors={errors}
         setWithdraw={setWithdraw}
+        submitted={submitted}
         closeModal={() => {
           setWithdrawInvoice([false, 0, 0]);
           setErrors("");

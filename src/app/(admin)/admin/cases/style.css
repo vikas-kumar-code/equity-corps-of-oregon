@@ -55,3 +55,7 @@
 .doc-remove:hover{
   color: #c21111 !important;
 }
+
+.date_input{
+  height: 58px;
+}

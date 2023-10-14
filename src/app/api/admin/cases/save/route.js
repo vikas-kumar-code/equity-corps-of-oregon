@@ -18,13 +18,24 @@ export async function POST(request) {
       response.error = true;
       response.message = validated.errors;
     } else {
+      let clientsData;
+      if (validated.clients.length > 0) {
+        clientsData = validated.clients?.map((clients) => {
+          return {
+            first_name: clients.first_name,
+            last_name: clients.last_name,
+            dob: clients.dob,
+          };
+        });
+      }
+      console.log("wjcbwkwdcwdcwdc", clientsData);
       await prisma.cases.create({
         data: {
           added_by: session.user.id,
           maximum_compensation: validated.maximum_compensation,
           hourly_rate: validated?.hourly_rate || null,
           case_number: validated.case_number,
-          title: validated.title,       
+          title: validated.title,
           description: validated.description,
           case_milestones: { create: validated.milestones },
           case_documents: {
@@ -36,6 +47,7 @@ export async function POST(request) {
               };
             }),
           },
+          clients: JSON.stringify(clientsData),
           logs: {
             create: {
               content: `A case added by ${authUser.name}.`,
