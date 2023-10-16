@@ -118,9 +118,9 @@ export default function AddEditCase(props) {
         let fieldsData =
           deletedDocuments.length > 0
             ? {
-                ...fields,
-                deleted_documents: deletedDocuments,
-              }
+              ...fields,
+              deleted_documents: deletedDocuments,
+            }
             : fields;
         console.log(fieldsData);
         await fetch(REQUEST_URI, {
