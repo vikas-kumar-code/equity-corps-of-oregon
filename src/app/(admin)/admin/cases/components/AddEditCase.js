@@ -21,11 +21,11 @@ import {
   casesSchemaForm1,
   casesSchemaForm2,
   casesSchemaForm3,
-  casesSchemaForm4,
 } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
 import CaseActivities from "./CaseActivities";
+import ListClients from "./ListClients";
 LoadingOverlay.propTypes = undefined;
 
 export default function AddEditCase(props) {
@@ -48,8 +48,9 @@ export default function AddEditCase(props) {
     ],
   };
   const [fields, setFields] = useState(initialValues);
-  let fieldsData = JSON.parse(JSON.stringify(fields));
+  let fieldsData = fields && JSON.parse(JSON.stringify(fields));
   const [errors, setErrors] = useState({});
+  const [clientsData, setClientsData] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
   const [activated, setActivated] = useState(1);
@@ -80,7 +81,7 @@ export default function AddEditCase(props) {
       }
     } else if (activeTab === 2) {
       const validate = caseClientsValidation(fields);
-      if (validate.error) {
+      if (validate.error && clientsData.length <= 0) {
         setErrors(validate.messages);
       } else {
         setActiveTab(3);
@@ -117,8 +118,13 @@ export default function AddEditCase(props) {
         // Set deleted docs
         let fieldsData =
           deletedDocuments.length > 0
-            ? { ...fields, deleted_documents: deletedDocuments }
-            : fields;
+            ? {
+                ...fields,
+                deleted_documents: deletedDocuments,
+                clients: clientsData,
+              }
+            : { ...fields, clients: clientsData };
+            console.log(fieldsData);
         await fetch(REQUEST_URI, {
           method: REQUEST_METHOD,
           body: JSON.stringify(fieldsData),
@@ -164,13 +170,54 @@ export default function AddEditCase(props) {
     }
   };
 
+  const handleClientChange = (e, field, i) => {
+    fieldsData.clients[i][field] = e.target.value;
+    setFields(fieldsData);
+  };
+
+  const handleClientSubmit = () => {
+    const validate = caseClientsValidation(fields);
+    if (validate.error) {
+      setErrors(validate.messages);
+    } else {
+      setClientsData([...clientsData, ...fieldsData.clients]);
+      setFields({
+        ...fields,
+        clients: [
+          {
+            first_name: "",
+            last_name: "",
+            dob: "",
+          },
+        ],
+      });
+      setErrors({});
+    }
+  };
+
+  const deleteRecord = (index) => {
+    let newData = [...clientsData];
+    let filteredData = newData.filter((item, i) => i !== index);
+    setClientsData(filteredData);
+  };
+
   const getRecord = async (id) => {
     setLoader(true);
-    fetch(common.apiPath(`/admin/cases/get/${props.recordId}`))
+    fetch(common.apiPath(`/admin/cases/get/${id}`))
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
-          setFields(response.data);
+          setFields({
+            ...response.data,
+            clients: [
+              {
+                first_name: "",
+                last_name: "",
+                dob: "",
+              },
+            ],
+          });
+          setClientsData(response.data.clients);
         } else if (response.error) {
           toast.error(response.message);
         }
@@ -396,112 +443,127 @@ export default function AddEditCase(props) {
                 <Form onSubmit={handleSubmit}>
                   {fields.clients?.map((item, index) => {
                     return (
-                      <Row
-                        className="invoice-fieldset"
-                        key={`clients-${index}`}
-                      >
-                        <Form.Group as={Col} md={4} className="mb-2">
-                          <FloatingLabel label="First Name" className="mb-3">
-                            <Form.Control
-                              type="text"
-                              name="first_name"
-                              placeholder="first_name"
-                              onChange={(event) => {
-                                fieldsData.clients[index].first_name =
-                                  event.target.value;
-                                setFields(fieldsData);
-                              }}
-                              isInvalid={!!errors[`clients${index}first_name`]}
-                              value={fields.first_name}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors[`clients${index}first_name`]}
-                            </Form.Control.Feedback>
-                          </FloatingLabel>
-                        </Form.Group>
-                        <Form.Group as={Col} md={4} className="mb-2">
-                          <FloatingLabel label="Last Name" className="mb-3">
-                            <Form.Control
-                              type="text"
-                              name="last_name"
-                              placeholder="last_name"
-                              onChange={(event) => {
-                                fieldsData.clients[index].last_name =
-                                  event.target.value;
-                                setFields(fieldsData);
-                              }}
-                              isInvalid={!!errors[`clients${index}last_name`]}
-                              value={fields.last_name}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors[`clients${index}last_name`]}
-                            </Form.Control.Feedback>
-                          </FloatingLabel>
-                        </Form.Group>
-                        <Form.Group as={Col} md={4}>
-                          <FloatingLabel label="" className="mb-3">
-                            <DatePicker
-                              placeholderText="DOB"
-                              selected={Date.parse(fields.clients[index].dob)}
-                              onChange={(date) => {
-                                fieldsData.clients[index].dob = date;
-                                setFields(fieldsData);
-                              }}
-                              className="form-control w-100 date_input"
-                              dateFormat={"MM-dd-yyyy"}
-                            />
-                            <Form.Control.Feedback
-                              type="invalid"
-                              className="d-block"
-                            >
-                              {errors[`clients${index}dob`]}
-                            </Form.Control.Feedback>
-                            {index < 1 && (
-                              <Button
-                                key={index}
-                                variant="success"
-                                size="sm"
-                                className="q-opt-add position-absolute rounded-circle"
-                                onClick={() => addFieldSet(index)}
-                                style={{
-                                  right: 9,
-                                  top: 14,
-                                  height: 32,
-                                  width: 32,
-                                }}
-                              >
-                                <span className="fs-4">+</span>
-                              </Button>
-                            )}
-                            {index >= 1 && (
-                              <Button
-                                key={index}
-                                variant="secondary"
-                                size="sm"
-                                className="q-opt-remove btn-close"
-                                onClick={() => removeFieldSet(index)}
-                                style={{
-                                  right: 10,
-                                  top: 14,
-                                  height: 18,
-                                  width: 18,
-                                }}
+                      <>
+                        <Row
+                          className="invoice-fieldset"
+                          key={`clients-${index}`}
+                        >
+                          <Form.Group as={Col} md={4}>
+                            <FloatingLabel label="First Name" className="mb-3">
+                              <Form.Control
+                                type="text"
+                                name="first_name"
+                                placeholder="first_name"
+                                onChange={(event) =>
+                                  handleClientChange(event, "first_name", index)
+                                }
+                                isInvalid={
+                                  !!errors[`clients${index}first_name`]
+                                }
+                                value={item.first_name}
                               />
-                            )}
-                            <Form.Control.Feedback type="invalid">
-                              {errors.dob}
-                            </Form.Control.Feedback>
-                          </FloatingLabel>
-                        </Form.Group>
-                      </Row>
+                              <Form.Control.Feedback type="invalid">
+                                {errors[`clients${index}first_name`]}
+                              </Form.Control.Feedback>
+                            </FloatingLabel>
+                          </Form.Group>
+                          <Form.Group as={Col} md={4}>
+                            <FloatingLabel label="Last Name" className="mb-3">
+                              <Form.Control
+                                type="text"
+                                name="last_name"
+                                placeholder="last_name"
+                                onChange={(event) =>
+                                  handleClientChange(event, "last_name", index)
+                                }
+                                isInvalid={!!errors[`clients${index}last_name`]}
+                                value={item.last_name}
+                              />
+                              <Form.Control.Feedback type="invalid">
+                                {errors[`clients${index}last_name`]}
+                              </Form.Control.Feedback>
+                            </FloatingLabel>
+                          </Form.Group>
+                          <Form.Group as={Col} md={4}>
+                            <FloatingLabel label="" className="mb-3">
+                              <DatePicker
+                                placeholderText="DOB"
+                                selected={Date.parse(fields.clients[index].dob)}
+                                onChange={(date) => {
+                                  fieldsData.clients[index].dob = date;
+                                  setFields(fieldsData);
+                                }}
+                                className="form-control w-100 date_input"
+                                dateFormat={"MM-dd-yyyy"}
+                              />
+                              <Form.Control.Feedback
+                                type="invalid"
+                                className="d-block"
+                              >
+                                {errors[`clients${index}dob`]}
+                              </Form.Control.Feedback>
+                              {index < 1 && (
+                                <Button
+                                  key={index}
+                                  variant="success"
+                                  size="sm"
+                                  className="q-opt-add position-absolute rounded-circle"
+                                  onClick={() => addFieldSet(index)}
+                                  style={{
+                                    right: 9,
+                                    top: 14,
+                                    height: 32,
+                                    width: 32,
+                                  }}
+                                >
+                                  <span className="fs-4">+</span>
+                                </Button>
+                              )}
+                              {index >= 1 && (
+                                <Button
+                                  key={index}
+                                  variant="secondary"
+                                  size="sm"
+                                  className="q-opt-remove btn-close"
+                                  onClick={() => removeFieldSet(index)}
+                                  style={{
+                                    right: 10,
+                                    top: 14,
+                                    height: 18,
+                                    width: 18,
+                                  }}
+                                />
+                              )}
+                              <Form.Control.Feedback type="invalid">
+                                {errors.dob}
+                              </Form.Control.Feedback>
+                            </FloatingLabel>
+                          </Form.Group>
+                        </Row>
+                      </>
                     );
                   })}
                 </Form>
+                <div className="d-flex justify-content-end p-1">
+                  <Button
+                    variant="success"
+                    size="md"
+                    onClick={handleClientSubmit}
+                  >
+                    Submit
+                  </Button>
+                </div>
+                <ListClients
+                  fields={clientsData}
+                  loader={loader}
+                  submitted={submitted}
+                  deleteRecord={deleteRecord}
+                />
               </Tab>
               <Tab
                 eventKey={3}
                 title="Milestones"
-                disabled={activated < 2 && !props.recordId}
+                disabled={activated < 3 && !props.recordId}
               >
                 <Milestones
                   errors={errors}
@@ -518,7 +580,7 @@ export default function AddEditCase(props) {
               <Tab
                 eventKey={4}
                 title="Documents"
-                disabled={activated < 3 && !props.recordId}
+                disabled={activated < 4 && !props.recordId}
               >
                 <Documents
                   updateDocuments={(documents) =>
@@ -533,7 +595,7 @@ export default function AddEditCase(props) {
                 />
               </Tab>
               {props.recordId && (
-                <Tab eventKey={4} title="Case Activities">
+                <Tab eventKey={5} title="Case Activities">
                   <CaseActivities logs={fields?.logs || []} />
                 </Tab>
               )}
