@@ -35,7 +35,6 @@ export async function POST(request) {
           },
         });
       }
-      console.log(caseInvitation.status);
 
       if (caseInvitation) {
         if (caseInvitation.status === 0) {
