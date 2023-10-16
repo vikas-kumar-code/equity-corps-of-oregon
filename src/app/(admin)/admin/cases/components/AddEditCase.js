@@ -13,7 +13,6 @@ import {
   Tab,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
-import DatePicker from "react-datepicker";
 import Milestones from "./Milestones";
 import Documents from "./Documents";
 import {
@@ -119,9 +118,9 @@ export default function AddEditCase(props) {
         let fieldsData =
           deletedDocuments.length > 0
             ? {
-              ...fields,
-              deleted_documents: deletedDocuments,
-            }
+                ...fields,
+                deleted_documents: deletedDocuments,
+              }
             : fields;
         console.log(fieldsData);
         await fetch(REQUEST_URI, {
@@ -400,7 +399,18 @@ export default function AddEditCase(props) {
                 disabled={activated < 2 && !props.recordId}
               >
                 <Form onSubmit={handleSubmit}>
-                  {fields.clients?.map((item, index) => <AddEditClient index={index} item={item} errors={errors} fieldsData={fieldsData} setFields={setFields} fields={fields} addFieldSet={addFieldSet} removeFieldSet={removeFieldSet} />)}
+                  {fields.clients?.map((item, index) => (
+                    <AddEditClient
+                      index={index}
+                      item={item}
+                      errors={errors}
+                      fieldsData={fieldsData}
+                      setFields={setFields}
+                      fields={fields}
+                      addFieldSet={addFieldSet}
+                      removeFieldSet={removeFieldSet}
+                    />
+                  ))}
                 </Form>
               </Tab>
               <Tab

@@ -78,6 +78,9 @@ const InvitationDetails = ({
     },
   };
 
+  let clients = record?.case?.clients && JSON.parse(record?.case?.clients);
+  console.log(record);
+
   useEffect(() => {
     getRecords();
   }, []);
@@ -143,13 +146,41 @@ const InvitationDetails = ({
               </table>
             </div>
           </Tab>
+          <Tab eventKey={2} title="Clients Details">
+            <div className="table-responsive">
+              <table className="table table-borderless table-striped">
+                <thead>
+                  <tr>
+                    <td>#</td>
+                    <td>First Name</td>
+                    <td>Last Name</td>
+                    <td>DOB</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {clients &&
+                    clients?.length > 0 &&
+                    clients?.map((client, i) => {
+                      return (
+                        <tr key={`clients-${i}`}>
+                          <td>{i + 1}</td>
+                          <td>{client.first_name}</td>
+                          <td>{client.last_name}</td>
+                          <td>{moment(client?.dob).format("D MMM, YYYY")}</td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
+          </Tab>
           {record?.status >= 1 && (
-            <Tab eventKey={2} title="Invoice Details">
+            <Tab eventKey={3} title="Invoice Details">
               <div className="table-responsive">
                 <table className="table table-borderless table-striped">
                   <tbody>
                     <tr>
-                      <td  width="30%">
+                      <td width="30%">
                         <strong>Max Comp:</strong>
                       </td>
                       <td>
@@ -199,7 +230,7 @@ const InvitationDetails = ({
               </div>
             </Tab>
           )}
-          <Tab eventKey={3} title="Milestones">
+          <Tab eventKey={4} title="Milestones">
             <div>
               <Row>
                 <Col md={12} sm={12}>
@@ -234,7 +265,7 @@ const InvitationDetails = ({
             </div>
           </Tab>
           {record?.status >= 1 && (
-            <Tab eventKey={4} title="Documents">
+            <Tab eventKey={5} title="Documents">
               <Documents
                 reloadRecords={reloadRecords}
                 setDeletedDocument={(doc) => {
@@ -247,7 +278,7 @@ const InvitationDetails = ({
               />
             </Tab>
           )}
-          <Tab eventKey={5} title="Case Activities">
+          <Tab eventKey={6} title="Case Activities">
             <div style={{ maxHeight: "250px", overflowY: "auto" }}>
               <ol className="activity-feed">
                 {record?.case?.logs.map((log, i) => {
