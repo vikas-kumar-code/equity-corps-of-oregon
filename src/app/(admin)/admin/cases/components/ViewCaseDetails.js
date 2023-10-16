@@ -17,6 +17,7 @@ const ViewCaseDetails = ({
   const [errors, setErrors] = useState({});
   const [deletedDocuments, setDeletedDocuments] = useState([]);
 
+  console.log(record);
   const btnStatus = {
     0: {
       label: "New Case",
@@ -32,6 +33,7 @@ const ViewCaseDetails = ({
     },
   };
 
+  let clients = JSON.parse(record.clients);
   return (
     <Modal
       show={showModal}
@@ -56,21 +58,29 @@ const ViewCaseDetails = ({
               <table className="table table-borderless table-striped">
                 <tbody>
                   <tr>
-                    <td width="30%"><strong>Title</strong></td>
+                    <td width="30%">
+                      <strong>Title</strong>
+                    </td>
                     <td>{record.title}</td>
                   </tr>
                   <tr>
-                    <td><strong>Case Number</strong></td>
+                    <td>
+                      <strong>Case Number</strong>
+                    </td>
                     <td>{record.case_number}</td>
                   </tr>
                   <tr>
-                    <td><strong>Maximum Compensation</strong></td>
+                    <td>
+                      <strong>Maximum Compensation</strong>
+                    </td>
                     <td>
                       {common.currencyFormat(record.maximum_compensation, 2)}
                     </td>
                   </tr>
                   <tr>
-                    <td><strong>Hourly Rate</strong></td>
+                    <td>
+                      <strong>Hourly Rate</strong>
+                    </td>
                     <td>
                       {record.hourly_rate
                         ? common.currencyFormat(record.hourly_rate)
@@ -78,11 +88,15 @@ const ViewCaseDetails = ({
                     </td>
                   </tr>
                   <tr>
-                    <td><strong>Description</strong></td>
+                    <td>
+                      <strong>Description</strong>
+                    </td>
                     <td>{record.description}</td>
                   </tr>
                   <tr>
-                    <td><strong>Status</strong></td>
+                    <td>
+                      <strong>Status</strong>
+                    </td>
                     <td>
                       <Badge pill bg={btnStatus[record.status].bg || "info"}>
                         {btnStatus[record.status].label || "N/A"}
@@ -90,14 +104,43 @@ const ViewCaseDetails = ({
                     </td>
                   </tr>
                   <tr>
-                    <td><strong>Added On</strong></td>
+                    <td>
+                      <strong>Added On</strong>
+                    </td>
                     <td>{moment(record.sent_on).format("D MMM, YYYY")}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </Tab>
-          <Tab eventKey={2} title="Milestones">
+          <Tab eventKey={2} title="Client Details">
+            <div className="table-responsive">
+              <table className="table table-borderless table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>First Name </th>
+                    <th>Last Name</th>
+                    <th>DOB</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {clients.length > 0 &&
+                    clients.map((client, i) => {
+                      return (
+                        <tr>
+                        <td>{i+1}</td>
+                          <td>{client.first_name}</td>
+                          <td>{client.last_name}</td>
+                          <td>{moment(client.dob).format("D MMM, YYYY")}</td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
+          </Tab>
+          <Tab eventKey={3} title="Milestones">
             <div className="p-3">
               <Row>
                 <Col className="">Milestones</Col>
@@ -134,7 +177,7 @@ const ViewCaseDetails = ({
               </Row>
             </div>
           </Tab>
-          <Tab eventKey={3} title="Documents">
+          <Tab eventKey={4} title="Documents">
             <div className="p-3">
               <Row>
                 <Col className="">Documents</Col>
@@ -165,7 +208,7 @@ const ViewCaseDetails = ({
               </div>
             </div>
           </Tab>
-          <Tab eventKey={4} title="Case Activities">
+          <Tab eventKey={5} title="Case Activities">
             <div style={{ maxHeight: "250px", overflowY: "auto" }}>
               <ol className="activity-feed">
                 {record.logs.map((log, i) => {

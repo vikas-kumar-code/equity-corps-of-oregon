@@ -25,7 +25,6 @@ import {
 import common from "@/utils/common";
 import { toast } from "react-toastify";
 import CaseActivities from "./CaseActivities";
-import ListClients from "./ListClients";
 LoadingOverlay.propTypes = undefined;
 
 export default function AddEditCase(props) {
@@ -121,10 +120,9 @@ export default function AddEditCase(props) {
             ? {
                 ...fields,
                 deleted_documents: deletedDocuments,
-                clients: clientsData,
               }
-            : { ...fields, clients: clientsData };
-            console.log(fieldsData);
+            : fields;
+        console.log(fieldsData);
         await fetch(REQUEST_URI, {
           method: REQUEST_METHOD,
           body: JSON.stringify(fieldsData),
@@ -175,31 +173,25 @@ export default function AddEditCase(props) {
     setFields(fieldsData);
   };
 
-  const handleClientSubmit = () => {
-    const validate = caseClientsValidation(fields);
-    if (validate.error) {
-      setErrors(validate.messages);
-    } else {
-      setClientsData([...clientsData, ...fieldsData.clients]);
-      setFields({
-        ...fields,
-        clients: [
-          {
-            first_name: "",
-            last_name: "",
-            dob: "",
-          },
-        ],
-      });
-      setErrors({});
-    }
-  };
-
-  const deleteRecord = (index) => {
-    let newData = [...clientsData];
-    let filteredData = newData.filter((item, i) => i !== index);
-    setClientsData(filteredData);
-  };
+  // const handleClientSubmit = () => {
+  //   const validate = caseClientsValidation(fields);
+  //   if (validate.error) {
+  //     setErrors(validate.messages);
+  //   } else {
+  //     setClientsData([...clientsData, ...fieldsData.clients]);
+  //     setFields({
+  //       ...fields,
+  //       clients: [
+  //         {
+  //           first_name: "",
+  //           last_name: "",
+  //           dob: "",
+  //         },
+  //       ],
+  //     });
+  //     setErrors({});
+  //   }
+  // };
 
   const getRecord = async (id) => {
     setLoader(true);
@@ -207,16 +199,7 @@ export default function AddEditCase(props) {
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
-          setFields({
-            ...response.data,
-            clients: [
-              {
-                first_name: "",
-                last_name: "",
-                dob: "",
-              },
-            ],
-          });
+          setFields(response.data);
           setClientsData(response.data.clients);
         } else if (response.error) {
           toast.error(response.message);
@@ -454,9 +437,11 @@ export default function AddEditCase(props) {
                                 type="text"
                                 name="first_name"
                                 placeholder="first_name"
-                                onChange={(event) =>
-                                  handleClientChange(event, "first_name", index)
-                                }
+                                onChange={(e) => {
+                                  fieldsData.clients[index].first_name =
+                                    e.target.value;
+                                  setFields(fieldsData);
+                                }}
                                 isInvalid={
                                   !!errors[`clients${index}first_name`]
                                 }
@@ -473,9 +458,11 @@ export default function AddEditCase(props) {
                                 type="text"
                                 name="last_name"
                                 placeholder="last_name"
-                                onChange={(event) =>
-                                  handleClientChange(event, "last_name", index)
-                                }
+                                onChange={(e) => {
+                                  fieldsData.clients[index].last_name =
+                                    e.target.value;
+                                  setFields(fieldsData);
+                                }}
                                 isInvalid={!!errors[`clients${index}last_name`]}
                                 value={item.last_name}
                               />
@@ -544,21 +531,6 @@ export default function AddEditCase(props) {
                     );
                   })}
                 </Form>
-                <div className="d-flex justify-content-end p-1">
-                  <Button
-                    variant="success"
-                    size="md"
-                    onClick={handleClientSubmit}
-                  >
-                    Submit
-                  </Button>
-                </div>
-                <ListClients
-                  fields={clientsData}
-                  loader={loader}
-                  submitted={submitted}
-                  deleteRecord={deleteRecord}
-                />
               </Tab>
               <Tab
                 eventKey={3}
