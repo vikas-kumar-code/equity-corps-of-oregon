@@ -168,6 +168,7 @@ export default function ListCases() {
                         <th>Eco Providers</th>
                         <th>Status</th>
                         <th>Added On</th>
+                        <th>Last Activity</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -181,13 +182,13 @@ export default function ListCases() {
                           sn={common.sn(searchParams, index)}
                         />
                       ))}
-                      {records.length <= 0  && (
-                      <tr>
-                        <td colSpan={6}>
-                          <h6 className="text-gray text-center m-5">No records available</h6>
-                        </td>
-                      </tr>
-                    )}
+                      {records.length <= 0 && (
+                        <tr>
+                          <td colSpan={6}>
+                            <h6 className="text-gray text-center m-5">No records available</h6>
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>

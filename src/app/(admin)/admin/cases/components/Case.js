@@ -46,6 +46,7 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
           </Badge>
         </td>
         <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
+        <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
         <td>
           <DropdownButton
             as={ButtonGroup}
