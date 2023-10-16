@@ -26,13 +26,17 @@ export async function GET(request, data) {
       maximum_compensation: record.maximum_compensation,
       hourly_rate: record.hourly_rate,
       description: record.description,
-      clients: clients.map((client) => {
+      clients: clients ? clients.map((client) => {
         return {
           first_name: client.first_name,
           last_name: client.last_name,
           dob: client.dob,
         }
-      }),
+      }) : [{
+        first_name: "",
+        last_name: "",
+        dob: "",
+      }],
       milestones:
         record.case_milestones.map((milestone) => {
           return {
