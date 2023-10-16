@@ -168,31 +168,6 @@ export default function AddEditCase(props) {
     }
   };
 
-  const handleClientChange = (e, field, i) => {
-    fieldsData.clients[i][field] = e.target.value;
-    setFields(fieldsData);
-  };
-
-  // const handleClientSubmit = () => {
-  //   const validate = caseClientsValidation(fields);
-  //   if (validate.error) {
-  //     setErrors(validate.messages);
-  //   } else {
-  //     setClientsData([...clientsData, ...fieldsData.clients]);
-  //     setFields({
-  //       ...fields,
-  //       clients: [
-  //         {
-  //           first_name: "",
-  //           last_name: "",
-  //           dob: "",
-  //         },
-  //       ],
-  //     });
-  //     setErrors({});
-  //   }
-  // };
-
   const getRecord = async (id) => {
     setLoader(true);
     fetch(common.apiPath(`/admin/cases/get/${id}`))
