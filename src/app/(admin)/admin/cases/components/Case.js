@@ -2,12 +2,11 @@
 
 import React, { useState } from "react";
 import moment from "moment";
-import { Badge, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import { Badge, ButtonGroup, Dropdown, DropdownButton, OverlayTrigger, Tooltip } from "react-bootstrap";
 import SendInvitation from "./SendInvitation";
 import AddEditCase from "./AddEditCase";
 import ListInvoices from "./ListInvoices";
 import EcoProviders from "./EcoProviders";
-import ViewCase from "./ViewCaseDetails";
 import ViewCaseDetails from "./ViewCaseDetails";
 
 export default function Case({ record, getRecords, deleteRecord, sn }) {
@@ -46,7 +45,18 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
           </Badge>
         </td>
         <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
-        <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
+        <td>
+          <OverlayTrigger
+            placement="bottom"
+            overlay={<Tooltip id={`tooltip-key-${sn}`}>
+              {record.logs.length > 0 ? `${record.logs[Number(record.logs.length) - 1].content} on ${moment(record.logs[Number(record.logs.length) - 1].created_at).format("D MMM,  YYYY")}` : '...'}
+            </Tooltip>}
+          >
+            {({ ref, ...triggerHandler }) => (
+              <spna className="text-primary" role='button' ref={ref} {...triggerHandler}>View</spna>
+            )}
+          </OverlayTrigger>
+        </td>
         <td>
           <DropdownButton
             as={ButtonGroup}
