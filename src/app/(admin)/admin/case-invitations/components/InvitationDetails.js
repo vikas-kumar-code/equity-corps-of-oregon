@@ -146,15 +146,15 @@ const InvitationDetails = ({
               </table>
             </div>
           </Tab>
-          <Tab eventKey={2} title="Clients Details">
+          <Tab eventKey={2} title="Clients">
             <div className="table-responsive">
               <table className="table table-borderless table-striped">
                 <thead>
                   <tr>
-                    <td>#</td>
-                    <td>First Name</td>
-                    <td>Last Name</td>
-                    <td>DOB</td>
+                    <th>#</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>DOB</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -249,7 +249,7 @@ const InvitationDetails = ({
                             <tr key={i}>
                               <td>{mile?.id}</td>
                               <td>{mile?.comment}</td>
-                              <td className="text-center">
+                              <td>
                                 {moment(mile?.milestone_date).format(
                                   "D MMM,  YYYY"
                                 )}

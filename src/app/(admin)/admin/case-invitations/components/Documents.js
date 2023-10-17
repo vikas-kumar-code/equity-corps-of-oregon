@@ -97,8 +97,8 @@ export default function Documents(props) {
                               "MMMM DD, YYYY"
                             )}
                           </td>
-                          <td className="text-center">                            
-                              {/* {user && user.id === record.uploaded_by && (
+                          <td>
+                            {/* {user && user.id === record.uploaded_by && (
                                 <Button
                                   variant="none"
                                   onClick={() => deleteRecord(record.id)}
@@ -108,12 +108,12 @@ export default function Documents(props) {
                                   <span className="mdi mdi-delete-circle text-danger fs-4"></span>
                                 </Button>
                               )} */}
-                              <DownloadButton
-                                fileName={record.document_name}
-                                path={common.downloadLink(
-                                  "uploads/case_documents/" + record.file_name
-                                )}
-                              />
+                            <DownloadButton
+                              fileName={record.document_name}
+                              path={common.downloadLink(
+                                "uploads/case_documents/" + record.file_name
+                              )}
+                            />
                           </td>
                         </tr>
                       ))}
