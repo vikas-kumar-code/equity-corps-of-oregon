@@ -12,15 +12,18 @@
   padding: 15px;
   list-style: none;
 }
+
 .activity-feed .feed-item {
   position: relative;
   padding-bottom: 20px;
   padding-left: 30px;
   border-left: 2px solid #e4e8eb;
 }
+
 .activity-feed .feed-item:last-child {
   border-color: transparent;
 }
+
 .activity-feed .feed-item::after {
   content: "";
   display: block;
@@ -33,6 +36,7 @@
   background: #fff;
   border: 1px solid #f37167;
 }
+
 .activity-feed .feed-item .date {
   display: block;
   position: relative;
@@ -41,6 +45,7 @@
   text-transform: capitalize;
   font-size: 13px;
 }
+
 .activity-feed .feed-item .text {
   position: relative;
   top: -3px;
@@ -51,12 +56,15 @@
   border-bottom: 0.002px solid #dfdada;
   margin: 5px;
 }
+
 .case_invitation .row:last-child {
   border: none;
 }
+
 .milestones {
   border-bottom: 0.2px solid rgb(214, 218, 222);
 }
+
 .milestones:last-child {
   border: none;
 }
@@ -77,41 +85,51 @@
   margin-bottom: 10px;
   animation-delay: 0.2s;
   animation: FieldsetAnimation 0.3s ease forwards;
+  background-color: #f0dddd;
+  padding: 10px;
 }
 
 .table-border td,
 .table-border th {
   border-width: 1px !important;
 }
+
 .invoice_category {
   position: relative;
 }
+
 .css-1nmdiq5-menu {
   z-index: 1 !important;
   position: absolute;
 }
+
 .css-t3ipsp-control {
   min-height: 58px !important;
 }
+
 .css-13cymwt-control {
   min-height: 58px !important;
   background-color: #f9f9f9;
 }
+
 @keyframes FieldsetAnimation {
   0% {
     opacity: 0;
     margin-top: -60px;
   }
+
   100% {
     opacity: 1;
     margin-top: 0px;
   }
 }
+
 .filepond--wrapper {
   border: 1px solid #ccc;
   margin-bottom: 10px;
   border-radius: 6px;
 }
+
 .filepond--credits {
   display: none !important;
 }
@@ -122,6 +140,7 @@
   list-style: none;
   margin-bottom: 10px;
 }
+
 .files-list li {
   display: inline-block;
   background-color: #d1d1d1;
@@ -132,6 +151,7 @@
   transition: .3s;
   cursor: pointer;
 }
+
 .files-list li a {
   padding: 10px;
   padding-top: 0;
@@ -143,6 +163,7 @@
   overflow: hidden;
   color: black;
 }
+
 .inv-file-icon {
   font-size: 40px;
   display: block;
@@ -152,10 +173,10 @@
 }
 
 .files-list li:hover {
-  box-shadow: 0px 2px 5px rgba(0,0,0,0.4);  
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.4);
 }
 
-.invoice-item{
+.invoice-item {
   height: 58px;
   background-color: #f9f9f9;
   border-radius: 0;
