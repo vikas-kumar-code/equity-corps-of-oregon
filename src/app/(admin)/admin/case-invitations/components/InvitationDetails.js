@@ -146,9 +146,9 @@ const InvitationDetails = ({
               </table>
             </div>
           </Tab>
-          <Tab eventKey={2} title="Clients">
+          <Tab eventKey={2} title="Clients" className="ps-5 pt-2 pe-5">
             <div className="table-responsive">
-              <table className="table table-borderless table-striped">
+              <table className="table table-borderless">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -230,7 +230,7 @@ const InvitationDetails = ({
               </div>
             </Tab>
           )}
-          <Tab eventKey={4} title="Milestones">
+          <Tab eventKey={4} title="Milestones" className="ps-5 pt-2 pe-5">
             <div>
               <Row>
                 <Col md={12} sm={12}>
@@ -265,7 +265,7 @@ const InvitationDetails = ({
             </div>
           </Tab>
           {record?.status >= 1 && (
-            <Tab eventKey={5} title="Documents">
+            <Tab eventKey={5} title="Documents" className="ps-5 pt-2 pe-5">
               <Documents
                 reloadRecords={reloadRecords}
                 setDeletedDocument={(doc) => {
