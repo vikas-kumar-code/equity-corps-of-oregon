@@ -51,7 +51,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const [submissionAction, setSubmissionAction] = useState(0);
   const [categories, setCategories] = useState([]);
   const [deletedFiles, setDeletedFiles] = useState([]);
-  const [withdraw, setWithdraw] = useState("") 
+  const [withdraw, setWithdraw] = useState("")
   const filePondRef = useRef(null);
 
   const resetFilepond = () => {
@@ -128,7 +128,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       body: JSON.stringify({
         case_id: record.id,
         ...fields,
-        deletedFiles : [...deletedFiles]
+        deletedFiles: [...deletedFiles]
       }),
     })
       .then((response) => response.json())
@@ -220,14 +220,14 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
 
   const handleDelFile = (index) => {
     let newFiles = [...fields.files];
-    let deletedFile =  newFiles[index].fileName;
+    let deletedFile = newFiles[index].fileName;
     let filteredFiles = newFiles.filter((file, i) => {
       return i !== index;
     });
     setDeletedFiles((prevDeletedFiles) => [...prevDeletedFiles, deletedFile]);
-    setFields({...fields, files: [...filteredFiles], deleted_files: deletedFiles });
+    setFields({ ...fields, files: [...filteredFiles], deleted_files: deletedFiles });
   };
-  
+
   useEffect(() => {
     getInvoiceCategories();
   }, []);
@@ -304,7 +304,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                       className="invoice-fieldset"
                       key={`particulars-${index}`}
                     >
-                      <Col md={5} className="p-0 invoice_drop_down">
+                      <Col md={4} className="p-0 invoice_drop_down">
                         {item.show_other_category ? (
                           <FloatingLabel label="Desribe your category">
                             <Form.Control
@@ -313,7 +313,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                               placeholder="Category"
                               isInvalid={
                                 !!errors[
-                                  "particulars" + index + "other_category"
+                                "particulars" + index + "other_category"
                                 ]
                               }
                               value={item.other_category}
@@ -350,7 +350,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             <FloatingLabel label="Select">
                               <Form.Select
                                 className="invoice-item"
-                                onChange={(e) => {                                  
+                                onChange={(e) => {
                                   fieldsData.particulars[index].category.value = Number(e.target.value);
                                   fieldsData.particulars[index].category.label = categories[e.target.value].label;
                                   if (
@@ -393,7 +393,32 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                           </div>
                         )}
                       </Col>
-                      <Col md={3} className="p-0 ps-2">
+                      <Col md={8} className="p-0 ps-2">
+                        <FloatingLabel label="Short Description">
+                          <Form.Control
+                            autoComplete="off"
+                            row={1}
+                            name="short_description"
+                            placeholder="Short Description"
+                            isInvalid={
+                              !!errors["particulars" + index + "short_description"]
+                            }
+                            value={item.short_description}
+                            onChange={(event) => {
+                              fieldsData.particulars[index].short_description = event.target.value;
+                              setFields(fieldsData);
+                              setNoError(
+                                "particulars" + index + "short_description"
+                              );
+                            }}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors["particulars" + index + "short_description"] ||
+                              ""}
+                          </Form.Control.Feedback>
+                        </FloatingLabel>
+                      </Col>
+                      <Col md={6} className="p-0 mt-2">
                         <FloatingLabel label="Hours worked">
                           <Form.Control
                             autoComplete="off"
@@ -430,7 +455,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                           </Form.Control.Feedback>
                         </FloatingLabel>
                       </Col>
-                      <Col md={4} className="position-relative pe-0">
+                      <Col md={6} className="position-relative pe-0 mt-2">
                         <FloatingLabel label="Amount">
                           <Form.Control
                             disabled={record.hourly_rate ? true : false}
@@ -613,7 +638,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
               caseId={record.id}
               setShowInvoice={setShowInvoice}
               getRecord={getRecord}
-              withdraw={withdraw} 
+              withdraw={withdraw}
               setWithdraw={setWithdraw}
               refresh={refreshInvoices}
             />

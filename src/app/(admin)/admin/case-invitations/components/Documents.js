@@ -74,31 +74,28 @@ export default function Documents(props) {
         </Col> */}
         <Col md={12}>
           <LoadingOverlay active={loader} spinner text="Loading...">
-            <Card>
-              <Card.Body style={{ maxHeight: "326px", overflowY: "auto" }}>
-                <Card.Title>Documents</Card.Title>
-                <div className="table-responsive">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Document Name </th>
-                        <th>Uploaded On</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {props?.documents?.map((record, index) => (
-                        <tr key={`documents-key-${index}`}>
-                          <td>{Number(index + 1)}.</td>
-                          <td>{record.document_name}</td>
-                          <td>
-                            {moment(record?.uploaded_on || new Date()).format(
-                              "MMMM DD, YYYY"
-                            )}
-                          </td>
-                          <td className="text-center">                            
-                              {/* {user && user.id === record.uploaded_by && (
+            <div className="table-responsive">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Document Name </th>
+                    <th>Uploaded On</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {props?.documents?.map((record, index) => (
+                    <tr key={`documents-key-${index}`}>
+                      <td>{Number(index + 1)}.</td>
+                      <td>{record.document_name}</td>
+                      <td>
+                        {moment(record?.uploaded_on || new Date()).format(
+                          "MMMM DD, YYYY"
+                        )}
+                      </td>
+                      <td>
+                        {/* {user && user.id === record.uploaded_by && (
                                 <Button
                                   variant="none"
                                   onClick={() => deleteRecord(record.id)}
@@ -108,20 +105,18 @@ export default function Documents(props) {
                                   <span className="mdi mdi-delete-circle text-danger fs-4"></span>
                                 </Button>
                               )} */}
-                              <DownloadButton
-                                fileName={record.document_name}
-                                path={common.downloadLink(
-                                  "uploads/case_documents/" + record.file_name
-                                )}
-                              />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </Card.Body>
-            </Card>
+                        <DownloadButton
+                          fileName={record.document_name}
+                          path={common.downloadLink(
+                            "uploads/case_documents/" + record.file_name
+                          )}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </LoadingOverlay>
         </Col>
       </Row>
