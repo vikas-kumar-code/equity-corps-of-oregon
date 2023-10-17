@@ -11,6 +11,9 @@ export default function invoiceValidation(fields, hourly_rate = false) {
       errs["particulars" + index + "other_category"] =
         "Category can not be blank.";
     }
+    if (!item?.short_description) {
+      errs["particulars" + index + "short_description"] = "Short description can not be blank.";
+    }
     if (!item?.amount) {
       errs["particulars" + index + "amount"] = "Amount can not be blank.";
     }

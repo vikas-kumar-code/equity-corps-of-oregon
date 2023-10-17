@@ -33,6 +33,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         },
         other_category: "",
         show_other_category: false,
+        short_description:"",
         hours_worked: "",
         amount: "",
       },
