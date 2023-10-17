@@ -16,10 +16,10 @@ import LoadingOverlay from "react-loading-overlay";
 import Milestones from "./Milestones";
 import Documents from "./Documents";
 import {
-  caseClientsValidation,
   casesSchemaForm1,
   casesSchemaForm2,
   casesSchemaForm3,
+  casesSchemaForm4,
 } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
@@ -35,7 +35,12 @@ export default function AddEditCase(props) {
     maximum_compensation: "",
     hourly_rate: "",
     description: "",
-    milestones: [],
+    milestones: [
+      {
+        milestone_date: "",
+        comment: "",
+      },
+    ],
     documents: [],
     logs: [],
     clients: [
@@ -62,7 +67,8 @@ export default function AddEditCase(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
-    // Validate fields
+
+    // Tab-1 validation
     if (activeTab === 1) {
       try {
         await casesSchemaForm1.validateAsync(fields, {
@@ -78,16 +84,32 @@ export default function AddEditCase(props) {
           toast.error(errors);
         }
       }
-    } else if (activeTab === 2) {
-      const validate = caseClientsValidation(fields);
-      if (validate.error && clientsData.length <= 0) {
-        setErrors(validate.messages);
-      } else {
-        setActiveTab(3);
-      }
-    } else if (activeTab === 3) {
+    }
+
+    // Tab-2 validation
+    else if (activeTab === 2) {
       try {
+        console.log('here-------',fields);
         await casesSchemaForm2.validateAsync(fields, {
+          abortEarly: false,
+          allowUnknown: true,
+        });
+        setActiveTab(3);
+      } catch (error) {
+        console.log(error.message);
+        let errors = common.getErrors(error);
+        if (typeof errors === "object") {
+          setErrors(errors);
+        } else {
+          toast.error(errors);
+        }
+      }
+    }
+
+    // Tab-3 validation
+    else if (activeTab === 3) {
+      try {
+        await casesSchemaForm3.validateAsync(fields, {
           abortEarly: false,
           allowUnknown: true,
         });
@@ -100,10 +122,12 @@ export default function AddEditCase(props) {
           toast.error(errors);
         }
       }
+
+      // Tab-4 validation
     } else if (activeTab === 4) {
       setSubmitted(true);
       try {
-        await casesSchemaForm3.validateAsync(fields, {
+        await casesSchemaForm4.validateAsync(fields, {
           abortEarly: false,
           allowUnknown: true,
         });
@@ -421,13 +445,9 @@ export default function AddEditCase(props) {
                 <Milestones
                   errors={errors}
                   setErrors={setErrors}
-                  milestones={fields?.milestones || []}
-                  updateMilestones={(milestones) =>
-                    setFields({
-                      ...fields,
-                      milestones: milestones,
-                    })
-                  }
+                  fields={fields}
+                  setFields={setFields}
+                  initialValues={initialValues}
                 />
               </Tab>
               <Tab

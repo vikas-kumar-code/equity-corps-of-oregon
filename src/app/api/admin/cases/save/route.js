@@ -10,14 +10,15 @@ export async function POST(request) {
   const authUser = await prisma.users.findUnique({
     where: { id: session.user.id },
   });
-
-  let response = {};
+  let response = {};  
   try {
     const validated = await validateAsync(casesSchema, await request.json());
     if (validated.errors) {
       response.error = true;
       response.message = validated.errors;
     } else {
+
+      // Preapare clients data
       let clientsData;
       if (validated.clients.length > 0) {
         clientsData = validated.clients?.map((clients) => {
@@ -28,7 +29,7 @@ export async function POST(request) {
           };
         });
       }
-      console.log("wjcbwkwdcwdcwdc", clientsData);
+      
       await prisma.cases.create({
         data: {
           added_by: session.user.id,
@@ -63,6 +64,7 @@ export async function POST(request) {
           common.publicPath("uploads/case_documents/" + doc.file_name) // destination path
         );
       });
+      
       response.success = true;
       response.message = "New case added successfully.";
     }

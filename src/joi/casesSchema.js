@@ -6,7 +6,7 @@ const maxDocuments = 200;
 const casesSchema = Joi.object({
   title: Joi.string().max(255).required(),
   case_number: Joi.string().required(),
-  hourly_rate: Joi.number().min(0).optional().allow("",null),
+  hourly_rate: Joi.number().min(0).optional().allow("", null),
   maximum_compensation: Joi.number().min(1).required(),
   description: Joi.string().optional().allow(null, "", " "),
   status: Joi.number().integer().default(1),
@@ -33,16 +33,16 @@ const casesSchema = Joi.object({
     .max(maxDocuments)
     .required(),
 
-      // clients: Joi.array()
-      //   .items(
-      //     Joi.object({
-      //       first_name: Joi.string().optional(),
-      //       laste_name: Joi.string().optional(),
-      //       dob: Joi.date().optional()
-      //     })
-      //   )
-      //   .min(1)
-      //   .required(),
+  clients: Joi.array()
+    .items(
+      Joi.object({
+        first_name: Joi.string().max(100).required(),
+        last_name: Joi.string().max(100).required(),
+        dob: Joi.string().optional().allow("", null),
+      })
+    )
+    .min(1)
+    .required(),
 });
 
 const casesSchemaForm1 = Joi.object({
@@ -55,6 +55,19 @@ const casesSchemaForm1 = Joi.object({
 });
 
 const casesSchemaForm2 = Joi.object({
+  clients: Joi.array()
+    .items(
+      Joi.object({
+        first_name: Joi.string().max(100).required(),
+        last_name: Joi.string().max(100).required(),
+        dob: Joi.date().optional().allow("", null),
+      })
+    )    
+    .min(1)
+    .required(),
+});
+
+const casesSchemaForm3 = Joi.object({
   milestones: Joi.array()
     .items(
       Joi.object({
@@ -67,7 +80,7 @@ const casesSchemaForm2 = Joi.object({
     .required(),
 });
 
-const casesSchemaForm3 = Joi.object({
+const casesSchemaForm4 = Joi.object({
   documents: Joi.array()
     .items(
       Joi.object({
@@ -82,31 +95,6 @@ const casesSchemaForm3 = Joi.object({
     .required(),
 });
 
-function caseClientsValidation(fields) {
-  let errs = {};
-  fields?.clients?.forEach((item, index) => {
-    if (!item?.first_name) {
-      errs["clients" + index + "first_name"] =
-        "First Name is not allowed to be empty.";
-    }
-    if (!item?.last_name) {
-      errs["clients" + index + "last_name"] =
-        "Last Name is not allowed to be empty.";
-    }
-    if (!item?.dob) {
-      errs["clients" + index + "dob"] = "DOB can not be blank.";
-    }
-  });
-  if (Object.entries(errs).length > 0) {
-    return {
-      error: Object.entries(errs).length > 0,
-      messages: errs,
-    };
-  } else {
-    return fields;
-  }
-}
-
 const invoicePaymentSchema = Joi.object({
   total_amount: Joi.number().min(0).required().label("amount"),
 });
@@ -117,6 +105,6 @@ export {
   casesSchemaForm1,
   casesSchemaForm2,
   casesSchemaForm3,
-  caseClientsValidation,
+  casesSchemaForm4,  
   invoicePaymentSchema,
 };

@@ -1,87 +1,110 @@
 "use client";
 
-import React, { memo, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import AddEditMilestone from "./AddEditMilestone";
-import moment from "moment";
+import React from "react";
+import { Button, Col, FloatingLabel, Form, Row } from "react-bootstrap";
+import DatePicker from "react-datepicker";
 
-function Milestones(props) {
-  const [showModal, setShowModal] = useState(false);
-  const deleteRecord = (index) => {
-    if (window.confirm("Are you sure to delete?")) {
-      let newMilestones = props?.milestones.filter((r, indx) => index !== indx);
-      props.updateMilestones(newMilestones);
-    }
+function Milestones({ fields, setFields, errors, initialValues }) {
+  // copy milestones object
+  const milestones = JSON.parse(JSON.stringify(fields.milestones));
+
+  // handle input values
+  const handleChange = (milestones) => {
+    setFields({ ...fields, milestones });
   };
-  return (
-    <div className="p-3">
-      <Row>
-        <Col className="">Milestones</Col>
-        <Col className="text-end">
-          <Button variant="primary" onClick={() => setShowModal(true)}>
-            Add New Milestone
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        <Col md={12} sm={12}>
-          <div
-            className="table-responsive overflow-auto"
-            style={{ height: "45vh" }}
-          >
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Date </th>
-                  <th>Comment</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {props?.milestones?.map((record, index) => (
-                  <tr key={`milestones-key-${index}`}>
-                    <td>{Number(index + 1)}.</td>
-                    <td>
-                      {moment(new Date(record.milestone_date)).format(
-                        "MMMM DD, YYYY"
-                      )}
-                    </td>
-                    <td>{record.comment}</td>
-                    <td>
-                      {record.case_id !== undefined && (
-                        <Button variant="primary" className="me-2">
-                          Edit
-                        </Button>
-                      )}
-                      <Button
-                        variant="danger"
-                        onClick={() => deleteRecord(index)}
-                        size="sm"
-                      >
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <Form.Control.Feedback type="invalid" className="text-center pt-4">
-              {props?.errors?.milestones}
+
+  // Add new field set
+  const addFieldSet = () => {
+    setFields({
+      ...fields,
+      milestones: [...fields.milestones, initialValues.milestones[0]],
+    });
+  };
+
+  // Delete a field set
+  const removeFieldSet = (index) => {
+    setFields({
+      ...fields,
+      milestones: fields.milestones.filter((value, i) => i !== index),
+    });
+  };
+  return fields.milestones.map((item, index) => {
+    return (
+      <Row key={`milestone-fieldset-${index}`}>
+        <Form.Group as={Col} md={4}>
+          <FloatingLabel label="" className="mb-3">
+            <DatePicker
+              placeholderText="Date"
+              selected={Date.parse(milestones[index].milestone_date)}
+              onChange={(date) => {
+                milestones[index].milestone_date = date;
+                handleChange(milestones);
+              }}
+              className="form-control w-100 date_input"
+              dateFormat={"MM-dd-yyyy"}
+            />
+            <Form.Control.Feedback type="invalid" className="d-block">
+              {errors[`milestones${index}milestone_date`]}
             </Form.Control.Feedback>
-          </div>
-        </Col>
-        <AddEditMilestone
-          setErrors={props.setErrors}
-          showModal={showModal}
-          closeModal={() => setShowModal(false)}
-          updateMilestones={(milestones) =>
-            props?.updateMilestones([...props?.milestones, milestones])
-          }
-        />
+          </FloatingLabel>
+        </Form.Group>
+
+        <Form.Group as={Col} md={8}>
+          <FloatingLabel label="Comment" className="mb-3">
+            <Form.Control
+              type="text"
+              name="comment"
+              placeholder="Comment"
+              onChange={(e) => {
+                milestones[index].comment = e.target.value;
+                handleChange(milestones);
+              }}
+              value={item.comment}
+            />
+            <Form.Control.Feedback type="invalid" className="d-block">
+              {errors[`milestones${index}comment`]}
+            </Form.Control.Feedback>
+
+            {/* Add more button */}
+            {index < 1 && (
+              <Button
+                key={index}
+                variant="success"
+                size="sm"
+                className="q-opt-add position-absolute rounded-circle"
+                onClick={() => addFieldSet(index)}
+                style={{
+                  right: 9,
+                  top: 14,
+                  height: 32,
+                  width: 32,
+                }}
+              >
+                <span className="fs-4">+</span>
+              </Button>
+            )}
+
+            {/* Rmove button */}
+            {index >= 1 && (
+              <Button
+                key={index}
+                variant="secondary"
+                size="sm"
+                className="q-opt-remove btn-close"
+                onClick={() => removeFieldSet(index)}
+                style={{
+                  right: 12,
+                  top: 14,
+                  height: 18,
+                  width: 18,
+                }}
+              />
+            )}
+          </FloatingLabel>
+        </Form.Group>
       </Row>
-    </div>
-  );
+    );
+  });
 }
 
-export default memo(Milestones);
+export default Milestones;

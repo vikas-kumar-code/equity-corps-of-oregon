@@ -184,7 +184,7 @@ export default function ListCases() {
                       ))}
                       {records.length <= 0 && (
                         <tr>
-                          <td colSpan={7}>
+                          <td colSpan={8}>
                             <h6 className="text-gray text-center m-5">No records available</h6>
                           </td>
                         </tr>

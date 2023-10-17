@@ -114,30 +114,39 @@ const ViewCaseDetails = ({
             </div>
           </Tab>
           <Tab eventKey={2} title="Client Details">
-            <div className="table-responsive">
-              <table className="table table-borderless table-striped">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>First Name </th>
-                    <th>Last Name</th>
-                    <th>DOB</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {clients.length > 0 &&
-                    clients.map((client, i) => {
-                      return (
-                        <tr>
-                        <td>{i+1}</td>
-                          <td>{client.first_name}</td>
-                          <td>{client.last_name}</td>
-                          <td>{moment(client.dob).format("D MMM, YYYY")}</td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
+            <div className="p-3">
+              <Row>
+                <Col className="">Clients</Col>
+              </Row>
+              <Row>
+                <div className="table-responsive" style={{ maxHeight: 200 }}>
+                  <table className="table table-borderless">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>First Name </th>
+                        <th>Last Name</th>
+                        <th>DOB</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {clients.length > 0 &&
+                        clients.map((client, i) => {
+                          return (
+                            <tr>
+                              <td>{i + 1}</td>
+                              <td>{client.first_name}</td>
+                              <td>{client.last_name}</td>
+                              <td>
+                                {moment(client.dob).format("D MMM, YYYY")}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
+              </Row>
             </div>
           </Tab>
           <Tab eventKey={3} title="Milestones">
@@ -162,7 +171,7 @@ const ViewCaseDetails = ({
                             <tr key={i}>
                               <td>{mile.id}</td>
                               <td>{mile.comment}</td>
-                              <td className="text-center">
+                              <td>
                                 {moment(mile.milestone_date).format(
                                   "D MMM,  YYYY"
                                 )}
