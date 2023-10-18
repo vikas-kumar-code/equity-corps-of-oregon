@@ -6,7 +6,7 @@ export default function Login() {
       <div className="page-body-wrapper">
         <div className="d-flex justify-content-center align-items-center w-100">
           <div
-            className="bg-white w-100 shadow"
+            className="auth-yellow-bg w-100 shadow"
             style={{ maxWidth: 440, borderRadius: 15 }}
           >
             <div className="card-body p-5">              
