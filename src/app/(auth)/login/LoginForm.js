@@ -35,8 +35,9 @@ export default function LoginForm() {
     <form onSubmit={handleSubmit}>
       {error !== null && <p className="text-danger text-center">{error}</p>}
       <div className="form-group">
-        <label className="fw-bold">Email *</label>
+        <label className="auth-label">Email *</label>
         <input
+        placeholder="Enter email"
           type="text"
           className="form-control p_input"
           onChange={(event) =>
@@ -45,8 +46,9 @@ export default function LoginForm() {
         />
       </div>
       <div className="form-group">
-        <label className="fw-bold">Password *</label>
+        <label className="auth-label">Password *</label>
         <input
+        placeholder="Enter password"
           type="password"
           className="form-control p_input"
           onChange={(event) =>

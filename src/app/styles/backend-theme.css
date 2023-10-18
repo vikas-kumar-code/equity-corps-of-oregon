@@ -30802,6 +30802,12 @@ div.tagsinput span.tag a {
     hsl(192deg 36% 37%) 100%
   ); */
 }
+.auth-label{
+  font-weight:600;
+  color: #000;
+  margin-bottom:2px;
+  margin-top: 3px;
+}
 
 .auth-yellow-bg{
   background-color: #E99315 !important;
