@@ -28,12 +28,12 @@ npm install
 
 - [ ] Create database in your MySQL server with name "eco"
 
-## Create .env file at root and pase the following code and do the changes accordingly for your server.
+## Create .env file at root and paste the following code and do the changes accordingly for your server.
 ```
 APP_NAME="Equity Corps of Oregon"
 NEXTAUTH_SECRET=secret
 NEXTAUTH_URL="http://localhost:3000"
-DATABASE_URL="mysql://prisma:p@ssw0rd@localhost:8889/eco"
+DATABASE_URL="mysql://[database-username]:[database-password]@[host]:[port]/[database-name]"
 NEXT_PUBLIC_API_URL="http://localhost:3000"
 
 # Mail Config
@@ -53,4 +53,5 @@ TEST_USER_EMAIL=""
 - [ ] Run the following command to migrate database tables. 
 ```
 npx prisma db push
+npx prisma db seed
 ```
