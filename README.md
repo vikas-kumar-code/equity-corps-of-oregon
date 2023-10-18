@@ -8,11 +8,7 @@ To configure this application do the following things:
 
 ## Prerequisite
 
-- [ ] Install node (>=19.x)
-- [ ] To download the latest version of npm, on the command line, run the following command
-```
-npm install -g npm
-```
+- [ ] Install node by following the instructioin given at (https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 ## Copy the application
 ```
@@ -22,9 +18,39 @@ git checkout -b master
 git pull origin master
 ```
 
-## Integrate with your tools
+## Install the dependencies 
+- [ ] Go inside your project directory and run the following command
+```
+npm install
+```
 
-- [ ] [Set up project integrations](https://gitlab.com/pksbbsr-jha/equity-corps-of-oregon/-/settings/integrations)
+## Database migration
+
+- [ ] Create database in your MySQL server with name "eco"
+
+## Create .env file at root and pase the following code and do the changes accordingly.
+```
+APP_NAME="Equity Corps of Oregon"
+NEXTAUTH_SECRET=secret
+NEXTAUTH_URL="http://localhost:3000"
+DATABASE_URL="mysql://prisma:p@ssw0rd@localhost:8889/eco"
+NEXT_PUBLIC_API_URL="http://localhost:3000"
+
+# Mail Config
+MAIL_MAILER=""
+MAIL_HOST=""
+MAIL_PORT=""
+MAIL_ENCRYPTION=""
+MAIL_USERNAME="mitizdeveloper@gmail.com"
+MAIL_PASSWORD="yizcealabjjxgvkd"
+MAIL_FROM_ADDRESS="mitizdeveloper@gmail.com"
+MAIL_FROM_NAME=$APP_NAME
+
+TEST_USER_EMAIL=""
+
+```
+
+- [ ] Create database in your MySQL server with name "eco"
 
 ## Collaborate with your team
 
