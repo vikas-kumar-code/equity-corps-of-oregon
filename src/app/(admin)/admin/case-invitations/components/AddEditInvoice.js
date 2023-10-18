@@ -45,6 +45,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const [categories, setCategories] = useState([]);
   const [deletedFiles, setDeletedFiles] = useState([]);
   const [withdraw, setWithdraw] = useState("");
+  const [uploadedFile, setUploadedFile] = useState(null);
   const filePondRef = useRef(null);
 
   const resetFilepond = () => {
@@ -230,6 +231,15 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   useEffect(() => {
     getInvoiceCategories();
   }, []);
+
+  useEffect(() => {
+    if (uploadedFile) {
+      setFields({
+        ...fields,
+        temp_files: [...fields.temp_files, uploadedFile],
+      });
+    }
+  }, [uploadedFile]);
 
   return (
     <>
@@ -568,13 +578,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             response = JSON.parse(response);
                             console.log(response)
                             if (response.success) {
-                              setFields({
-                                ...fields,
-                                temp_files: [
-                                  ...fields.temp_files,
-                                  ...response.files,
-                                ],
-                              });
+                              // console.log(filePondRef.current.getFiles(),'###########################');
+                              setUploadedFile(response.files[0]);
                               return JSON.stringify({
                                 file: response.files[0].fileName,
                               });
@@ -591,7 +596,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             copyFields = {
                               ...copyFields,
                               temp_files: copyFields.temp_files.filter(
-                                (item) => item.fileName !== response?.fileName
+                                (item) => item?.fileName !== response?.fileName
                               ),
                             };
                             setFields(copyFields);
