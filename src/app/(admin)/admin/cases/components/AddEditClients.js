@@ -99,7 +99,7 @@ export default function AddEditClients({
                   }}
                 >
                   <select
-                    className="custom-select-style p-1 mx-1 rounded-1"
+                    className="custom-select-style p-1 mx-1"
                     value={getYear(date)}
                     onChange={({ target: { value } }) => changeYear(value)}
                   >
@@ -109,6 +109,7 @@ export default function AddEditClients({
                       </option>
                     ))}
                   </select>
+
                   <select
                     className="custom-select-style p-1"
                     value={months[getMonth(date)]}
@@ -124,6 +125,7 @@ export default function AddEditClients({
                   </select>
                 </div>
               )}
+              maxDate={new Date()}
               placeholderText="DOB"
               selected={Date.parse(clients[index].dob)}
               onChange={(date) => {
