@@ -391,7 +391,7 @@ export default function AddEditCase(props) {
                       <Form.Control
                         as="textarea"
                         name="description"
-                        placeholder="description"
+                        placeholder="Description"
                         onChange={(event) => handleChange(event, "description")}
                         isInvalid={!!errors.description}
                         value={fields.description ? fields.description : ""}
