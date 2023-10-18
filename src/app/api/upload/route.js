@@ -54,7 +54,11 @@ export async function POST(request) {
         mkdirSync(tempPath, { recursive: true, mode: "777" });
       }
 
-      await writeFile(destPath, buffer);
+      try {
+        await writeFile(destPath, buffer);
+      } catch (error) {
+        console.error(`Error saving file ${file.name}:`, error.message);
+      }
 
       // Add file details to the response
       response.files.push({

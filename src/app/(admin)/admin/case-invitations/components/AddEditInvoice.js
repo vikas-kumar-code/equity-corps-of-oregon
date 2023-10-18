@@ -1,4 +1,3 @@
-// import { invoiceSchema } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Row, Col, Form, FloatingLabel } from "react-bootstrap";
@@ -289,6 +288,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                         setFields({ ...fields, due_on: date });
                         setNoError("due_on");
                       }}
+                      minDate={new Date()}
                       className="form-control w-100 py-4"
                       placeholderText="Due On"
                       dateFormat={"MM-dd-yyyy"}
