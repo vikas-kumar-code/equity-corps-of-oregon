@@ -54,7 +54,6 @@ export default function AddEditCase(props) {
   const [fields, setFields] = useState(initialValues);
   let fieldsData = fields && JSON.parse(JSON.stringify(fields));
   const [errors, setErrors] = useState({});
-  const [clientsData, setClientsData] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
   const [activated, setActivated] = useState(1);
@@ -199,7 +198,6 @@ export default function AddEditCase(props) {
       .then((response) => {
         if (response.success) {
           setFields(response.data);
-          setClientsData(response.data.clients);
         } else if (response.error) {
           toast.error(response.message);
         }

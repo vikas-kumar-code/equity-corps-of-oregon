@@ -135,6 +135,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
+          console.log(fields.files, fields.temp_files);
+          console.log(response);
           if (send_invoice && response?.id) {
             sendInvoice(response.id);
           } else {
@@ -556,6 +558,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                           url: common.apiPath("/upload"),
                           onload: (response) => {
                             response = JSON.parse(response);
+                            console.log(response)
                             if (response.success) {
                               setFields({
                                 ...fields,

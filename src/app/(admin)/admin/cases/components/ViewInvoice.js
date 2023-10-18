@@ -44,8 +44,8 @@ const ViewInvoice = ({
 
   useEffect(() => {
     getRecord();
-    console.log(fields);
   }, []);
+  console.log(invoiceData?.particulars[0].short_description);
 
   return (
     <Modal
@@ -132,10 +132,11 @@ const ViewInvoice = ({
                                       {String(index + 1).padStart(2, 0)}
                                     </td>
                                     <td>
-                                      {item?.category?.label !==
+                                      <div>{item?.category?.label !==
                                       "Other - Describe"
                                         ? item?.category?.label
-                                        : item?.other_category}
+                                        : item?.other_category}</div>
+                                        <div>{item.short_description}</div>
                                     </td>
                                     <td
                                       className="text-end"
@@ -146,7 +147,7 @@ const ViewInvoice = ({
                                       )}
                                     </td>
                                     <td className="text-end">
-                                      {item?.hours_worked}
+                                      {item?.hours_worked ? item?.hours_worked : "N/A"}
                                     </td>
                                     <td className="total">
                                       {common.currencyFormat(item?.amount)}
