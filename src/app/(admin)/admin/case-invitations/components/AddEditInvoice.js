@@ -1,14 +1,7 @@
 // import { invoiceSchema } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Button,
-  Row,
-  Col,
-  Form,
-  FloatingLabel,
-} from "react-bootstrap";
+import { Modal, Button, Row, Col, Form, FloatingLabel } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import ListInvoices from "./ListInvoices";
@@ -33,7 +26,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
         },
         other_category: "",
         show_other_category: false,
-        short_description:"",
+        short_description: "",
         hours_worked: "",
         amount: "",
       },
@@ -52,7 +45,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
   const [submissionAction, setSubmissionAction] = useState(0);
   const [categories, setCategories] = useState([]);
   const [deletedFiles, setDeletedFiles] = useState([]);
-  const [withdraw, setWithdraw] = useState("")
+  const [withdraw, setWithdraw] = useState("");
   const filePondRef = useRef(null);
 
   const resetFilepond = () => {
@@ -129,7 +122,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       body: JSON.stringify({
         case_id: record.id,
         ...fields,
-        deletedFiles: [...deletedFiles]
+        deletedFiles: [...deletedFiles],
       }),
     })
       .then((response) => response.json())
@@ -144,7 +137,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
             reloadRecords();
             setSubmitted(false);
           }
-          setDeletedFiles([])
+          setDeletedFiles([]);
           setShowInvoice(null);
           resetFilepond();
         } else if (response.error) {
@@ -226,7 +219,11 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
       return i !== index;
     });
     setDeletedFiles((prevDeletedFiles) => [...prevDeletedFiles, deletedFile]);
-    setFields({ ...fields, files: [...filteredFiles], deleted_files: deletedFiles });
+    setFields({
+      ...fields,
+      files: [...filteredFiles],
+      deleted_files: deletedFiles,
+    });
   };
 
   useEffect(() => {
@@ -314,7 +311,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                               placeholder="Category"
                               isInvalid={
                                 !!errors[
-                                "particulars" + index + "other_category"
+                                  "particulars" + index + "other_category"
                                 ]
                               }
                               value={item.other_category}
@@ -338,9 +335,13 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                               size="sm"
                               className="q-opt-remove btn-close"
                               onClick={() => {
-                                fieldsData.particulars[index].other_category = "";
-                                fieldsData.particulars[index].show_other_category = false;
-                                fieldsData.particulars[index].category = initialValues.particulars[0].category;
+                                fieldsData.particulars[index].other_category =
+                                  "";
+                                fieldsData.particulars[
+                                  index
+                                ].show_other_category = false;
+                                fieldsData.particulars[index].category =
+                                  initialValues.particulars[0].category;
                                 setFields(fieldsData);
                               }}
                               style={{ right: 9, top: 17 }}
@@ -352,8 +353,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                               <Form.Select
                                 className="invoice-item"
                                 onChange={(e) => {
-                                  fieldsData.particulars[index].category.value = Number(e.target.value);
-                                  fieldsData.particulars[index].category.label = categories[e.target.value].label;
+                                  fieldsData.particulars[index].category.value =
+                                    Number(e.target.value);
+                                  fieldsData.particulars[index].category.label =
+                                    categories[e.target.value].label;
                                   if (
                                     e.target.value ==
                                     categories[categories.length - 1].value
@@ -375,7 +378,8 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                                       key={`particular-${i}`}
                                       className="p-2"
                                       selected={
-                                        fields.particulars[index].category.value === category.value
+                                        fields.particulars[index].category
+                                          .value === category.value
                                       }
                                     >
                                       {category.label}
@@ -402,11 +406,14 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             name="short_description"
                             placeholder="Short Description"
                             isInvalid={
-                              !!errors["particulars" + index + "short_description"]
+                              !!errors[
+                                "particulars" + index + "short_description"
+                              ]
                             }
                             value={item.short_description}
                             onChange={(event) => {
-                              fieldsData.particulars[index].short_description = event.target.value;
+                              fieldsData.particulars[index].short_description =
+                                event.target.value;
                               setFields(fieldsData);
                               setNoError(
                                 "particulars" + index + "short_description"
@@ -414,8 +421,9 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             }}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors["particulars" + index + "short_description"] ||
-                              ""}
+                            {errors[
+                              "particulars" + index + "short_description"
+                            ] || ""}
                           </Form.Control.Feedback>
                         </FloatingLabel>
                       </Col>
@@ -432,10 +440,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             value={item.hours_worked}
                             onChange={(event) => {
                               fieldsData.particulars[index].hours_worked =
-                                event.target.value.replace(
-                                  /[^0-9.]|(\.(?=.*\.))/g,
-                                  ""
-                                );
+                                common.parseDecimalInput(event.target.value);
                               if (record.hourly_rate) {
                                 fieldsData.particulars[index].amount = "";
                                 fieldsData.particulars[index].amount =
@@ -469,7 +474,7 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                             value={item.amount}
                             onChange={(event) => {
                               fieldsData.particulars[index].amount =
-                                event.target.value.replace(/[^0-9.]/g, "");
+                                common.parseDecimalInput(event.target.value);
                               if (record.hourly_rate) {
                                 fieldsData.particulars[index].hours_worked = "";
                               }
@@ -526,7 +531,10 @@ const AddEditInvoice = ({ showModal, closeModal, record, reloadRecords }) => {
                         <ul className="files-list">
                           {fields.files.map((item, i) => {
                             return (
-                              <li key={`file-${i}`} className="position-relative">
+                              <li
+                                key={`file-${i}`}
+                                className="position-relative"
+                              >
                                 <span
                                   className="mdi mdi-delete-circle fs-4 position-absolute end-0 me-1 text-danger"
                                   onClick={() => handleDelFile(i)}

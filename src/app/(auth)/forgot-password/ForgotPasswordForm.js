@@ -128,12 +128,32 @@ export default function ForgotPasswordForm() {
       )}
       {status === 2 && (
         <div className="show-down-animation-2">
-          <h3 className="card-title text-left mb-3">New Password</h3>
+          <h3 className="card-title text-center mb-3">Reset Password</h3>
           <Form onSubmit={submitNewPassword}>
             <p className="text-success text-center uc-first">
               Verification code has been sent to your email. please check your
               mail box.
             </p>
+            <Form.Group className="mb-2">
+              <Form.Label>Verification Code *</Form.Label>
+              <Form.Control
+                type="text"
+                name="verification_code"
+                placeholder="Enter Verification Code"
+                value={fields?.verification_code || ""}
+                onChange={(event) =>
+                  setFields({
+                    ...fields,
+                    verification_code: event.target.value,
+                  })
+                }
+                isInvalid={!!errors?.verification_code}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors?.verification_code}
+              </Form.Control.Feedback>
+            </Form.Group>
+
             <Form.Group className="mb-2">
               <Form.Label>New Password *</Form.Label>
               <Form.Control
@@ -171,25 +191,6 @@ export default function ForgotPasswordForm() {
                   {errors?.password_confirmation}
                 </Form.Control.Feedback>
               )}
-            </Form.Group>
-            <Form.Group className="mb-2">
-              <Form.Label>Verification Code *</Form.Label>
-              <Form.Control
-                type="text"
-                name="verification_code"
-                placeholder="Enter Verification Code"
-                value={fields?.verification_code || ""}
-                onChange={(event) =>
-                  setFields({
-                    ...fields,
-                    verification_code: event.target.value,
-                  })
-                }
-                isInvalid={!!errors?.verification_code}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors?.verification_code}
-              </Form.Control.Feedback>
             </Form.Group>
             <div className="d-grid mt-3">
               <Button

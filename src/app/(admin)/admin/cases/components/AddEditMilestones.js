@@ -4,7 +4,7 @@ import React from "react";
 import { Button, Col, FloatingLabel, Form, Row } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 
-function Milestones({ fields, setFields, errors, initialValues }) {
+const AddEditMilestones = ({ fields, setFields, errors, initialValues }) => {
   // copy milestones object
   const milestones = JSON.parse(JSON.stringify(fields.milestones));
 
@@ -105,6 +105,6 @@ function Milestones({ fields, setFields, errors, initialValues }) {
       </Row>
     );
   });
-}
+};
 
-export default Milestones;
+export default AddEditMilestones;

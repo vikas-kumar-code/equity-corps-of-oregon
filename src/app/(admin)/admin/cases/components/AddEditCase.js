@@ -13,7 +13,7 @@ import {
   Tab,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
-import Milestones from "./Milestones";
+import AddEditMilestones from "./AddEditMilestones";
 import Documents from "./Documents";
 import {
   casesSchemaForm1,
@@ -24,7 +24,7 @@ import {
 import common from "@/utils/common";
 import { toast } from "react-toastify";
 import CaseActivities from "./CaseActivities";
-import AddEditClient from "./AddEditClient";
+import AddEditClients from "./AddEditClients";
 LoadingOverlay.propTypes = undefined;
 
 export default function AddEditCase(props) {
@@ -51,10 +51,9 @@ export default function AddEditCase(props) {
       },
     ],
   };
+
   const [fields, setFields] = useState(initialValues);
-  let fieldsData = fields && JSON.parse(JSON.stringify(fields));
   const [errors, setErrors] = useState({});
-  const [clientsData, setClientsData] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
   const [activated, setActivated] = useState(1);
@@ -89,7 +88,6 @@ export default function AddEditCase(props) {
     // Tab-2 validation
     else if (activeTab === 2) {
       try {
-        console.log('here-------',fields);
         await casesSchemaForm2.validateAsync(fields, {
           abortEarly: false,
           allowUnknown: true,
@@ -146,7 +144,6 @@ export default function AddEditCase(props) {
                 deleted_documents: deletedDocuments,
               }
             : fields;
-        console.log(fieldsData);
         await fetch(REQUEST_URI, {
           method: REQUEST_METHOD,
           body: JSON.stringify(fieldsData),
@@ -192,14 +189,16 @@ export default function AddEditCase(props) {
     }
   };
 
+  /*
+   * Get case details, clients, documents, ....
+   */
   const getRecord = async (id) => {
     setLoader(true);
     fetch(common.apiPath(`/admin/cases/get/${id}`))
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
-          setFields(response.data);
-          setClientsData(response.data.clients);
+          setFields({ ...initialValues, ...response.data });
         } else if (response.error) {
           toast.error(response.message);
         }
@@ -225,20 +224,6 @@ export default function AddEditCase(props) {
         props.closeModal();
       }
     }
-  };
-
-  const addFieldSet = () => {
-    setFields({
-      ...fields,
-      clients: [...fields.clients, initialValues.clients[0]],
-    });
-  };
-
-  const removeFieldSet = (index) => {
-    setFields({
-      ...fields,
-      clients: fields.clients.filter((value, i) => i !== index),
-    });
   };
 
   useEffect(() => {
@@ -384,7 +369,9 @@ export default function AddEditCase(props) {
                         onChange={(event) =>
                           setFields({
                             ...fields,
-                            maximum_compensation: event.target.value,
+                            maximum_compensation: common.parseDecimalInput(
+                              event.target.value
+                            ),
                           })
                         }
                         isInvalid={!!errors.maximum_compensation}
@@ -422,29 +409,20 @@ export default function AddEditCase(props) {
                 title="Clients"
                 disabled={activated < 2 && !props.recordId}
               >
-                <Form onSubmit={handleSubmit}>
-                  {fields.clients?.map((item, index) => (
-                    <AddEditClient
-                      index={index}
-                      item={item}
-                      errors={errors}
-                      fieldsData={fieldsData}
-                      setFields={setFields}
-                      fields={fields}
-                      addFieldSet={addFieldSet}
-                      removeFieldSet={removeFieldSet}
-                    />
-                  ))}
-                </Form>
+                <AddEditClients
+                  errors={errors}
+                  fields={fields}
+                  setFields={setFields}
+                  initialValues={initialValues}
+                />
               </Tab>
               <Tab
                 eventKey={3}
                 title="Milestones"
                 disabled={activated < 3 && !props.recordId}
               >
-                <Milestones
+                <AddEditMilestones
                   errors={errors}
-                  setErrors={setErrors}
                   fields={fields}
                   setFields={setFields}
                   initialValues={initialValues}

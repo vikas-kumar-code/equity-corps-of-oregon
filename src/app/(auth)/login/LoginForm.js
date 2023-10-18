@@ -70,7 +70,7 @@ export default function LoginForm() {
       <div className="text-center d-grid">
         <button
           type="submit"
-          className="btn btn-primary btn-block enter-btn"
+          className="btn btn-primary btn-lg"
           disabled={loader}
         >
           {loader && <Spinner size="sm" variant="light" className="me-1" />}
