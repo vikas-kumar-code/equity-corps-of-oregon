@@ -8,7 +8,7 @@ To configure this application do the following things:
 
 ## Prerequisite
 
-- [ ] Install node by following the instructioin given at (https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [ ] Install node by following the instruction given at (https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 ## Copy the application
 ```
