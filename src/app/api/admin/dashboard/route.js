@@ -87,12 +87,14 @@ export async function GET(request) {
       response.recentInvoices = await prisma.case_invoices.findMany({
         where,
         orderBy: [{ id: "desc" }],
+        take: 5,
       });
 
       response.recentCaseInvitations = await prisma.case_invitations.findMany({
         where,
         orderBy: [{ id: "desc" }],
         include: { case: true },
+        take: 5,
       });
 
       return NextResponse.json({
@@ -105,12 +107,11 @@ export async function GET(request) {
       error: true,
       message: err.message,
     });
-    counts = [
-      ...counts,
-      { count: totalInvitations, label: 'Total Case Invitations', icon: 'mdi mdi-alpha-c-circle' },
-    ]
   }
-
+  counts = [
+    ...counts,
+    { count: totalInvitations, label: 'Total Case Invitations', icon: 'mdi mdi-alpha-c-circle' },
+  ]
   return NextResponse.json({
     success: true,
     records: {
