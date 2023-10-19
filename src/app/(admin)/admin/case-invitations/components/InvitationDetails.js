@@ -231,37 +231,29 @@ const InvitationDetails = ({
             </Tab>
           )}
           <Tab eventKey={4} title="Milestones" className="ps-5 pt-2 pe-5">
-            <div>
-              <Row>
-                <Col md={12} sm={12}>
-                  <div className="table-responsive" style={{ maxHeight: 200 }}>
-                    <table className="table">
-                      <thead>
-                        <tr className="mx-5">
-                          <th>#</th>
-                          <th>Comment</th>
-                          <th>Updated On</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {record?.case?.case_milestones?.map((mile, i) => {
-                          return (
-                            <tr key={i}>
-                              <td>{mile?.id}</td>
-                              <td>{mile?.comment}</td>
-                              <td>
-                                {moment(mile?.milestone_date).format(
-                                  "D MMM,  YYYY"
-                                )}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </Col>
-              </Row>
+            <div className="table-responsive" style={{ maxHeight: 200 }}>
+              <table className="table">
+                <thead>
+                  <tr className="mx-5">
+                    <th>#</th>
+                    <th>Comment</th>
+                    <th>Updated On</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {record?.case?.case_milestones?.map((mile, i) => {
+                    return (
+                      <tr key={i}>
+                        <td>{mile?.id}</td>
+                        <td>{mile?.comment}</td>
+                        <td>
+                          {moment(mile?.milestone_date).format("D MMM,  YYYY")}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </Tab>
           {record?.status >= 1 && (

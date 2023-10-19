@@ -14,8 +14,6 @@ const ViewCaseDetails = ({
   showListInvoices,
 }) => {
   const [activeTab, setActiveTab] = useState(1);
-  const [errors, setErrors] = useState({});
-  const [deletedDocuments, setDeletedDocuments] = useState([]);
 
   console.log(record);
   const btnStatus = {
@@ -113,108 +111,83 @@ const ViewCaseDetails = ({
               </table>
             </div>
           </Tab>
-          <Tab eventKey={2} title="Client Details">
-            <div className="p-3">
-              <Row>
-                <Col className="">Clients</Col>
-              </Row>
-              <Row>
-                <div className="table-responsive" style={{ maxHeight: 200 }}>
-                  <table className="table table-borderless">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>First Name </th>
-                        <th>Last Name</th>
-                        <th>DOB</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {clients.length > 0 &&
-                        clients.map((client, i) => {
-                          return (
-                            <tr>
-                              <td>{i + 1}</td>
-                              <td>{client.first_name}</td>
-                              <td>{client.last_name}</td>
-                              <td>
-                                {moment(client.dob).format("D MMM, YYYY")}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                    </tbody>
-                  </table>
-                </div>
-              </Row>
-            </div>
-          </Tab>
-          <Tab eventKey={3} title="Milestones">
-            <div className="p-3">
-              <Row>
-                <Col className="">Milestones</Col>
-              </Row>
-              <Row>
-                <Col md={12} sm={12}>
-                  <div className="table-responsive" style={{ maxHeight: 200 }}>
-                    <table className="table table-borderless">
-                      <thead>
-                        <tr className="mx-5">
-                          <th>#</th>
-                          <th>Comment</th>
-                          <th>Updated On</th>
+          <Tab eventKey={2} title="Client" className="ps-5 pt-2 pe-5">
+            <div className="table-responsive" style={{ maxHeight: 200 }}>
+              <table className="table table-borderless">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>First Name </th>
+                    <th>Last Name</th>
+                    <th>DOB</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {clients.length > 0 &&
+                    clients.map((client, i) => {
+                      return (
+                        <tr>
+                          <td>{i + 1}</td>
+                          <td>{client.first_name}</td>
+                          <td>{client.last_name}</td>
+                          <td>{moment(client.dob).format("D MMM, YYYY")}</td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {record.case_milestones.map((mile, i) => {
-                          return (
-                            <tr key={i}>
-                              <td>{mile.id}</td>
-                              <td>{mile.comment}</td>
-                              <td>
-                                {moment(mile.milestone_date).format(
-                                  "D MMM,  YYYY"
-                                )}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </Col>
-              </Row>
+                      );
+                    })}
+                </tbody>
+              </table>
             </div>
           </Tab>
-          <Tab eventKey={4} title="Documents">
-            <div className="p-3">
-              <Row>
-                <Col className="">Documents</Col>
-              </Row>
-              <div className="table-responsive" style={{ maxHeight: 200 }}>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Document Name </th>
-                      <th>Uploaded On</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {record.case_documents?.map((record, index) => (
-                      <tr key={`documents-key-${index}`}>
-                        <td>{Number(index + 1)}.</td>
-                        <td>{record.document_name}</td>
+          <Tab eventKey={3} title="Milestones" className="ps-5 pt-2 pe-5">
+            <div className="table-responsive" style={{ maxHeight: 200 }}>
+              <table className="table table-borderless">
+                <thead>
+                  <tr className="mx-5">
+                    <th>#</th>
+                    <th>Comment</th>
+                    <th>Updated On</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {record.case_milestones.map((mile, i) => {
+                    return (
+                      <tr key={i}>
+                        <td>{mile.id}</td>
+                        <td>{mile.comment}</td>
                         <td>
-                          {moment(record?.uploaded_on || new Date()).format(
-                            "MMMM DD, YYYY"
-                          )}
+                          {moment(mile.milestone_date).format("D MMM,  YYYY")}
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </Tab>
+          <Tab eventKey={4} title="Documents" className="ps-5 pt-2 pe-5">
+            <div className="table-responsive" style={{ maxHeight: 200 }}>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Document Name </th>
+                    <th>Uploaded On</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {record.case_documents?.map((record, index) => (
+                    <tr key={`documents-key-${index}`}>
+                      <td>{Number(index + 1)}.</td>
+                      <td>{record.document_name}</td>
+                      <td>
+                        {moment(record?.uploaded_on || new Date()).format(
+                          "MMMM DD, YYYY"
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </Tab>
           <Tab eventKey={5} title="Case Activities">

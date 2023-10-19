@@ -1,5 +1,6 @@
+import Link from "next/link";
 import React from "react";
-import { Card, } from "react-bootstrap";
+import { Card, Col, Row, } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 
 const RecentAttorney = ({ records, loader }) => {
@@ -7,7 +8,10 @@ const RecentAttorney = ({ records, loader }) => {
     <LoadingOverlay active={loader} spinner>
       <Card>
         <Card.Body>
-          <h4 className="card-title">Recent Attorney</h4>
+        <Row>
+            <Col><h4 className="card-title">Recent Attorney</h4></Col>
+            <Col className="text-end text-primary"><Link href="/admin/users">View All</Link></Col>
+          </Row>
           <div className="table-responsive">
             <table className="table">
               <thead>
