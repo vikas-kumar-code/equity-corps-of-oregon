@@ -3,6 +3,9 @@
 import React from "react";
 import { Button, FloatingLabel, Form, Row, Col } from "react-bootstrap";
 import DatePicker from "react-datepicker";
+import { getMonth, getYear } from "date-fns";
+import range from "lodash/range";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function AddEditClients({
   fields,
@@ -11,6 +14,21 @@ export default function AddEditClients({
   initialValues,
 }) {
   const clients = JSON.parse(JSON.stringify(fields.clients));
+  const years = range(1990, getYear(new Date()) + 1, 1);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   const handleChange = (clients) => {
     setFields({ ...fields, clients });
@@ -72,6 +90,42 @@ export default function AddEditClients({
         <Form.Group as={Col} md={4}>
           <FloatingLabel label="" className="mb-3">
             <DatePicker
+              renderCustomHeader={({ date, changeYear, changeMonth }) => (
+                <div
+                  style={{
+                    margin: 10,
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <select
+                    className="custom-select-style p-1 mx-1"
+                    value={getYear(date)}
+                    onChange={({ target: { value } }) => changeYear(value)}
+                  >
+                    {years.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+
+                  <select
+                    className="custom-select-style p-1"
+                    value={months[getMonth(date)]}
+                    onChange={({ target: { value } }) =>
+                      changeMonth(months.indexOf(value))
+                    }
+                  >
+                    {months.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              maxDate={new Date()}
               placeholderText="DOB"
               selected={Date.parse(clients[index].dob)}
               onChange={(date) => {

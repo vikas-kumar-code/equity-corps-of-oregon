@@ -44,12 +44,12 @@ export async function GET(request) {
           },
         },
         orderBy: [{ id: "desc" }],
-        take: 10,
+        take: 5,
       });
 
       response.recentAttorney = await prisma.users.findMany({
         where: { role_id: 2 },
-        take: 10,
+        take: 5,
         orderBy: [{ id: "desc" }],
         select: {
           id: true,

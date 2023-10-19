@@ -1,13 +1,26 @@
+import Link from "next/link";
 import React from "react";
-import { Card, } from "react-bootstrap";
-import LoadingOverlay from "react-loading-overlay";
+import { Button, Card, Col, Row } from "react-bootstrap";
 
-const RecentAttorney = ({ records, loader }) => {
+const RecentAttorney = ({ records }) => {
   return (
-    <LoadingOverlay active={loader} spinner>
       <Card>
-        <Card.Body>
-          <h4 className="card-title">Recent Attorney</h4>
+        <Card.Body style={{minHeight: "443px"}}>
+          <Row>
+            <Col>
+              <h4 className="card-title">Recent Attorney</h4>
+            </Col>
+            <Col className="text-end text-primary">
+              <Button variant="primary">
+                <Link
+                  href="/admin/users"
+                  style={{ textDecoration: "none", color: "white" }}
+                >
+                  View All
+                </Link>
+              </Button>
+            </Col>
+          </Row>
           <div className="table-responsive">
             <table className="table">
               <thead>
@@ -44,7 +57,6 @@ const RecentAttorney = ({ records, loader }) => {
           </div>
         </Card.Body>
       </Card>
-    </LoadingOverlay>
   );
 };
 
