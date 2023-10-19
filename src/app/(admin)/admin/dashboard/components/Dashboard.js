@@ -11,7 +11,7 @@ import DashboardShimmer from "./DashboardShimmer";
 
 const Dashboard = () => {
   const [records, setRecords] = useState([]);
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
 
   const getRecords = async () => {
     setLoader(true);
@@ -31,7 +31,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    getRecords();
+    // getRecords();
   }, []);
 
   return (

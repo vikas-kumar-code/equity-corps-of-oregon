@@ -59,7 +59,7 @@ const RecentInvoices = ({ records }) => {
               {(!records.recentInvoices ||
                 records.recentInvoices.length <= 0) && (
                 <tr>
-                  <td colSpan={3}>
+                  <td colSpan={3} className="text-center pt-5">
                     <h6 className="text-gray">No records available</h6>
                   </td>
                 </tr>
