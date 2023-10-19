@@ -44,7 +44,7 @@ export default function RootLayout({ children }) {
                                     <div className="bg-holder promo-bg">
                                     </div>
                                     <div className="px-5 py-7 position-relative">
-                                        <h1 className="text-center w-lg-75 mx-auto fs-lg-6 fs-md-4 fs-3 text-white">An enterprise template to ramp up your company website</h1>
+                                        <h1 className="text-center w-lg-75 mx-auto fs-lg-6 fs-md-4 fs-3 text-white">Get updated with all our announcement.</h1>
                                         <div className="row justify-content-center mt-5">
                                             <div className="col-auto w-100 w-lg-50">
                                                 <input className="form-control mb-2 border-light fs-1" type="email" placeholder="Your email address" />
@@ -61,7 +61,7 @@ export default function RootLayout({ children }) {
                             <div className="container">
                                 <div className="row justify-content-between">
                                     <div className="col-lg-6 col-sm-12"><a href="index.html"><img className="img-fluid mt-5 mb-4" src="assets/img/black-logo.png" alt="" /></a>
-                                        <p className="w-lg-75 text-gray">Social media validation business model canvas graphical user interface launch party creative facebook iPad twitter.</p>
+                                        <p className="w-lg-75 text-gray">Equity Corps of Oregon’s objective is to provide universal representation, which protects our communities by making sure that no individual faces the risk of deportation or exclusion without legal consultation and representation.</p>
                                     </div>
                                     <div className="col-lg-2 col-sm-4">
                                         <h3 className="fw-bold fs-1 mt-5 mb-4">Landings</h3>
