@@ -1,9 +1,7 @@
 import moment from "moment";
 import React, { useState } from "react";
-import { Modal, Badge, Tabs, Tab, Button, Row, Col } from "react-bootstrap";
-import Documents from "./Documents";
+import { Modal, Badge, Tabs, Tab, Button } from "react-bootstrap";
 import common from "@/utils/common";
-import DownloadButton from "./DownloadButton";
 
 const ViewCaseDetails = ({
   showModal,
@@ -15,7 +13,6 @@ const ViewCaseDetails = ({
 }) => {
   const [activeTab, setActiveTab] = useState(1);
 
-  console.log(record);
   const btnStatus = {
     0: {
       label: "New Case",
@@ -111,7 +108,7 @@ const ViewCaseDetails = ({
               </table>
             </div>
           </Tab>
-          <Tab eventKey={2} title="Client" className="ps-5 pt-2 pe-5">
+          <Tab eventKey={2} title="Clients" className="ps-5 pt-2 pe-5">
             <div className="table-responsive" style={{ maxHeight: 200 }}>
               <table className="table table-borderless">
                 <thead>
