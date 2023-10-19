@@ -48,11 +48,11 @@ const Dashboard = () => {
             <RecentAttorney records={records} loader={loader}/>
           </div>
         )}
-        {records.recentCaseInvitations && (
+        {/* {records.recentCaseInvitations && (
           <div className="col-md-6">
             <RecentCaseInvitations records={records} loader={loader}/>
           </div>
-        )}
+        )} */}
       </div>)}
     </>
   );
