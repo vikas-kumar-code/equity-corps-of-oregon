@@ -2,7 +2,14 @@
 
 import React, { useState } from "react";
 import moment from "moment";
-import { Badge, ButtonGroup, Dropdown, DropdownButton, OverlayTrigger, Tooltip } from "react-bootstrap";
+import {
+  Badge,
+  ButtonGroup,
+  Dropdown,
+  DropdownButton,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import SendInvitation from "./SendInvitation";
 import AddEditCase from "./AddEditCase";
 import ListInvoices from "./ListInvoices";
@@ -46,14 +53,29 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
         </td>
         <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
         <td>
-          <OverlayTrigger
-            placement="bottom"
-            overlay={<Tooltip id={`tooltip-key-${sn}`}>
-              {record.logs.length > 0 ? `${record.logs[Number(record.logs.length) - 1].content} on ${moment(record.logs[Number(record.logs.length) - 1].created_at).format("D MMM,  YYYY")}` : '...'}
-            </Tooltip>}
+          <OverlayTrigger          
+            placement="top"
+            overlay={
+              <Tooltip id={`tooltip-key-${sn}`}>
+                {record.logs.length > 0
+                  ? `${
+                      record.logs[Number(record.logs.length) - 1].content
+                    } on ${moment(
+                      record.logs[Number(record.logs.length) - 1].created_at
+                    ).format("D MMM,  YYYY")}`
+                  : "..."}
+              </Tooltip>
+            }
           >
             {({ ref, ...triggerHandler }) => (
-              <spna className="text-primary" role='button' ref={ref} {...triggerHandler}>View</spna>
+              <spna
+                className="text-primary p-2"
+                role="button"
+                ref={ref}
+                {...triggerHandler}
+              >
+                <span class="mdi mdi-information-outline fs-3"></span>
+              </spna>
             )}
           </OverlayTrigger>
         </td>

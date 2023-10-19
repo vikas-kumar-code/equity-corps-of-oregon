@@ -91,6 +91,7 @@
   content: "";
 }
 .skeleton-box-gray {
+  position: relative;
   overflow: hidden;
 }
 .skeleton-box-gray::after {

@@ -49,7 +49,7 @@ const RecentCaseInvitations = ({ records, loader }) => {
                   records.recentCaseInvitations.length <= 0) && (
                     <tr>
                       <td colSpan={3}>
-                        <h6 className="text-gray">No records available</h6>
+                        <h6 className="text-gray text-center">No records available</h6>
                       </td>
                     </tr>
                   )}

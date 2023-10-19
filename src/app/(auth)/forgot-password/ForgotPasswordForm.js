@@ -83,13 +83,15 @@ export default function ForgotPasswordForm() {
     <>
       {status === 1 && (
         <div>
-          <h3 className="card-title text-left mb-3">Forgot Password?</h3>
+          <h3 className="text-left mb-3 text-white fw-bold fs-3">
+            Forgot Password?
+          </h3>
           <Form onSubmit={sendVerificationCode}>
             {typeof errors == "string" && (
               <p className="text-danger text-center uc-first">{errors}</p>
             )}
             <Form.Group className="mb-2">
-              <Form.Label>Email *</Form.Label>
+              <label className="auth-label">Email *</label>
               <Form.Control
                 autoFocus
                 type="email"
@@ -128,14 +130,36 @@ export default function ForgotPasswordForm() {
       )}
       {status === 2 && (
         <div className="show-down-animation-2">
-          <h3 className="card-title text-left mb-3">New Password</h3>
+          <h3 className="text-left mb-3 text-white fw-bold fs-3">
+            Reset Password
+          </h3>
           <Form onSubmit={submitNewPassword}>
             <p className="text-success text-center uc-first">
               Verification code has been sent to your email. please check your
               mail box.
             </p>
             <Form.Group className="mb-2">
-              <Form.Label>New Password *</Form.Label>
+              <label className="auth-label">Verification Code *</label>
+              <Form.Control
+                type="text"
+                name="verification_code"
+                placeholder="Enter Verification Code"
+                value={fields?.verification_code || ""}
+                onChange={(event) =>
+                  setFields({
+                    ...fields,
+                    verification_code: event.target.value,
+                  })
+                }
+                isInvalid={!!errors?.verification_code}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors?.verification_code}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group className="mb-2">
+              <label className="fw-bold">New Password *</label>
               <Form.Control
                 autoComplete="off"
                 type="password"
@@ -152,7 +176,7 @@ export default function ForgotPasswordForm() {
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-2">
-              <Form.Label>Confirm Password *</Form.Label>
+              <label className="auth-label">Confirm Password *</label>
               <Form.Control
                 type="password"
                 name="password_confirmation"
@@ -171,25 +195,6 @@ export default function ForgotPasswordForm() {
                   {errors?.password_confirmation}
                 </Form.Control.Feedback>
               )}
-            </Form.Group>
-            <Form.Group className="mb-2">
-              <Form.Label>Verification Code *</Form.Label>
-              <Form.Control
-                type="text"
-                name="verification_code"
-                placeholder="Enter Verification Code"
-                value={fields?.verification_code || ""}
-                onChange={(event) =>
-                  setFields({
-                    ...fields,
-                    verification_code: event.target.value,
-                  })
-                }
-                isInvalid={!!errors?.verification_code}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors?.verification_code}
-              </Form.Control.Feedback>
             </Form.Group>
             <div className="d-grid mt-3">
               <Button

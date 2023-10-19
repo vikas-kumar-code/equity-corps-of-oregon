@@ -4,15 +4,13 @@ import LoginForm from "./LoginForm";
 export default async function Login() {
   await redirectToDashboard();
   return (
-    <div className="container-scroller">
-      <div className="container-fluid page-body-wrapper full-page-wrapper">
-        <div className="row w-100 m-0">
-          <div className="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
-            <div className="card col-lg-4 mx-auto">
-              <div className="card-body px-5 py-5">
-                <h3 className="card-title text-left mb-3">Login</h3>
-                <LoginForm />
-              </div>
+    <div className="container-scroller auth-bg">
+      <div className="page-body-wrapper">
+        <div className="d-flex justify-content-center align-items-center w-100">
+          <div className="auth-yellow-bg w-100 shadow" style={{ maxWidth:440, borderRadius:15 }}>
+            <div className="card-body p-5">
+              <h3 className="text-left mb-3 text-white fw-bold fs-3">ECO Provider Portal Login</h3>
+              <LoginForm />
             </div>
           </div>
         </div>
