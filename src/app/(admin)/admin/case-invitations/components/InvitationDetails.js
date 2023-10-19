@@ -112,19 +112,19 @@ const InvitationDetails = ({
                     <td width="30%">
                       <strong>Title</strong>
                     </td>
-                    <td>{record?.case?.title}</td>
+                    <td>{record?.case?.title || "N/A"}</td>
                   </tr>
                   <tr>
                     <td>
                       <strong>Case Number</strong>
                     </td>
-                    <td>{record?.case?.case_number}</td>
+                    <td>{record?.case?.case_number || "N/A"}</td>
                   </tr>
                   <tr>
                     <td>
                       <strong>Description</strong>
                     </td>
-                    <td>{record?.case?.description}</td>
+                    <td>{record?.case?.description || "N/A"}</td>
                   </tr>
                   <tr>
                     <td>
@@ -140,7 +140,7 @@ const InvitationDetails = ({
                     <td>
                       <strong>Added On</strong>
                     </td>
-                    <td>{moment(record?.sent_on).format("D MMM, YYYY")}</td>
+                    <td>{moment(record?.sent_on).format("D MMM, YYYY") || "N/A"}</td>
                   </tr>
                 </tbody>
               </table>
