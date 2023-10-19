@@ -37,18 +37,18 @@ const RecentAttorney = ({ records }) => {
                   <tr key={`attorney-${id}-${i}`}>
                     <td>
                       <div>{name}</div>
-                      <div>{email ?? "N/A"} </div>
+                      <div>{email || "N/A"} </div>
                     </td>
-                    <td> {phone ?? "N/A"} </td>
-                    <td> {address ?? "N/A"} </td>
+                    <td> {phone || "N/A"} </td>
+                    <td> {address || "N/A"} </td>
                   </tr>
                 );
               })}
               {(!records.recentAttorney ||
                 records.recentAttorney.length <= 0) && (
                 <tr>
-                  <td colSpan={4}>
-                    <h6 className="text-gray">No records available</h6>
+                  <td colSpan={3}>
+                    <h6 className="text-gray text-center">No records available</h6>
                   </td>
                 </tr>
               )}
