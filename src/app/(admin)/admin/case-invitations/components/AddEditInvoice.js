@@ -1,11 +1,9 @@
 import common from "@/utils/common";
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Row, Col, Form, FloatingLabel } from "react-bootstrap";
+import { Modal, Button, Row, Col, Form } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import { toast } from "react-toastify";
 import ListInvoices from "./ListInvoices";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import ViewInvoice from "../../cases/components/ViewInvoice";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";

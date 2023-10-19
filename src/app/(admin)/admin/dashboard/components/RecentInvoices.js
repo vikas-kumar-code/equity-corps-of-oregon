@@ -1,6 +1,6 @@
 import common from "@/utils/common";
 import React from "react";
-import { Badge, Card } from "react-bootstrap";
+import { Badge, Card, Spinner } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 
 const RecentInvoices = ({ records, loader }) => {
@@ -28,52 +28,49 @@ const RecentInvoices = ({ records, loader }) => {
       <Card>
         <Card.Body>
           <h4 className="card-title">Recent Invoices</h4>
-          <div className="table-responsive">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th> Name </th>
-                  <th> Total Amount </th>
-                  <th> Status </th>
-                </tr>
-              </thead>
-              <tbody>
-                {records.recentInvoices?.map((invoice, i) => {
-                  const {
-                    id,
-                    status,
-                    name,
-                    total_amount,
-                  } = invoice;
-                  return (
-                    <tr key={`invoice-${id}-${i}`}>
-                      <td>
-                        <span className="ps-2">{name}</span>
-                      </td>
-                      <td>{common.currencyFormat(total_amount, 2) ?? "N/A"}</td>
-                      <td>
-                        <Badge
-                          pill
-                          bg={btnStatus[invoice.status]?.bg || "info"}
-                          size="sm"
-                        >
-                          {btnStatus[invoice.status]?.label || "N/A"}
-                        </Badge>
+            <div className="table-responsive">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th> Name </th>
+                    <th> Total Amount </th>
+                    <th> Status </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {records.recentInvoices?.map((invoice, i) => {
+                    const { id, status, name, total_amount } = invoice;
+                    return (
+                      <tr key={`invoice-${id}-${i}`}>
+                        <td>
+                          <span className="ps-2">{name}</span>
+                        </td>
+                        <td>
+                          {common.currencyFormat(total_amount, 2) ?? "N/A"}
+                        </td>
+                        <td>
+                          <Badge
+                            pill
+                            bg={btnStatus[invoice.status]?.bg || "info"}
+                            size="sm"
+                          >
+                            {btnStatus[invoice.status]?.label || "N/A"}
+                          </Badge>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  {(!records.recentInvoices ||
+                    records.recentInvoices.length <= 0) && (
+                    <tr>
+                      <td colSpan={3}>
+                        <h6 className="text-gray">No records available</h6>
                       </td>
                     </tr>
-                  );
-                })}
-                {(!records.recentInvoices ||
-                  records.recentInvoices.length <= 0) && (
-                  <tr>
-                    <td colSpan={3}>
-                      <h6 className="text-gray">No records available</h6>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                  )}
+                </tbody>
+              </table>
+            </div>
         </Card.Body>
       </Card>
     </LoadingOverlay>

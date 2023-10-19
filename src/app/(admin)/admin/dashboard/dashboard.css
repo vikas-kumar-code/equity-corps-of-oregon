@@ -1,0 +1,11 @@
+.shimmer-card{
+    height: 120px;
+}
+.shimmer-card .card-body{
+    background-color: #E8E8E8;
+}
+
+.shimmer-table{
+    min-height: 40vh;
+    background-color: #E8E8E8;
+}
