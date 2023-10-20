@@ -9,11 +9,12 @@ export async function POST(request) {
       const createGroup = await prisma.groups.create({
         data: {
           name: data.name,
+          description: data?.description || "",
         },
       });
       if (createGroup) {
         response.success = true;
-        response.message = "Template added successfully.";
+        response.message = "A new group added successfully.";
       } else {
         response.error = true;
         response.message = "Something went wrong. please try again.";

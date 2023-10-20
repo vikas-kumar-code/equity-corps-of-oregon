@@ -17,36 +17,48 @@ import { toast } from "react-toastify";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useSearchParams } from "next/navigation";
 import AddEditGroup from "./AddEditGroup";
+import "../styles.css";
 
 export default function ListGroupsAndMembers() {
   const searchParams = useSearchParams();
   const [loader, setLoader] = useState(true);
-  const [records, setRecords] = useState([]);
-  const [recordOrder, setOrder] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [groupOrder, setGroupOrder] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [recordId, setRecordId] = useState(null);
+  const [groupData, setGroupData] = useState({});
   const [showSearchBox, setShowSearchBox] = useState(false);
   const searchFields = [{ label: "Question", type: "text", name: "question" }];
 
   const onDragEnd = (result) => {
+    console.log("################", result);
     const { source, destination, draggableId } = result;
-    if (!destination) return;
-    if (destination.index == source.index) return;
-    const t = records.filter(
-      (ele) => parseInt(ele.id) === parseInt(draggableId)
-    )[0];
 
-    const newList = [...records];
-    newList.splice(source.index, 1);
-    newList.splice(destination.index, 0, t);
-    setRecords(newList);
-    let recordOrder = newList.map((record, index) => {
-      return {
-        id: record.id,
-        sequence: index,
-      };
-    });
-    setOrder(recordOrder);
+    if (!destination) {
+      return;
+    } else if (
+      destination.droppableId == source.droppableId &&
+      source.droppableId == "groups-container" &&
+      destination.index !== source.index
+    ) {
+      const activeId = draggableId.replace(/[^1-9]/g, "");
+      const activeRecord = groups.filter(
+        (ele) => parseInt(ele.id) === parseInt(activeId)
+      )[0];
+      const newList = [...groups];
+      newList.splice(source.index, 1);
+      newList.splice(destination.index, 0, activeRecord);
+      setGroups(newList);
+      let groupOrder = newList.map((record, index) => {
+        return {
+          id: record.id,
+          sequence: index,
+        };
+      });
+      setGroupOrder(groupOrder);
+    } else {
+      return;
+    }
   };
 
   const getRecord = (recordId = null) => {
@@ -54,14 +66,11 @@ export default function ListGroupsAndMembers() {
     setShowModal(true);
   };
 
-  const getRecords = async () => {
-    let REQUEST_URI = common.apiPath(
-      `/admin/questions?${searchParams.toString()}`
-    );
-    fetch(REQUEST_URI)
+  const getGroups = async () => {
+    fetch(common.apiPath(`/admin/groups`))
       .then((response) => response.json())
-      .then((data) => {
-        setRecords(data.records);
+      .then((response) => {
+        setGroups(response.records);
       })
       .catch((error) => {
         toast.error(error.message);
@@ -69,16 +78,34 @@ export default function ListGroupsAndMembers() {
       .finally(() => setLoader(false));
   };
 
-  const saveOrder = async () => {
-    fetch(common.apiPath(`/admin/questions/save/sequence`), {
+  const getUsers = async () => {
+    setLoader(true);
+    fetch(common.apiPath(`/admin/users`))
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          setUsers(response.records);
+        } else if (response.error) {
+          toast.error(response.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => setLoader(false));
+  };
+
+  const saveGroupSequence = async () => {
+    fetch(common.apiPath(`/admin/groups/save/sequence`), {
       method: "POST",
-      body: JSON.stringify({ orders: recordOrder }),
+      body: JSON.stringify({ orders: groupOrder }),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
           toast.success(data.message);
         } else if (data.error) {
+          toast.error(data.message);
         }
       })
       .catch((error) => {
@@ -88,22 +115,22 @@ export default function ListGroupsAndMembers() {
   };
 
   useEffect(() => {
-    if (recordOrder && recordOrder?.length > 0) {
-      saveOrder();
+    if (groupOrder && groupOrder?.length > 0) {
+      saveGroupSequence();
     }
-  }, [recordOrder]);
+  }, [groupOrder]);
 
-  const deleteRecord = async (id) => {
-    if (window.confirm("Are you sure to delete this question?")) {
+  const deleteGroup = async (id) => {
+    if (window.confirm("Are you sure to delete this group?")) {
       setLoader(true);
-      fetch(common.apiPath(`/admin/questions/delete/${id}`), {
+      fetch(common.apiPath(`/admin/group/delete/${id}`), {
         method: "DELETE",
       })
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
             toast.success(response.message);
-            getRecords();
+            getGroups();
           } else if (response.error) {
             toast.error(response.message);
           }
@@ -116,8 +143,9 @@ export default function ListGroupsAndMembers() {
   };
 
   useEffect(() => {
-    getRecords();
-  }, [searchParams]);
+    getGroups();
+    getUsers();
+  }, []);
 
   return (
     <div>
@@ -149,169 +177,113 @@ export default function ListGroupsAndMembers() {
         col={6}
       />
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided) => (
-            <Row {...provided.droppableProps} ref={provided.innerRef}>
-              <Col md={6}>
-                <Card>
-                  <Card.Body>
-                    <Card.Title className="fw-bold fs-6 text-secondary">
-                      Users
-                    </Card.Title>
-                    <div className="table-responsive table-borderless">
-                      <table className="table">
-                        <thead>
-                          <tr>
-                            <th>#</th>
-                            <th>Name </th>
-                            <th colSpan={2}>Email</th>
-                          </tr>
-                        </thead>
-                        <Droppable droppableId="droppable">
+        <Row>
+          <Col md={6}>
+            <Card>
+              <Card.Body>
+                <Card.Title className="fw-bold fs-6 text-secondary">
+                  Users
+                </Card.Title>
+                <Droppable droppableId="users-container" key="users-container">
+                  {(provided) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                      {users?.map((record, index) => (
+                        <Draggable
+                          key={`user-${record.id}`}
+                          draggableId={`user-${record.id}`}
+                          index={index}
+                        >
                           {(provided) => (
-                            <tbody
-                              {...provided.droppableProps}
+                            <Row
+                              key={`{user-row-${index}}`}
                               ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className="drag-user-box"
                             >
-                              {records?.map((record, index) => (
-                                <Draggable
-                                  key={record.id}
-                                  draggableId={`${record.id}`}
-                                  index={index}
-                                >
-                                  {(provided) => (
-                                    <tr
-                                      key={`{row-${index}}`}
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                    >
-                                      <td>{Number(index + 1)}.</td>
-                                      <td>{record.question}</td>
-                                      <td className="px-1">
-                                        <DropdownButton
-                                          as={ButtonGroup}
-                                          key="action-1"
-                                          id={`action-btn-1`}
-                                          variant="primary"
-                                          title="Action"
-                                          align="end"
-                                        >
-                                          <Dropdown.Item
-                                            eventKey="1"
-                                            onClick={() => getRecord(record.id)}
-                                          >
-                                            <span className="mdi mdi-pencil"></span>
-                                            Edit
-                                          </Dropdown.Item>
-                                          <Dropdown.Item
-                                            eventKey="2"
-                                            onClick={() =>
-                                              deleteRecord(record.id)
-                                            }
-                                          >
-                                            <span className="mdi mdi-delete"></span>
-                                            Delete
-                                          </Dropdown.Item>
-                                        </DropdownButton>
-                                      </td>
-                                    </tr>
-                                  )}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
-                            </tbody>
+                              <Col className="">{record.name}</Col>
+                              <Col>{record.email}</Col>
+                            </Row>
                           )}
-                        </Droppable>
-                      </table>
+                        </Draggable>
+                      ))}
                     </div>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col md={6}>
-                <Card>
-                  <Card.Body>
-                    <Card.Title className="fw-bold fs-6 text-secondary">
-                      Groups
-                    </Card.Title>
-                    <div className="table-responsive table-borderless">
-                      <table className="table">
-                        <thead>
-                          <tr>
-                            <th>#</th>
-                            <th>Name </th>
-                            <th colSpan={2}>Action</th>
-                          </tr>
-                        </thead>
-                        <Droppable droppableId="droppable">
+                  )}
+                </Droppable>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={6}>
+            <Card>
+              <Card.Body>
+                <Card.Title className="fw-bold fs-6 text-secondary">
+                  Groups
+                </Card.Title>
+                <Droppable
+                  droppableId="groups-container"
+                  key="groups-container"
+                >
+                  {(provided) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                      {groups?.map((record, index) => (
+                        <Draggable
+                          key={`group-${record.id}`}
+                          draggableId={`group-${record.id}`}
+                          index={index}
+                        >
                           {(provided) => (
-                            <tbody
-                              {...provided.droppableProps}
+                            <Card
+                              className="group-box"
+                              key={`{group-row-${index}}`}
                               ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
                             >
-                              {records?.map((record, index) => (
-                                <Draggable
-                                  key={record.id}
-                                  draggableId={`${record.id}`}
-                                  index={index}
-                                >
-                                  {(provided) => (
-                                    <tr
-                                      key={`{row-${index}}`}
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                    >
-                                      <td>{Number(index + 1)}.</td>
-                                      <td>{record.question}</td>
-                                      <td className="px-1">
-                                        <DropdownButton
-                                          as={ButtonGroup}
-                                          key="action-1"
-                                          id={`action-btn-1`}
-                                          variant="primary"
-                                          title="Action"
-                                          align="end"
-                                        >
-                                          <Dropdown.Item
-                                            eventKey="1"
-                                            onClick={() => getRecord(record.id)}
-                                          >
-                                            <span className="mdi mdi-pencil"></span>
-                                            Edit
-                                          </Dropdown.Item>
-                                          <Dropdown.Item
-                                            eventKey="2"
-                                            onClick={() =>
-                                              deleteRecord(record.id)
-                                            }
-                                          >
-                                            <span className="mdi mdi-delete"></span>
-                                            Delete
-                                          </Dropdown.Item>
-                                        </DropdownButton>
-                                      </td>
-                                    </tr>
-                                  )}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
-                            </tbody>
+                              <Droppable
+                                droppableId="group-item-container"
+                                key="group-item-container"
+                              >
+                                {(provided, snapshot) => (
+                                  <Card.Body
+                                    {...provided.droppableProps}
+                                    ref={provided.innerRef}
+                                    style={
+                                      snapshot.isDraggingOver
+                                        ? {
+                                            height: 500,
+                                            width: 500,
+                                          }
+                                        : null
+                                    }
+                                  >
+                                    <Card.Title>{record.name}</Card.Title>
+                                    <Card.Text>{record.description}</Card.Text>
+                                    {record.group_members.map((item) => {
+                                      return <span>{item.name}</span>;
+                                    })}
+                                  </Card.Body>
+                                )}
+                              </Droppable>
+                            </Card>
                           )}
-                        </Droppable>
-                      </table>
+                        </Draggable>
+                      ))}
                     </div>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
-          )}
-        </Droppable>
+                  )}
+                </Droppable>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
       </DragDropContext>
       {showModal && (
         <AddEditGroup
+          data={groupData}
           showModal={showModal}
-          closeModal={() => setShowModal(false)}
+          closeModal={() => {
+            setShowModal(false);
+            setGroupData({});
+          }}
         />
       )}
     </div>

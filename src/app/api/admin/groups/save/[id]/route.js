@@ -12,6 +12,7 @@ export async function PUT(request, data) {
           where: { id: recordId },
           data: {
             name: fields.name,
+            description: fields?.description || "",
           },
         });
         if (updateGroup) {

@@ -1,17 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Modal, Spinner, FloatingLabel, Form } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
 LoadingOverlay.propTypes = undefined;
 
-export default function AddEditGroup({
-  recordId,
-  data,
-  showModal,
-  closeModal,
-}) {
+export default function AddEditGroup({ data, showModal, closeModal }) {
   const [fields, setFields] = useState(data || {});
   const [error, setError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
@@ -23,8 +18,8 @@ export default function AddEditGroup({
       setSubmitted(true);
       let REQUEST_URI = common.apiPath(`/admin/groups/save`);
       let REQUEST_METHOD = "POST";
-      if (props.recordId) {
-        REQUEST_URI = common.apiPath(`/admin/groups/save/${props.recordId}`);
+      if (data?.id) {
+        REQUEST_URI = common.apiPath(`/admin/groups/save/${data?.id}`);
         REQUEST_METHOD = "PUT";
       }
       await fetch(REQUEST_URI, {
@@ -35,7 +30,7 @@ export default function AddEditGroup({
         .then((response) => {
           if (response.success) {
             toast.success(response.message);
-            props.closeModal();
+            closeModal();
             // props.reloadRecords();
           } else if (response.error) {
             toast.error(response.message);
@@ -52,8 +47,8 @@ export default function AddEditGroup({
 
   return (
     <Modal
-      show={props.showModal}
-      onHide={props.closeModal}
+      show={showModal}
+      onHide={closeModal}
       backdrop="static"
       keyboard={false}
       centered
@@ -61,7 +56,7 @@ export default function AddEditGroup({
     >
       <Form onSubmit={handleSubmit} autoComplete="off">
         <Modal.Header closeButton>
-          <h3>{props.recordId ? "Update" : "Add"} Group</h3>
+          <h3>{data?.id ? "Update" : "Add"} Group</h3>
         </Modal.Header>
         <Modal.Body>
           <FloatingLabel
@@ -82,13 +77,31 @@ export default function AddEditGroup({
               {error}
             </Form.Control.Feedback>
           </FloatingLabel>
+
+          <FloatingLabel
+            controlId="floatingInput"
+            label="Enter short description (optional)"
+            className="mb-3"
+          >
+            <Form.Control
+              as="textarea"
+              style={{height:100}}
+              rows={6}
+              name="description"
+              placeholder="Enter short description (optional)"
+              onChange={(event) =>
+                setFields({ ...fields, description: event.target.value })
+              }
+              value={fields.description || ""}
+            />
+          </FloatingLabel>
         </Modal.Body>
         <Modal.Footer>
           <Button
             variant="danger"
             type="button"
             disabled={submitted}
-            onClick={props.closeModal}
+            onClick={closeModal}
             size="lg"
           >
             Cancel
