@@ -24,7 +24,7 @@ const RecentInvoices = ({ records }) => {
 
   return (
     <Card>
-      <Card.Body style={{minHeight: "443px"}}>
+      <Card.Body style={{minHeight: "62vh"}}>
         <h4 className="card-title">Recent Invoices</h4>
         <div className="table-responsive">
           <table className="table">

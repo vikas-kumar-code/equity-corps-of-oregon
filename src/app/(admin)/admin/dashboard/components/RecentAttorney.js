@@ -5,7 +5,7 @@ import { Button, Card, Col, Row } from "react-bootstrap";
 const RecentAttorney = ({ records }) => {
   return (
     <Card>
-      <Card.Body style={{ minHeight: "443px" }}>
+      <Card.Body style={{ minHeight: "62vh" }}>
         <Row>
           <Col>
             <h4 className="card-title">Recent Attorney</h4>
