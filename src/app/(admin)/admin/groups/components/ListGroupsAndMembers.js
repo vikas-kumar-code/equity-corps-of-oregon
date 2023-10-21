@@ -31,31 +31,19 @@ export default function ListGroupsAndMembers() {
   const searchFields = [{ label: "Question", type: "text", name: "question" }];
 
   const onDragEnd = (result) => {
-    console.log("################", result);
-    const { source, destination, draggableId } = result;
-
+    const { source, destination } = result;
+    // dropped outside the list
     if (!destination) {
       return;
-    } else if (
-      destination.droppableId == source.droppableId &&
-      source.droppableId == "groups-container" &&
-      destination.index !== source.index
-    ) {
-      const activeId = draggableId.replace(/[^1-9]/g, "");
-      const activeRecord = groups.filter(
-        (ele) => parseInt(ele.id) === parseInt(activeId)
-      )[0];
-      const newList = [...groups];
-      newList.splice(source.index, 1);
-      newList.splice(destination.index, 0, activeRecord);
-      setGroups(newList);
-      let groupOrder = newList.map((record, index) => {
-        return {
-          id: record.id,
-          sequence: index,
-        };
-      });
-      setGroupOrder(groupOrder);
+    } else if (source.droppableId !== destination.droppableId) {
+      const index = Number(destination.droppableId.replace(/[^0-9]/g, ""));
+      const newGroups = JSON.parse(JSON.stringify(groups));
+      newGroups[index].group_members = [
+        ...newGroups[index].group_members,
+        users[source.index],
+      ];
+      setGroups(newGroups);
+      setUsers(users);
     } else {
       return;
     }
@@ -178,32 +166,59 @@ export default function ListGroupsAndMembers() {
       />
       <DragDropContext onDragEnd={onDragEnd}>
         <Row>
-          <Col md={6}>
+          <Col md={4}>
             <Card>
               <Card.Body>
                 <Card.Title className="fw-bold fs-6 text-secondary">
                   Users
                 </Card.Title>
-                <Droppable droppableId="users-container" key="users-container">
-                  {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                <Droppable
+                  droppableId="users-container"
+                  key="users-container"
+                  isDropDisabled={true}
+                >
+                  {(provided, snapshot) => (
+                    <div ref={provided.innerRef}>
                       {users?.map((record, index) => (
                         <Draggable
                           key={`user-${record.id}`}
                           draggableId={`user-${record.id}`}
                           index={index}
                         >
-                          {(provided) => (
-                            <Row
-                              key={`{user-row-${index}}`}
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              className="drag-user-box"
-                            >
-                              <Col className="">{record.name}</Col>
-                              <Col>{record.email}</Col>
-                            </Row>
+                          {(provided, snapshot) => (
+                            <>
+                              <Row
+                                key={`{user-row-${index}}`}
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={`drag-user-box ${
+                                  snapshot.isDragging ? "active-drag" : ""
+                                }`}
+                              >
+                                <Col md={12}>
+                                  <span class="mdi mdi-account-circle-outline"></span>
+                                  <h3 className="user-name">{record.name}</h3>
+                                  <span className="user-email">
+                                    {record.email}
+                                  </span>
+                                </Col>
+                              </Row>
+                              {snapshot.isDragging && (
+                                <Row
+                                  key={`{user-row-copy-${index}}`}
+                                  className="drag-user-box dnd-copy"
+                                >
+                                  <Col md={12}>
+                                    <span class="mdi mdi-account-circle-outline"></span>
+                                    <h3 className="user-name">{record.name}</h3>
+                                    <span className="user-email">
+                                      {record.email}
+                                    </span>
+                                  </Col>
+                                </Row>
+                              )}
+                            </>
                           )}
                         </Draggable>
                       ))}
@@ -213,64 +228,56 @@ export default function ListGroupsAndMembers() {
               </Card.Body>
             </Card>
           </Col>
-          <Col md={6}>
+          <Col md={8}>
             <Card>
               <Card.Body>
                 <Card.Title className="fw-bold fs-6 text-secondary">
                   Groups
                 </Card.Title>
-                <Droppable
-                  droppableId="groups-container"
-                  key="groups-container"
-                >
-                  {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
-                      {groups?.map((record, index) => (
-                        <Draggable
-                          key={`group-${record.id}`}
-                          draggableId={`group-${record.id}`}
-                          index={index}
-                        >
-                          {(provided) => (
-                            <Card
-                              className="group-box"
-                              key={`{group-row-${index}}`}
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            >
-                              <Droppable
-                                droppableId="group-item-container"
-                                key="group-item-container"
-                              >
-                                {(provided, snapshot) => (
-                                  <Card.Body
-                                    {...provided.droppableProps}
-                                    ref={provided.innerRef}
-                                    style={
-                                      snapshot.isDraggingOver
-                                        ? {
-                                            height: 500,
-                                            width: 500,
-                                          }
-                                        : null
-                                    }
-                                  >
-                                    <Card.Title>{record.name}</Card.Title>
-                                    <Card.Text>{record.description}</Card.Text>
-                                    {record.group_members.map((item) => {
-                                      return <span>{item.name}</span>;
-                                    })}
-                                  </Card.Body>
-                                )}
-                              </Droppable>
-                            </Card>
+                {groups?.map((record, index) => (
+                  <Droppable
+                    droppableId={"group-container-" + index}
+                    key={"group-container-" + index}
+                  >
+                    {(provided, snapshot) => (
+                      <Card
+                        className="group-box"
+                        key={`{group-row-${index}}`}
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                      >
+                        <div className="group-info">
+                          <Button variant="link" className="group-edit">
+                            <span class="mdi mdi-playlist-edit mdi-icon"></span>
+                          </Button>
+                          <h3>
+                            <span class="mdi mdi-account-group-outline group-icon"></span>
+                            {record.name}
+                          </h3>
+                          <p>
+                            React-Bootstrap automatically generates an id for
+                            some components (such as DropdownToggle) if they are
+                            not provided. This is done for accessibility
+                            purposes.
+                          </p>
+                        </div>
+                        <Row className="group-members">
+                          {record.group_members.length ? (
+                            record.group_members.map((item) => {
+                              return <span>{item.name}</span>;
+                            })
+                          ) : (
+                            <Col className="text-center py-5">
+                              <h6 className="text-secondary m-0">
+                                Drop members here
+                              </h6>
+                            </Col>
                           )}
-                        </Draggable>
-                      ))}
-                    </div>
-                  )}
-                </Droppable>
+                        </Row>
+                      </Card>
+                    )}
+                  </Droppable>
+                ))}
               </Card.Body>
             </Card>
           </Col>
