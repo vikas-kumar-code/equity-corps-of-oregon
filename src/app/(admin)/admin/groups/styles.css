@@ -1,8 +1,12 @@
 .dnd-copy ~ div {
   transform: none !important;
 }
-.active-drag{
-  border:2px #4d8cf1 dashed !important;
+.active-drag {
+  border: 2px #26a22a dashed !important;
+}
+
+.active-group {
+  border: 2px #4d8cf1 dashed !important;
 }
 
 .drag-user-box {
@@ -20,7 +24,7 @@
   background-color: #f0edff;
 }
 
-.drag-user-box .mdi {
+.drag-user-box .user-icon {
   font-size: 40px;
   float: left;
   margin-right: 8px;
@@ -42,8 +46,8 @@
   font-size: 24px;
 }
 
-.group-edit{
-  float:right;
+.group-edit {
+  float: right;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,7 +59,8 @@
   border-radius: 50%;
 }
 
-.group-edit:hover, .group-edit:active{
+.group-edit:hover,
+.group-edit:active {
   background-color: #4d8cf1;
   color: white;
 }
@@ -97,4 +102,49 @@
   color: white !important;
   font-size: 18px;
   font-weight: 600;
+}
+
+.group-member {
+  border: 1px solid #e6e6e6;
+  background-color: #faf9ff;
+  border-radius: 6px;
+  padding: 5px;
+  padding-bottom: 0;
+  margin: 10px;
+  position: relative;
+}
+
+.group-member .user-icon {
+  font-size: 40px;
+  float: left;
+  margin-right: 8px;
+  color: #484848;
+}
+
+.group-member .user-name {
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.group-member .user-email {
+  font-size: 15px;
+  color: #5d5d5d;
+}
+
+.remove-user {
+  display: flex;
+  height: 30px;
+  width: 30px;
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 10px;
+  top: 25%;
+}
+
+.remove-user-icon {
+  font-size: 23px;
+  height: 22px;
 }

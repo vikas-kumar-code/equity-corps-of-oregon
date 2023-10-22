@@ -6,7 +6,13 @@ import common from "@/utils/common";
 import { toast } from "react-toastify";
 LoadingOverlay.propTypes = undefined;
 
-export default function AddEditGroup({ data, showModal, closeModal }) {
+export default function AddEditGroup({
+  data,
+  showModal,
+  closeModal,
+  getGroups,
+  deleteGroup,
+}) {
   const [fields, setFields] = useState(data || {});
   const [error, setError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
@@ -31,7 +37,7 @@ export default function AddEditGroup({ data, showModal, closeModal }) {
           if (response.success) {
             toast.success(response.message);
             closeModal();
-            // props.reloadRecords();
+            getGroups();
           } else if (response.error) {
             toast.error(response.message);
           }
@@ -56,18 +62,18 @@ export default function AddEditGroup({ data, showModal, closeModal }) {
     >
       <Form onSubmit={handleSubmit} autoComplete="off">
         <Modal.Header closeButton>
-          <h3>{data?.id ? "Update" : "Add"} Group</h3>
+          <h3>{data?.id ? "Edit" : "Add"} Group</h3>
         </Modal.Header>
         <Modal.Body>
           <FloatingLabel
             controlId="floatingInput"
-            label="Enter group name"
+            label="Group Name"
             className="mb-3"
           >
             <Form.Control
               type="text"
               name="name"
-              placeholder="Enter group name"
+              placeholder="Group Name"
               onChange={(event) =>
                 setFields({ ...fields, name: event.target.value })
               }
@@ -80,15 +86,15 @@ export default function AddEditGroup({ data, showModal, closeModal }) {
 
           <FloatingLabel
             controlId="floatingInput"
-            label="Enter short description (optional)"
+            label="Short Description (Optional)"
             className="mb-3"
           >
             <Form.Control
               as="textarea"
-              style={{height:100}}
+              style={{ height: 100 }}
               rows={6}
               name="description"
-              placeholder="Enter short description (optional)"
+              placeholder="Short Description (Optional)"
               onChange={(event) =>
                 setFields({ ...fields, description: event.target.value })
               }
@@ -97,8 +103,19 @@ export default function AddEditGroup({ data, showModal, closeModal }) {
           </FloatingLabel>
         </Modal.Body>
         <Modal.Footer>
+          {data?.id && (
+            <Button
+              variant="danger"
+              type="button"
+              disabled={submitted}
+              onClick={() => deleteGroup(fields.id)}
+              size="lg"
+            >
+              Delete
+            </Button>
+          )}
           <Button
-            variant="danger"
+            variant="secondary"
             type="button"
             disabled={submitted}
             onClick={closeModal}

@@ -1,34 +1,36 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  Row,
-  Col,
-  Button,
-  DropdownButton,
-  ButtonGroup,
-  Dropdown,
-} from "react-bootstrap";
+import { Card, Row, Col, Button } from "react-bootstrap";
 import SearchBox from "@/app/components/SearchBox";
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { useSearchParams } from "next/navigation";
 import AddEditGroup from "./AddEditGroup";
 import "../styles.css";
+import LoadingOverlay from "react-loading-overlay";
+
+function randomAlphabets() {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let code = "";
+  for (let i = 0; i < 4; i++) {
+    const randomIndex = Math.floor(Math.random() * alphabet.length);
+    code += alphabet[randomIndex];
+  }
+  return code;
+}
 
 export default function ListGroupsAndMembers() {
-  const searchParams = useSearchParams();
-  const [loader, setLoader] = useState(true);
+  const [groupsLoader, setGroupsLoader] = useState(false);
+  const [usersLoader, setUsersLoader] = useState(false);
   const [groups, setGroups] = useState([]);
   const [users, setUsers] = useState([]);
-  const [groupOrder, setGroupOrder] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [groupData, setGroupData] = useState({});
   const [showSearchBox, setShowSearchBox] = useState(false);
   const searchFields = [{ label: "Question", type: "text", name: "question" }];
+  const [randomCode, setRandomCode] = useState(randomAlphabets());
 
   const onDragEnd = (result) => {
     const { source, destination } = result;
@@ -36,8 +38,10 @@ export default function ListGroupsAndMembers() {
     if (!destination) {
       return;
     } else if (source.droppableId !== destination.droppableId) {
+      setRandomCode(randomAlphabets());
       const index = Number(destination.droppableId.replace(/[^0-9]/g, ""));
       const newGroups = JSON.parse(JSON.stringify(groups));
+
       newGroups[index].group_members = [
         ...newGroups[index].group_members,
         users[source.index],
@@ -49,12 +53,8 @@ export default function ListGroupsAndMembers() {
     }
   };
 
-  const getRecord = (recordId = null) => {
-    setRecordId(recordId);
-    setShowModal(true);
-  };
-
   const getGroups = async () => {
+    setGroupsLoader(true);
     fetch(common.apiPath(`/admin/groups`))
       .then((response) => response.json())
       .then((response) => {
@@ -63,11 +63,11 @@ export default function ListGroupsAndMembers() {
       .catch((error) => {
         toast.error(error.message);
       })
-      .finally(() => setLoader(false));
+      .finally(() => setGroupsLoader(false));
   };
 
   const getUsers = async () => {
-    setLoader(true);
+    setUsersLoader(true);
     fetch(common.apiPath(`/admin/users`))
       .then((response) => response.json())
       .then((response) => {
@@ -80,38 +80,14 @@ export default function ListGroupsAndMembers() {
       .catch((error) => {
         toast.error(error.message);
       })
-      .finally(() => setLoader(false));
+      .finally(() => setUsersLoader(false));
   };
-
-  const saveGroupSequence = async () => {
-    fetch(common.apiPath(`/admin/groups/save/sequence`), {
-      method: "POST",
-      body: JSON.stringify({ orders: groupOrder }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          toast.success(data.message);
-        } else if (data.error) {
-          toast.error(data.message);
-        }
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      })
-      .finally(() => setLoader(false));
-  };
-
-  useEffect(() => {
-    if (groupOrder && groupOrder?.length > 0) {
-      saveGroupSequence();
-    }
-  }, [groupOrder]);
 
   const deleteGroup = async (id) => {
     if (window.confirm("Are you sure to delete this group?")) {
-      setLoader(true);
-      fetch(common.apiPath(`/admin/group/delete/${id}`), {
+      setGroupsLoader(true);
+      setShowModal(false);
+      fetch(common.apiPath(`/admin/groups/delete/${id}`), {
         method: "DELETE",
       })
         .then((response) => response.json())
@@ -126,8 +102,33 @@ export default function ListGroupsAndMembers() {
         .catch((error) => {
           toast.error(error.message);
         })
-        .finally(() => setLoader(false));
+        .finally(() => setGroupsLoader(false));
     }
+  };
+
+  const removeMember = (groupIndex, memberIndex) => {
+    let copyGroups = JSON.parse(JSON.stringify(groups));
+    copyGroups[groupIndex].group_members = copyGroups[
+      groupIndex
+    ].group_members.filter((item, index) => index !== memberIndex);
+    setGroups(copyGroups);
+    setGroupsLoader(true);
+    fetch(common.apiPath(`/admin/groups/remove-member/${id}`), {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          toast.success(response.message);
+          getGroups();
+        } else if (response.error) {
+          toast.error(response.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => setGroupsLoader(false));
   };
 
   useEffect(() => {
@@ -167,119 +168,157 @@ export default function ListGroupsAndMembers() {
       <DragDropContext onDragEnd={onDragEnd}>
         <Row>
           <Col md={4}>
-            <Card>
-              <Card.Body>
-                <Card.Title className="fw-bold fs-6 text-secondary">
-                  Users
-                </Card.Title>
-                <Droppable
-                  droppableId="users-container"
-                  key="users-container"
-                  isDropDisabled={true}
-                >
-                  {(provided, snapshot) => (
-                    <div ref={provided.innerRef}>
-                      {users?.map((record, index) => (
-                        <Draggable
-                          key={`user-${record.id}`}
-                          draggableId={`user-${record.id}`}
-                          index={index}
-                        >
-                          {(provided, snapshot) => (
-                            <>
-                              <Row
-                                key={`{user-row-${index}}`}
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className={`drag-user-box ${
-                                  snapshot.isDragging ? "active-drag" : ""
-                                }`}
-                              >
-                                <Col md={12}>
-                                  <span class="mdi mdi-account-circle-outline"></span>
-                                  <h3 className="user-name">{record.name}</h3>
-                                  <span className="user-email">
-                                    {record.email}
-                                  </span>
-                                </Col>
-                              </Row>
-                              {snapshot.isDragging && (
+            <LoadingOverlay active={usersLoader} spinner>
+              <Card>
+                <Card.Body>
+                  <Card.Title className="fw-bold fs-6 text-secondary">
+                    Users
+                  </Card.Title>
+                  <Droppable
+                    droppableId="users-container"
+                    key="users-container"
+                    isDropDisabled={true}
+                  >
+                    {(provided, snapshot) => (
+                      <div ref={provided.innerRef}>
+                        {users?.map((record, index) => (
+                          <Draggable
+                            key={`user-${randomCode}-${record.id}`}
+                            draggableId={`user-${randomCode}-${record.id}`}
+                            index={index}
+                          >
+                            {(provided, snapshot) => (
+                              <>
                                 <Row
-                                  key={`{user-row-copy-${index}}`}
-                                  className="drag-user-box dnd-copy"
+                                  key={`{user-row-${index}}`}
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className={`drag-user-box ${
+                                    snapshot.isDragging ? "active-drag" : ""
+                                  }`}
                                 >
                                   <Col md={12}>
-                                    <span class="mdi mdi-account-circle-outline"></span>
+                                    <span class="mdi mdi-account-circle-outline user-icon"></span>
                                     <h3 className="user-name">{record.name}</h3>
                                     <span className="user-email">
                                       {record.email}
                                     </span>
                                   </Col>
                                 </Row>
-                              )}
-                            </>
-                          )}
-                        </Draggable>
-                      ))}
-                    </div>
-                  )}
-                </Droppable>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col md={8}>
-            <Card>
-              <Card.Body>
-                <Card.Title className="fw-bold fs-6 text-secondary">
-                  Groups
-                </Card.Title>
-                {groups?.map((record, index) => (
-                  <Droppable
-                    droppableId={"group-container-" + index}
-                    key={"group-container-" + index}
-                  >
-                    {(provided, snapshot) => (
-                      <Card
-                        className="group-box"
-                        key={`{group-row-${index}}`}
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                      >
-                        <div className="group-info">
-                          <Button variant="link" className="group-edit">
-                            <span class="mdi mdi-playlist-edit mdi-icon"></span>
-                          </Button>
-                          <h3>
-                            <span class="mdi mdi-account-group-outline group-icon"></span>
-                            {record.name}
-                          </h3>
-                          <p>
-                            React-Bootstrap automatically generates an id for
-                            some components (such as DropdownToggle) if they are
-                            not provided. This is done for accessibility
-                            purposes.
-                          </p>
-                        </div>
-                        <Row className="group-members">
-                          {record.group_members.length ? (
-                            record.group_members.map((item) => {
-                              return <span>{item.name}</span>;
-                            })
-                          ) : (
-                            <Col className="text-center py-5">
-                              <h6 className="text-secondary m-0">
-                                Drop members here
-                              </h6>
-                            </Col>
-                          )}
-                        </Row>
-                      </Card>
+                                {snapshot.isDragging && (
+                                  <Row
+                                    key={`{user-row-copy-${index}}`}
+                                    className="drag-user-box dnd-copy"
+                                  >
+                                    <Col md={12}>
+                                      <span class="mdi mdi-account-circle-outline user-icon"></span>
+                                      <h3 className="user-name">
+                                        {record.name}
+                                      </h3>
+                                      <span className="user-email">
+                                        {record.email}
+                                      </span>
+                                    </Col>
+                                  </Row>
+                                )}
+                              </>
+                            )}
+                          </Draggable>
+                        ))}
+                      </div>
                     )}
                   </Droppable>
-                ))}
-              </Card.Body>
-            </Card>
+                </Card.Body>
+              </Card>
+            </LoadingOverlay>
+          </Col>
+          <Col md={8}>
+            <LoadingOverlay active={groupsLoader} spinner>
+              <Card>
+                <Card.Body>
+                  <Card.Title className="fw-bold fs-6 text-secondary">
+                    Groups
+                  </Card.Title>
+                  {groups?.map((record, index) => (
+                    <Droppable
+                      droppableId={"group-container-" + index}
+                      key={"group-container-" + index}
+                    >
+                      {(provided, snapshot) => (
+                        <Card
+                          className="group-box"
+                          key={`{group-row-${index}}`}
+                        >
+                          <div className="group-info">
+                            <Button
+                              variant="link"
+                              className="group-edit"
+                              onClick={() => {
+                                setShowModal(true);
+                                setGroupData(record);
+                              }}
+                            >
+                              <span class="mdi mdi-playlist-edit mdi-icon"></span>
+                            </Button>
+                            <h3>
+                              <span class="mdi mdi-account-group-outline group-icon"></span>
+                              {record.name}
+                            </h3>
+                            <p>{record.description}</p>
+                          </div>
+                          <div
+                            {...provided.droppableProps}
+                            ref={provided.innerRef}
+                            className={
+                              "w-100 group-members " +
+                              (snapshot.isDraggingOver ? "active-group" : "")
+                            }
+                          >
+                            {record.group_members.length ? (
+                              record.group_members.map(
+                                (member, memberIndex) => {
+                                  return (
+                                    <Row
+                                      key={`{member-${memberIndex}}`}
+                                      className="group-member"
+                                    >
+                                      <div className="col-10">
+                                        <span class="mdi mdi-account-circle-outline user-icon"></span>
+                                        <h6 className="user-name">
+                                          {member.name}
+                                        </h6>
+                                        <span md={3} className="user-email">
+                                          {member.email}
+                                        </span>
+                                      </div>
+                                      <Button
+                                        variant="danger rounded-circle remove-user"
+                                        onClick={() =>
+                                          removeMember(index, memberIndex)
+                                        }
+                                      >
+                                        <span class="mdi mdi-delete-circle-outline remove-user-icon"></span>
+                                      </Button>
+                                    </Row>
+                                  );
+                                }
+                              )
+                            ) : (
+                              <Col className="text-center py-5">
+                                <h6 className="text-secondary m-0">
+                                  Drop members here
+                                </h6>
+                              </Col>
+                            )}
+                          </div>
+                        </Card>
+                      )}
+                    </Droppable>
+                  ))}
+                </Card.Body>
+              </Card>
+            </LoadingOverlay>
           </Col>
         </Row>
       </DragDropContext>
@@ -291,6 +330,8 @@ export default function ListGroupsAndMembers() {
             setShowModal(false);
             setGroupData({});
           }}
+          getGroups={getGroups}
+          deleteGroup={deleteGroup}
         />
       )}
     </div>

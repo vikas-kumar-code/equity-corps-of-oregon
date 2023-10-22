@@ -5,7 +5,7 @@ export async function PUT(request, data) {
   let response = {};
   const recordId = Number(data.params.id);
   try {
-    if (groupId) {
+    if (recordId) {
       const fields = await request.json();
       if (fields?.name) {
         const updateGroup = await prisma.groups.update({
