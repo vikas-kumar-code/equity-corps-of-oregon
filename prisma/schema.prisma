@@ -273,7 +273,6 @@ model group_members {
   id       Int      @id @default(autoincrement())
   group_id Int
   user_id  Int
-  name     String?  @db.Text()
   added_on DateTime @default(now())
   groups   groups?  @relation(fields: [group_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
   user     users    @relation(fields: [user_id], references: [id])

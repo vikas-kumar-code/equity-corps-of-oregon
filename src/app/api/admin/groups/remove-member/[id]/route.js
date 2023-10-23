@@ -3,8 +3,8 @@ import prisma from "@/utils/prisma";
 
 export async function DELETE(request, data) {
   let response = {};
-  let deletedId = Number(data.params.id);
   try {
+    let deletedId = Number(data.params.id);
     if (deletedId) {
       const deleted = await prisma.group_members.delete({
         where: {

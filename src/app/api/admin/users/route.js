@@ -9,7 +9,11 @@ export async function GET(request) {
   try {
     const paginate = common.paginate(searchParams);
     // Filters
-    let where = {};
+    let where = {
+      NOT: {
+        id: 1,
+      },
+    };
     if (searchParams.get("name")) {
       where = {
         ...where,

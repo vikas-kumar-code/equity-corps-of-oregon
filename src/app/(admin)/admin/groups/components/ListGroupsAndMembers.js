@@ -33,21 +33,27 @@ export default function ListGroupsAndMembers() {
   const [randomCode, setRandomCode] = useState(randomAlphabets());
 
   const onDragEnd = (result) => {
-    const { source, destination } = result;
+    const { draggableId, source, destination } = result;
+    console.log("# Drag =  ", result);
     // dropped outside the list
     if (!destination) {
       return;
     } else if (source.droppableId !== destination.droppableId) {
       setRandomCode(randomAlphabets());
-      const index = Number(destination.droppableId.replace(/[^0-9]/g, ""));
-      const newGroups = JSON.parse(JSON.stringify(groups));
-
-      newGroups[index].group_members = [
-        ...newGroups[index].group_members,
-        users[source.index],
-      ];
-      setGroups(newGroups);
+      // const index = Number(destination.droppableId.replace(/[^0-9]/g, ""));
+      // const newGroups = JSON.parse(JSON.stringify(groups));
+      // newGroups[index].group_members.users = [
+      //   ...newGroups[index].group_members,
+      //   users[source.index],
+      // ];
+      // setGroups(newGroups);
       setUsers(users);
+      setGroupsLoader(true);
+      const userIndex = Number(draggableId.replace(/[^0-9]/g, ""));
+      const groupIndex = Number(destination.droppableId.replace(/[^0-9]/g, ""));
+      const user_id = users[userIndex].id;
+      const group_id = groups[groupIndex].id;
+      addMember(group_id, user_id);
     } else {
       return;
     }
@@ -106,15 +112,11 @@ export default function ListGroupsAndMembers() {
     }
   };
 
-  const removeMember = (groupIndex, memberIndex) => {
-    let copyGroups = JSON.parse(JSON.stringify(groups));
-    copyGroups[groupIndex].group_members = copyGroups[
-      groupIndex
-    ].group_members.filter((item, index) => index !== memberIndex);
-    setGroups(copyGroups);
+  const addMember = (group_id, user_id) => {
     setGroupsLoader(true);
-    fetch(common.apiPath(`/admin/groups/remove-member/${id}`), {
-      method: "DELETE",
+    fetch(common.apiPath(`/admin/groups/add-member`), {
+      method: "POST",
+      body: JSON.stringify({ group_id, user_id }),
     })
       .then((response) => response.json())
       .then((response) => {
@@ -131,6 +133,28 @@ export default function ListGroupsAndMembers() {
       .finally(() => setGroupsLoader(false));
   };
 
+  const removeMember = (id) => {
+    if (window.confirm("Are you sure to remove this member?")) {
+      setGroupsLoader(true);
+      fetch(common.apiPath(`/admin/groups/remove-member/${id}`), {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.success) {
+            toast.success(response.message);
+            getGroups();
+          } else if (response.error) {
+            toast.error(response.message);
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        })
+        .finally(() => setGroupsLoader(false));
+    }
+  };
+
   useEffect(() => {
     getGroups();
     getUsers();
@@ -143,17 +167,20 @@ export default function ListGroupsAndMembers() {
           <h3>Groups & Members</h3>
         </Col>
         <Col md={6} sm={12} className="text-end">
-          <Button
+          {/* <Button
             variant="warning"
             className="me-2"
             onClick={() => setShowSearchBox(!showSearchBox)}
           >
             {showSearchBox ? <FaSearchMinus /> : <FaSearchPlus />} Search
-          </Button>
+          </Button> */}
           <Button
             variant="success"
             type="button"
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              setShowModal(true);
+              setGroupData({});
+            }}
           >
             Add New Group
           </Button>
@@ -169,7 +196,7 @@ export default function ListGroupsAndMembers() {
         <Row>
           <Col md={4}>
             <LoadingOverlay active={usersLoader} spinner>
-              <Card>
+              <Card style={{height:'78vh', overflowY:'auto'}}>
                 <Card.Body>
                   <Card.Title className="fw-bold fs-6 text-secondary">
                     Users
@@ -183,8 +210,8 @@ export default function ListGroupsAndMembers() {
                       <div ref={provided.innerRef}>
                         {users?.map((record, index) => (
                           <Draggable
-                            key={`user-${randomCode}-${record.id}`}
-                            draggableId={`user-${randomCode}-${record.id}`}
+                            key={`user-${randomCode}-${index}`}
+                            draggableId={`user-${randomCode}-${index}`}
                             index={index}
                           >
                             {(provided, snapshot) => (
@@ -235,7 +262,7 @@ export default function ListGroupsAndMembers() {
           </Col>
           <Col md={8}>
             <LoadingOverlay active={groupsLoader} spinner>
-              <Card>
+              <Card style={{height:'78vh', overflowY:'auto'}}>
                 <Card.Body>
                   <Card.Title className="fw-bold fs-6 text-secondary">
                     Groups
@@ -286,17 +313,15 @@ export default function ListGroupsAndMembers() {
                                       <div className="col-10">
                                         <span class="mdi mdi-account-circle-outline user-icon"></span>
                                         <h6 className="user-name">
-                                          {member.name}
+                                          {member?.user?.name}
                                         </h6>
                                         <span md={3} className="user-email">
-                                          {member.email}
+                                          {member?.user?.email}
                                         </span>
                                       </div>
                                       <Button
                                         variant="danger rounded-circle remove-user"
-                                        onClick={() =>
-                                          removeMember(index, memberIndex)
-                                        }
+                                        onClick={() => removeMember(member.id)}
                                       >
                                         <span class="mdi mdi-delete-circle-outline remove-user-icon"></span>
                                       </Button>
