@@ -6,7 +6,7 @@ import common from "@/utils/common";
 import Cards from "./Cards";
 import RecentAttorney from "./RecentAttorney";
 import RecentInvoices from "./RecentInvoices";
-import RecentCaseInvitations from "./RecentCaseInvitations";
+// import RecentCaseInvitations from "./RecentCaseInvitations";
 import DashboardShimmer from "./DashboardShimmer";
 
 const Dashboard = () => {
