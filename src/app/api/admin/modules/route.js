@@ -16,6 +16,7 @@ export async function GET() {
       "/admin/users",
       "/admin/email-templates",
       "/admin/roles",
+      "/admin/groups",
       "/admin/settings",
     ];
 

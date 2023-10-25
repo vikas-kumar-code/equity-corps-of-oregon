@@ -22,6 +22,7 @@ import { useSearchParams } from "next/navigation";
 LoadingOverlay.propTypes = undefined;
 
 export default function ListQuestions() {
+  
   const searchParams = useSearchParams();
   const [loader, setLoader] = useState(true);
   const [records, setRecords] = useState([]);
@@ -56,6 +57,7 @@ export default function ListQuestions() {
     setRecordId(recordId);
     setShowModal(true);
   };
+
   const getRecords = async () => {
     let REQUEST_URI = common.apiPath(
       `/admin/questions?${searchParams.toString()}`
@@ -94,10 +96,6 @@ export default function ListQuestions() {
       saveOrder();
     }
   }, [recordOrder]);
-
-  useEffect(() => {
-    getRecords();
-  }, [searchParams]);
 
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this question?")) {
