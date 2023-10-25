@@ -77,7 +77,6 @@ const SendInvitation = (props) => {
       .finally(() => setLoader(false));
   };
 
-  console.log(props?.invitedUsers);
   const loadUsers = async () => {
     setErrors(null);
     try {

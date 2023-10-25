@@ -72,19 +72,40 @@ const ViewInvoice = ({
                           <span className="brand-logo ps-0">
                             EC<span style={{ color: "#ca8a2e" }}>O</span>
                           </span>
+                          <h6 className="mt-1">
+                            Case Number - <b>{caseData?.case_number}</b>
+                          </h6>
+                          <h2 className="to">{record?.admin?.name}</h2>
+                          <div className="address">
+                            {record?.admin?.address}
+                          </div>
+                          <div className="email">
+                            <a href={"mailto:" + record?.admin?.email}>
+                              {record.admin.email}
+                            </a>
+                          </div>
                         </div>
                         <div className="col company-details">
-                          <b className="name">
+                        <h1 className="invoice-id">INVOICE {record.id}</h1>
+                          <div className="date">
+                            Date of Invoice:{" "}
+                            {moment(invoiceData.added_on).format("DD/MM/YYYY")}
+                          </div>
+                          <div className="date">
+                            Due Date:{" "}
+                            {moment(invoiceData.due_on).format("DD/MM/YYYY")}
+                          </div>
+                          {/* <b className="name">
                             <span>Equity Corps of Oregon</span>
                           </b>
                           <div>455 Foggy Heights, AZ 85004, US</div>
                           <div>(123) 456-789</div>
-                          <div>company@example.com</div>
+                          <div>company@example.com</div> */}
                         </div>
                       </div>
                     </header>
                     <main>
-                      <div className="row contacts">
+                      {/* <div className="row contacts">
                         <div className="col invoice-to">
                           <div className="text-gray-light">INVOICE TO:</div>
                           <h6 className="mt-1">
@@ -111,7 +132,7 @@ const ViewInvoice = ({
                             {moment(invoiceData.due_on).format("DD/MM/YYYY")}
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                       <div className="table-responsive min-list-height">
                         <table>
                           <thead>
