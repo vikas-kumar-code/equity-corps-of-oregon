@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import { getMonth, getYear } from "date-fns";
 import range from "lodash/range";
 import "react-datepicker/dist/react-datepicker.css";
+import { useState } from "react";
 
 export default function AddEditClients({
   fields,
@@ -13,8 +14,9 @@ export default function AddEditClients({
   errors,
   initialValues,
 }) {
+  const [selectedMonth, setSelectedMonth] = useState("")
   const clients = JSON.parse(JSON.stringify(fields.clients));
-  const years = range(1990, getYear(new Date()) + 1, 1);
+  const years = Array.from({ length: new Date().getFullYear() - 1989 }, (_, i) => i + 1990);
   const months = [
     "January",
     "February",
@@ -47,6 +49,7 @@ export default function AddEditClients({
       clients: fields.clients.filter((value, i) => i !== index),
     });
   };
+  console.log(selectedMonth);
 
   return fields.clients.map((item, index) => {
     return (
@@ -112,9 +115,12 @@ export default function AddEditClients({
 
                   <select
                     className="custom-select-style p-1"
-                    value={months[getMonth(date)]}
+                    value={selectedMonth}
                     onChange={({ target: { value } }) =>
-                      changeMonth(months.indexOf(value))
+                      {
+                        setSelectedMonth(value)
+                        changeMonth(months.indexOf(value))
+                      }
                     }
                   >
                     {months.map((option) => (

@@ -8,7 +8,24 @@ import prisma from "@/utils/prisma";
 export async function POST(request) {
   let response = {};
   try {
-    const data = await request.json();
+    let data = await request.json();
+
+    const groupsModel = await prisma.group_members.findMany({
+      where: {
+        group_id: {
+          in: data?.groups,
+        },
+      },
+    });
+    if(groupsModel){
+      for(let i=0; i<groupsModel.length; i++){
+        data.users.push(groupsModel[i].user_id)
+      }
+      data.users = data.users.filter((value, index, arr) => {
+        return arr.indexOf(value) === index;
+      });
+    }
+    console.log(data.users);
     const caseModel = await prisma.cases.findUnique({
       where: {
         id: data?.case_id,
@@ -24,7 +41,7 @@ export async function POST(request) {
       },
       select: {
         status: true,
-      }
+      },
     });
 
     const usersModel = await prisma.users.findMany({
@@ -33,7 +50,7 @@ export async function POST(request) {
           in: data?.users,
         },
         role_id: {
-          in:  [3,4],
+          in: [3, 4],
         }, // Eco providers
       },
     });
@@ -71,13 +88,13 @@ export async function POST(request) {
                 };
               }),
             });
-            const userNames = createInvUsers.map(user => user.name);
+            const userNames = createInvUsers.map((user) => user.name);
             await tx.logs.create({
               data: {
                 case_id: caseModel.id,
-                content: `Invitation sent to ${userNames.join(", ")}`
-              }
-            })
+                content: `Invitation sent to ${userNames.join(", ")}`,
+              },
+            });
             // Email will be sent to all requested users
             await createInvUsers.forEach(async (user) => {
               const mail = await sendMail({
@@ -88,17 +105,17 @@ export async function POST(request) {
                   cases: caseModel,
                 },
               });
-              console.log(mail,'Mail dataaaaaaaaaaaaaa');
+              console.log(mail, "Mail dataaaaaaaaaaaaaa");
             });
 
-            if(caseData.status < 2){
+            if (caseData.status < 2) {
               await prisma.cases.update({
                 where: {
                   id: data?.case_id,
                 },
-                data:{
-                  status: 1
-                }
+                data: {
+                  status: 1,
+                },
               });
             }
 

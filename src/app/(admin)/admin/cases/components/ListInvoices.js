@@ -269,6 +269,7 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
           showModal={showInvoice ? true : false}
           closeModal={() => setShowInvoice(null)}
           invoiceId={showInvoice}
+          caseData={records.case}
         />
       )}
 

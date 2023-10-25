@@ -45,8 +45,8 @@ const ViewInvoice = ({
   useEffect(() => {
     getRecord();
   }, []);
-  console.log(invoiceData?.particulars[0].short_description);
 
+  console.log(caseData);
   return (
     <Modal
       show={showModal}

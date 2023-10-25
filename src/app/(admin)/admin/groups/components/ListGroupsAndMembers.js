@@ -302,8 +302,8 @@ export default function ListGroupsAndMembers() {
                               (snapshot.isDraggingOver ? "active-group" : "")
                             }
                           >
-                            {record.group_members.length ? (
-                              record.group_members.map(
+                            {record?.group_members?.length ? (
+                              record?.group_members?.map(
                                 (member, memberIndex) => {
                                   return (
                                     <Row
