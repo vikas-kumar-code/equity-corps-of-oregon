@@ -6,10 +6,9 @@ import {
   Form,
   Col,
   Table,
-  Badge,
   SplitButton,
   Dropdown,
-  Row,
+  FormLabel,
 } from "react-bootstrap";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
@@ -140,6 +139,7 @@ const SendInvitation = (props) => {
               props.closeModal();
               props.reloadRecords();
               setSelected([]);
+              selectedGroups([])
             } else if (response.error) {
               setErrors(response.message);
             }
@@ -199,9 +199,11 @@ const SendInvitation = (props) => {
   };
 
   useEffect(() => {
-    loadUsers();
     getGroups();
   }, []);
+  useEffect(() => {
+    loadUsers();
+  }, [props?.invitedUsers]);
 
   return (
     <Modal
@@ -275,35 +277,35 @@ const SendInvitation = (props) => {
               </div>
             )}
             <Form.Group as={Col} md={12} className="mb-2">
-                <AsyncSelect
-                  className="multi-select-input"
-                  isMulti
-                  placeholder="Select Groups..."
-                  cacheOptions
-                  loadOptions={promiseUserOptions}
-                  defaultOptions={groups}
-                  value={selectedGroups}
-                  onChange={setSelectedGroups}
-                />
-              </Form.Group>
-              <Form.Control.Feedback type="invalid">
-                {errors}
-              </Form.Control.Feedback>
-              <Form.Group as={Col} md={12} className="mb-2">
-                <AsyncSelect
-                  className="multi-select-input"
-                  isMulti
-                  placeholder="Select Members..."
-                  cacheOptions
-                  loadOptions={promiseUserOptions}
-                  defaultOptions={users}
-                  value={selected}
-                  onChange={setSelected}
-                />
-              </Form.Group>
-              <Form.Control.Feedback type="invalid">
-                {errors}
-              </Form.Control.Feedback>
+              <FormLabel>Select Groups</FormLabel>
+              <AsyncSelect
+                className="multi-select-input"
+                isMulti
+                cacheOptions
+                loadOptions={promiseUserOptions}
+                defaultOptions={groups}
+                value={selectedGroups}
+                onChange={setSelectedGroups}
+              />
+            </Form.Group>
+            <Form.Control.Feedback type="invalid">
+              {errors}
+            </Form.Control.Feedback>
+            <Form.Group as={Col} md={12} className="mb-2">
+              <FormLabel>Select Members</FormLabel>
+              <AsyncSelect
+                className="multi-select-input"
+                isMulti
+                cacheOptions
+                loadOptions={promiseUserOptions}
+                defaultOptions={users}
+                value={selected}
+                onChange={setSelected}
+              />
+            </Form.Group>
+            <Form.Control.Feedback type="invalid">
+              {errors}
+            </Form.Control.Feedback>
           </Modal.Body>
           <Modal.Footer>
             <Button

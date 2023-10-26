@@ -3,8 +3,6 @@
 import React from "react";
 import { Button, FloatingLabel, Form, Row, Col } from "react-bootstrap";
 import DatePicker from "react-datepicker";
-import { getMonth, getYear } from "date-fns";
-import range from "lodash/range";
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
 
@@ -14,9 +12,13 @@ export default function AddEditClients({
   errors,
   initialValues,
 }) {
-  const [selectedMonth, setSelectedMonth] = useState("")
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const clients = JSON.parse(JSON.stringify(fields.clients));
-  const years = Array.from({ length: new Date().getFullYear() - 1989 }, (_, i) => i + 1990);
+  const years = Array.from(
+    { length: new Date().getFullYear() - 1989 },
+    (_, i) => i + 1990
+  );
   const months = [
     "January",
     "February",
@@ -49,7 +51,7 @@ export default function AddEditClients({
       clients: fields.clients.filter((value, i) => i !== index),
     });
   };
-  console.log(selectedMonth);
+  console.log(selectedYear);
 
   return fields.clients.map((item, index) => {
     return (
@@ -91,9 +93,9 @@ export default function AddEditClients({
         </Form.Group>
 
         <Form.Group as={Col} md={4}>
-          <FloatingLabel label="" className="mb-3">
+          <FloatingLabel label="" className="">
             <DatePicker
-              renderCustomHeader={({ date, changeYear, changeMonth }) => (
+              renderCustomHeader={({ changeYear, changeMonth }) => (
                 <div
                   style={{
                     margin: 10,
@@ -103,8 +105,11 @@ export default function AddEditClients({
                 >
                   <select
                     className="custom-select-style p-1 mx-1"
-                    value={getYear(date)}
-                    onChange={({ target: { value } }) => changeYear(value)}
+                    value={selectedYear}
+                    onChange={({ target: { value } }) => {
+                      setSelectedYear(value);
+                      changeYear(value);
+                    }}
                   >
                     {years.map((option) => (
                       <option key={option} value={option}>
@@ -114,14 +119,12 @@ export default function AddEditClients({
                   </select>
 
                   <select
-                    className="custom-select-style p-1"
-                    value={selectedMonth}
-                    onChange={({ target: { value } }) =>
-                      {
-                        setSelectedMonth(value)
-                        changeMonth(months.indexOf(value))
-                      }
-                    }
+                    className="custom-select-style p-1" 
+                    value={months[selectedMonth]}
+                    onChange={({ target: { value } }) => {
+                      setSelectedMonth(value);
+                      changeMonth(months.indexOf(value));
+                    }}
                   >
                     {months.map((option) => (
                       <option key={option} value={option}>
@@ -132,7 +135,7 @@ export default function AddEditClients({
                 </div>
               )}
               maxDate={new Date()}
-              placeholderText="DOB"
+              // placeholderText="DOB"
               selected={Date.parse(clients[index].dob)}
               onChange={(date) => {
                 clients[index].dob = date;

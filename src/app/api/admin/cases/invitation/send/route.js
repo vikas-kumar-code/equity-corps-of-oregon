@@ -25,7 +25,7 @@ export async function POST(request) {
         return arr.indexOf(value) === index;
       });
     }
-    console.log(data.users);
+
     const caseModel = await prisma.cases.findUnique({
       where: {
         id: data?.case_id,

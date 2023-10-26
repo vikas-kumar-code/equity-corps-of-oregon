@@ -72,10 +72,10 @@ const ViewInvoice = ({
                           <span className="brand-logo ps-0">
                             EC<span style={{ color: "#ca8a2e" }}>O</span>
                           </span>
-                          <h6 className="mt-1">
+                          <h6 className="mt-1 mb-0">
                             Case Number - <b>{caseData?.case_number}</b>
                           </h6>
-                          <h2 className="to">{record?.admin?.name}</h2>
+                          <h2 className="mb-0">{record?.admin?.name}</h2>
                           <div className="address">
                             {record?.admin?.address}
                           </div>
@@ -107,7 +107,7 @@ const ViewInvoice = ({
                               <th className="col-md-6">PARTICULAR</th>
                               <th className="col-md-1">HOURLY RATE</th>
                               <th className="col-md-1">HOURS</th>
-                              <th>AMOUNT</th>
+                              <th className="col-md-1">AMOUNT</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -146,7 +146,7 @@ const ViewInvoice = ({
                           <tfoot>
                             <tr>
                               <td colSpan={4} className="text-end">GRAND TOTAL</td>
-                              <td>
+                              <td className="text-end">
                                 {common.currencyFormat(
                                   totalAmount
                                 )}
