@@ -181,7 +181,7 @@ const InvitationDetails = ({
                   <tbody>
                     <tr>
                       <td width="30%">
-                        <strong>Max Comp:</strong>
+                        <strong>Max Compensation</strong>
                       </td>
                       <td>
                         <strong>
@@ -192,7 +192,7 @@ const InvitationDetails = ({
                     </tr>
                     <tr>
                       <td>
-                        <strong>Total Invoiced:</strong>
+                        <strong>Total Invoiced</strong>
                       </td>
                       <td>
                         <strong>
@@ -205,7 +205,7 @@ const InvitationDetails = ({
                     </tr>
                     <tr>
                       <td>
-                        <strong>Total Paid:</strong>
+                        <strong>Total Paid</strong>
                       </td>
                       <td>
                         <strong>
@@ -216,7 +216,7 @@ const InvitationDetails = ({
                     </tr>
                     <tr>
                       <td>
-                        <strong>Available:</strong>
+                        <strong>Available</strong>
                       </td>
                       <td>
                         <strong>
