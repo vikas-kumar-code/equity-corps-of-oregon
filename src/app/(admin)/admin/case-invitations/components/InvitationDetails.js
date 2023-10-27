@@ -79,7 +79,6 @@ const InvitationDetails = ({
   };
 
   let clients = record?.case?.clients && JSON.parse(record?.case?.clients);
-  console.log(record);
 
   useEffect(() => {
     getRecords();
@@ -105,46 +104,126 @@ const InvitationDetails = ({
           onSelect={(k) => setActiveTab(parseInt(k))}
         >
           <Tab eventKey={1} title="Basic Details">
-            <div className="table-responsive">
-              <table className="table table-borderless table-striped">
-                <tbody>
-                  <tr>
-                    <td width="30%">
-                      <strong>Title</strong>
-                    </td>
-                    <td>{record?.case?.title || "N/A"}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Case Number</strong>
-                    </td>
-                    <td>{record?.case?.case_number || "N/A"}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Description</strong>
-                    </td>
-                    <td>{record?.case?.description || "N/A"}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Status</strong>
-                    </td>
-                    <td>
-                      <Badge pill bg={iStatus[record?.status].bg || "info"}>
-                        {iStatus[record?.status].label || "N/A"}
-                      </Badge>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Added On</strong>
-                    </td>
-                    <td>{moment(record?.sent_on).format("D MMM, YYYY") || "N/A"}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <Row>
+              <Col md={6}>
+                <div className="table-responsive">
+                  <table className="table table-borderless table-striped">
+                    <tbody>
+                      <tr>
+                        <td width="50%">
+                          <strong>Title</strong>
+                        </td>
+                        <td>{record?.case?.title || "N/A"}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Case Number</strong>
+                        </td>
+                        <td>{record?.case?.case_number || "N/A"}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Description</strong>
+                        </td>
+                        <td>{record?.case?.description || "N/A"}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Status</strong>
+                        </td>
+                        <td>
+                          <Badge pill bg={iStatus[record?.status].bg || "info"}>
+                            {iStatus[record?.status].label || "N/A"}
+                          </Badge>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Added On</strong>
+                        </td>
+                        <td>
+                          {moment(record?.sent_on).format("D MMM, YYYY") ||
+                            "N/A"}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </Col>
+              <Col md={6}>
+                <div className="table-responsive">
+                  <table className="table table-borderless table-striped">
+                    <tbody>
+                      <tr>
+                        <td width="50%">
+                          <strong>Max Compensation</strong>
+                        </td>
+                        <td>
+                          <strong>
+                            {common.currencyFormat(amountDetails?.maxComp, 2) ??
+                              "N/A"}
+                          </strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Hourly Rate</strong>
+                        </td>
+                        <td>
+                          <strong>
+                            {amountDetails?.hourly_rate === "null"
+                              ? common.currencyFormat(
+                                  amountDetails?.hourly_rate,
+                                  2
+                                )
+                              : "N/A"}
+                          </strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Total Invoiced</strong>
+                        </td>
+                        <td>
+                          <strong>
+                            {common.currencyFormat(
+                              amountDetails?.totalInvoiced,
+                              2
+                            ) ?? "N/A"}
+                          </strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Total Paid</strong>
+                        </td>
+                        <td>
+                          <strong>
+                            {common.currencyFormat(
+                              amountDetails?.totalPaid,
+                              2
+                            ) ?? "N/A"}
+                          </strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Available</strong>
+                        </td>
+                        <td>
+                          <strong>
+                            {common.currencyFormat(
+                              amountDetails?.available,
+                              2
+                            ) ?? "N/A"}
+                          </strong>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </Col>
+            </Row>
           </Tab>
           <Tab eventKey={2} title="Clients" className="ps-5 pt-2 pe-5">
             <div className="table-responsive">
@@ -174,62 +253,6 @@ const InvitationDetails = ({
               </table>
             </div>
           </Tab>
-          {record?.status >= 1 && (
-            <Tab eventKey={3} title="Invoice Details">
-              <div className="table-responsive">
-                <table className="table table-borderless table-striped">
-                  <tbody>
-                    <tr>
-                      <td width="30%">
-                        <strong>Max Compensation</strong>
-                      </td>
-                      <td>
-                        <strong>
-                          {common.currencyFormat(amountDetails?.maxComp, 2) ??
-                            "N/A"}
-                        </strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Total Invoiced</strong>
-                      </td>
-                      <td>
-                        <strong>
-                          {common.currencyFormat(
-                            amountDetails?.totalInvoiced,
-                            2
-                          ) ?? "N/A"}
-                        </strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Total Paid</strong>
-                      </td>
-                      <td>
-                        <strong>
-                          {common.currencyFormat(amountDetails?.totalPaid, 2) ??
-                            "N/A"}
-                        </strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Available</strong>
-                      </td>
-                      <td>
-                        <strong>
-                          {common.currencyFormat(amountDetails?.available, 2) ??
-                            "N/A"}
-                        </strong>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </Tab>
-          )}
           <Tab eventKey={4} title="Milestones" className="ps-5 pt-2 pe-5">
             <div className="table-responsive" style={{ maxHeight: 200 }}>
               <table className="table">

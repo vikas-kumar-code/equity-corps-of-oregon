@@ -46,7 +46,6 @@ const ViewInvoice = ({
     getRecord();
   }, []);
 
-  console.log(caseData);
   return (
     <Modal
       show={showModal}

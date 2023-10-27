@@ -10,8 +10,8 @@ import AddDocuments from "../../cases/components/AddDocuments";
 
 export default function Documents(props) {
   const [loader, setLoader] = useState(false);
-  const session = useSession();
-  const user = session.data.user || {};
+  // const session = useSession();
+  // const user = session.data.user || {};
 
   // const updateDocuments = async (documents) => {
   //   try {
