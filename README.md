@@ -71,7 +71,7 @@ await routeSeeder();
 await questionSeeder();
 await emailTemplateSeeder();
 ```
-## run the seeder command to update permission seeder only
+- [ ] run the seeder command to update permission seeder only
 ```
 npx prisma db seed
 ```
