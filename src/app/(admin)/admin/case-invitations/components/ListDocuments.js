@@ -1,7 +1,4 @@
-import moment from "moment";
-import React, { useState } from "react";
-import { Modal, Badge, Tabs, Tab, Button, Row, Col } from "react-bootstrap";
-import Documents from "./Documents";
+import { Modal, Button } from "react-bootstrap";
 import common from "@/utils/common";
 import DownloadButton from "../../cases/components/DownloadButton";
 
@@ -11,7 +8,8 @@ const ListDocuments = ({
   showDocList,
   caseInvitationIndex,
 }) => {
-  const files = records?.case_invoices && JSON.parse(records?.case_invoices[caseInvitationIndex]?.files);
+  let files = records?.case_invoices != undefined && JSON.parse(records?.case_invoices[caseInvitationIndex]?.files || null);
+
   return (
     <Modal
       show={showDocList}
@@ -19,13 +17,13 @@ const ListDocuments = ({
       backdrop="static"
       keyboard={false}
       centered
-      size="lg"
+      size="md"
     >
       <Modal.Header closeButton className="border-bottom-0">
         <h3> Case Invoice Documents</h3>
       </Modal.Header>
       <Modal.Body>
-        <div className="table-responsive min-list-height">
+        <div className="table-responsive" style={{maxHeight:200}}>
           <table className="table table-borderless table-striped">
             <thead>
               <tr>
@@ -45,7 +43,7 @@ const ListDocuments = ({
                         <DownloadButton
                           fileName={file.originalFileName}
                           path={common.downloadLink(
-                            "uploads/case_documents/" + file.fileName
+                            "uploads/invoice_documents/" + file.fileName
                           )}
                         />
                       </td>

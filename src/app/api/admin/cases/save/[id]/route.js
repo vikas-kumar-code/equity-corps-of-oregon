@@ -8,6 +8,7 @@ import prisma from "@/utils/prisma";
 import validateAsync from "@/utils/validateAsync";
 
 export async function PUT(request, data) {
+  let clientsData = await request.json()
   let response = {};
   const caseId = parseInt(data.params.id);
   const session = await getSession();
@@ -15,7 +16,7 @@ export async function PUT(request, data) {
     where: { id: session.user.id },
   });
   try {
-    const validated = await validateAsync(casesSchema, await request.json());
+    const validated = await validateAsync(casesSchema, clientsData);
     if (validated.errors) {
       response.error = true;
       response.message = validated.errors;
@@ -56,6 +57,7 @@ export async function PUT(request, data) {
                 };
               }),
             },
+            clients: JSON.stringify(clientsData.clients),
             logs: {
               create: {
                 content: `Case updated by ${authUser.name}.`,

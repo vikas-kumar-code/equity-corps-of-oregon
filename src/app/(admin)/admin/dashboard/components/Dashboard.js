@@ -6,12 +6,12 @@ import common from "@/utils/common";
 import Cards from "./Cards";
 import RecentAttorney from "./RecentAttorney";
 import RecentInvoices from "./RecentInvoices";
-import RecentCaseInvitations from "./RecentCaseInvitations";
-import { Spinner } from "react-bootstrap";
+// import RecentCaseInvitations from "./RecentCaseInvitations";
+import DashboardShimmer from "./DashboardShimmer";
 
 const Dashboard = () => {
   const [records, setRecords] = useState([]);
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(false);
 
   const getRecords = async () => {
     setLoader(true);
@@ -34,30 +34,26 @@ const Dashboard = () => {
     getRecords();
   }, []);
 
-  return loader ? (
-    <div className="text-center" style={{ marginTop: "17%" }}>
-      <Spinner animation="border" variant="primary" />
-    </div>
-  ) : (
+  return (
     <>
       <Cards records={records} loader={loader} />
-      <div className="row">
+      {loader ? (<DashboardShimmer />): (<div className="row">
         {records.recentInvoices && (
           <div className="col-md-6">
-            <RecentInvoices records={records} />
+            <RecentInvoices records={records} loader={loader}/>
           </div>
         )}
         {records.recentAttorney && (
           <div className="col-md-6">
-            <RecentAttorney records={records} />
+            <RecentAttorney records={records} loader={loader}/>
           </div>
         )}
-        {records.recentCaseInvitations && (
+        {/* {records.recentCaseInvitations && (
           <div className="col-md-6">
-            <RecentCaseInvitations records={records} />
+            <RecentCaseInvitations records={records} loader={loader}/>
           </div>
-        )}
-      </div>
+        )} */}
+      </div>)}
     </>
   );
 };

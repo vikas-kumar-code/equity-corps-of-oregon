@@ -61,6 +61,21 @@ const userSeeder = async () => {
       verified: 1,
     },
   });
+
+  // Reviewer
+  await prisma.users.upsert({
+    where: { email: "reviewer@gmail.com" },
+    update: {},
+    create: {
+      email: "reviewer@gmail.com",
+      first_name: "Reviewer",
+      name: "Reviewer",
+      password: await bcrypt.hashSync("password", 10),
+      role_id: 4,
+      status: 1,
+      verified: 1,
+    },
+  });
 };
 
 module.exports = userSeeder;

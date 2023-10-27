@@ -9397,7 +9397,7 @@ body {
   font-size: var(--bs-body-font-size);
   font-weight: var(--bs-body-font-weight);
   line-height: var(--bs-body-line-height);
-  color: var(--bs-body-color);
+  color: #171717;
   text-align: var(--bs-body-text-align);
   background-color: var(--bs-body-bg);
   -webkit-text-size-adjust: 100%;
@@ -11519,6 +11519,7 @@ progress {
 .table-responsive {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  min-height: 40vh;
 }
 
 @media (max-width: 575.98px) {
@@ -15470,6 +15471,7 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
     opacity: 0;
     margin-top: 12px;
   }
+
   to {
     opacity: 1;
     margin-top: 5px;
@@ -16280,7 +16282,7 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
 }
 
 .nav-tabs .nav-link.disabled {
-  color: #6c757d;
+  color: #b1b8bd !important;
   background-color: transparent;
   border-color: transparent;
 }
@@ -27225,7 +27227,7 @@ code {
 .tt-query:focus,
 .tt-hint:focus {
   border: 1px solid rgba(71, 164, 71, 0.5);
-  background-color: #2a3038;
+  background-color: #e7e7e7;
 }
 
 .form-control.form-control-lg,
@@ -31327,25 +31329,6 @@ div.tagsinput span.tag a {
 /*-------------------------------------------------------------------*/
 /* === Landing screens === */
 /* Auth */
-.auth.login-bg {
-  background: url("/images/Login_bg.jpg");
-  background-size: cover;
-}
-
-.auth .login-half-bg {
-  background: url("/images/login-bg.jpg");
-  background-size: cover;
-}
-
-.auth.register-half-bg {
-  background: url("/images//Login_bg2.jpg");
-  background-size: cover;
-}
-
-.auth.lock-full-bg {
-  background: url("/images/lockscreen-bg.jpg");
-  background-size: cover;
-}
 
 .auth .lock-profile-img {
   width: 90px;
@@ -33822,7 +33805,6 @@ div.tagsinput span.tag a {
 }
 
 .modal-body-scroll {
-  height: 70vh;
   overflow-y: auto;
 }
 
@@ -33833,6 +33815,36 @@ div.tagsinput span.tag a {
 .z-value-0 ._loading_overlay_wrapper {
   position: unset !important;
 }
+
 .z-value-0 .card {
   position: unset !important;
 }
+
+.auth-bg {
+  background-color: #13323a !important;
+  /* background-image: linear-gradient(
+    0deg,
+    hsl(192deg 51% 15%) 0%,
+    hsl(192deg 48% 17%) 11%,
+    hsl(192deg 45% 19%) 22%,
+    hsl(192deg 43% 21%) 32%,
+    hsl(192deg 42% 23%) 42%,
+    hsl(192deg 41% 26%) 52%,
+    hsl(192deg 39% 28%) 61%,
+    hsl(192deg 38% 30%) 71%,
+    hsl(192deg 38% 32%) 81%,
+    hsl(192deg 37% 35%) 90%,
+    hsl(192deg 36% 37%) 100%
+  ); */
+}
+.auth-label {
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 2px;
+  margin-top: 3px;
+}
+
+.auth-yellow-bg {
+  background-color: #e99315 !important;
+}
+

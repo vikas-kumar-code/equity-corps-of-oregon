@@ -108,6 +108,9 @@ const common = {
   currencyToNumber: (currency) => {
     return (currency || "").replace(/[^0-9.]/g, "");
   },
+  parseDecimalInput: (value = "") => {
+    return value.replace(/[^0-9.]|(\.(?=.*\.))/g, "");
+  },
 };
 
 export default common;

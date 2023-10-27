@@ -22,16 +22,9 @@ export async function GET(request, data) {
     response.data = {
       case_number: record.case_number,
       title: record.title,
-      maximum_compensation: record.maximum_compensation, 
-      hourly_rate: record.hourly_rate,   
+      maximum_compensation: record.maximum_compensation,
+      hourly_rate: record.hourly_rate,
       description: record.description,
-      milestones:
-        record.case_milestones.map((milestone) => {
-          return {
-            milestone_date: milestone.milestone_date,
-            comment: milestone.comment,
-          };
-        }) || [],
       documents:
         record?.case_documents?.map((doc) => {
           return {
@@ -43,6 +36,20 @@ export async function GET(request, data) {
         }) || [],
       logs: record?.logs,
     };
+
+    if (record.case_milestones.length > 0) {
+      response.data.milestones = record.case_milestones.map((milestone) => {
+        return {
+          milestone_date: milestone.milestone_date,
+          comment: milestone.comment,
+        };
+      });
+    }
+
+    const clients = record.clients ? JSON.parse(record.clients) : [];
+    if (clients.length > 0) {
+      response.data.clients = clients;
+    }
   } catch (error) {
     response.error = true;
     response.message = error.message;

@@ -44,7 +44,6 @@ export default function ListCaseInvitations() {
       })
       .finally(() => setLoader(false));
   };
-  
   useEffect(() => {
     getRecords();
   }, [searchParams]);
@@ -107,7 +106,7 @@ export default function ListCaseInvitations() {
                         />
                       ))}
                       {!loader && records.length === 0 && <tr>
-                        <td colSpan={6} className="text-center text-danger">No invitation found!</td>
+                        <td colSpan={6} className="text-center text-gray m-5">No invitation found!</td>
                       </tr>}
                     </tbody>
                   </table>

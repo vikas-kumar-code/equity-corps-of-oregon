@@ -40,15 +40,20 @@ const ViewInvoice = ({
 
   const invoiceData = invoiceId == 0 ? fields : record?.case_invoice;
   const submission = submissionAction == 1 ? false : true;
+<<<<<<< HEAD
   const totalAmount = invoiceData?.particulars.reduce(
     (acc, item) => acc + item.amount,
     0
   );
+=======
+  const totalAmount = invoiceData?.particulars.reduce((acc, item) => acc + item.amount , 0);
+>>>>>>> 0f9114cbf7fae536d003cad5924f4b3a7c059041
 
   useEffect(() => {
     getRecord();
   }, []);
 
+  console.log(caseData);
   return (
     <Modal
       show={showModal}
@@ -74,25 +79,10 @@ const ViewInvoice = ({
                           <span className="brand-logo ps-0">
                             EC<span style={{ color: "#ca8a2e" }}>O</span>
                           </span>
-                        </div>
-                        <div className="col company-details">
-                          <b className="name">
-                            <span>Equity Corps of Oregon</span>
-                          </b>
-                          <div>455 Foggy Heights, AZ 85004, US</div>
-                          <div>(123) 456-789</div>
-                          <div>company@example.com</div>
-                        </div>
-                      </div>
-                    </header>
-                    <main>
-                      <div className="row contacts">
-                        <div className="col invoice-to">
-                          <div className="text-gray-light">INVOICE TO:</div>
-                          <h6 className="mt-1">
+                          <h6 className="mt-1 mb-0">
                             Case Number - <b>{caseData?.case_number}</b>
                           </h6>
-                          <h2 className="to">{record?.admin?.name}</h2>
+                          <h2 className="mb-0">{record?.admin?.name}</h2>
                           <div className="address">
                             {record?.admin?.address}
                           </div>
@@ -102,8 +92,8 @@ const ViewInvoice = ({
                             </a>
                           </div>
                         </div>
-                        <div className="col invoice-details">
-                          {/* <h1 className="invoice-id">INVOICE {record.id}</h1> */}
+                        <div className="col company-details">
+                        <h1 className="invoice-id">INVOICE {record.id}</h1>
                           <div className="date">
                             Date of Invoice:{" "}
                             {moment(invoiceData.added_on).format("DD/MM/YYYY")}
@@ -114,6 +104,8 @@ const ViewInvoice = ({
                           </div>
                         </div>
                       </div>
+                    </header>
+                    <main>
                       <div className="table-responsive min-list-height">
                         <table>
                           <thead>
@@ -122,7 +114,7 @@ const ViewInvoice = ({
                               <th className="col-md-6">PARTICULAR</th>
                               <th className="col-md-1">HOURLY RATE</th>
                               <th className="col-md-1">HOURS</th>
-                              <th>AMOUNT</th>
+                              <th className="col-md-1">AMOUNT</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -134,10 +126,11 @@ const ViewInvoice = ({
                                       {String(index + 1).padStart(2, 0)}
                                     </td>
                                     <td>
-                                      {item?.category?.label !==
+                                      <div>{item?.category?.label !==
                                       "Other - Describe"
                                         ? item?.category?.label
-                                        : item?.other_category}
+                                        : item?.other_category}</div>
+                                        <div>{item.short_description}</div>
                                     </td>
                                     <td
                                       className="text-end"
@@ -148,7 +141,7 @@ const ViewInvoice = ({
                                       )}
                                     </td>
                                     <td className="text-end">
-                                      {item?.hours_worked}
+                                      {item?.hours_worked ? item?.hours_worked : "N/A"}
                                     </td>
                                     <td className="total">
                                       {common.currencyFormat(item?.amount)}
@@ -160,7 +153,7 @@ const ViewInvoice = ({
                           <tfoot>
                             <tr>
                               <td colSpan={4} className="text-end">GRAND TOTAL</td>
-                              <td>
+                              <td className="text-end">
                                 {common.currencyFormat(
                                   totalAmount
                                 )}
@@ -179,6 +172,7 @@ const ViewInvoice = ({
                 </div>
               </div>
               <div className="w-100 text-center no-print">
+              {record?.case_invoice?.status == undefined ?  
                 <Button
                   variant="success"
                   type="button"
@@ -186,12 +180,12 @@ const ViewInvoice = ({
                   disabled={!!submitted}
                   onClick={()=>handleSubmit(null, submission)}
                 >
-                  {submitted === 1 && (
+                  {submitted === 1 || submitted === 2 ? (
                     <Spinner className="me-1" color="light" size="sm" />
-                  )}
-                  <span class="mdi mdi-send me-1"></span>
+                  ): <span className="mdi mdi-send me-1"></span>}
+                  
                   Submit
-                </Button>
+                </Button>:
                 <Button
                   id="printInvoice"
                   className="btn btn-primary"
@@ -199,7 +193,7 @@ const ViewInvoice = ({
                 >
                   <span className="mdi mdi-printer me-1"></span>
                   Print
-                </Button>
+                </Button>}
               </div>
             </div>
           )}

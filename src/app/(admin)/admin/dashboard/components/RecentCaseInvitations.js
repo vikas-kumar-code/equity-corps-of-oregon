@@ -6,10 +6,17 @@ const RecentCaseInvitations = ({ records, loader }) => {
   return (
     <LoadingOverlay active={loader} spinner>
       <Card>
-        <Card.Body>
+        <Card.Body style={{minHeight: "62vh"}}>
           <Row>
             <Col><h4 className="card-title">Recent Invitations</h4></Col>
-            <Col className="text-end text-primary"><Link href="/admin/case-invitations">View All</Link></Col>
+            <Col className="text-end text-primary"><Button variant="primary">
+              <Link
+                href="/admin/case-invitations"
+                style={{ textDecoration: "none", color: "white" }}
+              >
+                View All
+              </Link>
+            </Button></Col>
           </Row>
           <div className="table-responsive">
             <table className="table">
@@ -49,7 +56,7 @@ const RecentCaseInvitations = ({ records, loader }) => {
                   records.recentCaseInvitations.length <= 0) && (
                     <tr>
                       <td colSpan={3}>
-                        <h6 className="text-gray">No records available</h6>
+                        <h6 className="text-gray text-center">No records available</h6>
                       </td>
                     </tr>
                   )}

@@ -2,14 +2,23 @@
 
 import React, { useState } from "react";
 import moment from "moment";
-import { Badge, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import {
+  Badge,
+  ButtonGroup,
+  Dropdown,
+  DropdownButton,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import SendInvitation from "./SendInvitation";
 import AddEditCase from "./AddEditCase";
 import ListInvoices from "./ListInvoices";
 import EcoProviders from "./EcoProviders";
+import ViewCaseDetails from "./ViewCaseDetails";
 
 export default function Case({ record, getRecords, deleteRecord, sn }) {
   const [showModal, setShowModal] = useState(false);
+  const [showCaseModal, setShowCaseModal] = useState(false);
   const [showSendInvitationModal, setShowSendInvitationModal] = useState(false);
   const [showListInvoices, setShowListInvoices] = useState(false);
 
@@ -44,6 +53,33 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
         </td>
         <td>{moment(record.created_at).format("D MMM,  YYYY")}</td>
         <td>
+          <OverlayTrigger          
+            placement="top"
+            overlay={
+              <Tooltip id={`tooltip-key-${sn}`}>
+                {record.logs.length > 0
+                  ? `${
+                      record.logs[Number(record.logs.length) - 1].content
+                    } on ${moment(
+                      record.logs[Number(record.logs.length) - 1].created_at
+                    ).format("D MMM,  YYYY")}`
+                  : "..."}
+              </Tooltip>
+            }
+          >
+            {({ ref, ...triggerHandler }) => (
+              <spna
+                className="text-primary p-2"
+                role="button"
+                ref={ref}
+                {...triggerHandler}
+              >
+                <span class="mdi mdi-information-outline fs-3"></span>
+              </spna>
+            )}
+          </OverlayTrigger>
+        </td>
+        <td>
           <DropdownButton
             as={ButtonGroup}
             key="action-1"
@@ -52,6 +88,10 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
             title="Action"
             align="end"
           >
+            <Dropdown.Item eventKey="1" onClick={() => setShowCaseModal(true)}>
+              <span className="mdi mdi-eye"></span>
+              View
+            </Dropdown.Item>
             <Dropdown.Item
               eventKey="1"
               onClick={() => setShowSendInvitationModal(true)}
@@ -77,6 +117,20 @@ export default function Case({ record, getRecords, deleteRecord, sn }) {
           </DropdownButton>
         </td>
       </tr>
+
+      {showCaseModal && (
+        <ViewCaseDetails
+          showModal={showCaseModal}
+          closeModal={() => {
+            setShowCaseModal(false);
+          }}
+          record={record}
+          showEditModal={() => setShowModal(true)}
+          showListInvoices={() => setShowListInvoices(true)}
+          deleteRecord={deleteRecord}
+        />
+      )}
+
       {showModal && (
         <AddEditCase
           showModal={showModal}

@@ -13,17 +13,18 @@ import {
   Tab,
 } from "react-bootstrap";
 import LoadingOverlay from "react-loading-overlay";
-import { TagsInput } from "react-tag-input-component";
-import Milestones from "./Milestones";
+import AddEditMilestones from "./AddEditMilestones";
 import Documents from "./Documents";
 import {
   casesSchemaForm1,
   casesSchemaForm2,
   casesSchemaForm3,
+  casesSchemaForm4,
 } from "@/joi/casesSchema";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
 import CaseActivities from "./CaseActivities";
+import AddEditClients from "./AddEditClients";
 LoadingOverlay.propTypes = undefined;
 
 export default function AddEditCase(props) {
@@ -34,10 +35,23 @@ export default function AddEditCase(props) {
     maximum_compensation: "",
     hourly_rate: "",
     description: "",
-    milestones: [],
+    milestones: [
+      {
+        milestone_date: "",
+        comment: "",
+      },
+    ],
     documents: [],
     logs: [],
+    clients: [
+      {
+        first_name: "",
+        last_name: "",
+        dob: "",
+      },
+    ],
   };
+
   const [fields, setFields] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -52,7 +66,8 @@ export default function AddEditCase(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
-    // Validate fields
+
+    // Tab-1 validation
     if (activeTab === 1) {
       try {
         await casesSchemaForm1.validateAsync(fields, {
@@ -68,13 +83,35 @@ export default function AddEditCase(props) {
           toast.error(errors);
         }
       }
-    } else if (activeTab === 2) {
+    }
+
+    // Tab-2 validation
+    else if (activeTab === 2) {
       try {
         await casesSchemaForm2.validateAsync(fields, {
           abortEarly: false,
           allowUnknown: true,
         });
         setActiveTab(3);
+      } catch (error) {
+        console.log(error.message);
+        let errors = common.getErrors(error);
+        if (typeof errors === "object") {
+          setErrors(errors);
+        } else {
+          toast.error(errors);
+        }
+      }
+    }
+
+    // Tab-3 validation
+    else if (activeTab === 3) {
+      try {
+        await casesSchemaForm3.validateAsync(fields, {
+          abortEarly: false,
+          allowUnknown: true,
+        });
+        setActiveTab(4);
       } catch (error) {
         let errors = common.getErrors(error);
         if (typeof errors === "object") {
@@ -83,10 +120,12 @@ export default function AddEditCase(props) {
           toast.error(errors);
         }
       }
-    } else if (activeTab === 3) {
+
+      // Tab-4 validation
+    } else if (activeTab === 4) {
       setSubmitted(true);
       try {
-        await casesSchemaForm3.validateAsync(fields, {
+        await casesSchemaForm4.validateAsync(fields, {
           abortEarly: false,
           allowUnknown: true,
         });
@@ -100,7 +139,10 @@ export default function AddEditCase(props) {
         // Set deleted docs
         let fieldsData =
           deletedDocuments.length > 0
-            ? { ...fields, deleted_documents: deletedDocuments }
+            ? {
+                ...fields,
+                deleted_documents: deletedDocuments,
+              }
             : fields;
         await fetch(REQUEST_URI, {
           method: REQUEST_METHOD,
@@ -147,13 +189,16 @@ export default function AddEditCase(props) {
     }
   };
 
+  /*
+   * Get case details, clients, documents, ....
+   */
   const getRecord = async (id) => {
     setLoader(true);
-    fetch(common.apiPath(`/admin/cases/get/${props.recordId}`))
+    fetch(common.apiPath(`/admin/cases/get/${id}`))
       .then((response) => response.json())
       .then((response) => {
         if (response.success) {
-          setFields(response.data);
+          setFields({ ...initialValues, ...response.data });
         } else if (response.error) {
           toast.error(response.message);
         }
@@ -207,7 +252,7 @@ export default function AddEditCase(props) {
             Back
           </Button>
         )}
-        {step < 4 && (
+        {step < 5 && (
           <Button
             size="lg"
             type="submit"
@@ -215,7 +260,7 @@ export default function AddEditCase(props) {
             disabled={submitted}
           >
             {submitted && <Spinner className="mr-1" color="light" size="sm" />}
-            {activeTab === 3 ? " Save" : " Next"}
+            {activeTab === 4 ? " Save" : " Next"}
           </Button>
         )}
       </React.Fragment>
@@ -270,9 +315,12 @@ export default function AddEditCase(props) {
                         type="text"
                         name="case_number"
                         placeholder="case_number"
-                        onChange={(event) => {                          
-                          setFields({...fields, case_number: event.target.value.replace(/ /g,"")})
-                        }}                          
+                        onChange={(event) => {
+                          setFields({
+                            ...fields,
+                            case_number: event.target.value.replace(/ /g, ""),
+                          });
+                        }}
                         isInvalid={!!errors.case_number}
                         value={fields.case_number ? fields.case_number : ""}
                       />
@@ -294,7 +342,10 @@ export default function AddEditCase(props) {
                         onChange={(event) =>
                           setFields({
                             ...fields,
-                            hourly_rate: event.target.value.replace(/[^0-9.]/,''),
+                            hourly_rate: event.target.value.replace(
+                              /[^0-9.]/,
+                              ""
+                            ),
                           })
                         }
                         isInvalid={!!errors.hourly_rate}
@@ -318,7 +369,9 @@ export default function AddEditCase(props) {
                         onChange={(event) =>
                           setFields({
                             ...fields,
-                            maximum_compensation: event.target.value,
+                            maximum_compensation: common.parseDecimalInput(
+                              event.target.value
+                            ),
                           })
                         }
                         isInvalid={!!errors.maximum_compensation}
@@ -333,12 +386,12 @@ export default function AddEditCase(props) {
                   <Form.Group as={Col} md={12}>
                     <FloatingLabel
                       controlId="floatingInput3"
-                      label="Description"                      
+                      label="Description"
                     >
                       <Form.Control
                         as="textarea"
                         name="description"
-                        placeholder="description"
+                        placeholder="Description"
                         onChange={(event) => handleChange(event, "description")}
                         isInvalid={!!errors.description}
                         value={fields.description ? fields.description : ""}
@@ -353,25 +406,32 @@ export default function AddEditCase(props) {
               </Tab>
               <Tab
                 eventKey={2}
-                title="Milestones"
+                title="Clients"
                 disabled={activated < 2 && !props.recordId}
               >
-                <Milestones
+                <AddEditClients
                   errors={errors}
-                  setErrors={setErrors}
-                  milestones={fields?.milestones || []}
-                  updateMilestones={(milestones) =>
-                    setFields({
-                      ...fields,
-                      milestones: milestones,
-                    })
-                  }
+                  fields={fields}
+                  setFields={setFields}
+                  initialValues={initialValues}
                 />
               </Tab>
               <Tab
                 eventKey={3}
-                title="Documents"
+                title="Milestones"
                 disabled={activated < 3 && !props.recordId}
+              >
+                <AddEditMilestones
+                  errors={errors}
+                  fields={fields}
+                  setFields={setFields}
+                  initialValues={initialValues}
+                />
+              </Tab>
+              <Tab
+                eventKey={4}
+                title="Documents"
+                disabled={activated < 4 && !props.recordId}
               >
                 <Documents
                   updateDocuments={(documents) =>
@@ -386,7 +446,7 @@ export default function AddEditCase(props) {
                 />
               </Tab>
               {props.recordId && (
-                <Tab eventKey={4} title="Case Activities">
+                <Tab eventKey={5} title="Case Activities">
                   <CaseActivities logs={fields?.logs || []} />
                 </Tab>
               )}

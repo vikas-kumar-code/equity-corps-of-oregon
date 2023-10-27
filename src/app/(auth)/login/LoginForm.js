@@ -35,8 +35,9 @@ export default function LoginForm() {
     <form onSubmit={handleSubmit}>
       {error !== null && <p className="text-danger text-center">{error}</p>}
       <div className="form-group">
-        <label>Email *</label>
+        <label className="auth-label">Email *</label>
         <input
+        placeholder="Enter email"
           type="text"
           className="form-control p_input"
           onChange={(event) =>
@@ -45,8 +46,9 @@ export default function LoginForm() {
         />
       </div>
       <div className="form-group">
-        <label>Password *</label>
+        <label className="auth-label">Password *</label>
         <input
+        placeholder="Enter password"
           type="password"
           className="form-control p_input"
           onChange={(event) =>
@@ -59,6 +61,7 @@ export default function LoginForm() {
           type="checkbox"
           id="remember-me"
           label="Remember me"
+          className="text-black"
           onChange={(e) => {
             setFields({ ...fields, remember: e.target?.checked ? 1 : 0 });
           }}
@@ -70,7 +73,7 @@ export default function LoginForm() {
       <div className="text-center d-grid">
         <button
           type="submit"
-          className="btn btn-primary btn-block enter-btn"
+          className="btn btn-primary btn-lg"
           disabled={loader}
         >
           {loader && <Spinner size="sm" variant="light" className="me-1" />}

@@ -30,6 +30,14 @@ const roleSeeder = async () => {
     },
   });
 
+  await prisma.roles.upsert({
+    where: { id: 4 },
+    update: {},
+    create: {
+      name: "Reviewer", // Created by registered Attorney
+      status: 1,
+    },
+  });
 };
 
 module.exports = roleSeeder;

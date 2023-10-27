@@ -16,11 +16,18 @@ export async function GET() {
       "/admin/users",
       "/admin/email-templates",
       "/admin/roles",
+      "/admin/groups",
       "/admin/settings",
     ];
 
     const ecoProviderModules = [
-      "/admin/dashboard",
+      // "/admin/dashboard",
+      "/admin/case-invitations",
+      "/admin/settings",
+    ];
+
+    const reviewerModules = [
+      // "/admin/dashboard",
       "/admin/case-invitations",
       "/admin/settings",
     ];
@@ -30,6 +37,8 @@ export async function GET() {
       modules = adminModules;
     } else if (parseInt(session.user.role_id) === 3) {
       modules = ecoProviderModules;
+    }else if (parseInt(session.user.role_id) === 4) {
+      modules = reviewerModules;
     }
 
     if (modules) {

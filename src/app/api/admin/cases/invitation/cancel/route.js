@@ -11,6 +11,18 @@ export async function POST(request) {
           id: parseInt(data?.id),
         },
       });
+
+      if(data.invitedUsers.length <= 1){
+        await prisma.cases.update({
+          where: {
+            id: parseInt(data?.case_id),
+          },
+          data:{
+            status: 0,
+          }
+        });
+      }
+
       response.success = true;
       response.message = "Invitation cancelled successfully.";
     }

@@ -32,6 +32,7 @@ export const authOptions = {
         });
 
         if (user) {
+          let is_first_login = user.is_first_login;
           const isPasswordValid = await compare(
             credentials.password,
             user.password
@@ -39,38 +40,50 @@ export const authOptions = {
           if (isPasswordValid) {
             if (user.status === 1) {
               // if (user.verified === 1) {
-                if (user.on_board_status === 1) {
-                  // update on board status
-                  await prisma.users.update({
-                    where: {
-                      id: user.id,
-                    },
-                    data: {
-                      on_board_status: 2,
-                    },
-                  });
-                }
 
-                // fetch all authorized routes
-                if (
-                  user?.role?.permissions &&
-                  user?.role?.permissions.length > 0
-                ) {
-                  const authorizedRoutes = await prisma.routes.findMany({
-                    where: {
-                      id: {
-                        in: user?.role?.permissions.map(
-                          (item) => item.route_id
-                        ),
-                      },
-                    },
-                  });
-                  user.routes = authorizedRoutes.map((route) => {
-                    return { url: route.url, method: route.method };
-                  });
-                }
+              // update on board status
+              if (user.on_board_status === 1) {
+                await prisma.users.update({
+                  where: {
+                    id: user.id,
+                  },
+                  data: {
+                    on_board_status: 2,
+                  },
+                });
+              }
 
-                return user;
+              // update on user first login
+              if (user.is_first_login === 1) {
+                await prisma.users.update({
+                  where: {
+                    id: user.id,
+                  },
+                  data: {
+                    on_board_status: 2,
+                    is_first_login: 0,
+                  },
+                });
+              }
+
+              // fetch all authorized routes
+              if (
+                user?.role?.permissions &&
+                user?.role?.permissions.length > 0
+              ) {
+                const authorizedRoutes = await prisma.routes.findMany({
+                  where: {
+                    id: {
+                      in: user?.role?.permissions.map((item) => item.route_id),
+                    },
+                  },
+                });
+                user.routes = authorizedRoutes.map((route) => {
+                  return { url: route.url, method: route.method };
+                });
+              }
+              user.is_first_login = is_first_login;
+              return user;
               // } else {
               //   throw new Error("Your account is not verified.");
               // }
@@ -94,10 +107,13 @@ export const authOptions = {
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.role_id = token.role_id;
-      session.user.routes = token.routes;   
-      session.maxAge = 0;   
+      session.user.routes = token.routes;
+      session.user.is_first_login = token.is_first_login;
+      session.maxAge = 0;
       return session;
     },
+
+    // First this function is called.
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -105,6 +121,7 @@ export const authOptions = {
         token.name = user.name;
         token.routes = user.routes;
         token.maxAge = 0;
+        token.is_first_login = user.is_first_login;
       }
       return token;
     },

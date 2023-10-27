@@ -44,12 +44,12 @@ export async function GET(request) {
           },
         },
         orderBy: [{ id: "desc" }],
-        take: 10,
+        take: 5,
       });
 
       response.recentAttorney = await prisma.users.findMany({
         where: { role_id: 2 },
-        take: 10,
+        take: 5,
         orderBy: [{ id: "desc" }],
         select: {
           id: true,
@@ -66,51 +66,53 @@ export async function GET(request) {
       });
 
       // Eco provider dashboard data
-    } else if (session.user.role_id === 3) {
-      let where = {
-        user_id: session.user.id,
-      };
+    } 
+    // else if (session.user.role_id === 3) {
+    //   let where = {
+    //     user_id: session.user.id,
+    //   };
 
-      response.counts = [
-        {
-          count: await prisma.case_invitations.count({ where }),
-          label: "Total Case Invitation",
-          icon: "mdi mdi-alpha-c-circle",
-        },
-        {
-          count: await prisma.case_invoices.count({ where }),
-          label: "Total Invoice",
-          icon: "mdi mdi-receipt",
-        },
-      ];
+    //   response.counts = [
+    //     {
+    //       count: await prisma.case_invitations.count({ where }),
+    //       label: "Total Case Invitation",
+    //       icon: "mdi mdi-alpha-c-circle",
+    //     },
+    //     {
+    //       count: await prisma.case_invoices.count({ where }),
+    //       label: "Total Invoice",
+    //       icon: "mdi mdi-receipt",
+    //     },
+    //   ];
 
-      response.recentInvoices = await prisma.case_invoices.findMany({
-        where,
-        orderBy: [{ id: "desc" }],
-      });
+    //   response.recentInvoices = await prisma.case_invoices.findMany({
+    //     where,
+    //     orderBy: [{ id: "desc" }],
+    //     take: 5,
+    //   });
 
-      response.recentCaseInvitations = await prisma.case_invitations.findMany({
-        where,
-        orderBy: [{ id: "desc" }],
-        include: { case: true },
-      });
+    //   response.recentCaseInvitations = await prisma.case_invitations.findMany({
+    //     where,
+    //     orderBy: [{ id: "desc" }],
+    //     include: { case: true },
+    //     take: 5,
+    //   });
 
-      return NextResponse.json({
-        success: true,
-        records: response,
-      });
-    }
+    //   return NextResponse.json({
+    //     success: true,
+    //     records: response,
+    //   });
+    // }
   } catch (err) {
     return NextResponse.json({
       error: true,
       message: err.message,
     });
-    counts = [
-      ...counts,
-      { count: totalInvitations, label: 'Total Case Invitations', icon: 'mdi mdi-alpha-c-circle' },
-    ]
   }
-
+  // counts = [
+  //   ...counts,
+  //   { count: totalInvitations, label: 'Total Case Invitations', icon: 'mdi mdi-alpha-c-circle' },
+  // ]
   return NextResponse.json({
     success: true,
     records: {

@@ -22,10 +22,14 @@ import PaymentButtons from "./PaymentButtons";
 const ListInvoices = ({ showModal, closeModal, caseId }) => {
   const [showInvoice, setShowInvoice] = useState(null);
   const [invoicePayment, setInvoicePayment] = useState(null);
-  const [payModal, setPayModal] = useState(null);
   const [records, setRecords] = useState({});
   const [loader, setLoader] = useState(true);
-  let paidAmount = 0;
+  const [amountDetails, setAmountDetails] = useState({
+    maxComp: 0,
+    totalInvoiced: 0,
+    totalPaid: 0,
+    available: 0,
+  });
 
   const getRecords = async () => {
     setLoader(true);
@@ -35,6 +39,29 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
         .then((response) => {
           if (response.success) {
             setRecords(response.records);
+            if (response.records) {
+              let amounts = {
+                maxComp: 0,
+                totalInvoiced: 0,
+                totalPaid: 0,
+                available: 0,
+              };
+              amounts.maxComp =
+                response.records?.case?.maximum_compensation || 0;
+              Array.isArray(response.records?.case_invoices) &&
+                response.records?.case_invoices?.forEach((item) => {
+                  amounts.totalInvoiced += Number(item.total_amount);
+                  amounts.totalPaid += item.payments.reduce(
+                    (total, pay) => total + Number(pay.amount),
+                    0
+                  );
+                });
+              amounts.available = amounts.maxComp - amounts.totalPaid;
+              setAmountDetails(amounts);
+              // response.records.forEach(item => {
+              // item.
+              // });
+            }
           } else if (response.error) {
             toast.error(response.message);
           }
@@ -81,123 +108,51 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
         className={showInvoice ? "fade-out" : "fade-in"}
       >
         <Modal.Header closeButton className="border-bottom-0">
-          <h3>Manage invoices</h3>
+          <h3>Manage invoices for case {records.case?.case_number}</h3>
         </Modal.Header>
         <Modal.Body className="pt-0">
           <LoadingOverlay active={loader} spinner text="Loading...">
-            <div className="modal-body-scroll">
+            <div style={{ minHeight: 200 }}>
               <Row
-                className="bg-light m-0 p-3 text-center"
+                className="bg-light m-0 text-center"
                 style={{ fontSize: "0.8rem" }}
               >
-                <Col>
+                <Col md={6} className="p-3">
                   <h6 className="m-0">
-                    CASE NUMBER: <strong> {records.case?.case_number}</strong>{" "}
+                    Max Comp:{" "}
+                    <strong>
+                      {common.currencyFormat(amountDetails.maxComp, 2)}
+                    </strong>
                   </h6>
                 </Col>
-                <Col>
+                <Col md={6} className="p-3">
                   <h6 className="m-0">
-                    MAX COMPENSATION:{" "}
+                    Total Invoiced :{" "}
                     <strong>
-                      {common.currencyFormat(
-                        records.case?.maximum_compensation,
-                        2
-                      )}
+                      {common.currencyFormat(amountDetails.totalInvoiced, 2)}
+                    </strong>
+                  </h6>
+                </Col>
+                <Col md={6} className="p-3">
+                  <h6 className="m-0">
+                    Total Paid:{" "}
+                    <strong>
+                      {common.currencyFormat(amountDetails.totalPaid, 2)}
+                    </strong>
+                  </h6>
+                </Col>
+                <Col md={6} className="p-3">
+                  <h6 className="m-0">
+                    Available :{" "}
+                    <strong>
+                      {common.currencyFormat(amountDetails.available, 2)}
                     </strong>
                   </h6>
                 </Col>
               </Row>
+
               {records.case && records.case_invoices && (
-                <div className="table-responsive">
-<<<<<<< HEAD
-                  <div className="table-responsive">
-                    <table className="table">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Invoice</th>
-                          <th>Total Amount</th>
-                          <th>Paid Amount</th>
-                          <th>Added On</th>
-                          <th>Status</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {records.case_invoices.map((item, index) => (
-                          <>
-                            <tr>
-                              <td>{index + 1}</td>
-                              <td>{item.name}</td>
-                              <td>
-                                {common.currencyFormat(item.total_amount, 2)}
-                              </td>
-                              <td>
-                                {common.currencyFormat(item.total_amount, 2)}
-                              </td>
-                              <td>
-                                {moment(item.added_on).format("D MMM, YYYY")}
-                              </td>
-                              <td>
-                                <Badge
-                                  pill
-                                  bg={btnStatus[item.status].bg || "info"}
-                                  size="sm"
-                                >
-                                  {btnStatus[item.status].label || "N/A"}
-                                </Badge>
-                              </td>
-                              <td>
-                                <DropdownButton
-                                  as={ButtonGroup}
-                                  key="action-1"
-                                  id={`action-btn-1`}
-                                  variant="primary"
-                                  title="Action"
-                                  align="end"
-                                >
-                                  <Dropdown.Item
-                                    eventKey="1"
-                                    onClick={() => setShowInvoice(item.id)}
-                                  >
-                                    <span className="mdi mdi-eye"></span>
-                                    View
-                                  </Dropdown.Item>
-                                  {item.status <= 2 && (
-                                    <Dropdown.Item
-                                      eventKey="2"
-                                      onClick={() => setInvoicePayment(item)}
-                                    >
-                                      <span className="mdi mdi-currency-usd"></span>
-                                      Pay
-                                    </Dropdown.Item>
-                                  )}
-                                </DropdownButton>
-                              </td>
-                            </tr>
-                            {item.status === 2 && (
-                              <tr>
-                                <td colSpan={4}>Payments</td>
-                                <td>$200</td>
-                                <td>$300</td>
-                              </tr>
-                            )}
-                          </>
-                        ))}
-                        {(!records.case_invoices ||
-                          records.case_invoices.length <= 0) && (
-                            <tr>
-                              <td colSpan={6}>
-                                <h6 className="text-gray">
-                                  No records available
-                                </h6>
-                              </td>
-                            </tr>
-                          )}
-                      </tbody>
-                    </table>
-                  </div>
-=======
+                <div className="table-responsive" style={{ maxHeight: 350 }}>
                   <table className="table">
                     <thead>
                       <tr>
@@ -220,7 +175,7 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                                 className="text-truncate"
                                 style={{ maxWidth: 200 }}
                               >
-                                {item.name}                                
+                                {item.name}
                               </div>
                             </td>
                             <td>
@@ -296,13 +251,12 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
                         records.case_invoices.length <= 0) && (
                         <tr>
                           <td colSpan={7}>
-                            <h6 className="text-gray">No records available</h6>
+                            <h6 className="text-gray text-center m-5">No records available</h6>
                           </td>
                         </tr>
                       )}
                     </tbody>
                   </table>
->>>>>>> 227e7da595f1e61849f8fe228956b10d35dd4be7
                 </div>
               )}
             </div>
@@ -315,6 +269,7 @@ const ListInvoices = ({ showModal, closeModal, caseId }) => {
           showModal={showInvoice ? true : false}
           closeModal={() => setShowInvoice(null)}
           invoiceId={showInvoice}
+          caseData={records.case}
         />
       )}
 

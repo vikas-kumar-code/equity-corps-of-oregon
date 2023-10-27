@@ -109,6 +109,22 @@ const routeSeeder = async () => {
       },
     },
     {
+      label: "Groups",
+      icon: "mdi mdi-tune-vertical",
+      url: "/admin/groups",
+      method: "get",
+      children: {
+        create: [
+          { label: "Get Groups & Group members", url: "/api/admin/groups", method: "get" },
+          { label: "Create a Group", url: "/api/admin/groups/save", method: "post" },
+          { label: "Update a Group", url: "/api/admin/groups/save/:id", method: "put" },
+          { label: "Delete a Group", url: "/api/admin/groups/delete/:id", method: "delete" },
+          { label: "Add a member to the Group", url: "/api/admin/groups/add-member/:id", method: "post" },
+          { label: "Remove a member from a group", url: "/api/admin/groups/remove-member/:id", method: "post" },          
+        ],
+      },
+    },
+    {
       label: "Settings",
       icon: "mdi mdi-tune-vertical",
       url: "/admin/settings",

@@ -1,6 +1,7 @@
 .whitetheme {
   background-color: #fff;
 }
+
 .whitetheme .navbar,
 .whitetheme .sidebar .sidebar-brand-wrapper,
 .whitetheme .sidebar {
@@ -16,7 +17,6 @@
   padding-top: 100px;
   height: 100%;
   margin-bottom: 0px;
-
 }
 
 .whitetheme .sidebar .nav:not(.sub-menu)>.nav-item:hover:not(.nav-category):not(.account-dropdown)>.nav-link,
@@ -24,7 +24,8 @@
   background: #e8e8e8;
 }
 
-.whitetheme .sidebar .nav .nav-item.active>.nav-link span.menu-icon, .whitetheme .sidebar .nav .nav-item.active>.nav-link span.menu-icon:hover {
+.whitetheme .sidebar .nav .nav-item.active>.nav-link span.menu-icon,
+.whitetheme .sidebar .nav .nav-item.active>.nav-link span.menu-icon:hover {
   background-color: rgba(108, 114, 147, 0.2);
 }
 
@@ -89,9 +90,9 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.125) !important;
 }
 
-.whitetheme .table-responsive .table thead tr th:last-child {
+/* .whitetheme .table-responsive .table thead tr th:last-child {
   text-align: center;
-}
+} */
 
 .whitetheme .table-responsive .table tbody tr td {
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
@@ -101,9 +102,9 @@
   border-bottom: none;
 }
 
-.whitetheme .table-responsive .table tbody tr td:last-child {
+/* .whitetheme .table-responsive .table tbody tr td:last-child {
   text-align: center;
-}
+} */
 
 /* Table */
 

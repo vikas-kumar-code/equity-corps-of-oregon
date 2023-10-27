@@ -15,12 +15,24 @@ import LoadingOverlay from "react-loading-overlay";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import ListDocuments from "./ListDocuments";
+import PaymentButtons from "../../cases/components/PaymentButtons";
+import WithdrawInvoice from "./WithdrawInvoice";
 
-const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
+const ListInvoices = ({
+  caseId,
+  getRecord,
+  setShowInvoice,
+  refresh,
+  withdraw,
+  setWithdraw,
+}) => {
   const [records, setRecords] = useState({});
+  const [errors, setErrors] = useState("");
   const [loader, setLoader] = useState(true);
-  const [caseInvitationIndex, setCaseInvitationIndex] = useState(0);
+  const [caseInvitationIndex, setCaseInvitationIndex] = useState(null);
   const [showDocList, setShowDocList] = useState(false);
+  const [withdrawInvoice, setWithdrawInvoice] = useState([false, 0, 0]);
+  const [submitted, setSubmitted] = useState(false);
 
   const getRecords = async () => {
     setLoader(true);
@@ -63,34 +75,51 @@ const ListInvoices = ({ caseId, getRecord, setShowInvoice, refresh }) => {
     }
   };
 
-  const sendInvoice = async (id) => {
-    if (window.confirm("Are you sure to send this invoice for approval?")) {
-      setLoader(true);
-      fetch(common.apiPath(`/admin/cases/invoice/send/${id}`), {
-        method: "POST",
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.success) {
-            toast.success(response.message);
-            getRecords();
-          } else if (response.error) {
-            toast.error(response.message);
-          }
+  const sendInvoice = async (id, status) => {
+    if (withdraw === "" && status === 1) {
+      setErrors("Withdraw remarks can not be empty.");
+    } else {
+      if (
+        status === 0
+          ? window.confirm("Are you sure to send this invoice for approval?")
+          : status === 1 &&
+            window.confirm("Are you sure to withdraw this invoice?")
+      ) {
+        setSubmitted(true);
+        setLoader(true);
+        fetch(common.apiPath(`/admin/cases/invoice/send/${id}`), {
+          method: "POST",
+          body: JSON.stringify({ withdraw_remarks: withdraw }),
         })
-        .catch((error) => {
-          toast.error(error.message);
-        })
-        .finally(() => setLoader(false));
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.success) {
+              console.log(response.message);
+              toast.success(response.message);
+              getRecords();
+              setWithdrawInvoice(false);
+              setWithdraw("");
+              setErrors("");
+            } else if (response.error) {
+              toast.error(response.message);
+            }
+          })
+          .catch((error) => {
+            toast.error(error.message);
+          })
+          .finally(() => {
+            setLoader(false);
+            setSubmitted(false);
+          });
+      }
     }
   };
 
-  const handleShowDoc = (index)=>{
-    setCaseInvitationIndex(index)
-    console.log(index);
-    setShowDocList(true)
-  }
-console.log(records);
+  const handleShowDoc = (index) => {
+    setCaseInvitationIndex(index);
+    setShowDocList(true);
+  };
+
   const btnStatus = {
     0: {
       label: "Draft",
@@ -121,34 +150,35 @@ console.log(records);
           <Card.Body>
             <h4>Invoices</h4>
             {records?.case && records?.case_invoices && (
-              <div className="table-responsive">
-                <div className="table-responsive">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Invoice</th>
-                        <th>Total Amount</th>
-                        <th>Added On</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {records.case_invoices.map((item, index) => (
-                        <tr>
+              <div className="table-responsive" style={{ maxHeight: 300 }}>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Invoice</th>
+                      <th>Total Amount</th>
+                      <th>Added On</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {records.case_invoices.map((item, index) => (
+                      <>
+                        <tr key={`invoice-${index}`}>
                           <td>{index + 1}</td>
                           <td>
                             {item.name}
-                            {item.files != null && item.files.length > 0 && (
-                              <a
-                                href="#"
-                                className="d-block text-primary"
-                                onClick={() => handleShowDoc(index)}
-                              >
-                                View files
-                              </a>
-                            )}
+                            {item?.files &&
+                              JSON.parse(item?.files)?.length > 0 && (
+                                <a
+                                  href="#"
+                                  className="d-block text-primary"
+                                  onClick={() => handleShowDoc(index)}
+                                >
+                                  View files
+                                </a>
+                              )}
                           </td>
                           <td>{common.currencyFormat(item.total_amount, 2)}</td>
                           <td>{moment(item.added_on).format("D MMM, YYYY")}</td>
@@ -173,7 +203,9 @@ console.log(records);
                               {item.status === 0 && (
                                 <Dropdown.Item
                                   eventKey="4"
-                                  onClick={() => sendInvoice(item.id)}
+                                  onClick={() =>
+                                    sendInvoice(item.id, item.status)
+                                  }
                                 >
                                   <span className="mdi mdi-send"></span>
                                   Send
@@ -187,6 +219,21 @@ console.log(records);
                                 <span className="mdi mdi-eye"></span>
                                 View
                               </Dropdown.Item>
+                              {item.status === 1 && (
+                                <Dropdown.Item
+                                  eventKey="2"
+                                  onClick={() =>
+                                    setWithdrawInvoice([
+                                      true,
+                                      item.id,
+                                      item.status,
+                                    ])
+                                  }
+                                >
+                                  <span class="mdi mdi-comment-remove-outline"></span>
+                                  Withdraw
+                                </Dropdown.Item>
+                              )}
                               {item.status === 0 && (
                                 <Dropdown.Item
                                   eventKey="2"
@@ -208,22 +255,51 @@ console.log(records);
                             </DropdownButton>
                           </td>
                         </tr>
-                      ))}
-                      {records.case_invoices.length <= 0 && (
-                        <tr>
-                          <td colSpan={6}>
-                            <h6 className="text-gray">No records available</h6>
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                        {item.status === 2 && (
+                          <tr style={{ backgroundColor: "#009c0014" }}>
+                            <td className="py-2"></td>
+                            <td
+                              colSpan={6}
+                              className="text-start py-2"
+                              style={{ color: "#434343" }}
+                            >
+                              <strong>
+                                Payments -
+                                <PaymentButtons item={item} />
+                              </strong>
+                            </td>
+                          </tr>
+                        )}
+                      </>
+                    ))}
+                    {records.case_invoices.length <= 0 && (
+                      <tr>
+                        <td colSpan={6}>
+                          <h6 className="text-gray text-center m-5">
+                            No records available
+                          </h6>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             )}
           </Card.Body>
         </Card>
       </LoadingOverlay>
+      <WithdrawInvoice
+        showWithdrawModal={withdrawInvoice}
+        sendInvoice={sendInvoice}
+        withdraw={withdraw}
+        errors={errors}
+        setWithdraw={setWithdraw}
+        submitted={submitted}
+        closeModal={() => {
+          setWithdrawInvoice([false, 0, 0]);
+          setErrors("");
+        }}
+      />
       <ListDocuments
         showDocList={showDocList}
         closeModal={() => setShowDocList(false)}

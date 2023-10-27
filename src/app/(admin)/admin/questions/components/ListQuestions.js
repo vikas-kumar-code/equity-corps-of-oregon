@@ -22,6 +22,7 @@ import { useSearchParams } from "next/navigation";
 LoadingOverlay.propTypes = undefined;
 
 export default function ListQuestions() {
+  
   const searchParams = useSearchParams();
   const [loader, setLoader] = useState(true);
   const [records, setRecords] = useState([]);
@@ -56,6 +57,7 @@ export default function ListQuestions() {
     setRecordId(recordId);
     setShowModal(true);
   };
+
   const getRecords = async () => {
     let REQUEST_URI = common.apiPath(
       `/admin/questions?${searchParams.toString()}`
@@ -94,10 +96,6 @@ export default function ListQuestions() {
       saveOrder();
     }
   }, [recordOrder]);
-
-  useEffect(() => {
-    getRecords();
-  }, [searchParams]);
 
   const deleteRecord = async (id) => {
     if (window.confirm("Are you sure to delete this question?")) {
@@ -203,22 +201,14 @@ export default function ListQuestions() {
                                           eventKey="1"
                                           onClick={() => getRecord(record.id)}
                                         >
-<<<<<<< HEAD
-                                          <span className="mdi mdi-pencil"></span>
-=======
                                         <span className="mdi mdi-pencil"></span>
->>>>>>> 227e7da595f1e61849f8fe228956b10d35dd4be7
                                           Edit
                                         </Dropdown.Item>
                                         <Dropdown.Item
                                           eventKey="2"
                                           onClick={() => deleteRecord(record.id)}
                                         >
-<<<<<<< HEAD
-                                          <span className="mdi mdi-delete"></span>
-=======
                                         <span className="mdi mdi-delete"></span>
->>>>>>> 227e7da595f1e61849f8fe228956b10d35dd4be7
                                           Delete
                                         </Dropdown.Item>
                                       </DropdownButton>

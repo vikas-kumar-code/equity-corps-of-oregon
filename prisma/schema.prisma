@@ -50,6 +50,7 @@ model users {
   created_at                 DateTime?          @default(now())
   updated_at                 DateTime?          @db.Timestamp(0)
   status                     Int                @default(1)
+  is_first_login             Int                @default(1)
   /// On boarding process status [0 => Not Sent, 1 => Sent, 2 => Completed]
   on_board_status            Int                @default(0)
   verified                   Int                @default(0)
@@ -62,6 +63,9 @@ model users {
   case_documents             case_documents[]
   case_invoices              case_invoices[]
   payments                   payments[]
+  group_members              group_members[]
+
+  @@index([role_id])
 }
 
 model roles {
@@ -83,29 +87,36 @@ model cases {
   maximum_compensation Decimal            @db.Decimal(10, 2)
   hourly_rate          Decimal?           @db.Decimal(10, 2)
   user                 users              @relation(fields: [added_by], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  clients              String?            @db.LongText
   case_milestones      case_milestones[]
   case_documents       case_documents[]
   case_invitations     case_invitations[]
   created_at           DateTime           @default(now())
   logs                 logs[]
   case_invoices        case_invoices[]
+
+  @@index([added_by])
 }
 
 model case_invoices {
-  id           Int        @id @default(autoincrement())
-  case_id      Int
-  user_id      Int
-  name         String?
-  particulars  String     @db.LongText
-  files        String?    @db.LongText
-  total_amount Decimal    @db.Decimal(10, 2)
-  added_on     DateTime   @default(now())
-  due_on       DateTime   @db.Date
+  id               Int        @id @default(autoincrement())
+  case_id          Int
+  user_id          Int
+  name             String?
+  particulars      String     @db.LongText
+  files            String?    @db.LongText
+  total_amount     Decimal    @db.Decimal(10, 2)
+  added_on         DateTime   @default(now())
+  due_on           DateTime   @db.Date
+  withdraw_remarks String?    @db.LongText
   /// Invoice Status [0 => draft, 1 => sent, 2 => partially paid, 3 => full paid]
-  status       Int        @default(0)
-  case         cases      @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
-  user         users      @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
-  payments     payments[]
+  status           Int        @default(0)
+  case             cases      @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  user             users      @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  payments         payments[]
+
+  @@index([user_id])
+  @@index([case_id])
 }
 
 model invoice_categories {
@@ -122,6 +133,9 @@ model payments {
   added_on        DateTime      @default(now())
   case_invoice    case_invoices @relation(fields: [case_invoice_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
   user            users         @relation(fields: [user_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([case_invoice_id])
 }
 
 model contracts {
@@ -141,6 +155,9 @@ model case_invitations {
   case       cases    @relation(fields: [case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   user       users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   sent_on    DateTime @default(now())
+
+  @@index([user_id])
+  @@index([case_id])
 }
 
 model case_milestones {
@@ -149,6 +166,8 @@ model case_milestones {
   milestone_date DateTime
   comment        String   @db.VarChar(255)
   case           cases    @relation(fields: [case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([case_id])
 }
 
 model case_documents {
@@ -160,6 +179,9 @@ model case_documents {
   uploaded_on   DateTime @default(now())
   case          cases    @relation(fields: [case_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   user          users?   @relation(fields: [uploaded_by], references: [id], onUpdate: NoAction, onDelete: SetNull)
+
+  @@index([uploaded_by])
+  @@index([case_id])
 }
 
 model routes {
@@ -172,6 +194,8 @@ model routes {
   permissions permissions[]
   parent      routes?       @relation("ParentToRoutes", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   children    routes[]      @relation("ParentToRoutes")
+
+  @@index([parent_id])
 }
 
 model permissions {
@@ -180,6 +204,9 @@ model permissions {
   route_id Int
   route    routes @relation(fields: [route_id], references: [id])
   role     roles? @relation(fields: [role_id], references: [id])
+
+  @@index([role_id])
+  @@index([route_id])
 }
 
 model questions {
@@ -198,6 +225,8 @@ model options {
   status           Boolean            @default(false)
   question         questions          @relation(fields: [question_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   attorney_answers attorney_answers[]
+
+  @@index([question_id])
 }
 
 model email_templates {
@@ -216,6 +245,10 @@ model attorney_answers {
   user        users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   answer      options?  @relation(fields: [answer_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
   question    questions @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([question_id])
+  @@index([answer_id])
+  @@index([user_id])
 }
 
 model logs {
@@ -224,4 +257,26 @@ model logs {
   content    String?  @db.LongText
   created_at DateTime @default(now())
   case       cases?   @relation(fields: [case_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
+
+  @@index([case_id])
+}
+
+model groups {
+  id            Int             @id @default(autoincrement())
+  name          String?         @db.Text()
+  description   String?         @db.Text()
+  sequence      Int             @default(0)
+  group_members group_members[]
+}
+
+model group_members {
+  id       Int      @id @default(autoincrement())
+  group_id Int
+  user_id  Int
+  added_on DateTime @default(now())
+  groups   groups?  @relation(fields: [group_id], references: [id], onUpdate: NoAction, onDelete: Cascade)
+  user     users    @relation(fields: [user_id], references: [id])
+
+  @@index([group_id])
+  @@index([user_id])
 }

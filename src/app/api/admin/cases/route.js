@@ -47,6 +47,21 @@ export async function GET(request) {
         },
       };
     }
+
+    // if (request.get("reviewer")) {
+    //   where = {
+    //     ...where,
+    //     case_invitations: {
+    //       some: {
+    //         user: {
+    //           is: {
+    //             id: parseInt(request.get("reviewer")),
+    //           },
+    //         },
+    //       },
+    //     },
+    //   };
+    // }
     records = await prisma.cases.findMany({
       where,
       ...paginate,
@@ -70,6 +85,9 @@ export async function GET(request) {
             },
           },
         },
+        case_milestones: true,
+        logs: true,
+        case_documents: true,
       },
     });
     totalRecords = await prisma.cases.count({ where });

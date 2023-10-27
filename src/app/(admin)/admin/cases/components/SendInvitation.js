@@ -6,9 +6,9 @@ import {
   Form,
   Col,
   Table,
-  Badge,
   SplitButton,
   Dropdown,
+  FormLabel,
 } from "react-bootstrap";
 import common from "@/utils/common";
 import { toast } from "react-toastify";
@@ -20,9 +20,11 @@ import LoadingOverlay from "react-loading-overlay";
 const SendInvitation = (props) => {
   const [users, setUsers] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [selectedGroups, setSelectedGroups] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [loader, setLoader] = useState(false);
   const [errors, setErrors] = useState(null);
+  const [groups, setGroups] = useState([]);
   let searchTimeOut = 0;
 
   const promiseUserOptions = (inputValue) => {
@@ -40,10 +42,44 @@ const SendInvitation = (props) => {
     });
   };
 
+  const getGroups = async () => {
+    setLoader(true);
+    fetch(common.apiPath(`/admin/groups`))
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          let userResponse = response.records;
+          const excludeGroups = [];
+          // Exclude invited users
+          if (props?.invitedUsers) {
+            props?.invitedUsers.forEach((item) => {
+              if (item?.user?.id) {
+                excludeGroups.push(item?.user?.id);
+              }
+            });
+          }
+          let groups = userResponse.filter(
+            (group) => !excludeGroups.includes(group.id)
+          );
+          groups = groups.map((group) => ({
+            label: group.name,
+            value: group.id,
+          }));
+          setGroups(groups);
+        } else if (response.error) {
+          toast.error(response.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => setLoader(false));
+  };
+
   const loadUsers = async () => {
     setErrors(null);
     try {
-      await fetch(common.apiPath(`/admin/users/search/?role_id=3`))
+      await fetch(common.apiPath(`/admin/users/search/?role_id=[3,4]`))
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
@@ -84,7 +120,7 @@ const SendInvitation = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (selected.length > 0) {
+    if (selected.length > 0 || selectedGroups.length > 0) {
       setErrors(null);
       setSubmitted(true);
       try {
@@ -93,6 +129,7 @@ const SendInvitation = (props) => {
           body: JSON.stringify({
             case_id: props?.recordId,
             users: selected.map((user) => user.value),
+            groups: selectedGroups.map((group) => group.value),
           }),
         })
           .then((response) => response.json())
@@ -102,6 +139,7 @@ const SendInvitation = (props) => {
               props.closeModal();
               props.reloadRecords();
               setSelected([]);
+              selectedGroups([])
             } else if (response.error) {
               setErrors(response.message);
             }
@@ -112,7 +150,7 @@ const SendInvitation = (props) => {
         setSubmitted(false);
       }
     } else {
-      setErrors("Select at leat one user.");
+      setErrors("Select at least one user.");
     }
   };
 
@@ -122,13 +160,17 @@ const SendInvitation = (props) => {
       try {
         await fetch(common.apiPath(`/admin/cases/invitation/cancel`), {
           method: "POST",
-          body: JSON.stringify({ id: id }),
+          body: JSON.stringify({
+            id: id,
+            case_id: props.recordId,
+            invitedUsers: props?.invitedUsers,
+          }),
         })
           .then((response) => response.json())
           .then((response) => {
             if (response.success) {
               toast.success(response.message);
-              props.reloadRecords();              
+              props.reloadRecords();
             } else if (response.error) {
               toast.error(response.message);
             }
@@ -157,8 +199,11 @@ const SendInvitation = (props) => {
   };
 
   useEffect(() => {
-    loadUsers();
+    getGroups();
   }, []);
+  useEffect(() => {
+    loadUsers();
+  }, [props?.invitedUsers]);
 
   return (
     <Modal
@@ -198,7 +243,7 @@ const SendInvitation = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {props?.invitedUsers.map((data, index) => {
+                    {props?.invitedUsers?.map((data, index) => {
                       return (
                         <tr>
                           <td>
@@ -232,10 +277,26 @@ const SendInvitation = (props) => {
               </div>
             )}
             <Form.Group as={Col} md={12} className="mb-2">
+              <FormLabel>Select Groups</FormLabel>
               <AsyncSelect
                 className="multi-select-input"
                 isMulti
-                cacheOptions                
+                cacheOptions
+                loadOptions={promiseUserOptions}
+                defaultOptions={groups}
+                value={selectedGroups}
+                onChange={setSelectedGroups}
+              />
+            </Form.Group>
+            <Form.Control.Feedback type="invalid">
+              {errors}
+            </Form.Control.Feedback>
+            <Form.Group as={Col} md={12} className="mb-2">
+              <FormLabel>Select Members</FormLabel>
+              <AsyncSelect
+                className="multi-select-input"
+                isMulti
+                cacheOptions
                 loadOptions={promiseUserOptions}
                 defaultOptions={users}
                 value={selected}
