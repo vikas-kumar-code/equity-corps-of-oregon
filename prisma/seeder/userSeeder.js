@@ -7,7 +7,7 @@ const userSeeder = async () => {
     where: { email: "admin@example.com" },
     update: {},
     create: {
-      email: "admin@gmail.com",
+      email: "admin@example.com",
       first_name: "Clearing",
       last_name: "House",
       name: "Clearing House",
