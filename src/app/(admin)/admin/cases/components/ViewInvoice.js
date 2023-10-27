@@ -40,14 +40,7 @@ const ViewInvoice = ({
 
   const invoiceData = invoiceId == 0 ? fields : record?.case_invoice;
   const submission = submissionAction == 1 ? false : true;
-<<<<<<< HEAD
-  const totalAmount = invoiceData?.particulars.reduce(
-    (acc, item) => acc + item.amount,
-    0
-  );
-=======
   const totalAmount = invoiceData?.particulars.reduce((acc, item) => acc + item.amount , 0);
->>>>>>> 0f9114cbf7fae536d003cad5924f4b3a7c059041
 
   useEffect(() => {
     getRecord();
