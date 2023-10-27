@@ -77,7 +77,7 @@ const ListInvoices = ({
 
   const sendInvoice = async (id, status) => {
     if (withdraw === "" && status === 1) {
-      setErrors("Withdraw remarks cannot be empty.");
+      setErrors("Withdraw remarks can not be empty.");
     } else {
       if (
         status === 0
