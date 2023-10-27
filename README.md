@@ -75,3 +75,7 @@ await emailTemplateSeeder();
 ```
 npx prisma db seed
 ```
+## At the end please delete the .next folder and run the below command to reflect the latest changes:
+```
+npm run build
+```
