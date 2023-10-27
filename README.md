@@ -53,5 +53,25 @@ TEST_USER_EMAIL=""
 - [ ] Run the following command to migrate database tables. 
 ```
 npx prisma db push
+```
+## To setup the application first time please make sure you run the seeder. To check seeder for all database tables open the "/prisma/seed.js" and make sure all seeders are active in main() function. Please note, this instruction is only for fist time configuration. To run the seeder, use below command. 
+```
+npx prisma db seed
+``` 
+
+## To accept the further database related changes follow the below steps: 
+```
+npx prisma db push
+```
+- [ ] After executing the above command, comment or remove the following statements from "/prisma/seed.js" file
+```
+await roleSeeder(); 
+await userSeeder();
+await routeSeeder();
+await questionSeeder();
+await emailTemplateSeeder();
+```
+- [ ] run the seeder command to update permission seeder only
+```
 npx prisma db seed
 ```
