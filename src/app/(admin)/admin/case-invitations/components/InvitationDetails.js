@@ -105,12 +105,12 @@ const InvitationDetails = ({
         >
           <Tab eventKey={1} title="Basic Details">
             <Row>
-              <Col md={6}>
+              <Col md={7}>
                 <div className="table-responsive">
                   <table className="table table-borderless table-striped">
                     <tbody>
                       <tr>
-                        <td width="50%">
+                        <td >
                           <strong>Title</strong>
                         </td>
                         <td>{record?.case?.title || "N/A"}</td>
@@ -150,12 +150,12 @@ const InvitationDetails = ({
                   </table>
                 </div>
               </Col>
-              <Col md={6}>
+              <Col md={5}>
                 <div className="table-responsive">
                   <table className="table table-borderless table-striped">
                     <tbody>
                       <tr>
-                        <td width="50%">
+                        <td >
                           <strong>Max Compensation</strong>
                         </td>
                         <td>
