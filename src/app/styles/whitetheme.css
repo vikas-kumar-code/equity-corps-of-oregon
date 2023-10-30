@@ -18,6 +18,12 @@
   height: 100%;
   margin-bottom: 0px;
 }
+.whitetheme .sidebar .side-nav {
+  border-right: #cbd0dd solid 1px;
+  padding-top: 20px;
+  height: 100%;
+  margin-bottom: 0px;
+}
 
 .whitetheme .sidebar .nav:not(.sub-menu)>.nav-item:hover:not(.nav-category):not(.account-dropdown)>.nav-link,
 .whitetheme .sidebar .nav .nav-item.active>.nav-link {

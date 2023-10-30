@@ -14,7 +14,6 @@ const InvitationDetails = ({
 }) => {
   const [activeTab, setActiveTab] = useState(1);
   const [errors, setErrors] = useState({});
-  const [records, setRecords] = useState([]);
   const [deletedDocuments, setDeletedDocuments] = useState([]);
   const [amountDetails, setAmountDetails] = useState({
     maxComp: 0,
@@ -29,7 +28,6 @@ const InvitationDetails = ({
         .then((response) => response.json())
         .then((response) => {
           if (response.success) {
-            setRecords(response.records);
             if (response.records) {
               let amounts = {
                 maxComp: 0,
