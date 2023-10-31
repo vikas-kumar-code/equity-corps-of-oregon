@@ -33339,18 +33339,28 @@ div.tagsinput span.tag a {
 @media screen and (max-width: 991px) {
   .sidebar-offcanvas {
     position: fixed;
-    max-height: calc(100vh - 70px);
-    top: 70px;
+    top: 0;
+    left: -244px;
     bottom: 0;
     overflow: auto;
-    right: -244px;
-    -webkit-transition: all 0.25s ease-out;
-    -o-transition: all 0.25s ease-out;
     transition: all 0.25s ease-out;
-  }
+}
 
   .sidebar-offcanvas.active {
+    left: 0;
+    z-index: 999;
+  }
+  #sidebar-backdrop.active{
+    content: 'backdrop';
+    color: transparent;
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
     right: 0;
+    background-color: #00000087;
+    z-index: 99;
   }
 }
 
